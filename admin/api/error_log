@@ -1,0 +1,169 @@
+[30-Dec-2024 18:23:01 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'LOGIN_STATUS' in 'SET' in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:10
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php(10): mysqli->prepare()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 10
+[30-Dec-2024 18:24:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'LOGIN_STATUS' in 'SET' in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:10
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php(10): mysqli->prepare()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 10
+[30-Dec-2024 18:35:39 UTC] PHP Fatal error:  Uncaught Error: Call to a member function close() on bool in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 19
+[30-Dec-2024 18:36:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function close() on bool in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 19
+[30-Dec-2024 18:36:56 UTC] PHP Fatal error:  Uncaught Error: Call to a member function close() on bool in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 19
+[30-Dec-2024 18:37:33 UTC] PHP Fatal error:  Uncaught Error: Call to a member function close() on bool in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 19
+[30-Dec-2024 18:38:40 UTC] PHP Fatal error:  Uncaught Error: Call to a member function close() on bool in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/toggleStatus.php on line 19
+[01-Jan-2025 16:52:18 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/admin/api/delete_user.php on line 5
+[20-Jan-2025 18:10:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TIMEZONE_OFFSET = '-06:00', USERTYPE = 'Player' 
+            WHERE ID = 6' at line 2 in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php:60
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/admin/api/update_user.php(60): mysqli_query()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 60
+[20-Jan-2025 18:11:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TIMEZONE_OFFSET = '-06:00', USERTYPE = 'Player' 
+            WHERE ID = 6' at line 2 in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php:61
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/admin/api/update_user.php(61): mysqli_query()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 61
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "email" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 8
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "EmailPermission" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 9
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "number" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 10
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "CallPermission" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 11
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "dateofbirth" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 12
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "GenderRadioOptions" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 13
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "City" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 14
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "Country" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 15
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "Province" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 16
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 17
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 18
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 19
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "password" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 20
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "timezone_offset" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 21
+[16-Feb-2025 11:21:06 UTC] PHP Warning:  Undefined array key "usertype" in /home/qpof8lg3h9cm/public_html/admin/api/update_user.php on line 22
+[21-Jan-2026 04:57:26 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'casa_db.users' doesn't exist in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php:40
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/admin/api/add_user.php(40): mysqli_query()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 40
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(header.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(): Failed opening 'header.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(sidebar.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(): Failed opening 'sidebar.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(footer.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 187
+[21-Jan-2026 10:10:53 UTC] PHP Warning:  include(): Failed opening 'footer.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 187
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:12:05 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:13:48 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:17:58 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(header.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(): Failed opening 'header.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(sidebar.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(): Failed opening 'sidebar.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(footer.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 188
+[21-Jan-2026 10:28:58 UTC] PHP Warning:  include(): Failed opening 'footer.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 188
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(header.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(): Failed opening 'header.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 2
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(sidebar.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(): Failed opening 'sidebar.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 3
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(footer.php): Failed to open stream: No such file or directory in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 193
+[21-Jan-2026 10:29:49 UTC] PHP Warning:  include(): Failed opening 'footer.php' for inclusion (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 193
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:31:08 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:32:14 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:33:35 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 05:53:42 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 06:16:47 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 06:18:36 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 07:06:11 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 16
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 22
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 23
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 28
+[21-Jan-2026 11:45:07 America/Toronto] PHP Warning:  Undefined variable $pdo in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 66
+[21-Jan-2026 11:45:07 America/Toronto] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 66
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 15
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 22
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 27
+[21-Jan-2026 11:46:19 America/Toronto] PHP Warning:  Undefined variable $pdo in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 65
+[21-Jan-2026 11:46:19 America/Toronto] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php:65
+Stack trace:
+#0 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 65
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "verified_level" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 14
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "country" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 18
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "province" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 19
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "currency" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 20
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "timezone" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 21
+[21-Jan-2026 11:47:35 America/Toronto] PHP Warning:  Undefined array key "email_permission" in /home/qpof8lg3h9cm/public_html/admin/api/add_user.php on line 26
