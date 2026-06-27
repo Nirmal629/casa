@@ -205,7 +205,7 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                 </div>
                 <!-- Player Stats Tab -->
                 <div class="tab-pane fade" id="playerstats" role="tabpanel" aria-labelledby="playerstats-tab">
-                    <?php include 'tabs/host-player-stats.php'; ?>
+                    <?php include 'host-player-stats.php'; ?>
                 </div>
             </div>
             <!----All-Event-tab-End------->

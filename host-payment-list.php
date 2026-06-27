@@ -1,15 +1,10 @@
 <?php
-session_start();
-date_default_timezone_set('America/Toronto');
-
-const DATABASE_NAME = 'casa_test';
-const USERNAME = 'casa_test';
-const PASSWORD = 'casa_test123#';
-$host = 'localhost';
-$conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+
+date_default_timezone_set('America/Toronto');
+include_once __DIR__ . '/dbConnection.php';
 
 $currentYear = date('Y');
 $currentMonth = date('n');
@@ -189,8 +184,6 @@ $currentMonth = date('n');
         } else {
             echo "<p>No players found.</p>";
         }
-
-        $conn->close();
         ?>
         
         <!-- Player Modal -->

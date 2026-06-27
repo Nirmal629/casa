@@ -1,21 +1,11 @@
 
 <?php
-session_start();
-date_default_timezone_set('America/Toronto');
-
-const DATABASE_NAME = 'casa_test';
-const USERNAME = 'casa_test';
-const PASSWORD = 'casa_test123#';
-$host = 'localhost';
-
-$conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
-?>
+include_once __DIR__ . '/dbConnection.php';
 
-<?php
-$sql = "SELECT * FROM ca_user LIMIT 5"; 
+$sql = "SELECT ID, NAME, EMAIL FROM ca_users LIMIT 5";
 $result = $conn->query($sql);
 if($result->num_rows > 0){
     echo "<table class='table'><tr><th>Name</th><th>Email</th></tr>";

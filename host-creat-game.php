@@ -1,18 +1,12 @@
 <!-----new-game-host------>
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Database configuration
-    date_default_timezone_set('America/Toronto');
-    $host = "localhost";
-    $username = "casa_test";
-    $password = "casa_test123#";
-    $dbname = "casa_test";
-    $conn = new mysqli($host, $username, $password, $dbname);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include_once __DIR__ . '/dbConnection.php';
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize input data
 
     // Sanitize input data
     $host_name = mysqli_real_escape_string($conn, $_POST['host_name']);
@@ -45,8 +39,6 @@ exit;
     } else {
         // echo "Error: " . $sql . "<br>" . $conn->error;
     }
-
-    $conn->close();
 }
 $result = mysqli_query($conn, "SELECT DESCRIPTION FROM ca_description WHERE 1");
     if ($result && mysqli_num_rows($result) > 0) {

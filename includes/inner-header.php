@@ -1,8 +1,10 @@
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-include('dbConnection.php');
+include_once __DIR__ . '/../dbConnection.php';
 
 // print_r($_SESSION);exit;
 

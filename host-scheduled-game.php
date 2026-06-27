@@ -49,23 +49,12 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
 
 
         <?php
-        date_default_timezone_set('America/Toronto');
-        const DATABASE_NAME='casa_test';
-        const USERNAME="casa_test";
-        const PASSWORD="casa_test123#";
-        
-        // Database configuration
-        $host = "localhost"; // Database host (e.g., localhost)
-        
-        // Create connection
-        $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-        
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-        // Assuming you have a connection to the database ($conn)
-        $sql = "SELECT * FROM ca_events WHERE HOST_ID='".$_SESSION['user_id']."' and STATUS='Active' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
+        include_once __DIR__ . '/dbConnection.php';
+        
+        $sql = "SELECT * FROM ca_events WHERE HOST_ID='" . intval($_SESSION['user_id']) . "' and STATUS='Active' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {
