@@ -1,0 +1,2592 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap');
+
+
+
+.tournamentcard_wrap {
+
+    width: 100%;
+
+    height: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 2%;
+
+}
+
+
+
+.tournament_card {
+
+    background-color: var(--white);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0px 0px 5px 0px var(--bs-box-shadow-color);
+
+    border: 1px solid transparent;
+
+    /* margin-bottom: 2%; */
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    color: var(--bs-text-color) !important;
+
+}
+
+
+
+.tournament_card:hover {
+
+    border: 1px solid var(--bs-primary);
+
+}
+
+
+
+.tournament_card.box {
+
+    width: 23.5%;
+
+    height: auto;
+
+}
+
+
+
+.tournament_card .image {
+
+    width: 100%;
+
+    height: 30vh;
+
+}
+
+
+
+.tournament_card .image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: top center;
+
+}
+
+
+
+.tournament_card .content {
+
+    padding: 10px 15px;
+
+}
+
+
+
+.tournament_card .name {
+
+    font-size: 125%;
+
+    font-weight: 700;
+
+    color: #000;
+
+    padding: 0;
+
+    margin-bottom: 10px;
+
+}
+
+.tournament_card .tagline {
+
+    color: var(--bs-text-color);
+
+}
+
+.tournamentcard_slider .tournament_card .name {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.tournamentcard_slider .tournament_card .tagline {
+    color: var(--bs-primary);
+    font-size: 16px;
+    text-align: center;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.tournamentCardCol {
+    display: flex;
+    justify-content: flex-start;
+    align-items: inherit;
+}
+
+.tournamentCardIcon {
+    width: 20px;
+}
+
+.tournamentCardTxt {
+    width: calc(100% - 20px);
+    padding-left: 5px;
+}
+
+.tournamentCardTxt p,
+.tournamentCardTxt strong,
+.tournamentCardTxt span {
+    font-size: 14px;
+    color: var(--bs-text-color);
+}
+
+.tournament_card i {
+    font-size: 15px;
+    color: var(--bs-primary) !important;
+}
+
+.tournamentcard_slider .category-line i {
+    font-size: 12px;
+}
+
+.tournamentCardFlex .tournamentCardCol:first-child {
+    width: 45%;
+}
+
+
+.tournamentcard_slider .tournament_card .openBtn {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    padding: 4px 6px;
+    text-align: center;
+}
+
+.tournamentcard_slider .tournament_card .openBtn span {
+    font-size: 15px;
+}
+
+.tournament_card p:last-child {
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+
+
+/*****/
+
+.tournament_Details {
+
+    width: 100%;
+
+    height: auto;
+
+}
+
+.tournament_Details .tournamentCardIcon {
+    width: 30px;
+}
+
+.tournament_Details .category-line .tournamentCardIcon i {
+    font-size: 17px;
+}
+
+.tournament_Details .tournamentCardTxt {
+    width: calc(100% - 30px);
+    padding-left: 5px;
+}
+
+.tournament_Details .tournamentCardTxt p,
+.tournament_Details .tournamentCardTxt strong,
+.tournament_Details .tournamentCardTxt span {
+    font-size: 17px;
+}
+
+.tournament_Details .tournamentCardIcon i {
+    font-size: 20px;
+    color: var(--bs-primary) !important;
+}
+
+
+
+.tournament_Details .image {
+
+    width: 100%;
+
+    height: 600px;
+
+    overflow: hidden;
+
+    border-radius: 4px;
+
+    box-shadow: 0px 0px 5px 0px var(--bs-box-shadow-color);
+
+    margin-bottom: 20px;
+
+}
+
+
+
+.tournament_Details .image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+    object-position: 0% 25%;
+
+}
+
+.tournament_Details .openBtn {
+    text-align: center;
+    padding: 8px 10px;
+    overflow: hidden;
+    position: relative;
+    background: #ff8100;
+}
+
+.tournament_Details .openBtn span {
+    font-size: 20px;
+}
+
+
+
+.tournament_Details .name {
+
+    font-size: 150%;
+
+    font-weight: 700;
+
+    color: var(--bs-heading);
+
+}
+
+
+
+.tournament_Details .desc {
+
+    margin-bottom: 15px;
+
+}
+
+.tournament_Details .subHead p {
+    color: var(--bs-primary);
+}
+
+
+
+.tournament_Details .content {
+
+    width: 100%;
+
+    height: auto;
+
+    padding-top: 15px;
+
+}
+
+
+
+.datelocation {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: start;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+
+}
+
+
+
+.datelocation i {
+
+    color: #e17603;
+
+}
+
+
+
+.datelocation span {
+
+    color: var(--bs-heading);
+
+    font-weight: 500;
+
+}
+
+
+
+.tournament_Details .amount {
+
+    font-size: 105%;
+
+    font-weight: 600;
+
+    color: var(--bs-heading);
+
+    padding: 0;
+
+    margin-bottom: 5px;
+
+}
+
+
+
+
+
+/******/
+
+
+
+.form-group {
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-weight: 600;
+
+    color: var(--bs-text-color);
+
+}
+
+
+
+.form-group input {
+
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    font-size: 85%;
+
+}
+
+
+
+.form-group input:focus {
+
+    outline: none;
+
+    border: 1px solid var(--bs-primary);
+
+}
+
+
+
+.player-section {
+
+    margin-top: 25px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #e0e0e0;
+
+}
+
+
+
+.player-section h4 {
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.checkbox-wrap {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 5px;
+
+}
+
+
+
+.checkbox-wrap input {
+
+    width: auto;
+
+}
+
+
+
+.tournamentdet_modal .form-group {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+}
+
+
+
+.tournamentdet_modal .form-group label {
+
+    white-space: nowrap;
+
+    font-size: 85%;
+
+}
+
+
+
+
+
+/********************
+
+****player-Hub*******
+
+*********************/
+
+.playerhub_sec {
+
+    /* background: radial-gradient(circle at top, #0f172a, #020617); */
+
+    background-color: var(--bs-body);
+
+    font-family: 'Inter', sans-serif;
+
+    /* color: #e5e7eb; */
+
+    width: 100%;
+
+    height: auto;
+
+    padding-top: 20px !important;
+
+}
+
+
+
+.playerhub_sec .wraper {
+
+    width: 100%;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    /* background: rgba(15, 23, 42, 0.7); */
+
+    color: #e5e7eb;
+
+    backdrop-filter: blur(20px);
+
+    box-shadow: 0 0 40px rgba(56, 189, 248, .25);
+
+    border: 2px solid rgba(56, 189, 248, .3);
+
+}
+
+
+
+/* ===== HEADER ===== */
+
+.playerhub_sec .header_box {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(90deg, #0ea5e9, #1e293b);
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-family: 'Orbitron';
+}
+
+.playerhub_sec .header_Box_left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+}
+
+.playerhub_sec .header_Box_Right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.playerhub_sec .header_Box_Right select {
+    background-color: #f9f9f9;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 11px;
+    color: #1e293b;
+    padding: 8px 6px;
+    outline: 0;
+    text-align: center;
+}
+
+
+.playerhub_sec .header_box span {
+
+    font-size: 13px;
+
+    /* opacity: .9; */
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+
+
+.playerhub_sec .header_box span i {
+
+    font-size: 150%;
+
+}
+
+
+
+/* ===== GRID ===== */
+
+.playerhub_sec .main-grid {
+
+    /* display: grid;
+
+    grid-template-columns: 300px 1fr 300px; */
+
+    gap: 20px;
+
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+/* ===== PANELS ===== */
+
+.playerhub_sec .panel {
+    width: 20%;
+    background: rgba(2, 6, 23, .75);
+
+    border-radius: 14px;
+
+    padding: 16px;
+
+    border: 1px solid rgba(148, 163, 184, .2);
+
+    box-shadow: inset 0 0 20px rgba(15, 23, 42, .8);
+
+}
+
+.playerhub_sec .center-panel {
+    width: 60%;
+}
+
+
+
+.playerhub_sec .panel h3 {
+
+    font-size: 14px;
+
+    margin-bottom: 12px;
+
+    text-transform: uppercase;
+
+    color: #93c5fd;
+
+}
+
+
+
+.playerhub_sec p {
+
+    font-size: 10px;
+
+    margin-bottom: 10px;
+
+}
+
+
+
+/* ===== Dossier card css ===== */
+
+
+
+/* Actions */
+
+.dossierCard .actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+}
+
+
+
+.dossierCard .actions button {
+
+    flex: 1;
+
+    font-size: 12px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    border: none;
+
+    background: #38bdf8;
+
+    color: #020617;
+
+}
+
+
+
+.dossierCard .actions .outline {
+
+    background: transparent;
+
+    color: #38bdf8;
+
+    border: 1px solid #38bdf8;
+
+}
+
+
+
+.dossierCard .profileDetails {
+
+    width: 100%;
+
+    height: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+
+/* Profile */
+
+.dossierCard .profile {
+
+    text-align: center;
+
+    /* margin-bottom: 12px; */
+
+    width: 90px;
+
+    min-width: 90px;
+
+    height: 90px;
+
+    border-radius: 12px;
+
+    border: 2px solid #38bdf8;
+
+    overflow: hidden;
+
+}
+
+
+
+.dossierCard .profile img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: top center;
+
+}
+
+
+
+/* Info */
+
+.dossierCard .info {
+
+    width: 100%;
+
+}
+
+
+
+.dossierCard .info p {
+
+    font-size: 12px;
+
+    margin: 4px 0;
+
+}
+
+
+
+/* Stats */
+
+.dossierCard .stats {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin: 12px 0;
+
+}
+
+
+
+.dossierCard .stats div {
+
+    background: rgba(56, 189, 248, .1);
+
+    border-radius: 8px;
+
+    padding: 8px;
+
+    font-size: 11px;
+
+    text-align: center;
+
+}
+
+.statInnDiv {
+    position: relative;
+}
+
+.upcmngBtn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    padding: 0 !important;
+}
+
+.upcmngBtn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(7%) saturate(28%) hue-rotate(277deg) brightness(107%) contrast(106%);
+}
+
+
+
+.dossierCard .stats span {
+
+    display: block;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+}
+
+
+
+/* Win Ratio */
+
+.dossierCard .win {
+
+    background: rgba(56, 189, 248, .1);
+
+    border-radius: 8px;
+
+    padding: 8px;
+
+    font-size: 12px;
+
+    margin-bottom: 12px;
+
+    position: relative;
+
+}
+
+
+
+.dossierCard .win .up {
+
+    color: #22c55e;
+
+}
+
+
+
+.dossierCard .win small {
+
+    display: block;
+
+    font-size: 10px;
+
+    opacity: .7;
+
+}
+
+.tournamentBtm {
+    display: block;
+    gap: 10px;
+    width: calc(100% - 110px);
+    overflow: hidden;
+}
+
+.tourSlider {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 30px;
+}
+
+.tourSlider .tourSlide {
+    width: 100%;
+}
+
+.tourCard {
+    backdrop-filter: blur(10px);
+    padding: 5px 5px;
+    border-radius: 30px;
+    background: rgb(100, 97, 97, 0.18);
+}
+
+.tourSlider .slick-arrow {
+    top: 50%;
+    bottom: auto;
+    left: 0 !important;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+}
+
+.tourSlider .slick-arrow::after {
+    color: #fff !important;
+    font-size: 12px;
+}
+
+.tourSlider .slick-arrow.next-arrow {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.tourSpan {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+}
+
+
+
+/* Blocks */
+
+.dossierCard .block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+
+
+.dossierCard .block h4 {
+    font-size: 12px;
+    margin-bottom: 6px;
+    margin-bottom: 0;
+}
+
+.dossierCard .block h4 img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(7%) saturate(28%) hue-rotate(277deg) brightness(107%) contrast(106%);
+}
+
+
+
+/* Badges */
+
+.dossierCard .badges {
+    display: block;
+    gap: 10px;
+    width: calc(100% - 110px);
+    overflow: hidden;
+}
+
+.badgeSlider {
+    width: 100%;
+    overflow: hidden;
+    padding: 0px 30px;
+}
+
+/* .badgeSlider .slick-track {
+    width: 100% !important;
+    height: 100%;
+} */
+
+.badgeSlider .badgeSlide {
+    width: 100%;
+}
+
+.badgeSlider .slick-arrow {
+    top: 50%;
+    bottom: auto;
+    left: 0 !important;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+}
+
+.badgeSlider .slick-arrow::after {
+    color: #fff !important;
+    font-size: 12px;
+}
+
+.badgeSlider .slick-arrow.next-arrow {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.dossierCard .badge {
+
+    font-size: 10px;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+}
+
+
+
+.dossierCard .badge.smash {
+
+    background: #ef4444;
+
+}
+
+
+
+.dossierCard .badge.net {
+
+    background: #3b82f6;
+
+}
+
+
+
+.dossierCard .badge.def {
+
+    background: #22c55e;
+
+}
+
+
+
+/* Refer */
+
+.dossierCard .refer {
+
+    width: 100%;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    border: none;
+
+    background: #38bdf8;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+
+
+
+/* ===== CENTER ===== */
+
+.playerhub_sec .panel .scrollbox {
+
+    max-height: 350px;
+
+    overflow-y: auto;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.playerhub_sec .panel .scrollbox::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+
+.playerhub_sec .center-panel .card {
+
+    border: 1px solid #176c91;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    box-shadow: 0 0 5px 0px rgba(68, 193, 239, 0.35);
+
+    background: #334155;
+
+}
+
+
+
+.playerhub_sec .card .content {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 5px;
+
+}
+
+
+
+.playerhub_sec .card h4 {
+
+    font-size: 85%;
+
+    margin-bottom: 6px;
+
+}
+
+
+
+.playerhub_sec .tag {
+
+    font-size: 70%;
+
+    background: #22c55e;
+
+    color: #fff;
+
+    padding: 2px 6px;
+
+    border-radius: 6px;
+
+    margin-left: 6px;
+
+}
+
+
+
+.playerhub_sec .tag.close {
+
+    background: #c52522;
+
+}
+
+
+
+.playerhub_sec .card .info-grid {
+
+    /* display: grid; */
+
+    /* grid-template-columns: 1fr 1fr; */
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+}
+
+
+
+.playerhub_sec .card .info {
+
+    /* background: rgba(30, 41, 59, .6); */
+
+    border-radius: 10px;
+
+    /* padding: 5px 10px; */
+
+    font-size: 65%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    white-space: nowrap;
+
+}
+
+
+
+.playerhub_sec .card .info span {
+
+    display: block;
+
+    color: #94a3b8;
+
+}
+
+
+
+.playerhub_sec .button_box {
+
+    display: flex;
+
+    gap: 6px;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+}
+
+
+
+.playerhub_sec .joinbtn {
+
+    font-size: 70%;
+
+    padding: 2px 6px;
+
+    margin: 0;
+
+    border-radius: 6px;
+
+    border: 1px solid #fff;
+
+    background-color: #fff;
+
+    color: #535252;
+
+    box-shadow: none;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+}
+
+
+
+/*=== tournament card css =====*/
+
+.tournamentCard {
+
+    border: 1px solid #176c91;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    box-shadow: 0 0 5px 0px rgba(68, 193, 239, 0.35);
+
+    background: #334155;
+
+}
+
+
+
+.tournamentCard .card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    /* align-items: center; */
+
+    padding: 0;
+
+}
+
+
+
+.tournamentCard .headwrap {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+
+.tournamentCard .badge {
+
+    background: #22c55e;
+
+    color: #022c22;
+
+    padding: 2px 10px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+}
+
+
+
+.tournamentCard .title {
+
+    font-size: 85%;
+
+    font-weight: 700;
+
+    margin: 0;
+
+}
+
+
+
+.tournamentCard .subtitle {
+
+    color: #94a3b8;
+
+    font-size: 85%;
+
+    font-weight: 600;
+
+}
+
+.tournamentCard .subtitle p {
+    font-size: 13px;
+}
+
+.tournamentCard .quoteDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.tournamentCard .quote {
+
+    margin: 8px 0;
+
+    font-style: italic;
+
+    font-size: 75%;
+
+    color: #cbd5f5;
+
+    border-left: 3px solid #38bdf8;
+
+    padding-left: 6px;
+
+}
+
+.regBtn {
+    background: #ff8100;
+    padding: 6px 8px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.regBtn p {
+    font-size: 12px;
+    margin-bottom: 0;
+}
+
+.resBtnDiv {
+    display: none;
+}
+
+
+
+.tournamentCard .content {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 5px;
+
+}
+
+
+
+.tournamentCard .info-grid {
+
+    /* display: grid; */
+
+    /* grid-template-columns: 1fr 1fr; */
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+}
+
+
+
+.tournamentCard .info {
+
+    /* background: rgba(30, 41, 59, .6); */
+
+    border-radius: 10px;
+
+    /* padding: 5px 10px; */
+
+    font-size: 65%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    white-space: nowrap;
+
+}
+
+.tournamentCard .info i {
+    color: #38bdf8;
+    font-size: 12px;
+}
+
+
+
+.tournamentCard .info span {
+
+    display: block;
+
+    color: #94a3b8;
+
+}
+
+
+
+.tournamentCard .actions {
+
+    display: flex;
+
+    gap: 6px;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+}
+
+
+
+
+
+/* ===== GEAR ===== */
+
+/* .casaStore {
+
+    border: 1px solid #176c91;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    box-shadow: 0 0 5px 0px rgba(68, 193, 239, 0.35);
+
+    background: #334155;
+
+} */
+
+
+
+.casaStore .store-title {
+
+    text-align: center;
+
+    margin-bottom: 14px;
+
+    font-size: 16px;
+
+}
+
+
+
+/* Store Item */
+
+.casaStore .store-item {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #176c91;
+
+    border-radius: 12px;
+
+    box-shadow: 0 0 5px 0px rgba(68, 193, 239, 0.35);
+
+    background: #334155;
+
+}
+
+
+
+.casaStore .store-item img {
+
+    width: 60px;
+
+    height: 75px;
+
+    border-radius: 8px;
+
+    object-fit: cover;
+
+}
+
+.casaStore .store-item .storeItemTop {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+/* Info */
+
+.casaStore .item-info {
+
+    flex: 1;
+
+}
+
+
+
+.casaStore .item-info h4 {
+    width: calc(100% - 75px);
+    padding-right: 5px;
+    font-size: 12px;
+
+    margin: 0 0 4px;
+
+}
+
+
+
+.casaStore .price {
+
+    font-size: 11px;
+
+    color: #38bdf8;
+
+    margin-bottom: 4px;
+    width: 75px;
+    text-align: right;
+
+}
+
+
+
+.casaStore .order {
+
+    font-size: 11px;
+
+    margin-bottom: 6px;
+
+}
+
+
+
+.casaStore .no-order {
+
+    font-size: 11px;
+
+    color: #94a3b8;
+
+    font-style: italic;
+
+}
+
+
+
+/* Status */
+
+.casaStore .status {
+
+    font-size: 10px;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    display: inline-block;
+
+}
+
+
+
+.casaStore .status.delivered {
+
+    background: #22c55e;
+
+    color: #022c22;
+
+}
+
+
+
+.casaStore .status.pending {
+
+    background: #f59e0b;
+
+    color: #3a2500;
+
+}
+
+
+
+.casastore_btn {
+
+    width: 100%;
+
+    height: auto;
+
+    padding: 8px 18px;
+
+    border-radius: 6px;
+
+    background-color: var(--bs-primary);
+
+    color: var(--bs-text-white);
+
+    border: 1px solid var(--bs-primary);
+
+    text-align: center;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    box-shadow: none;
+
+    display: block;
+
+    font-size: 80%;
+
+    font-weight: 500;
+
+    line-height: normal;
+
+}
+
+
+
+.casastore_btn:hover {
+
+    color: var(--bs-text-white);
+
+}
+
+
+
+/* ===== ACHIEVEMENTS ===== */
+
+.playerhub_sec .badges {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+
+
+.playerhub_sec .badge {
+
+    flex: 1;
+
+    padding: 5px 10px;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    width: 100%;
+
+}
+
+
+
+.playerhub_sec .info_btn {
+
+    background-color: transparent;
+
+    color: #b8c3d1;
+
+    border: 1px solid #b8c3d1;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    box-shadow: none;
+
+}
+
+
+
+.playerhub_sec .info_btn:hover {
+
+    color: #38bdf8;
+
+    border: 1px solid #38bdf8;
+
+}
+
+
+
+.achievement_box {
+
+    width: 100%;
+
+    height: auto;
+
+    background-color: var(--bs-body);
+
+    color: var(--bs-heading);
+
+    padding: 30px 20px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.achievement_box:last-child {
+
+    margin-bottom: 0;
+
+}
+
+
+
+.achievement_box i {
+
+    font-size: 220%;
+
+    color: #e17603;
+
+}
+
+
+
+.achievement_box .text {
+
+    font-size: 120%;
+
+    font-weight: 600;
+
+    text-align: center;
+
+    color: var(--bs-heading);
+
+    max-width: 300px;
+
+    /* text-transform: uppercase; */
+
+}
+
+
+
+/* ===== REVIEW ===== */
+
+.playerhub_sec .review {
+
+    margin-top: 20px;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    background: linear-gradient(180deg, #fef3c7, #eab308);
+
+    color: #1e293b;
+
+    text-align: center;
+
+    box-shadow: 0px 0px 5px 0px #ccc;
+
+}
+
+
+
+.playerhub_sec .review button {
+
+    margin-top: 12px;
+
+    padding: 10px 26px;
+
+    border-radius: 30px;
+
+    border: none;
+
+    background: #fff;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+/* schedule modal */
+.scheduleTable {
+    width: 100%;
+    overflow-y: auto;
+
+    table {
+        width: 100%;
+
+        th {
+            background-color: #0ea5e9;
+            color: #fff;
+            font-size: 14px;
+            padding: 8px 10px;
+
+            &:not(:last-child) {
+                border-right: 1px solid #fff;
+            }
+        }
+
+        td {
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        tbody {
+            tr {
+                &:first-child {
+                    td {
+                        border-top: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Refer modal */
+#ReferModal {
+    .modal-body {
+        p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+
+            i {
+                color: #0ea5e9;
+                font-size: 13px;
+            }
+
+            span {
+                width: calc(100% - 20px);
+                padding-left: 8px;
+            }
+        }
+
+        ul {
+            li {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .modal-footer {
+        display: none;
+    }
+}
+
+/* review slider */
+.reviewSlider {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0px auto;
+
+    .slick-slide {
+        width: 100%;
+        height: auto;
+    }
+
+    .reviewSlide {
+        padding: 0px 8px;
+
+        .reviewCard {
+            background-color: #fff;
+            padding: 15px 12px 25px;
+            border-radius: 12px;
+
+            .reviewTextDiv {
+                width: 100%;
+                max-height: 100px;
+                overflow-y: auto;
+                padding-right: 8px;
+
+                p {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .slick-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -50px !important;
+        bottom: auto;
+        width: 42px;
+        height: 42px;
+        border-radius: 50% !important;
+        padding: 0 !important;
+
+        &.next-arrow {
+            left: auto !important;
+            right: -50px !important;
+        }
+    }
+}
+
+#reviewmodal .formatter {
+    margin-bottom: 20px;
+}
+
+#reviewmodal .formatter .btn {
+    background-color: #0ea5e9;
+    padding: 6px;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-bottom: 8px;
+    width: 30px;
+    height: 30px;
+    color: #fff;
+    font-size: 15px;
+}
+
+#reviewmodal .formatter .btn i {
+    font-size: 16px;
+    color: #fff;
+}
+
+#reviewmodal .edit-text {
+    box-sizing: border-box;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    height: 140px;
+    border-radius: 5px;
+    overflow-y: auto;
+    border: 1px solid #575757;
+}
+
+
+#reviewmodal .reviewCancelBtn {
+    background-color: #2e424b;
+    width: 150px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+#reviewmodal .reviewBtn {
+    background-color: #0ea5e9;
+    width: 150px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+/* edit profile modal */
+.editProfileModal {
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --success-color: #27ae60;
+    --light-bg: #f8f9fa;
+    --border-color: #e0e6ed;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --disabled-bg: #f5f7fa;
+    --disabled-text: #95a5a6;
+
+    /* =========================
+       MODAL OVERLAY
+    ========================= */
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 550px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .modal-body {
+        padding: 30px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding: 20px 30px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* =========================
+       PROFILE PICTURE
+    ========================= */
+
+    .profile-pic-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+    .profile-pic-container {
+        margin-bottom: 20px;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#667eea,#764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: #fff;
+        border: 4px solid #fff;
+        box-shadow: 0 10px 30px rgba(102,126,234,0.3);
+    }
+
+    .pic-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .pic-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--border-color);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: .3s;
+        color: var(--text-light);
+
+        &:hover {
+            background: var(--light-bg);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        &.delete:hover {
+            background:#fee;
+            border-color:#e74c3c;
+            color:#e74c3c;
+        }
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dark);
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 8px;
+    }
+
+    /* INPUTS */
+
+    .field-input,
+    .field-select,
+    .field-input-readonly {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-dark);
+        transition: .2s;
+    }
+
+    .field-input:focus,
+    .field-select:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(52,152,219,.1);
+    }
+
+    .field-input-readonly {
+        background: var(--disabled-bg);
+        cursor: not-allowed;
+    }
+
+    /* SELECT */
+
+    .field-select {
+        appearance: none;
+        cursor: pointer;
+        padding-right: 36px;
+
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 18px;
+    }
+
+    .select-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    /* EDITABLE FIELD */
+
+    .editable-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .edit-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: .2s;
+
+        &:hover {
+            background: var(--light-bg);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+    }
+
+    /* =========================
+       PERMISSIONS
+    ========================= */
+
+    .permission-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .radio-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+
+        input {
+            accent-color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    }
+
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1600px) {
+    .tournamentcard_slider .tournament_card .name {
+        font-size: 16px;
+    }
+
+    .tournamentcard_slider .tournament_card .tagline {
+        font-size: 14px;
+    }
+
+
+    .tournamentCardIcon {
+        width: 16px;
+    }
+
+    .tournament_card i {
+        font-size: 13px;
+    }
+
+    .tournamentcard_slider .category-line i {
+        font-size: 10px;
+    }
+
+    .tournamentCardTxt {
+        width: calc(100% - 16px);
+        padding-left: 3px;
+    }
+
+    .tournamentCardTxt p,
+    .tournamentCardTxt strong,
+    .tournamentCardTxt span {
+        font-size: 13px;
+    }
+
+    .tournamentcard_slider .tournament_card .openBtn span {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1480px) {
+    .playerhub_sec .panel {
+        width: 22.5%;
+    }
+
+    .playerhub_sec .center-panel {
+        width: 55%;
+    }
+}
+
+@media (max-width: 1440px) {
+    .tournament_Details .image {
+        height: 550px;
+    }
+}
+
+
+@media (max-width: 1400px) {
+
+    #reviewmodal .reviewBtn,
+    #reviewmodal .reviewCancelBtn {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1365px) {
+    .price-tag {
+        flex-wrap: wrap;
+    }
+
+    .price-tag .tournamentCardCol {
+        width: 100% !important;
+    }
+
+    .price-tag .tournamentCardTxt {
+        width: 100%;
+    }
+
+    .playerhub_sec .main-grid {
+        flex-wrap: wrap;
+    }
+
+    .playerhub_sec .panel {
+        width: 100%;
+    }
+
+    .playerhub_sec .center-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .tournament_Details .tournamentCardIcon {
+        width: 20px;
+    }
+
+    .tournament_Details .tournamentCardTxt {
+        width: calc(100% - 20px);
+    }
+
+    .tournament_Details .tournamentCardTxt p,
+    .tournament_Details .tournamentCardTxt strong,
+    .tournament_Details .tournamentCardTxt span {
+        font-size: 15px;
+    }
+
+    .tournament_Details .tournamentCardIcon i {
+        font-size: 16px;
+    }
+
+    .tournament_Details .category-line .tournamentCardIcon i {
+        font-size: 14px;
+    }
+
+    #reviewmodal .reviewBtn,
+    #reviewmodal .reviewCancelBtn {
+        width: 110px;
+        height: 40px;
+    }
+}
+
+
+@media (max-width: 991px) {
+
+    .playerhub_sec .wraper {
+
+        padding: 8px;
+
+    }
+
+
+
+    .playerhub_sec .main-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .tournamentcard_slider {
+        padding-bottom: 40px;
+    }
+
+    .tournamentcard_slider .slide-arrow {
+        top: auto;
+        bottom: 0;
+    }
+
+    .tournament_Details .image {
+        height: auto;
+    }
+
+    .tournament_Details .content {
+        padding-top: 85px;
+    }
+
+    .tournament_Details .openBtn span {
+        font-size: 17px;
+    }
+
+    .tournament_Details .name {
+        margin: 0px 0px 6px 0px;
+    }
+
+    .tournament_Details .subHead p {
+        font-size: 15px;
+    }
+
+
+
+    /* order change */
+
+    .playerhub_sec .panel:nth-child(2) {
+
+        order: 1;
+
+    }
+
+
+
+    .playerhub_sec .panel:nth-child(1) {
+
+        order: 2;
+
+    }
+
+
+
+    .playerhub_sec .panel:nth-child(3) {
+
+        order: 3;
+
+    }
+
+    .playerhub_sec .header_Box_Right select {
+        font-size: 11px;
+    }
+
+    .scheduleTable {
+        table {
+
+            th,
+            td {
+                white-space: nowrap;
+            }
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .playerhub_sec .header_box {
+        justify-content: center;
+    }
+
+    .playerhub_sec .header_Box_left {
+        justify-content: center;
+        width: 100%;
+    }
+
+    #reviewmodal .reviewBtn,
+    #reviewmodal .reviewCancelBtn {
+        font-size: 14px;
+    }
+
+    .resBtnDiv {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        padding-top: 20px;
+    }
+
+    .resBtnDiv .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .resBtnDiv .regBtn {
+        padding: 0;
+        background-color: #fff;
+    }
+
+    .resBtnDiv .regBtn p {
+        font-size: 70%;
+        padding: 2px 6px;
+        margin: 0;
+        border-radius: 6px;
+        border: 1px solid #fff;
+        background-color: #fff;
+        color: #535252;
+        box-shadow: none;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .quoteDiv.deskView,
+    .content .actions.deskView {
+        display: none;
+    }
+
+    .resBtnDiv .quoteDiv {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .playerhub_sec .panel .scrollbox .card {
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+    }
+
+    .playerhub_sec .card .content {
+        justify-content: flex-start !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .playerhub_sec .joinbtn span {
+        display: none;
+    }
+
+    .playerhub_sec .joinbtn i {
+        font-size: 15px;
+    }
+
+    .tournamentCard .card-header {
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+
+
+    .tournamentCard .subtitle p {
+        font-size: 85%;
+        margin-bottom: 0;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .tournament_Details .tournamentCardTxt p,
+    .tournament_Details .tournamentCardTxt strong,
+    .tournament_Details .tournamentCardTxt span {
+        font-size: 13px;
+    }
+
+    .playerhub_sec .header_box span {
+        font-size: 11px;
+    }
+
+    .playerhub_sec .header_Box_Right select {
+        font-size: 10px;
+        padding: 6px 7px;
+    }
+
+    .playerhub_sec .header_box span i {
+        font-size: 15px;
+    }
+}
