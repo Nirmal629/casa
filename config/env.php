@@ -28,6 +28,11 @@ function load_env_file($path)
             continue;
         }
 
+        // Strip surrounding quotes if present
+        if ((strlen($value) >= 2) && (($value[0] === '"' && $value[strlen($value) - 1] === '"') || ($value[0] === "'" && $value[strlen($value) - 1] === "'"))) {
+            $value = substr($value, 1, -1);
+        }
+
         if (!array_key_exists($name, $_ENV) && !array_key_exists($name, $_SERVER)) {
             $_ENV[$name] = $value;
             putenv($name . '=' . $value);
@@ -50,13 +55,13 @@ function env($key, $default = null)
 }
 
 $baseDir = dirname(__DIR__);
-$envMode = env('APP_ENV', 'local');
+
+// Priority: .env.prod > .env.local > .env
+// This way, production will auto-detect .env.prod without needing APP_ENV set
 $envFile = $baseDir . '/.env';
 
-if ($envMode === 'production' || $envMode === 'prod') {
-    if (is_file($baseDir . '/.env.prod')) {
-        $envFile = $baseDir . '/.env.prod';
-    }
+if (is_file($baseDir . '/.env.prod')) {
+    $envFile = $baseDir . '/.env.prod';
 } elseif (is_file($baseDir . '/.env.local')) {
     $envFile = $baseDir . '/.env.local';
 }
