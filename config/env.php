@@ -56,14 +56,14 @@ function env($key, $default = null)
 
 $baseDir = dirname(__DIR__);
 
-// Priority: .env.prod > .env.local > .env
-// This way, production will auto-detect .env.prod without needing APP_ENV set
+// Priority: .env.local (local dev) > .env.prod (production) > .env (fallback)
+// This way, local dev will use .env.local credentials when present
 $envFile = $baseDir . '/.env';
 
-if (is_file($baseDir . '/.env.prod')) {
-    $envFile = $baseDir . '/.env.prod';
-} elseif (is_file($baseDir . '/.env.local')) {
+if (is_file($baseDir . '/.env.local')) {
     $envFile = $baseDir . '/.env.local';
+} elseif (is_file($baseDir . '/.env.prod')) {
+    $envFile = $baseDir . '/.env.prod';
 }
 
 load_env_file($envFile);
