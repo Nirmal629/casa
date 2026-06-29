@@ -609,7 +609,8 @@ $initialTeam2Score = ($matchData && ($matchData['STATUS'] ?? '') === 'RUNNING') 
         teamBPlayers: <?php echo json_encode($team2PlayerRows); ?>,
         matchStatus: <?php echo json_encode($matchData['STATUS'] ?? 'PENDING'); ?>,
         initialScoreA: <?php echo (int)$initialTeam1Score; ?>,
-        initialScoreB: <?php echo (int)$initialTeam2Score; ?>
+        initialScoreB: <?php echo (int)$initialTeam2Score; ?>,
+        defaultSetLimit: <?php echo (($matchData['STAGE'] ?? '') === 'GROUP') ? 1 : 3; ?>
     };
 </script>
 <?php include "includes/scorer-footer.php"; ?>

@@ -59,10 +59,12 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
 
 
         <?php
-        date_default_timezone_set('America/Toronto');
-        // DB connection ($conn) is already provided by inner-header.php
-        // Assuming you have a connection to the database ($conn)
-        $sql = "SELECT * FROM ca_events WHERE HOST_ID='".$_SESSION['user_id']."' and STATUS='Active' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        include_once __DIR__ . '/dbConnection.php';
+        
+        $sql = "SELECT * FROM ca_events WHERE HOST_ID='" . intval($_SESSION['user_id']) . "' and STATUS='Active' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {
@@ -274,7 +276,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
 <!-----View-modal------->
 <section class="customModal_wrap hostgameview_modal">
     <div class="customModal_body">
-        <h6 class="customModal_head">Invite/Add Players</h6>
+        <h6 class="customModal_head">Add Players</h6>
         <button type="submit" class="customModal_close btn">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -296,7 +298,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
             </div>
         
             <div class="col-6 col-md-4">
-                <label for="sgenderSkillLevell" class="form-label">Skill Level<span>*</span></label>
+                <label for="sgenderSkillLevell" class="form-label">Level<span>*</span></label>
                 <select class="form-select form-control" id="sgenderSkillLevell">
                     <option selected value="Beginner">Beginner</option>
                     <option value="Amateur">Amateur</option>

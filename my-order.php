@@ -1,15 +1,22 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // print_r($_SESSION);exit;
-include('dbConnection.php');
+include_once __DIR__ . '/dbConnection.php';
 
-
-if(!isset($_SESSION['user_id'])){
+if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
 
-$userId = intval($_SESSION['email']);
+$currentUserId = intval($_SESSION['user_id']);
+$userEmail = '';
+$userResult = $conn->query("SELECT EMAIL FROM ca_users WHERE ID = $currentUserId LIMIT 1");
+if ($userResult && $userResult->num_rows > 0) {
+    $userRow = $userResult->fetch_assoc();
+    $userEmail = $conn->real_escape_string($userRow['EMAIL']);
+}
 // echo "
 // SELECT o.ORDER_ID,
 //       o.BOOKING_NO,
@@ -31,7 +38,9 @@ $userId = intval($_SESSION['email']);
    FETCH USER ORDERS
 ============================= */
 
-$orders = $conn->query("
+$orders = false;
+if ($userEmail !== '') {
+    $orders = $conn->query("
 SELECT o.ORDER_ID,
        o.BOOKING_NO,
        o.ORDER_DATE,
@@ -44,9 +53,10 @@ SELECT o.ORDER_ID,
        i.PAYMENT_STATUS
 FROM ca_orders o
 JOIN ca_orders_item i ON i.ORDER_ID=o.ORDER_ID
-WHERE o.EMAIL = $userId
+WHERE o.EMAIL = '$userEmail'
 ORDER BY o.ORDER_DATE DESC
 ");
+}
 ?>
 
 <?php include "includes/store-header.php"; ?>

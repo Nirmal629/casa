@@ -54,7 +54,7 @@
 
         <!-----css file link----->
 
-        <link rel="stylesheet" href="assets/css/scorer.css?v=1.40" type="text/css">
+        <link rel="stylesheet" href="assets/css/scorer.css?v=1.49" type="text/css">
     </head>
 
 

@@ -36,8 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_message = mysqli_real_escape_string($conn, $_POST['event_message']);
 
     // SQL Query to insert data into the database
-    $sql = "INSERT INTO ca_events (HOST_ID,HOST_NAME, EVENT_COUNTRY, EVENT_PROVINCE, EVENT_CITY, EVENT_CURRENCY, EVENT_VENUE, EVENT_CATEGORY, GENDER_CATEGORY, GENDER_SKILL_LEVEL, EVENT_TYPE, EVENT_DATE, EVENT_TIME,TO_TIME,CANCEL_DATE,CANCEL_TIME, EVENT_COST, EVENT_DISCOUNT, EVENT_DESCRIPTION, EVENT_MESSAGE)
+    echo $sql = "INSERT INTO ca_events (HOST_ID,HOST_NAME, EVENT_COUNTRY, EVENT_PROVINCE, EVENT_CITY, EVENT_CURRENCY, EVENT_VENUE, EVENT_CATEGORY, GENDER_CATEGORY, GENDER_SKILL_LEVEL, EVENT_TYPE, EVENT_DATE, EVENT_TIME,TO_TIME,CANCEL_DATE,CANCEL_TIME, EVENT_COST, EVENT_DISCOUNT, EVENT_DESCRIPTION, EVENT_MESSAGE)
         VALUES ('".$_SESSION['user_id']."','$host_name', '$event_country', '$event_province', '$event_city', '$event_currency', '$event_venue', '$event_category', '$gender_category', '$gender_skill_level', '$event_type', '$event_date', '$event_time','$to_time','$freeze_date','$freeze_time', '$event_cost', '$event_discount', '$event_description', '$event_message')";
+exit;
 
     if ($conn->query($sql) === TRUE) {
             echo "<script>alert('New Event Created Successfully.');</script>";

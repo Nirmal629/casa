@@ -1,5 +1,10 @@
 <?php
-// DB connection ($conn) is already provided by inner-header.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+date_default_timezone_set('America/Toronto');
+include_once __DIR__ . '/dbConnection.php';
 
 $currentYear = date('Y');
 $currentMonth = date('n');

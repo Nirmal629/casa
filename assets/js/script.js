@@ -1081,7 +1081,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: "api/fetch_payment.php",
+                url: "https://casainfotech.com/staging/api/fetch_payment.php",
 
                 type: "POST",
 
@@ -1171,7 +1171,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "api/view_player_pay.php",
+            url: "https://casainfotech.com/staging/api/view_player_pay.php",
 
             type: "POST",
 
@@ -1215,7 +1215,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/filter_host_payment.php',
+            url: 'https://casainfotech.com/staging/api/filter_host_payment.php',
 
             data: {
 
@@ -1685,7 +1685,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'api/create_event_sub.php',
+            url: 'https://casainfotech.com/staging/api/create_event_sub.php',
 
             type: 'POST',
 
@@ -1879,7 +1879,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'api/create_event_sub.php',
+            url: 'https://casainfotech.com/staging/api/create_event_sub.php',
 
             type: 'POST',
 
@@ -2035,7 +2035,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'api/copy_event.php',
+            url: 'https://casainfotech.com/staging/api/copy_event.php',
 
             type: 'POST',
 
@@ -2065,7 +2065,7 @@ $(document).ready(function () {
 
                         type: "POST",
 
-                        url: 'api/filter_schedule.php',
+                        url: 'https://casainfotech.com/staging/api/filter_schedule.php',
 
                         data: {
 
@@ -2119,7 +2119,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/delete_event.php',
+                url: 'https://casainfotech.com/staging/api/delete_event.php',
 
                 type: 'POST',
 
@@ -2183,7 +2183,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/join_event.php',
+                url: 'https://casainfotech.com/staging/api/join_event.php',
 
                 type: 'POST',
 
@@ -2253,7 +2253,7 @@ $(document).ready(function () {
     
             $.ajax({
     
-                url: 'api/join_event_default.php',
+                url: 'https://casainfotech.com/staging/api/join_event_default.php',
     
                 type: 'POST',
     
@@ -2327,9 +2327,9 @@ $(document).ready(function () {
 
         let url = isJoined
 
-            ? 'api/cancel_event_default.php'
+            ? 'https://casainfotech.com/staging/api/cancel_event_default.php'
 
-            : 'api/join_event_default.php';
+            : 'https://casainfotech.com/staging/api/join_event_default.php';
 
 
 
@@ -2413,7 +2413,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/cancel_event.php',
+                url: 'https://casainfotech.com/staging/api/cancel_event.php',
 
                 type: 'POST',
 
@@ -2489,7 +2489,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/update_inviteJoin.php',
+                url: 'https://casainfotech.com/staging/api/update_inviteJoin.php',
 
                 type: 'POST',
 
@@ -2575,7 +2575,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: "api/new-game-host.php", // Ensure this file handles AJAX requests
+            url: "https://casainfotech.com/staging/api/new-game-host.php", // Ensure this file handles AJAX requests
 
             data: formData,
 
@@ -2683,7 +2683,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_joined_invited.php',
+            url: 'https://casainfotech.com/staging/api/view_joined_invited.php',
 
             data: parseData,
 
@@ -2725,7 +2725,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_joined_all.php',
+            url: 'https://casainfotech.com/staging/api/view_joined_all.php',
 
             data: parseData,
 
@@ -2765,7 +2765,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_joined_all_default.php',
+            url: 'https://casainfotech.com/staging/api/view_joined_all_default.php',
 
             data: parseData,
 
@@ -2811,7 +2811,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_player.php',
+            url: 'https://casainfotech.com/staging/api/view_player.php',
 
             data: parseData,
 
@@ -2843,7 +2843,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/same_paymentByhost.php',
+            url: 'https://casainfotech.com/staging/api/same_paymentByhost.php',
 
             data: {
 
@@ -2937,7 +2937,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/save_invitation.php', // PHP script to handle the request
+                url: 'https://casainfotech.com/staging/api/save_invitation.php', // PHP script to handle the request
 
                 type: 'POST',
 
@@ -2979,7 +2979,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/save_invitation.php', // PHP script to handle the request
+                url: 'https://casainfotech.com/staging/api/save_invitation.php', // PHP script to handle the request
 
                 type: 'POST',
 
@@ -3055,7 +3055,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/save_confirm.php', // PHP script to handle the request
+                url: 'https://casainfotech.com/staging/api/save_confirm.php', // PHP script to handle the request
 
                 type: 'POST',
 
@@ -3097,7 +3097,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'api/save_confirm.php', // PHP script to handle the request
+                url: 'https://casainfotech.com/staging/api/save_confirm.php', // PHP script to handle the request
 
                 type: 'POST',
 
@@ -3149,7 +3149,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "api/update_price.php", // Backend PHP script
+            url: "https://casainfotech.com/staging/api/update_price.php", // Backend PHP script
 
             type: "POST",
 
@@ -3227,7 +3227,7 @@ $(document).ready(function () {
 
     //                 type: "POST",
 
-    //                 url: "api/search_result.php", // Replace with your actual API endpoint
+    //                 url: "https://casainfotech.com/staging/api/search_result.php", // Replace with your actual API endpoint
 
     //                 data: { query: searchText,ID:gameIdN,HOST_ID:hostIdN },
 
@@ -3245,7 +3245,7 @@ $(document).ready(function () {
 
     //                 type: "POST",
 
-    //                 url: "api/search_result.php", // Replace with your actual API endpoint
+    //                 url: "https://casainfotech.com/staging/api/search_result.php", // Replace with your actual API endpoint
 
     //                 data: { query: "",ID:gameIdN,HOST_ID:hostIdN },
 
@@ -3295,7 +3295,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: "api/search_result.php",
+            url: "https://casainfotech.com/staging/api/search_result.php",
 
             data: {
 
@@ -3399,7 +3399,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "api/save_payment.php",
+            url: "https://casainfotech.com/staging/api/save_payment.php",
 
             type: "POST",
 
@@ -3491,7 +3491,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: "api/fetch_payment.php",
+                url: "https://casainfotech.com/staging/api/fetch_payment.php",
 
                 type: "POST",
 
@@ -3557,7 +3557,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_player_paymentHis.php',
+            url: 'https://casainfotech.com/staging/api/view_player_paymentHis.php',
 
             data: {
 
@@ -3593,7 +3593,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_player_paylist.php',
+            url: 'https://casainfotech.com/staging/api/view_player_paylist.php',
 
             data: {
 
@@ -3631,7 +3631,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/com_filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
 
             data: {
 
@@ -3669,7 +3669,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/view_game_player.php',
+            url: 'https://casainfotech.com/staging/api/view_game_player.php',
 
             data: {
 
@@ -3723,7 +3723,7 @@ $(document).ready(function () {
 
                 type: 'POST',
 
-                url: 'api/rollback_event.php',
+                url: 'https://casainfotech.com/staging/api/rollback_event.php',
 
                 data: {
 
@@ -3737,7 +3737,7 @@ $(document).ready(function () {
 
                 success: function (response) {
 
-                    window.location.href = 'host-dashboard.php';
+                    window.location.href = 'https://casainfotech.com/staging/host-dashboard.php';
 
                 },
 
@@ -3781,7 +3781,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/update_paymentHis.php',
+            url: 'https://casainfotech.com/staging/api/update_paymentHis.php',
 
             data: {
 
@@ -3997,7 +3997,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/filter_schedule.php',
 
             data: {
 
@@ -4037,7 +4037,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/filter_host_payment.php',
+            url: 'https://casainfotech.com/staging/api/filter_host_payment.php',
 
             data: {
 
@@ -4069,7 +4069,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/filter_schedule.php',
 
             data: {
 
@@ -4121,7 +4121,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/com_filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
 
             data: {
 
@@ -4151,7 +4151,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/com_filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
 
             data: {
 
@@ -4184,9 +4184,8 @@ $(document).ready(function () {
     })
 
 
-    $("#year, #month, #event_category").change(function () {
-        $("#play_filter").click();
-    });
+
+
 
     $("#play_filter").click(function () {
 
@@ -4202,7 +4201,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/play_filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/play_filter_schedule.php',
 
             data: {
 
@@ -4240,7 +4239,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/play_filter_schedule.php',
+            url: 'https://casainfotech.com/staging/api/play_filter_schedule.php',
 
             data: {
 
@@ -4286,9 +4285,6 @@ $(document).ready(function () {
 
     })
 
-    $("#comyear, #commonth").change(function () {
-        $("#play_com_filter").click();
-    });
 
     $("#play_com_filter").click(function () {
 
@@ -4304,7 +4300,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/player_filter_complete.php',
+            url: 'https://casainfotech.com/staging/api/player_filter_complete.php',
 
             data: {
 
@@ -4336,7 +4332,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/player_filter_complete.php',
+            url: 'https://casainfotech.com/staging/api/player_filter_complete.php',
 
             data: {
 
@@ -4392,7 +4388,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/pay_filter_complete.php',
+            url: 'https://casainfotech.com/staging/api/pay_filter_complete.php',
 
             data: {
 
@@ -4424,7 +4420,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'api/pay_filter_complete.php',
+            url: 'https://casainfotech.com/staging/api/pay_filter_complete.php',
 
             data: {
 

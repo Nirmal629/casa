@@ -121,9 +121,12 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                 </thead>
                 <tbody>
                     <?php
-                    // DB connection ($conn) is already provided by inner-header.php
-        // Assuming you have a connection to the database ($conn)
-        $sql = "SELECT * FROM ca_events WHERE STATUS!='Active' AND HOST_ID='".$_SESSION['user_id']."' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    include_once __DIR__ . '/dbConnection.php';
+        
+        $sql = "SELECT * FROM ca_events WHERE STATUS!='Active' AND HOST_ID='" . intval($_SESSION['user_id']) . "' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {

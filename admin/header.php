@@ -1,15 +1,14 @@
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
 
-if(!isset($_SESSION['user_id']))
+if (!isset($_SESSION['user_id'])) {
 
-{
+	header("Location: index.php");
 
-    header("Location: index.php");
-
-    exit();
-
+	exit();
 }
 
 ?>
@@ -238,4 +237,4 @@ if(!isset($_SESSION['user_id']))
 
 			</header> -->
 
-			<!-- end: header -->
+		<!-- end: header -->

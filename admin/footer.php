@@ -52,7 +52,33 @@
 		<!-- Examples -->
 		<script src="assets/javascripts/dashboard/examples.dashboard.js"></script>
 		<script>
-		    $('#datatable-default').DataTable();
+		    if ($.fn.DataTable && $('#datatable-default').length && !$.fn.DataTable.isDataTable('#datatable-default')) {
+		        $('#datatable-default').DataTable({
+		            autoWidth: false,
+		            scrollX: true
+		        });
+		    }
+
+		    $(function () {
+		        $('.sidebar-toggle')
+		            .off('click.toggleClass')
+		            .css('cursor', 'pointer')
+		            .on('click.sidebarDesktopToggle', function (event) {
+		                event.preventDefault();
+
+		                if (window.innerWidth < 768) {
+		                    return;
+		                }
+
+		                var $html = $('html');
+		                $html.toggleClass('sidebar-left-collapsed');
+
+		                $(window).trigger('sidebar-left-toggle', {
+		                    added: $html.hasClass('sidebar-left-collapsed'),
+		                    removed: !$html.hasClass('sidebar-left-collapsed')
+		                });
+		            });
+		    });
 		</script>
 
 	</body>

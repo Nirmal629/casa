@@ -189,24 +189,40 @@ function maybeCreateNextStage(PDO $pdo, int $tournamentId, string $completedStag
         }
 
         $topStmt = $pdo->prepare("
-            SELECT TEAM_ID
+            SELECT GROUP_NAME, TEAM_ID
             FROM to_standings
             WHERE TOURNAMENT_ID = :tournament_id
               AND STAGE = 'GROUP'
-            ORDER BY POINTS DESC, SCORE_DIFF DESC, SCORE_FOR DESC, SCORE_AGAINST ASC, RANK_NO ASC
-            LIMIT 8
+            ORDER BY GROUP_NAME, POINTS DESC, SCORE_DIFF DESC, SCORE_FOR DESC, SCORE_AGAINST ASC, RANK_NO ASC
         ");
         $topStmt->execute([':tournament_id' => $tournamentId]);
-        $seeded = array_map('intval', $topStmt->fetchAll(PDO::FETCH_COLUMN));
+        $qualifiedByGroup = [];
+        foreach ($topStmt->fetchAll(PDO::FETCH_ASSOC) as $standingRow) {
+            $groupName = (string)$standingRow['GROUP_NAME'];
+            if (!isset($qualifiedByGroup[$groupName])) {
+                $qualifiedByGroup[$groupName] = [];
+            }
+            if (count($qualifiedByGroup[$groupName]) < 2) {
+                $qualifiedByGroup[$groupName][] = (int)$standingRow['TEAM_ID'];
+            }
+        }
+
+        $seeded = [];
+        foreach ($qualifiedByGroup as $teamIds) {
+            if (count($teamIds) === 2) {
+                $seeded[] = $teamIds[0];
+                $seeded[] = $teamIds[1];
+            }
+        }
         if (count($seeded) < 8) {
             return;
         }
 
         createStageMatches($pdo, $tournamentId, 'QUARTER_FINAL', [
-            $seeded[0], $seeded[7],
-            $seeded[3], $seeded[4],
-            $seeded[1], $seeded[6],
-            $seeded[2], $seeded[5],
+            $seeded[0], $seeded[3],
+            $seeded[2], $seeded[1],
+            $seeded[4], $seeded[7],
+            $seeded[6], $seeded[5],
         ]);
         return;
     }
@@ -245,7 +261,7 @@ try {
     ]);
 
     $action = $_POST['action'] ?? '';
-    if (!in_array($action, ['start_match', 'record_point', 'undo_point'], true)) {
+    if (!in_array($action, ['start_match', 'record_point', 'undo_point', 'set_score_board'], true)) {
         jsonResponse(false, ['message' => 'Invalid action.']);
     }
 
@@ -271,6 +287,46 @@ try {
         $startStmt->execute([':match_id' => $matchId]);
 
         jsonResponse(true, ['status' => 'RUNNING']);
+    }
+
+    if ($action === 'set_score_board') {
+        $team1Score = max(0, (int)($_POST['team_1_score'] ?? 0));
+        $team2Score = max(0, (int)($_POST['team_2_score'] ?? 0));
+        $tournamentId = (int)$match['TOURNAMENT_ID'];
+
+        $pdo->beginTransaction();
+
+        $clearLogs = $pdo->prepare("
+            DELETE FROM to_match_rally_logs
+            WHERE MATCH_ID = :match_id
+        ");
+        $clearLogs->execute([':match_id' => $matchId]);
+
+        $updateMatch = $pdo->prepare("
+            UPDATE to_matches
+            SET TEAM_1_SCORE = :team_1_score,
+                TEAM_2_SCORE = :team_2_score,
+                WINNER_TEAM_ID = NULL,
+                STATUS = 'RUNNING'
+            WHERE ID = :match_id
+        ");
+        $updateMatch->execute([
+            ':team_1_score' => $team1Score,
+            ':team_2_score' => $team2Score,
+            ':match_id' => $matchId
+        ]);
+
+        if (($match['STAGE'] ?? '') === 'GROUP' && !empty($match['GROUP_NAME'])) {
+            recalculateGroupStandings($pdo, $tournamentId, (string)$match['GROUP_NAME']);
+        }
+
+        $pdo->commit();
+
+        jsonResponse(true, [
+            'team_1_score' => $team1Score,
+            'team_2_score' => $team2Score,
+            'status' => 'RUNNING'
+        ]);
     }
 
     if ($action === 'undo_point') {

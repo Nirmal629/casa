@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include 'dbConnection.php';
+include_once __DIR__ . '/../dbConnection.php';
 
 $cartCount = isset($_SESSION['cart'])
     ? array_sum(array_column($_SESSION['cart'], 'quantity'))

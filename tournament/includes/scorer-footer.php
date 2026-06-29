@@ -18,11 +18,38 @@
 <!----main-js----->
 <script src="assets/js/score.js?v=1.1"></script>
 <script>
+  function getConfiguredSetLimit(initialMatchData) {
+    const defaultLimit = parseInt(initialMatchData.defaultSetLimit || 3, 10) === 1 ? 1 : 3;
+    if ((initialMatchData.stage || '') !== 'GROUP') {
+      return 3;
+    }
+
+    try {
+      const storageKey = 'badmintonTournamentGameSets_' + parseInt(initialMatchData.tournamentId || 0, 10);
+      const config = JSON.parse(localStorage.getItem(storageKey) || '{}') || {};
+      return parseInt(config.GROUP || defaultLimit, 10) === 3 ? 3 : 1;
+    } catch (error) {
+      return defaultLimit;
+    }
+  }
+
+  function setsNeededToWin(setLimit) {
+    return setLimit === 1 ? 1 : 2;
+  }
+
+  function applySetLimitVisibility(setLimit) {
+    $('[data-set-row]').each(function () {
+      const rowSet = parseInt($(this).data('set-row') || 0, 10);
+      $(this).toggle(rowSet > 0 && rowSet <= setLimit);
+    });
+  }
+
   $(function () {
     if (!window.initialMatchData) {
       return;
     }
 
+    const configuredSetLimit = getConfiguredSetLimit(window.initialMatchData);
     const teamA = window.initialMatchData.teamA || [];
     const teamB = window.initialMatchData.teamB || [];
     const teamAPlayers = normalizeDoublesPlayers(window.initialMatchData.teamAPlayers, teamA);
@@ -74,11 +101,13 @@
       undoStack: [],
       sidesSwitched: false,
       thirdGameIntervalSwitched: false,
+      setLimit: configuredSetLimit,
       isStarted: (window.initialMatchData.matchStatus || '') === 'RUNNING',
       isSaving: false,
       isCompleted: false
     };
 
+    applySetLimitVisibility(configuredSetLimit);
     renderPlayableScore();
     renderDoublesCourt();
     renderMatchResult();
@@ -94,6 +123,29 @@
       updateCourtSwapButton();
       speakScore('Court swapped. ' + buildServeAnnouncement());
     });
+    $('.match-config-swap-team-a').on('click', function () {
+      swapInputValues('#t1_p1', '#t1_p2');
+    });
+    $('.match-config-swap-team-b').on('click', function () {
+      swapInputValues('#t2_p1', '#t2_p2');
+    });
+    $('#setScoreBoard').on('shown.bs.modal', function () {
+      renderSetScoreBoard(true);
+    });
+    $('#set-board-edit-a').on('click', function () {
+      enableSetBoardEdit('A');
+    });
+    $('#set-board-edit-b').on('click', function () {
+      enableSetBoardEdit('B');
+    });
+    $('#set-board-save-a, #set-board-save-b, #set-board-save-all').on('click', saveSetBoardManualScore);
+    $('#set-board-plus-a').on('click', function () {
+      addSetBoardPoint('A');
+    });
+    $('#set-board-plus-b').on('click', function () {
+      addSetBoardPoint('B');
+    });
+    $('#set-board-score-a, #set-board-score-b').on('input', updateSetBoardLiveScore);
     $('#undo-point, #set-board-undo-point').on('click', undoLastPoint);
     $('#matchConfig').modal('show');
   });
@@ -146,7 +198,50 @@
     $('#config-court-swap')
       .toggleClass('btn-info', swapped)
       .toggleClass('btn-outline-info', !swapped)
-      .html('<i class="fa-solid fa-right-left mr-1"></i> ' + (swapped ? 'COURT SWAPPED' : 'SWAP COURT'));
+      .attr('title', swapped ? 'Court swapped' : 'Swap court')
+      .html('<i class="fa-solid fa-right-left' + ($('#config-court-swap').hasClass('match-config-icon-btn') ? '' : ' mr-1') + '"></i>' + ($('#config-court-swap').hasClass('match-config-icon-btn') ? '' : ' ' + (swapped ? 'COURT SWAPPED' : 'SWAP COURT')));
+  }
+
+  function swapInputValues(firstSelector, secondSelector) {
+    const first = $(firstSelector);
+    const second = $(secondSelector);
+    const firstValue = first.val();
+    first.val(second.val());
+    second.val(firstValue);
+  }
+
+  function applyMatchConfigToState() {
+    const state = window.liveMatchState;
+    if (!state) {
+      return;
+    }
+    const team1Name = String($('#t1_name').val() || '').trim() || 'Team 1';
+    const team2Name = String($('#t2_name').val() || '').trim() || 'Team 2';
+    const teamAPlayer1 = String($('#t1_p1').val() || '').trim() || 'PLAYER NAME';
+    const teamAPlayer2 = String($('#t1_p2').val() || '').trim() || 'PLAYER NAME';
+    const teamBPlayer1 = String($('#t2_p1').val() || '').trim() || 'PLAYER NAME';
+    const teamBPlayer2 = String($('#t2_p2').val() || '').trim() || 'PLAYER NAME';
+
+    window.initialMatchData.team1Name = team1Name;
+    window.initialMatchData.team2Name = team2Name;
+    window.initialMatchData.teamA = [teamAPlayer1, teamAPlayer2];
+    window.initialMatchData.teamB = [teamBPlayer1, teamBPlayer2];
+    state.players.A[0].name = teamAPlayer1;
+    state.players.A[1].name = teamAPlayer2;
+    state.players.B[0].name = teamBPlayer1;
+    state.players.B[1].name = teamBPlayer2;
+
+    $('#team-a-player-1, #mini-team-a-player-1').val(teamAPlayer1);
+    $('#team-a-player-2, #mini-team-a-player-2').val(teamAPlayer2);
+    $('#team-b-player-1, #mini-team-b-player-1').val(teamBPlayer1);
+    $('#team-b-player-2, #mini-team-b-player-2').val(teamBPlayer2);
+    $('#team-a-names').html(teamAPlayer1 + '<br>' + teamAPlayer2);
+    $('#team-b-names').html(teamBPlayer1 + '<br>' + teamBPlayer2);
+    $('#left-court-team-name').text(team1Name);
+    $('#right-court-team-name').text(team2Name);
+    renderPlayableScore();
+    renderDoublesCourt();
+    renderMatchResult();
   }
 
   function speakScore(text) {
@@ -194,6 +289,8 @@
       return;
     }
 
+    applyMatchConfigToState();
+
     if (state.isStarted) {
       $('#matchConfig').modal('hide');
       setScoreButtonsEnabled(true);
@@ -230,6 +327,138 @@
     $('#team-b-set-two').text(state.setScores[1].b);
     $('#team-a-set-three').text(state.setScores[2].a);
     $('#team-b-set-three').text(state.setScores[2].b);
+    applySetLimitVisibility(state.setLimit || 3);
+    renderSetScoreBoard();
+  }
+
+  function renderSetScoreBoard(resetEditMode) {
+    const state = window.liveMatchState;
+    if (!state) {
+      return;
+    }
+
+    if (resetEditMode) {
+      setSetBoardReadOnly(true);
+    }
+
+    if (!setBoardIsEditing('A')) {
+      $('#set-board-score-a').val(state.scoreA);
+    }
+    if (!setBoardIsEditing('B')) {
+      $('#set-board-score-b').val(state.scoreB);
+    }
+    updateSetBoardLiveScore();
+    $('#set-board-team-a-name').text(getTeamName('A'));
+    $('#set-board-team-b-name').text(getTeamName('B'));
+    $('#set-board-team-a-players').html(state.players.A[0].name + '<br>' + state.players.A[1].name);
+    $('#set-board-team-b-players').html(state.players.B[0].name + '<br>' + state.players.B[1].name);
+    updateSetBoardEditingUi();
+  }
+
+  function enableSetBoardEdit(teamKey) {
+    const selector = teamKey === 'A' ? '#set-board-score-a' : '#set-board-score-b';
+    $(selector).prop('readonly', false).focus().select();
+    updateSetBoardEditingUi();
+  }
+
+  function setSetBoardReadOnly(readOnly) {
+    $('#set-board-score-a, #set-board-score-b').prop('readonly', readOnly);
+    updateSetBoardEditingUi();
+  }
+
+  function setBoardIsEditing(teamKey) {
+    if (teamKey === 'A') {
+      return !$('#set-board-score-a').prop('readonly');
+    }
+    if (teamKey === 'B') {
+      return !$('#set-board-score-b').prop('readonly');
+    }
+    return setBoardIsEditing('A') || setBoardIsEditing('B');
+  }
+
+  function updateSetBoardLiveScore() {
+    $('#set-board-live-score').text(readSetBoardScore('#set-board-score-a') + ' - ' + readSetBoardScore('#set-board-score-b'));
+  }
+
+  function updateSetBoardEditingUi() {
+    ['A', 'B'].forEach(function (teamKey) {
+      const suffix = teamKey.toLowerCase();
+      const editing = setBoardIsEditing(teamKey);
+      $('#set-board-plus-' + suffix).prop('disabled', !editing).toggleClass('is-disabled', !editing);
+      $('#set-board-save-' + suffix).prop('disabled', !editing).toggleClass('is-disabled', !editing);
+      $('#set-board-edit-' + suffix).toggleClass('is-active', editing);
+    });
+    $('#set-board-save-all').prop('disabled', !setBoardIsEditing()).toggleClass('is-disabled', !setBoardIsEditing());
+  }
+
+  function readSetBoardScore(selector) {
+    const value = parseInt($(selector).val(), 10);
+    if (Number.isNaN(value) || value < 0) {
+      return 0;
+    }
+    return Math.min(value, 99);
+  }
+
+  function addSetBoardPoint(teamKey) {
+    if (setBoardIsEditing(teamKey)) {
+      const selector = teamKey === 'A' ? '#set-board-score-a' : '#set-board-score-b';
+      $(selector).val(Math.min(readSetBoardScore(selector) + 1, 99));
+      updateSetBoardLiveScore();
+      return;
+    }
+  }
+
+  function saveSetBoardManualScore() {
+    const state = window.liveMatchState;
+    if (!state || state.isSaving) {
+      return;
+    }
+
+    const scoreA = readSetBoardScore('#set-board-score-a');
+    const scoreB = readSetBoardScore('#set-board-score-b');
+    state.isSaving = true;
+    saveManualSetScore(scoreA, scoreB).then(function () {
+      state.scoreA = scoreA;
+      state.scoreB = scoreB;
+      state.setScores[state.setNo - 1] = {a: scoreA, b: scoreB};
+      state.undoStack = [];
+      state.isStarted = true;
+      state.isCompleted = false;
+      startGame = true;
+      setSetBoardReadOnly(true);
+      renderPlayableScore();
+      renderDoublesCourt();
+      renderMatchResult();
+      setScoreButtonsEnabled(true);
+      speakScore('Manual score saved. ' + buildScoreAnnouncement());
+    }).catch(function (error) {
+      alert(error.message);
+    }).finally(function () {
+      state.isSaving = false;
+    });
+  }
+
+  function saveManualSetScore(scoreA, scoreB) {
+    const state = window.liveMatchState;
+    const formData = new FormData();
+    formData.append('action', 'set_score_board');
+    formData.append('match_id', state.matchId);
+    formData.append('team_1_score', scoreA);
+    formData.append('team_2_score', scoreB);
+    formData.append('team_1_sets', state.setsA);
+    formData.append('team_2_sets', state.setsB);
+
+    return fetch('api-match-score.php', {
+      method: 'POST',
+      body: formData
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (!data.success) {
+        throw new Error(data.message || 'Manual score save failed.');
+      }
+      return data;
+    });
   }
 
   function renderDoublesCourt() {
@@ -345,7 +574,7 @@
 
   function maybeSwitchSidesAfterPoint() {
     const state = window.liveMatchState;
-    if (state.setNo === 3 && !state.thirdGameIntervalSwitched && (state.scoreA === 11 || state.scoreB === 11)) {
+    if ((state.setLimit || 3) === 3 && state.setNo === 3 && !state.thirdGameIntervalSwitched && (state.scoreA === 11 || state.scoreB === 11)) {
       state.thirdGameIntervalSwitched = true;
       state.sidesSwitched = !state.sidesSwitched;
       return 'Players switched sides at 11 points in the third game.';
@@ -365,23 +594,32 @@
     $('#match-result-team-b-name').text(getTeamName('B'));
     $('#match-result-team-a-sets').text(state.setsA);
     $('#match-result-team-b-sets').text(state.setsB);
+    $('#match-result-team-a-winner-name').text(getTeamName('A'));
+    $('#match-result-team-b-winner-name').text(getTeamName('B'));
+    $('#match-result-set-indicator').text('Set - ' + state.setNo + '/' + (state.setLimit || 3));
 
-    const rows = state.setScores.map(function (score, index) {
+    const rows = state.setScores.slice(0, state.setLimit || 3).map(function (score, index) {
       const played = index < state.completedSets.length || index === state.setNo - 1;
       if (!played && score.a === 0 && score.b === 0) {
         return '';
       }
       const aWon = score.a > score.b;
       const bWon = score.b > score.a;
-      return '<div class="d-flex justify-content-between align-items-center p-2 rounded-3 bg-dark border border-secondary" style="font-size: 0.85rem;">'
-        + '<span class="opacity-50 fw-bold">SET ' + (index + 1) + '</span>'
-        + '<div class="fw-bold"><span class="' + (aWon ? 'text-info' : '') + '">' + score.a + '</span>'
-        + ' <span class="mx-2 opacity-25">|</span> '
-        + '<span class="' + (bWon ? 'text-info' : '') + '">' + score.b + '</span></div>'
-        + '<i class="fa-solid ' + (played && (aWon || bWon) ? 'fa-check-circle text-success' : 'fa-hourglass-half text-secondary') + '"></i>'
+      const completed = index < state.completedSets.length;
+      const current = index === state.setNo - 1 && !completed;
+      const actions = completed
+        ? '<button type="button">Pos</button><button type="button" onclick="startPlayableMatch()">Start</button><button type="button">Edit</button><button type="button">Reset</button>'
+        : '<button type="button" onclick="startPlayableMatch()">' + (state.isStarted || current ? 'Resume' : 'Start') + '</button>';
+      return '<div class="match-result-set-row">'
+        + '<span class="match-result-set-label">SET ' + (index + 1) + '</span>'
+        + '<div class="match-result-set-score"><span class="' + (aWon ? 'match-result-set-winner' : '') + '">' + score.a + '</span>'
+        + '<span class="match-result-divider">|</span>'
+        + '<span class="' + (bWon ? 'match-result-set-winner' : '') + '">' + score.b + '</span></div>'
+        + '<div class="match-result-set-actions">' + actions + '</div>'
+        + '<i class="fa-solid match-result-set-icon ' + (played && (aWon || bWon) ? 'fa-check-circle' : 'fa-hourglass-half') + '"></i>'
         + '</div>';
     }).join('');
-    $('#match-result-set-breakdown').html(rows || '<div class="text-center small opacity-50">Match not started</div>');
+    $('#match-result-set-breakdown').html(rows || '<div class="match-result-empty">Match not started</div>');
   }
 
   function clonePlayableState() {
@@ -392,6 +630,7 @@
       setsA: state.setsA,
       setsB: state.setsB,
       setNo: state.setNo,
+      setLimit: state.setLimit,
       setScores: state.setScores.map(function (score) { return {a: score.a, b: score.b}; }),
       completedSets: state.completedSets.map(function (score) { return score ? {a: score.a, b: score.b} : score; }),
       positions: {
@@ -415,6 +654,7 @@
     state.setsA = snapshot.setsA;
     state.setsB = snapshot.setsB;
     state.setNo = snapshot.setNo;
+    state.setLimit = snapshot.setLimit || state.setLimit || 3;
     state.setScores = snapshot.setScores.map(function (score) { return {a: score.a, b: score.b}; });
     state.completedSets = snapshot.completedSets.map(function (score) { return score ? {a: score.a, b: score.b} : score; });
     state.positions = {
@@ -582,7 +822,7 @@
       notes.push('Set ' + state.setNo + ' completed.');
       notes.push('Players switch sides after the game.');
 
-      completed = state.setsA === 2 || state.setsB === 2;
+      completed = state.setsA === setsNeededToWin(state.setLimit || 3) || state.setsB === setsNeededToWin(state.setLimit || 3);
     }
 
     renderPlayableScore();

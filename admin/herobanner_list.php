@@ -227,20 +227,6 @@ $endItem = min($offset + count($heroBanners), $totalItems);
 <section role="main" class="content-body">
     <header class="page-header">
         <h2>Manage Hero Banners</h2>
-
-        <!-- <div class="right-wrapper pull-right">
-            <ol class="breadcrumbs">
-                <li>
-                    <a href="index.php">
-                        <i class="fa fa-home"></i>
-                    </a>
-                </li>
-                <li><span>Hero Banner</span></li>
-                <li><span>List</span></li>
-            </ol>
-
-            <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
-        </div> -->
     </header>
 
     <section class="panel">
@@ -255,13 +241,12 @@ $endItem = min($offset + count($heroBanners), $totalItems);
             <?php } ?>
 
             <form method="GET" class="herobanner-toolbar">
-                <button type="button" class="btn btn-success" id="open-add-herobanner">
-                    <i class="fa fa-plus"></i> Add
-                </button>
-
                 <div class="herobanner-toolbar-controls">
+                    <button type="button" class="btn btn-success" id="open-add-herobanner">
+                        <i class="fa fa-plus"></i>
+                    </button>
                     <div class="herobanner-limit-control">
-                        <label for="limit">Show</label>
+                        <!-- <label for="limit">Show</label> -->
                         <select class="form-control" id="limit" name="limit">
                             <?php foreach ($allowedLimits as $allowedLimit) { ?>
                                 <option value="<?php echo (int) $allowedLimit; ?>" <?php echo $limit === $allowedLimit ? 'selected' : ''; ?>>
@@ -269,7 +254,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
                                 </option>
                             <?php } ?>
                         </select>
-                        <span>entries</span>
+                        <!-- <span>entries</span> -->
                     </div>
 
                     <div class="input-group herobanner-search-control">
@@ -336,8 +321,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
                                             data-description2="<?php echo h($row['description2']); ?>"
                                             data-image="<?php echo h($row['image']); ?>"
                                             data-status="<?php echo h($row['status']); ?>"
-                                            data-created_at="<?php echo h($row['created_at']); ?>"
-                                        >
+                                            data-created_at="<?php echo h($row['created_at']); ?>">
                                             <i class="fa fa-eye"></i>
                                         </button>
                                         <button
@@ -350,8 +334,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
                                             data-description1="<?php echo h($row['description1']); ?>"
                                             data-description2="<?php echo h($row['description2']); ?>"
                                             data-image="<?php echo h($row['image']); ?>"
-                                            data-status="<?php echo h($row['status']); ?>"
-                                        >
+                                            data-status="<?php echo h($row['status']); ?>">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                         <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this hero banner?');">
@@ -472,6 +455,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
     }
 
     @media (max-width: 767px) {
+
         .herobanner-toolbar,
         .herobanner-toolbar-controls,
         .herobanner-pagination-row {
@@ -641,7 +625,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
                         <div class="col-md-12 form-group">
                             <label for="modal_image">Image Path / URL <span>*</span></label>
                             <input type="text" class="form-control" id="modal_image" name="image" value="<?php echo h($formData['image']); ?>" placeholder="assets/images/banner.jpg" required>
-                            <img src="<?php echo h($formData['image']); ?>" alt="Preview" id="modal_image_preview" class="herobanner-image-preview"<?php echo $formData['image'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
+                            <img src="<?php echo h($formData['image']); ?>" alt="Preview" id="modal_image_preview" class="herobanner-image-preview" <?php echo $formData['image'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
                         </div>
                     </div>
                 </div>
@@ -711,7 +695,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
 </div>
 
 <script>
-    window.addEventListener('load', function () {
+    window.addEventListener('load', function() {
         var $ = window.jQuery;
         var modal = document.getElementById('herobannerModal');
         var viewModal = document.getElementById('herobannerViewModal');
@@ -735,7 +719,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
         var limitSelect = document.getElementById('limit');
 
         if (limitSelect) {
-            limitSelect.addEventListener('change', function () {
+            limitSelect.addEventListener('change', function() {
                 limitSelect.form.submit();
             });
         }
@@ -844,53 +828,53 @@ $endItem = min($offset + count($heroBanners), $totalItems);
                 'image',
                 'status',
                 'created_at'
-            ].forEach(function (field) {
+            ].forEach(function(field) {
                 setViewValue(field, data[field] || '');
             });
         }
 
         if (openAddButton) {
-            openAddButton.addEventListener('click', function () {
+            openAddButton.addEventListener('click', function() {
                 setHeroBannerModal(getEmptyHeroBanner());
                 openModal();
             });
         }
 
-        document.querySelectorAll('.edit-herobanner').forEach(function (button) {
-            button.addEventListener('click', function () {
+        document.querySelectorAll('.edit-herobanner').forEach(function(button) {
+            button.addEventListener('click', function() {
                 setHeroBannerModal(button.dataset);
                 openModal();
             });
         });
 
-        document.querySelectorAll('.view-herobanner').forEach(function (button) {
-            button.addEventListener('click', function () {
+        document.querySelectorAll('.view-herobanner').forEach(function(button) {
+            button.addEventListener('click', function() {
                 setHeroBannerView(button.dataset);
                 openViewModal();
             });
         });
 
         if (imageInput) {
-            imageInput.addEventListener('input', function () {
+            imageInput.addEventListener('input', function() {
                 updateImagePreview(imageInput.value.trim());
             });
         }
 
         if (closeTopButton) {
-            closeTopButton.addEventListener('click', function () {
+            closeTopButton.addEventListener('click', function() {
                 closeModal();
                 setHeroBannerModal(getEmptyHeroBanner());
             });
         }
 
         if (closeBottomButton) {
-            closeBottomButton.addEventListener('click', function () {
+            closeBottomButton.addEventListener('click', function() {
                 closeModal();
                 setHeroBannerModal(getEmptyHeroBanner());
             });
         }
 
-        modal.addEventListener('click', function (event) {
+        modal.addEventListener('click', function(event) {
             if (event.target === modal) {
                 closeModal();
                 setHeroBannerModal(getEmptyHeroBanner());
@@ -905,13 +889,13 @@ $endItem = min($offset + count($heroBanners), $totalItems);
             closeViewBottomButton.addEventListener('click', closeViewModal);
         }
 
-        viewModal.addEventListener('click', function (event) {
+        viewModal.addEventListener('click', function(event) {
             if (event.target === viewModal) {
                 closeViewModal();
             }
         });
 
-        document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape' && modal.classList.contains('is-open')) {
                 closeModal();
                 setHeroBannerModal(getEmptyHeroBanner());
@@ -923,7 +907,7 @@ $endItem = min($offset + count($heroBanners), $totalItems);
         });
 
         <?php if ($showHeroBannerModal) { ?>
-        openModal();
+            openModal();
         <?php } ?>
     });
 </script>

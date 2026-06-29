@@ -1,2 +1,5 @@
 *.zip
 error_log
+/.env
+/.env.local
+/.env.prod

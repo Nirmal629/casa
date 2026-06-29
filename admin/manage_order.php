@@ -1,6 +1,61 @@
 <?php
 include('dbConnection.php');
 
+function generateBookingNo()
+{
+    return 'CASA' . date('YmdHis') . rand(100, 999);
+}
+
+/* ============================
+   HANDLE MANUAL ORDER
+============================ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_order_submit'])) {
+    $booking_no = generateBookingNo();
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
+    $created_by = intval($_POST['created_by']);
+    $order_date = date('Y-m-d');
+
+    $total = 0;
+    foreach ($_POST['price'] as $i => $p) {
+        $total += floatval($p) * intval($_POST['qty'][$i]);
+    }
+
+    mysqli_query($conn, "
+        INSERT INTO ca_orders
+        (BOOKING_NO,CUSTOMER_NAME,PHONE,EMAIL,ADDRESS,ORDER_DATE,TOTAL_AMOUNT,DELIVERY_CHARGE,FULFILLEDBY)
+        VALUES ('$booking_no','$name','$phone','$email','$address','$order_date','$total',0,'$created_by')
+    ");
+
+    $order_id = mysqli_insert_id($conn);
+
+    foreach ($_POST['product_id'] as $i => $pid) {
+        $qty = intval($_POST['qty'][$i]);
+        if ($qty <= 0) {
+            continue;
+        }
+
+        $price = floatval($_POST['price'][$i]);
+        $subtotal = $price * $qty;
+        $product_id = intval($pid);
+        $pname = mysqli_real_escape_string($conn, $_POST['product_name'][$i]);
+        $size = mysqli_real_escape_string($conn, $_POST['size'][$i] ?? '');
+        $tname = mysqli_real_escape_string($conn, $_POST['tname'][$i] ?? '');
+
+        mysqli_query($conn, "
+            INSERT INTO ca_orders_item
+            (ORDER_ID,BOOKING_NO,PRODUCT_ID,PRODUCT_NAME,PRICE,QUANTITY,SIZE,TNAME,SUBTOTAL,FULFILLEDBY)
+            VALUES ('$order_id','$booking_no','$product_id','$pname','$price','$qty','$size','$tname','$subtotal','$created_by')
+        ");
+    }
+
+    header("Location: manage_order.php?manual_order=success&booking_no=" . urlencode($booking_no));
+    exit;
+}
+
 /* ============================
    HANDLE AJAX UPDATE
 ============================ */
@@ -145,302 +200,540 @@ $summary = $totalSummaryQuery->fetch_assoc();
 
 $totalQty = $summary['total_qty'] ?? 0;
 $grandTotal = $summary['grand_total'] ?? 0;
+$manualProducts = mysqli_query($conn, "SELECT * FROM ca_products ORDER BY PRODUCT_NAME ASC");
 ?>
 
-<!doctype html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Manage Orders</title>
-<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css">
-<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+<?php
+include('header.php');
+include('sidebar.php');
+?>
 
 <style>
-.table-scroll{overflow-x:auto}
-.table-scroll table{min-width:1700px}
-.badge-time{font-size:11px;color:#777}
-.top-bar{
-display:flex;
-align-items:center;
-gap:10px;
-flex-wrap:nowrap;
-overflow-x:auto;
-white-space:nowrap;
-padding:10px;
-}
-.top-bar input,.top-bar select{
-height:30px;
-font-size:12px;
-}
-.status-badge{
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-    color:#fff;
-    display:inline-block;
-}
+    .table-scroll {
+        overflow-x: auto
+    }
 
-/* Completed = Green */
-.status-completed{
-    background:#28a745;
-}
+    .table-scroll table {
+        min-width: 1700px
+    }
 
-/* Cancelled = Red */
-.status-cancelled{
-    background:#dc3545;
-}
+    .badge-time {
+        font-size: 11px;
+        color: #777
+    }
 
-/* Pending = Orange */
-.status-pending{
-    background:#f0ad4e;
-}
-/* FIXED HEADER + SUMMARY */
-.fixed-top-section{
-    position:sticky;
-    top:0;
-    background:#fff;
-    z-index:1000;
-    padding:10px;
-    border-bottom:2px solid #ddd;
-}
+    .top-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+    }
 
-/* FILTER BAR */
-.top-bar{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    white-space:nowrap;
-    margin-bottom:8px;
-}
+    .top-bar input,
+    .top-bar select {
+        height: 30px;
+        font-size: 12px;
+    }
 
-/* SUMMARY */
-.summary-bar{
-    display:flex;
-    justify-content:space-between;
-    font-weight:600;
-    background:#f8f9fa;
-    padding:8px 10px;
-    border-radius:4px;
-}
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        display: inline-block;
+        white-space: nowrap;
+    }
 
-/* ONLY TABLE SCROLLS */
-.table-scroll-area{
-    height:70vh;
-    overflow-y:auto;
-}
+    /* Completed = Green */
+    .status-completed {
+        background: #28a745;
+    }
+
+    /* Cancelled = Red */
+    .status-cancelled {
+        background: #dc3545;
+    }
+
+    /* Pending = Orange */
+    .status-pending {
+        background: #f0ad4e;
+    }
+
+    /* FIXED HEADER + SUMMARY */
+    .fixed-top-section {
+        /* position: sticky; */
+        /* top: 0; */
+        background: #fff;
+        /* z-index: 1000; */
+        padding: 10px;
+        border-bottom: 5px solid #ddd;
+    }
+
+    /* FILTER BAR */
+    .top-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-bottom: 8px;
+    }
+
+    /* SUMMARY */
+    .summary-bar {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        background: #f8f9fa;
+        padding: 8px 10px;
+        border-radius: 4px;
+    }
+
+    /* ONLY TABLE SCROLLS */
+    .table-scroll-area {
+        height: 70vh;
+        overflow-y: auto;
+    }
+
+    .panel {
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .table-scroll-area {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .custom-table-toolbar,
+    .custom-table-footer {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
+
+    .custom-table-search {
+        max-width: 320px;
+        width: 100%;
+    }
+
+    .custom-table-length {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .custom-table-length select {
+        width: 90px;
+    }
+
+    .custom-table-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .custom-page-btn {
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        color: #333;
+        min-width: 34px;
+        padding: 5px 9px;
+    }
+
+    .custom-page-btn.active {
+        background: #0088cc;
+        border-color: #0088cc;
+        color: #fff;
+    }
+
+    .custom-page-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .custom-table-empty {
+        display: none;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .products-toolbar-controls,
+    .products-limit-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    @media (max-width:991px) {
+        .fixed-top-section {
+            position: relative;
+        }
+
+        .top-bar {
+            align-items: stretch;
+            flex-wrap: wrap;
+            overflow-x: visible;
+            white-space: normal;
+        }
+
+        .top-bar h3 {
+            flex: 1 0 100%;
+            margin: 0 0 8px !important;
+        }
+
+        .top-bar input,
+        .top-bar select {
+            max-width: 100%;
+        }
+
+        .summary-bar {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 6px;
+        }
+    }
+
+    @media (max-width:767px) {
+        .fixed-top-section {
+            padding: 10px;
+        }
+
+        .top-bar .btn {
+            flex: 1 1 44px;
+        }
+
+        .top-bar input,
+        .top-bar select {
+            flex: 1 1 145px;
+            width: 100%;
+        }
+
+        .table-scroll-area {
+            height: auto;
+            max-height: 65vh;
+        }
+
+        .custom-table-toolbar,
+        .custom-table-footer {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .custom-table-search,
+        .custom-table-length,
+        .custom-table-length select {
+            width: 100%;
+        }
+    }
+
+    .manual-order-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.55);
+        padding: 24px;
+    }
+
+    .manual-order-modal.is-open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .manual-order-dialog {
+        width: min(1100px, 100%);
+        height: min(88vh, 850px);
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.25);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .manual-order-modal-header {
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 15px;
+    }
+
+    .manual-order-modal-header h4 {
+        margin: 0;
+    }
+
+    .manual-order-close {
+        background: transparent;
+        border: 0;
+        color: #555;
+        font-size: 24px;
+        line-height: 1;
+        padding: 0 4px;
+    }
+
+    .manual-order-modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    .manual-order-products {
+        border: 1px solid #ddd;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    body.manual-order-modal-open {
+        overflow: hidden;
+    }
+
+    @media (max-width:767px) {
+        .manual-order-modal {
+            padding: 10px;
+        }
+
+        .manual-order-dialog {
+            height: 92vh;
+        }
+    }
 </style>
-</head>
 
-<body>
+<section role="main" class="content-body">
+    <header class="page-header">
+        <h2>Manage Orders</h2>
+    </header>
 
-<section class="panel">
+    <section class="panel manage-orders-panel">
 
-<!-- ================= FILTER BAR ================= -->
-<div class="fixed-top-section">
-<form method="GET" class="top-bar">
+        <!-- ================= FILTER BAR ================= -->
+        <div class="fixed-top-section">
+            <form method="GET" class="top-bar">
 
-<h3 style="margin:0 10px 0 0;">Manage Orders</h3>
+                <!-- <a href="dashboard.php" class="btn btn-sm btn-default">
+                    <i class="fa fa-arrow-left"></i>
+                </a> -->
 
-<a href="dashboard.php" class="btn btn-sm btn-default">
-<i class="fa fa-arrow-left"></i>
-</a>
+                <input type="text" name="customer" class="form-control"
+                    style="width:140px;" placeholder="Customer"
+                    value="<?= $_GET['customer'] ?? '' ?>">
 
-<a href="manage_order.php" class="btn btn-sm btn-primary">
-<i class="fa fa-refresh"></i>
-</a>
+                <input type="text" name="item" class="form-control"
+                    style="width:140px;" placeholder="Item"
+                    value="<?= $_GET['item'] ?? '' ?>">
 
-<a href="manual_order.php" class="btn btn-sm btn-success">
-<i class="fa fa-plus"></i>
-</a>
+                <select name="status" class="form-control" style="width:120px;">
+                    <option value="">Status</option>
+                    <option <?= (($_GET['status'] ?? '') == 'Pending') ? 'selected' : '' ?>>Pending</option>
+                    <option <?= (($_GET['status'] ?? '') == 'Completed') ? 'selected' : '' ?>>Completed</option>
+                    <option <?= (($_GET['status'] ?? '') == 'Cancelled') ? 'selected' : '' ?>>Cancelled</option>
+                </select>
 
-<input type="text" name="customer" class="form-control"
-style="width:140px;" placeholder="Customer"
-value="<?= $_GET['customer'] ?? '' ?>">
+                <select name="fulfilledby" class="form-control" style="width:140px;">
+                    <option value="">Fulfilled By</option>
+                    <option value="1" <?= (($_GET['fulfilledby'] ?? '') == '1') ? 'selected' : '' ?>>Anurag</option>
+                    <option value="6" <?= (($_GET['fulfilledby'] ?? '') == '6') ? 'selected' : '' ?>>Ariyan</option>
+                </select>
 
-<input type="text" name="item" class="form-control"
-style="width:140px;" placeholder="Item"
-value="<?= $_GET['item'] ?? '' ?>">
+                <select name="payment_type" class="form-control" style="width:130px;">
+                    <option value="">Payment Type</option>
+                    <option <?= (($_GET['payment_type'] ?? '') == 'CASH') ? 'selected' : '' ?>>CASH</option>
+                    <option <?= (($_GET['payment_type'] ?? '') == 'INTERACT') ? 'selected' : '' ?>>INTERACT</option>
+                </select>
 
-<select name="status" class="form-control" style="width:120px;">
-<option value="">Status</option>
-<option <?= (($_GET['status'] ?? '')=='Pending')?'selected':'' ?>>Pending</option>
-<option <?= (($_GET['status'] ?? '')=='Completed')?'selected':'' ?>>Completed</option>
-<option <?= (($_GET['status'] ?? '')=='Cancelled')?'selected':'' ?>>Cancelled</option>
-</select>
+                <select name="payment_status" class="form-control" style="width:140px;">
+                    <option value="">Payment Status</option>
+                    <option <?= (($_GET['payment_status'] ?? '') == 'PAID') ? 'selected' : '' ?>>PAID</option>
+                    <option <?= (($_GET['payment_status'] ?? '') == 'CREDIT') ? 'selected' : '' ?>>CREDIT</option>
+                    <option <?= (($_GET['payment_status'] ?? '') == 'UNPAID') ? 'selected' : '' ?>>UNPAID</option>
+                </select>
 
-<select name="fulfilledby" class="form-control" style="width:140px;">
-<option value="">Fulfilled By</option>
-<option value="1" <?= (($_GET['fulfilledby'] ?? '')=='1')?'selected':'' ?>>Anurag</option>
-<option value="6" <?= (($_GET['fulfilledby'] ?? '')=='6')?'selected':'' ?>>Ariyan</option>
-</select>
+                <button type="submit" class="btn btn-info btn-sm">
+                    <i class="fa fa-search"></i>
+                </button>
 
-<select name="payment_type" class="form-control" style="width:130px;">
-<option value="">Payment Type</option>
-<option <?= (($_GET['payment_type'] ?? '')=='CASH')?'selected':'' ?>>CASH</option>
-<option <?= (($_GET['payment_type'] ?? '')=='INTERACT')?'selected':'' ?>>INTERACT</option>
-</select>
+                <a href="manage_order.php" class="btn btn-sm btn-primary">
+                    <i class="fa fa-refresh"></i>
+                </a>
+            </form>
 
-<select name="payment_status" class="form-control" style="width:140px;">
-<option value="">Payment Status</option>
-<option <?= (($_GET['payment_status'] ?? '')=='PAID')?'selected':'' ?>>PAID</option>
-<option <?= (($_GET['payment_status'] ?? '')=='CREDIT')?'selected':'' ?>>CREDIT</option>
-<option <?= (($_GET['payment_status'] ?? '')=='UNPAID')?'selected':'' ?>>UNPAID</option>
-</select>
+            <div class="summary-bar">
+                <div>
+                    Total Quantity: <?= $totalQty ?>
+                </div>
 
-<button type="submit" class="btn btn-info btn-sm">
-<i class="fa fa-search"></i>
-</button>
+                <div>
+                    Grand Total: CAD <?= number_format($grandTotal, 2) ?>
+                </div>
+            </div>
 
-<a href="logout.php" class="btn btn-danger btn-sm">
-<i class="fa fa-sign-out"></i>
-</a>
-
-</form>
- <div class="summary-bar">
-        <div>
-            Total Quantity: <?= $totalQty ?>
         </div>
 
-        <div>
-            Grand Total: CAD <?= number_format($grandTotal,2) ?>
-        </div>
-    </div>
 
-</div>
-<!-- ================= TABLE ================= -->
-<div class="panel-body">
-<div class="table-scroll-area">
-<table id="ordersTable" class="table table-bordered table-striped">
-<thead>
-<tr>
-<th>Booking</th>
-<th>Date</th>
-<th>Customer</th>
-<th>Item</th>
-<th>Qty</th>
-<th>Status</th>
-<th>Fulfilled By</th>
-<th>Fulfillment</th>
-<th>Payment Type</th>
-<th>Payment Status</th>
-<th>View</th>
-</tr>
-</thead>
 
-<tbody>
+        <!-- ================= TABLE ================= -->
+        <div class="panel-body">
 
-<?php while($r=$q->fetch_assoc()): ?>
+            <div class="products-toolbar-controls" style="margin: 15px 0px;">
+                <button type="button" class="btn btn-sm btn-success" id="openManualOrderModal">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <label class="custom-table-length" for="ordersPageSize" style="margin-bottom: 0;">
+                    <!-- Show -->
+                    <select class="form-control" id="ordersPageSize">
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <!-- entries -->
+                </label>
+                <div style="width: 320px;">
+                    <input type="search" class="form-control custom-table-search" id="ordersSearch" placeholder="Search orders">
+                </div>
+            </div>
 
-<tr>
-<td><?= $r['BOOKING_NO'] ?></td>
-<td><?= date('d M Y',strtotime($r['ORDER_DATE'])) ?></td>
-<td><?= htmlspecialchars($r['CUSTOMER_NAME']) ?></td>
-<td><?= htmlspecialchars($r['PRODUCT_NAME']) ?></td>
-<td><?= $r['QUANTITY'] ?></td>
+            <div style="overflow-x: auto;">
+                <div class="admin-table-scroll">
+                    <table id="ordersTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Booking</th>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Status</th>
+                                <th>Fulfilled By</th>
+                                <th>Fulfillment</th>
+                                <th>Payment Type</th>
+                                <th>Payment Status</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
 
-<td>
-<?php
-$statusClass = '';
+                        <tbody>
 
-if($r['STATUS'] == 'Completed'){
-    $statusClass = 'status-completed';
-}
-elseif($r['STATUS'] == 'Cancelled'){
-    $statusClass = 'status-cancelled';
-}
-elseif($r['STATUS'] == 'Pending'){
-    $statusClass = 'status-pending';
-}
-?>
+                            <?php while ($r = $q->fetch_assoc()): ?>
 
-<?php if($r['STATUS']): ?>
-<div class="status-badge <?= $statusClass ?>">
-    <?= $r['STATUS'] ?>
-</div>
+                                <tr>
+                                    <td><?= $r['BOOKING_NO'] ?></td>
+                                    <td><?= date('d M Y', strtotime($r['ORDER_DATE'])) ?></td>
+                                    <td><?= htmlspecialchars($r['CUSTOMER_NAME']) ?></td>
+                                    <td><?= htmlspecialchars($r['PRODUCT_NAME']) ?></td>
+                                    <td><?= $r['QUANTITY'] ?></td>
 
-<div class="badge-time">
-<?= $r['STATUS_TIME'] ? date('d M Y h:i A',strtotime($r['STATUS_TIME'])):'' ?>
-</div>
+                                    <td>
+                                        <?php
+                                        $statusClass = '';
 
-<?php else: ?>
+                                        if ($r['STATUS'] == 'Completed') {
+                                            $statusClass = 'status-completed';
+                                        } elseif ($r['STATUS'] == 'Cancelled') {
+                                            $statusClass = 'status-cancelled';
+                                        } elseif ($r['STATUS'] == 'Pending') {
+                                            $statusClass = 'status-pending';
+                                        }
+                                        ?>
 
-<select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'STATUS',this.value)" class="form-control">
-<option value="">--</option>
-<option>Pending</option>
-<option>Completed</option>
-<option>Cancelled</option>
-</select>
+                                        <?php if ($r['STATUS']): ?>
+                                            <div class="status-badge <?= $statusClass ?>">
+                                                <?= $r['STATUS'] ?>
+                                            </div>
 
-<?php endif; ?>
-</td>
+                                            <div class="badge-time">
+                                                <?= $r['STATUS_TIME'] ? date('d M Y h:i A', strtotime($r['STATUS_TIME'])) : '' ?>
+                                            </div>
 
-<?php if($r['STATUS']!='Cancelled'): ?>
+                                        <?php else: ?>
 
-<td>
-<?php if($r['FULFILLEDBY']): ?>
-<div><?= ($r['FULFILLEDBY']==1)?'Anurag':'Ariyan' ?></div>
-<div class="badge-time"><?= date('d M Y h:i A',strtotime($r['FULFILLEDBY_TIME'])) ?></div>
-<?php else: ?>
-<select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'FULFILLEDBY',this.value)" class="form-control">
-<option value="">--</option>
-<option value="1">Anurag</option>
-<option value="6">Ariyan</option>
-</select>
-<?php endif; ?>
-</td>
+                                            <select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'STATUS',this.value)" class="form-control">
+                                                <option value="">--</option>
+                                                <option>Pending</option>
+                                                <option>Completed</option>
+                                                <option>Cancelled</option>
+                                            </select>
 
-<td>
-<?php if($r['FULFILLED_STATUS']): ?>
-<div><?= $r['FULFILLED_STATUS'] ?></div>
-<div class="badge-time"><?= date('d M Y h:i A',strtotime($r['FULFILLED_STATUS_TIME'])) ?></div>
-<?php else: ?>
-<select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'FULFILLED_STATUS',this.value)" class="form-control">
-<option value="">--</option>
-<option>PICKED UP</option>
-<option>DELIVERED</option>
-</select>
-<?php endif; ?>
-</td>
+                                        <?php endif; ?>
+                                    </td>
 
-<td>
-<?php if($r['PAYMENT_TYPE']): ?>
-<div><?= $r['PAYMENT_TYPE'] ?></div>
-<div class="badge-time"><?= date('d M Y h:i A',strtotime($r['PAYMENT_TYPE_TIME'])) ?></div>
-<?php else: ?>
-<select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'PAYMENT_TYPE',this.value)" class="form-control">
-<option value="">--</option>
-<option>CASH</option>
-<option>INTERACT</option>
-</select>
-<?php endif; ?>
-</td>
+                                    <?php if ($r['STATUS'] != 'Cancelled'): ?>
 
-<td>
-<?php if($r['PAYMENT_STATUS']): ?>
-<div><?= $r['PAYMENT_STATUS'] ?></div>
-<div class="badge-time"><?= date('d M Y h:i A',strtotime($r['PAYMENT_STATUS_TIME'])) ?></div>
-<?php else: ?>
-<select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'PAYMENT_STATUS',this.value)" class="form-control">
-<option value="">--</option>
-<option>PAID</option>
-<option>CREDIT</option>
-<option>UNPAID</option>
-</select>
-<?php endif; ?>
-</td>
+                                        <td>
+                                            <?php if ($r['FULFILLEDBY']): ?>
+                                                <div><?= ($r['FULFILLEDBY'] == 1) ? 'Anurag' : 'Ariyan' ?></div>
+                                                <div class="badge-time"><?= date('d M Y h:i A', strtotime($r['FULFILLEDBY_TIME'])) ?></div>
+                                            <?php else: ?>
+                                                <select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'FULFILLEDBY',this.value)" class="form-control">
+                                                    <option value="">--</option>
+                                                    <option value="1">Anurag</option>
+                                                    <option value="6">Ariyan</option>
+                                                </select>
+                                            <?php endif; ?>
+                                        </td>
 
-<?php else: ?>
-<td></td><td></td><td></td><td></td>
-<?php endif; ?>
+                                        <td>
+                                            <?php if ($r['FULFILLED_STATUS']): ?>
+                                                <div><?= $r['FULFILLED_STATUS'] ?></div>
+                                                <div class="badge-time"><?= date('d M Y h:i A', strtotime($r['FULFILLED_STATUS_TIME'])) ?></div>
+                                            <?php else: ?>
+                                                <select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'FULFILLED_STATUS',this.value)" class="form-control">
+                                                    <option value="">--</option>
+                                                    <option>PICKED UP</option>
+                                                    <option>DELIVERED</option>
+                                                </select>
+                                            <?php endif; ?>
+                                        </td>
 
-<td>
-<button class="btn btn-info btn-sm"
-onclick="viewFullDetails(
+                                        <td>
+                                            <?php if ($r['PAYMENT_TYPE']): ?>
+                                                <div><?= $r['PAYMENT_TYPE'] ?></div>
+                                                <div class="badge-time"><?= date('d M Y h:i A', strtotime($r['PAYMENT_TYPE_TIME'])) ?></div>
+                                            <?php else: ?>
+                                                <select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'PAYMENT_TYPE',this.value)" class="form-control">
+                                                    <option value="">--</option>
+                                                    <option>CASH</option>
+                                                    <option>INTERACT</option>
+                                                </select>
+                                            <?php endif; ?>
+                                        </td>
+
+                                        <td>
+                                            <?php if ($r['PAYMENT_STATUS']): ?>
+                                                <div><?= $r['PAYMENT_STATUS'] ?></div>
+                                                <div class="badge-time"><?= date('d M Y h:i A', strtotime($r['PAYMENT_STATUS_TIME'])) ?></div>
+                                            <?php else: ?>
+                                                <select onchange="updateItem(<?= $r['ITEM_ID'] ?>,'PAYMENT_STATUS',this.value)" class="form-control">
+                                                    <option value="">--</option>
+                                                    <option>PAID</option>
+                                                    <option>CREDIT</option>
+                                                    <option>UNPAID</option>
+                                                </select>
+                                            <?php endif; ?>
+                                        </td>
+
+                                    <?php else: ?>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    <?php endif; ?>
+
+                                    <td>
+                                        <button class="btn btn-info btn-sm"
+                                            onclick="viewFullDetails(
 '<?= htmlspecialchars($r['CUSTOMER_NAME']) ?>',
 '<?= htmlspecialchars($r['PHONE']) ?>',
 '<?= htmlspecialchars($r['EMAIL']) ?>',
@@ -451,8 +744,8 @@ onclick="viewFullDetails(
 '<?= htmlspecialchars($r['IMAGE']) ?>',
 '<?= htmlspecialchars($r['PRODUCT_NAME']) ?>',
 '<?= $r['QUANTITY'] ?>',
-'<?= number_format($r['PRICE'],2) ?>',
-'<?= number_format($r['PRICE'] * $r['QUANTITY'],2) ?>',
+'<?= number_format($r['PRICE'], 2) ?>',
+'<?= number_format($r['PRICE'] * $r['QUANTITY'], 2) ?>',
 '<?= htmlspecialchars($r['SIZE'] ?? '') ?>',
 '<?= htmlspecialchars($r['COLOR'] ?? '') ?>',
 '<?= htmlspecialchars($r['TNAME'] ?? '') ?>',

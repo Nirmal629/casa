@@ -88,6 +88,32 @@ function syncGroupFixturesAndStandings(PDO $pdo, int $tournamentId, string $grou
     }
 }
 
+function inferGroupsRequiredFromTeams(PDO $pdo, int $tournamentId, string $groupColumn, array $groupLabels, int $maxGroups): int
+{
+    if ($tournamentId <= 0) {
+        return $maxGroups;
+    }
+
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT `$groupColumn` AS GROUP_NAME
+        FROM to_teams
+        WHERE TOURNAMENT_ID = :tournament_id
+          AND `$groupColumn` IS NOT NULL
+          AND `$groupColumn` <> ''
+    ");
+    $stmt->execute([':tournament_id' => $tournamentId]);
+
+    $highestGroupIndex = 0;
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $groupName) {
+        $index = array_search((string)$groupName, $groupLabels, true);
+        if ($index !== false) {
+            $highestGroupIndex = max($highestGroupIndex, $index + 1);
+        }
+    }
+
+    return $highestGroupIndex > 0 ? min($maxGroups, $highestGroupIndex) : $maxGroups;
+}
+
 try {
     include_once __DIR__ . '/../dbConnection_PDO.php';
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -111,6 +137,11 @@ try {
     if ($tournamentId <= 0) {
         $latestTournament = $pdo->query("SELECT ID FROM to_tournaments ORDER BY ID DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
         $tournamentId = (int)($latestTournament['ID'] ?? 0);
+    }
+
+    if ($requestedGroups === null) {
+        $groupsRequired = inferGroupsRequiredFromTeams($pdo, $tournamentId, $groupColumn, $groupLabels, $maxGroups);
+        $allowedGroups = array_slice($groupLabels, 0, $groupsRequired);
     }
 
     if ($tournamentId > 0) {
@@ -274,23 +305,34 @@ try {
                     <div class="grid">
                         <div class="field small">
                             <label>Group League</label>
-                            <input type="number" value="1">
+                            <select id="groupLeagueSets" class="game-set-select" data-stage="GROUP">
+                                <option value="1" selected>1</option>
+                                <option value="3">3</option>
+                            </select>
                         </div>
                         <div class="field small">
                             <label>Quarter Final</label>
-                            <input type="number" value="3">
+                            <select class="game-set-select" data-stage="QUARTER_FINAL" disabled>
+                                <option value="3" selected>3</option>
+                            </select>
                         </div>
                         <div class="field small">
                             <label>Semi Final</label>
-                            <input type="number" value="3">
+                            <select class="game-set-select" data-stage="SEMI_FINAL" disabled>
+                                <option value="3" selected>3</option>
+                            </select>
                         </div>
                         <div class="field small">
                             <label>Winner Final</label>
-                            <input type="number" value="3">
+                            <select class="game-set-select" data-stage="FINAL" disabled>
+                                <option value="3" selected>3</option>
+                            </select>
                         </div>
                         <div class="field small">
                             <label>Loser Final</label>
-                            <input type="number" value="3">
+                            <select class="game-set-select" data-stage="BRONZE_FINAL" disabled>
+                                <option value="3" selected>3</option>
+                            </select>
                         </div>
                     </div>
 
@@ -299,7 +341,21 @@ try {
 
                     <!-- Quarter Final -->
                     <div class="match-box">
-                        <p></p>
+                        <p>Quarter Final - Group Match</p>
+                        <div id="quarterFinalGroupPairs" class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                            <?php for ($pairIndex = 0; $pairIndex < max(1, (int)ceil($groupsRequired / 2)); $pairIndex++): ?>
+                                <div class="selector qf-group-pair">
+                                    <input type="text" class="qf-group-input" data-slot="<?php echo $pairIndex * 2; ?>" placeholder="Select Group" readonly>
+                                    <span>VS</span>
+                                    <input type="text" class="qf-group-input" data-slot="<?php echo ($pairIndex * 2) + 1; ?>" placeholder="Select Group" readonly>
+                                    <?php if ($pairIndex === 0): ?>
+                                        <button type="button" class="small-spin-btn badge" data-bs-toggle="modal"
+                                            data-bs-target="#spinWheelModal" data-spin-mode="quarter-groups" title="Spin">Spin</button>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                        <div class="d-none">
                         <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
                             <div class="selector">
                                 <select>
@@ -377,6 +433,7 @@ try {
                                 <button type="button" class="small-spin-btn badge" data-bs-toggle="modal" 
                                 data-bs-target="#spinWheelModal" title="Spin">🎯</button>
                             </div>
+                        </div>
                         </div>
                     </div>
 
@@ -675,6 +732,87 @@ try {
     const battleTournamentEndpoint = 'battle-tournament.php?id=<?php echo (int)$tournamentId; ?>';
     const groupsRequiredInput = document.getElementById('groupsRequired');
     const groupSelects = document.querySelectorAll('.team-group-select');
+    const tournamentSetStorageKey = 'badmintonTournamentGameSets_<?php echo (int)$tournamentId; ?>';
+    const allowedQuarterGroups = <?php echo json_encode($allowedGroups); ?>;
+    const groupLeagueSetsSelect = document.getElementById('groupLeagueSets');
+
+    function readTournamentSetConfig() {
+        try {
+            return JSON.parse(localStorage.getItem(tournamentSetStorageKey) || '{}') || {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    function saveTournamentSetConfig(config) {
+        localStorage.setItem(tournamentSetStorageKey, JSON.stringify(config));
+    }
+
+    function applyStoredSetConfig() {
+        if (!groupLeagueSetsSelect) {
+            return;
+        }
+        const config = readTournamentSetConfig();
+        groupLeagueSetsSelect.value = String(config.GROUP || '1');
+    }
+
+    function updateQuarterGroupPairInputs(winners, remaining) {
+        const spunGroups = winners || [];
+        const leftGroups = remaining || [];
+        const selected = allowedQuarterGroups.length <= 2 || spunGroups.length >= 2
+            ? spunGroups.concat(leftGroups)
+            : spunGroups;
+        document.querySelectorAll('.qf-group-input').forEach(function (input) {
+            const slot = parseInt(input.dataset.slot || '0', 10);
+            input.value = selected[slot] || '';
+        });
+        localStorage.setItem('quarterFinalGroupPairs_<?php echo (int)$tournamentId; ?>', JSON.stringify(selected));
+    }
+
+    function restoreQuarterGroupPairInputs() {
+        try {
+            const selected = JSON.parse(localStorage.getItem('quarterFinalGroupPairs_<?php echo (int)$tournamentId; ?>') || '[]') || [];
+            document.querySelectorAll('.qf-group-input').forEach(function (input) {
+                const slot = parseInt(input.dataset.slot || '0', 10);
+                input.value = selected[slot] || '';
+            });
+        } catch (error) {
+            updateQuarterGroupPairInputs([], []);
+        }
+    }
+
+    function openQuarterGroupSpin() {
+        if (typeof window.loadSpinItems !== 'function') {
+            return;
+        }
+        const modalTitle = document.getElementById('spinWheelModalLabel');
+        if (modalTitle) {
+            modalTitle.textContent = 'Spin Quarter Final Groups';
+        }
+        updateQuarterGroupPairInputs([], []);
+        window.loadSpinItems(allowedQuarterGroups, function (winners, remaining) {
+            updateQuarterGroupPairInputs(winners, remaining);
+        });
+    }
+
+    applyStoredSetConfig();
+    restoreQuarterGroupPairInputs();
+
+    if (groupLeagueSetsSelect) {
+        groupLeagueSetsSelect.addEventListener('change', function () {
+            saveTournamentSetConfig({
+                GROUP: this.value === '3' ? 3 : 1,
+                QUARTER_FINAL: 3,
+                SEMI_FINAL: 3,
+                FINAL: 3,
+                BRONZE_FINAL: 3
+            });
+        });
+    }
+
+    document.querySelectorAll('[data-spin-mode="quarter-groups"]').forEach(function (button) {
+        button.addEventListener('click', openQuarterGroupSpin);
+    });
 
     if (groupsRequiredInput) {
         groupsRequiredInput.addEventListener('change', function () {

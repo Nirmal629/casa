@@ -1,5 +1,8 @@
 <?php
-// session_start and dbConnection are already provided by inner-header.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include_once __DIR__ . '/dbConnection.php';
 date_default_timezone_set('Asia/Kolkata');
 
 $currentUserId = $_SESSION['user_id'] ?? 0;

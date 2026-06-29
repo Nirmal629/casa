@@ -1,6 +1,8 @@
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
 
 // print_r($_SESSION);exit;
 
@@ -112,7 +114,7 @@ session_start();
 
 									<i class="fa fa-home" aria-hidden="true"></i>
 
-									<span>1-Dashboard</span>
+									<span>Dashboard</span>
 
 								</a>
 
@@ -126,9 +128,9 @@ session_start();
 
 								<a href="manage_user.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-user-tie" aria-hidden="true"></i>
 
-									<span>2-User</span>
+									<span>User</span>
 
 								</a>
 
@@ -142,9 +144,9 @@ session_start();
 
 								<a href="tournaments_list.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-chess" aria-hidden="true"></i>
 
-									<span>3-Tournament</span>
+									<span>Tournament</span>
 
 								</a>
 
@@ -156,9 +158,9 @@ session_start();
 
 								<a href="javascript:void(0)">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-baseball" aria-hidden="true"></i>
 
-									<span>4-Product</span>
+									<span>Product</span>
 
 								</a>
 
@@ -205,9 +207,9 @@ session_start();
 
 								<a href="manage_order.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
 
-									<span>5-Order</span>
+									<span>Order</span>
 
 								</a>
 
@@ -223,11 +225,11 @@ session_start();
 
 								<!-- Pending Section -->
 
-								<a href="Admin_host.php">
+								<a href="admin_host.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-user-tag" aria-hidden="true"></i>
 
-									<span>6-Host</span>
+									<span>Host</span>
 
 								</a>
 
@@ -241,9 +243,9 @@ session_start();
 							<li>
 								<a href="manage_adds.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-rectangle-ad" aria-hidden="true"></i>
 
-									<span>7-Advertisement</span>
+									<span>Advertisement</span>
 
 								</a>
 							</li>
@@ -258,9 +260,9 @@ session_start();
 
 								<a href="herobanner_list.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-image" aria-hidden="true"></i>
 
-									<span>8-Hero Banner</span>
+									<span>Hero Banner</span>
 
 								</a>
 
@@ -274,9 +276,9 @@ session_start();
 							<li>
 								<a href="media_list.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-podcast" aria-hidden="true"></i>
 
-									<span>9-Media</span>
+									<span>Media</span>
 
 								</a>
 							</li>
@@ -287,9 +289,9 @@ session_start();
 							<li>
 								<a href="aboutus_review.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i>
 
-									<span>10-Review</span>
+									<span>Review</span>
 
 								</a>
 							</li>
@@ -303,9 +305,9 @@ session_start();
 
 								<a href="contact_list.php">
 
-									<i class="fa fa-list-alt" aria-hidden="true"></i>
+									<i class="fa-solid fa-address-book" aria-hidden="true"></i>
 
-									<span>11-ContactUs</span>
+									<span>ContactUs</span>
 
 								</a>
 
@@ -321,7 +323,7 @@ session_start();
 
 									<i class="fa fa-list-alt" aria-hidden="true"></i>
 
-									<span>12-EventManagement</span>
+									<span>EventManagement</span>
 
 								</a>
 

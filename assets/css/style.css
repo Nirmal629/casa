@@ -8671,6 +8671,10 @@ Notification page
 
     width: 100%;
 
+    max-height: 450px;
+
+    overflow-y: auto;
+
 }
 
 
