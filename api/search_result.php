@@ -96,6 +96,7 @@ $query = "
       AND cu.DEL_STATUS = 'N'
       $gender_condition
       $search_condition
+    GROUP BY cu.ID
     ORDER BY IS_JOINED DESC,TOTAL_GAMES DESC
 ";
 
@@ -121,7 +122,7 @@ $select_Player = mysqli_query($conn, $query);
             $disabled = $is_joined ? '' : 'disabled';
             
             $checked_con = $player['CONFIRMED'] == 'Y' ? 'checked' : '';
-            $disabled_con = $player['CONFIRMED'] == 'Y' ? 'disabled' : '';
+            $disabled_con = ''; // Removed 'disabled' so host can un-confirm
 
             $level_map = [
                 'Beginner' => 'Beg',

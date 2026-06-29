@@ -73,6 +73,7 @@ if ($skill_level !== 'Mix') {
       AND cu.LOG_STATUS='Y' 
       AND cu.DEL_STATUS='N' 
       $gender_condition
+    GROUP BY cu.ID
     ORDER BY IS_JOINED DESC,TOTAL_GAMES DESC
     ");
     
@@ -95,7 +96,7 @@ if ($skill_level !== 'Mix') {
             $disabled = $is_joined ? '' : 'disabled';
             
             $checked_con = $player['CONFIRMED'] == 'Y' ? 'checked' : '';
-            $disabled_con = $player['CONFIRMED'] == 'Y' ? 'disabled' : '';
+            $disabled_con = ''; // Removed 'disabled' so host can un-confirm
     
             $level_map = [
                 'Beginner' => 'Beg',
@@ -174,6 +175,7 @@ else
           AND cu.LOG_STATUS='Y' 
           AND cu.DEL_STATUS='N' 
           AND cu.GENDER='".mysqli_real_escape_string($conn, $_SESSION['gender'])."'
+        GROUP BY cu.ID
     ");
     if (mysqli_num_rows($select_Player) > 0) {
         $i = 1;
@@ -192,7 +194,7 @@ else
             $checked = $is_joined ? 'checked' : '';
             $disabled = $is_joined ? 'disabled' : '';
             $checked_con = isset($fetch_Joined['CONFIRMED']) && $fetch_Joined['CONFIRMED'] == 'Y' ? 'checked' : '';
-            $disabled_con = isset($fetch_Joined['CONFIRMED']) && $fetch_Joined['CONFIRMED'] == 'Y' ? 'disabled' : '';
+            $disabled_con = ''; // Removed 'disabled' so host can un-confirm
 
             $level_map = [
                 'Beginner' => 'Beg',

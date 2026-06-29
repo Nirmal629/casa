@@ -3,3 +3,4 @@ error_log
 /.env
 /.env.local
 /.env.prod
+aritra_changelog.md

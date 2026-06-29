@@ -19,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $createdAt = date('Y-m-d H:i:s'); // Get the current timestamp
         
             // Insert the invitation data into the `ca_gamejoin` table
-            $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', '$createdAt')";
+            $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE, CONFIRMED, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', 'N', '$createdAt')";
             $result = mysqli_query($conn, $query);
         
             if ($result) {
-    applyAutoConfirmAndMessage($conn, $gameId);
+    applyAutoConfirmAndMessage($conn, $gameId, false);
 
                 echo json_encode(['status' => 'success', 'message' => 'Invitation sent successfully.']);
             } else {
@@ -40,14 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $createdAt = date('Y-m-d H:i:s'); // Get the current timestamp
         
             // Insert the invitation data into the `ca_gamejoin` table
-            $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE,STATUS, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price', '$currency','Public','Y','$createdAt')";
+            $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE,STATUS, CONFIRMED, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price', '$currency','Public','Y', 'N', '$createdAt')";
 
             // $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', '$createdAt')";
             $result = mysqli_query($conn, $query);
         
             if ($result) {
                 
-    applyAutoConfirmAndMessage($conn, $gameId);
+    applyAutoConfirmAndMessage($conn, $gameId, false);
 
                 echo json_encode(['status' => 'success', 'message' => 'Invitation sent successfully.']);
             } else {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     {
         $query = "DELETE FROM ca_gamejoin WHERE USER_ID='".$_POST['user_id']."' AND GAME_ID='".$_POST['game_id']."'";
         $result = mysqli_query($conn, $query);
-    applyAutoConfirmAndMessage($conn, $_POST['game_id']);
+    applyAutoConfirmAndMessage($conn, $_POST['game_id'], false);
 
     }
 } else {

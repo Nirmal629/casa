@@ -882,7 +882,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'api/get_player_cost.php', // 🔄 Adjust this URL to your PHP script
+            url: BASE_URL + 'api/get_player_cost.php', // 🔄 Adjust this URL to your PHP script
 
             method: 'POST',
 

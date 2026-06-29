@@ -190,6 +190,7 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                             </button>
                         </li>
             
+                        <!--
                         <li class="nav-item">
                             <button class="nav-link" id="Rating-tab" data-bs-toggle="tab" data-bs-target="#Rating" type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -198,6 +199,7 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                                 <span>Rating</span>
                             </button>
                         </li>
+                        -->
                     <?php endif; ?>
                     
                 </ul>
@@ -220,9 +222,11 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                 <div class="tab-pane fade" id="Subscription" role="tabpanel" aria-labelledby="Subscription-tab">
                     <?php include "subscription-list.php"; ?>
                 </div>
+                <?php /* 
                 <div class="tab-pane fade" id="Rating" role="tabpanel" aria-labelledby="Rating-tab">
                     <?php include "host-rating.php"; ?>
-                </div>
+                </div> 
+                */ ?>
                 <!-- Player Stats Tab -->
                 <div class="tab-pane fade" id="playerstats" role="tabpanel" aria-labelledby="playerstats-tab">
                     <?php include 'host-player-stats.php'; ?>

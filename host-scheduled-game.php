@@ -11,9 +11,10 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                     <div class="row g-1">
                         <div class="col-auto">
                             <select class="form-select py-0 px-2" id="year" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                                <option value="">Year</option>
+
                                 <?php
-                                for ($year = 2024; $year <= 2030; $year++) {
+                                $prevYear = $currentYear - 1;
+                                for ($year = $prevYear; $year <= $currentYear; $year++) {
                                     $selected = ($year == $currentYear) ? 'selected' : '';
                                     echo "<option value=\"$year\" $selected>$year</option>";
                                 }
@@ -22,7 +23,6 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                         </div>
                         <div class="col-auto">
                             <select class="form-select py-0 px-2" id="month" aria-label="Default select example" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                                <option value="">Month</option>
                                 <?php
                                 $months = [
                                     1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
@@ -37,7 +37,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
 
-                        <div class="col-auto ms-auto d-flex gap-1">
+                        <!-- <div class="col-auto ms-auto d-flex gap-1">
                             <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="filter" title="Submit" style="width: 32px; height: 31px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>
@@ -50,10 +50,11 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                                     <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
                                 </svg>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </form>
             </div>
+
 
         <div class="discoverGames_wraper hostWrapper">
 
@@ -201,48 +202,47 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                     <input type='hidden' id='event_data_$event_id' value='" . htmlspecialchars($eventData, ENT_QUOTES) . "'>
                 </div>
             </div>
-           <div class='d-flex flex-column justify-content-between gap-2 mb-2 px-2'>
-                <div class='flex-grow-1'>
-                    <div class='d-inline-flex align-items-center gap-2 mb-2 p-1 px-2' style='border: 1px solid #dc3545; border-radius: 6px; background: #fff5f5;'>
-                        <i class='fa-solid fa-clock' style='font-size: 90%; color: #dc3545;'></i>
-                        <h4 class='date_time mb-0' style='color: #dc3545; font-size: 0.85rem; font-weight: 600;'>$event_date<span class='fw-normal text-muted mx-1'>|</span>" . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
+            <div class='row px-2 mb-2 g-2 align-items-stretch'>
+                <!-- Left Column: Date, Time, Location -->
+                <div class='col-7 d-flex align-items-center'>
+                    <div class='d-flex align-items-start gap-2 w-100'>
+                        <!-- Calendar Box -->
+                        <div class='p-1 rounded text-center flex-shrink-0' style='min-width: 40px; background-color: #fff1f0; border: 1px solid #ffccc7;'>
+                            <div class='fw-bold' style='font-size: 0.95rem; line-height: 1; color: #cf1322;'>" . date('d', strtotime($event['EVENT_DATE'])) . "</div>
+                            <div class='fw-semibold' style='font-size: 0.65rem; text-transform: uppercase; color: #cf1322;'>" . date('M', strtotime($event['EVENT_DATE'])) . "</div>
+                        </div>
+                        <!-- Details -->
+                        <div class='d-flex flex-column justify-content-center w-100'>
+                            <h6 class='mb-1 fw-bold text-dark' style='font-size: 0.75rem; line-height: 1.2;'>" . date('g:i A', strtotime($event['EVENT_TIME'])) . " - " . date('g:i A', strtotime($event['TO_TIME'])) . "</h6>
+                            <p class='mb-0 text-truncate' style='font-size: 0.75rem; color: #555;'>
+                                <i class='fa-solid fa-location-dot text-secondary me-1' style='font-size:0.7rem'></i>$event_venue
+                            </p>
+                            <p class='mb-0 text-muted' style='font-size: 0.65rem; line-height: 1.2; margin-top: 2px;'>
+                                <i class='fa-solid fa-snowflake me-1' style='font-size:0.6rem'></i>Freeze: " . date('M d, g:i A', strtotime($event['CANCEL_DATE'] . ' ' . $event['CANCEL_TIME'])) . "
+                            </p>
+                        </div>
                     </div>
-                    
-                    <p class='location mb-1 text-truncate' style='max-width: 100%; font-size: 0.85rem; color: #333;'>
-                        <i class='fa-solid fa-location-dot text-secondary me-1'></i>
-                        $event_venue
-                    </p>
-                    <p class='text-secondary' style='font-size: 0.7rem; margin-bottom: 5px;'><i class='fa-solid fa-snowflake me-1'></i>Freeze: $event_canceldate $event_cancelTime</p>
                 </div>
-                <div class='d-flex flex-column gap-2 w-100'>
-                    <div class='d-flex gap-2 w-100'>
-                        <span class='badge bg-light text-dark border d-flex align-items-center justify-content-between p-2 flex-grow-1'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Joined: $countTotalJoin'>
-                            <span class='text-muted fw-normal'>Joined</span> <strong class='fs-6' style='line-height: 1;'>$countTotalJoin</strong>
-                        </span>
-                        
-                        <span class='badge bg-light text-dark border d-flex align-items-center justify-content-between p-2 flex-grow-1'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Confirmed: $countTotalConfirmed'>
-                            <span class='text-muted fw-normal'>Confirmed</span> <strong class='fs-6' style='line-height: 1;'>$countTotalConfirmed</strong>
-                        </span>
+                
+                <!-- Right Column: Stats (Joined, Confirmed, Players) -->
+                <div class='col-5 d-flex flex-column justify-content-between gap-1'>
+                    <div class='d-flex gap-1 w-100'>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Joined</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalJoin</div>
+                         </div>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Confirm</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalConfirmed</div>
+                         </div>
                     </div>
-
-                    <span class='badge bg-dark d-flex align-items-center justify-content-between p-2 w-100 joined_btn' 
-                          style='cursor: pointer;' title='View' data-id='$event_id'>
-                        <span class='fw-normal'>Players</span> <i class='fa-regular fa-eye fs-6' style='line-height: 1;'></i>
-                    </span>
+                    <button class='btn btn-dark btn-sm w-100 joined_btn d-flex align-items-center justify-content-center gap-2 p-1 border-0 shadow-sm' style='font-size: 0.75rem; border-radius: 4px;' data-id='$event_id'>
+                         Players <i class='fa-regular fa-eye'></i>
+                    </button>
                 </div>
             </div>
              <div class='px-2 mb-2'>
-                <p class='gamesms_text m-0 p-2 rounded' style='background-color:#e9f2fb; font-size: 0.8rem; color: #0d6efd; border-left: 3px solid #0d6efd;'>$wrapped_message</p>
+                <p class='gamesms_text m-0' style='font-size: 0.75rem; color: #6c757d; font-style: italic;'><i class='fa-solid fa-circle-info me-1' style='font-size: 0.7rem;'></i>$wrapped_message</p>
             </div>
             <div class='d-flex flex-wrap align-items-center justify-content-start gap-1 px-2 pb-2'>
                 <span class='badge bg-secondary rounded-pill fw-normal'>$gender_skill_level</span>
@@ -356,6 +356,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                 <!--    <button id="search-button">Search</button>-->
                 <!--</div>-->
 
+                <!--
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">
@@ -368,6 +369,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         </div>
                     </div>
                 </div>
+                -->
 
                 <!--<div class="Profiletable_wrap">-->
                 <!--    <div class="hostProfile_small">-->
@@ -454,6 +456,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                 <!--    <button id="search-button">Search</button>-->
                 <!--</div>-->
 
+                <!--
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">
@@ -466,6 +469,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         </div>
                     </div>
                 </div>
+                -->
 
 
             </div>
@@ -886,7 +890,7 @@ document.getElementById('autoConfirm').addEventListener('change', function () {
 });
 
 function hitAutomationAPI(value,eventID) {
-    fetch('https://casainfotech.com/staging/api/update-automation.php', {
+    fetch('api/update-automation.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

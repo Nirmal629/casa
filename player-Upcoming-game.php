@@ -8,6 +8,10 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
 $select_event_cat = mysqli_query($conn, "select * from ca_event_category where 1");
 $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
 ?>
+<?php
+// Get player's sport from session (e.g., "Badminton")
+$playerSport = isset($_SESSION['games']) ? trim($_SESSION['games']) : '';
+?>
 <!----player-Upcoming-game----->
 <div class="mb-4">
     <form>
@@ -15,51 +19,30 @@ $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET[
             <input type="hidden" id="host" value="<?= htmlspecialchars($host_id) ?>" />
             <div class="col-auto">
                 <select class="form-select form-select-sm" id="event_category" aria-label="Default select example" style="width: auto; min-width: 160px; font-size: 0.95rem;">
-                    <option value="" selected>All</option>
+                    <option value="">All</option>
                     <?php
+                    $defaultCategory = ''; // We will capture the exact DB category name that matches
                     while ($fetchEventCat = mysqli_fetch_assoc($select_event_cat)) {
-                    ?>
-                        <option value="<?= $fetchEventCat['NAME'] ?>"><?= $fetchEventCat['NAME'] ?></option>
-                    <?php
+                        $catName = $fetchEventCat['NAME'];
+                        $selected = '';
                         
+                        // If player has a sport set and it matches part of this category name
+                        if ($playerSport !== '' && strpos(strtolower($catName), strtolower($playerSport)) !== false) {
+                            $selected = 'selected';
+                            $defaultCategory = $catName; // Save this for the SQL query later
+                        }
+                    ?>
+                        <option value="<?= $catName ?>" <?= $selected ?>><?= $catName ?></option>
+                    <?php
                     }
                     ?>
                 </select>
             </div>
-            <!--<div class="col-auto">-->
-            <!--    <select class="form-select" id="year" aria-label="Default select example">-->
-            <!--        <option value=''>Select the Year</option>-->
-            <!--        <option value="2024">2024</option>-->
-            <!--        <option value="2025">2025</option>-->
-            <!--        <option value="2026">2026</option>-->
-            <!--        <option value="2027">2027</option>-->
-            <!--        <option value="2028">2028</option>-->
-            <!--        <option value="2029">2029</option>-->
-            <!--        <option value="2030">2030</option>-->
-            <!--    </select>-->
-            <!--</div>-->
-            <!--<div class="col-auto">-->
-            <!--    <select class="form-select" id="month" aria-label="Default select example">-->
-            <!--        <option value=''>Select the Month</option>-->
-            <!--        <option value="1">January</option>-->
-            <!--        <option value="2">February</option>-->
-            <!--        <option value="3">March</option>-->
-            <!--        <option value="4">April</option>-->
-            <!--        <option value="5">May</option>-->
-            <!--        <option value="6">June</option>-->
-            <!--        <option value="7">July</option>-->
-            <!--        <option value="8">August</option>-->
-            <!--        <option value="9">September</option>-->
-            <!--        <option value="10">October</option>-->
-            <!--        <option value="11">November</option>-->
-            <!--        <option value="12">December</option>-->
-            <!--    </select>-->
-            <!--</div>-->
             <div class="col-auto">
                 <select class="form-select form-select-sm" id="year" aria-label="Default select example" style="width: 85px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                    <option value="">Year</option>
                     <?php
-                    for ($year = 2024; $year <= 2030; $year++) {
+                    $prevYear = $currentYear - 1;
+                    for ($year = $prevYear; $year <= $currentYear; $year++) {
                         $selected = ($year == $currentYear) ? 'selected' : '';
                         echo "<option value=\"$year\" $selected>$year</option>";
                     }
@@ -68,7 +51,7 @@ $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET[
             </div>
             <div class="col-auto">
                 <select class="form-select form-select-sm" id="month" aria-label="Default select example" style="width: 80px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                    <option value="">Month</option>
+
                     <?php
                     $months = [
                         1 => 'Jan',
@@ -92,7 +75,7 @@ $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET[
                 </select>
             </div>
 
-            <div class="col-auto ms-auto d-flex gap-1">
+            <!-- <div class="col-auto ms-auto d-flex gap-1">
                 <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="play_filter" title="Submit" style="width: 32px; height: 31px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>
@@ -105,7 +88,7 @@ $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET[
                         <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
                     </svg>
                 </button>
-            </div>
+            </div> -->
         </div>
     </form>
 </div>
@@ -142,12 +125,19 @@ $currentYear = $nowToronto->format('Y');
 $currentMonth = $nowToronto->format('m');
 
 // --- build SQL using PHP Toronto date/time for comparisons ---
+// Add sport filter for initial load
+$sportCondition = '';
+if (!empty($defaultCategory)) {
+    $sportCondition = "AND EVENT_CATEGORY = '" . mysqli_real_escape_string($conn, $defaultCategory) . "'";
+}
+
 $sql = "
     SELECT * FROM ca_events
     WHERE STATUS = 'Active'
       AND HOST_ID = '$host_id'
       AND (GENDER_CATEGORY = '$gender' OR GENDER_CATEGORY = 'Mix')
       AND (GENDER_SKILL_LEVEL = '" . trim($skill_level) . "' OR GENDER_SKILL_LEVEL = 'Mix')
+      $sportCondition
       AND YEAR(EVENT_DATE) = '$currentYear'
       AND MONTH(EVENT_DATE) = '$currentMonth'
       AND (

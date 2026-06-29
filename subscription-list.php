@@ -42,7 +42,7 @@
             <?php if (!empty($dayEvents)): ?>
                 <div class="mb-4">
                     <h4 class="text-uppercase fw-bold mb-3"><?php echo $day; ?></h4>
-                    <div class="discoverGames_wraper hostWrapper">
+                    <div class="discoverGames_wraper subscriptionWrapper">
                         <?php foreach ($dayEvents as $event): 
                             $event_id = $event['ID'];
                             $event_day = $event['DAY'];
@@ -121,7 +121,7 @@
 
 
 <!-----View-modal------->
-<section class="customModal_wrap hostgameview_modal">
+<section class="customModal_wrap hostgameview_modal_sub">
     <div class="customModal_body">
         <h6 class="customModal_head">View Game</h6>
         <button type="submit" class="customModal_close btn">
@@ -192,7 +192,7 @@
 
             <!--<hr />-->
 
-            <div class="" id="playerList">
+            <div class="" id="playerList_sub">
                 <!--<h4 class="sub_text" style="text-decoration: underline;">Invite Player List</h4>-->
 
                 <!--<div id="search-wrapper">-->

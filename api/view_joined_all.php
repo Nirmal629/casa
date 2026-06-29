@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
             $disabled = $is_joined ? '' : 'disabled';
             
             $checked_con = $player['CONFIRMED'] == 'Y' ? 'checked' : '';
-            $disabled_con = $player['CONFIRMED'] == 'Y' ? 'disabled' : '';
+            $disabled_con = ''; // Allow host to unconfirm players
     
             $level_map = [
                 'Beginner' => 'Beg',

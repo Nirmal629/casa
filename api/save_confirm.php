@@ -16,16 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
             $check_game_exits = mysqli_query($conn,"select * from ca_gamejoin where USER_ID='".$_POST['user_id']."' AND GAME_ID='".$_POST['game_id']."'");
             $count_rows = mysqli_num_rows($check_game_exits);
-            // Insert the invitation data into the `ca_gamejoin` table
             if($count_rows > 0)
             {
                 $query = "UPDATE ca_gamejoin SET CONFIRMED = 'Y' WHERE USER_ID='".$_POST['user_id']."' AND GAME_ID='".$_POST['game_id']."'";
     
-                // $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', '$createdAt')";
                 $result = mysqli_query($conn, $query);
             
                 if ($result) {
-                    // $joinMessage = applyAutoConfirmAndMessage($conn, $gameId,false);
+                    // Recalculate costs, etc.
+                    applyAutoConfirmAndMessage($conn, $gameId, false);
 
                     echo json_encode(['status' => 'success', 'message' => 'Status Updated successfully.']);
                 } else {
@@ -34,7 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             else
             {
-                echo json_encode(['status' => 'error', 'message' => 'Player Not yet added']);
+                // Player is NOT added yet. Add AND confirm them!
+                $dtype = $_POST['dtype'];
+                if ($dtype == 'Invite' || $dtype == 'invite') {
+                    $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID, PRICE, CURRENCY, TYPE, CONFIRMED, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', 'Y', '$createdAt')";
+                } else {
+                    $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID, PRICE, CURRENCY, TYPE, STATUS, CONFIRMED, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price', '$currency','Public','Y','Y','$createdAt')";
+                }
+                $result = mysqli_query($conn, $query);
+                if ($result) {
+                    applyAutoConfirmAndMessage($conn, $gameId, false);
+                    echo json_encode(['status' => 'success', 'message' => 'Player added and confirmed successfully.']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to add and confirm player.']);
+                }
             }
         
     }
@@ -52,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Insert the invitation data into the `ca_gamejoin` table
             if($count_rows > 0)
             {
-                echo $query = "UPDATE ca_gamejoin SET CONFIRMED = 'N' WHERE USER_ID='".$_POST['user_id']."' AND GAME_ID='".$_POST['game_id']."'";
+                $query = "UPDATE ca_gamejoin SET CONFIRMED = 'N' WHERE USER_ID='".$_POST['user_id']."' AND GAME_ID='".$_POST['game_id']."'";
     
                 // $query = "INSERT INTO ca_gamejoin (USER_ID, GAME_ID, HOST_ID,PRICE,CURRENCY,TYPE, CREATED_AT) VALUES ('$userId', '$gameId', '$hostId','$price','$currency','Invite', '$createdAt')";
                 $result = mysqli_query($conn, $query);

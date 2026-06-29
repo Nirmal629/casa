@@ -25,3 +25,14 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset($dbCharset);
+
+if (!function_exists('logPlayerActivity')) {
+    function logPlayerActivity($conn, $user_id, $activity_type, $description = null) {
+        if (!$conn || !is_numeric($user_id)) return;
+        $user_id = (int)$user_id;
+        $activity_type = mysqli_real_escape_string($conn, $activity_type);
+        $description = $description ? "'" . mysqli_real_escape_string($conn, $description) . "'" : "NULL";
+        $sql = "INSERT INTO ca_player_logs (USER_ID, ACTIVITY_TYPE, DESCRIPTION) VALUES ($user_id, '$activity_type', $description)";
+        mysqli_query($conn, $sql);
+    }
+}
