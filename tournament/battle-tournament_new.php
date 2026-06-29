@@ -5,8 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $groupLabels = ['Group-A', 'Group-B', 'Group-C', 'Group-D'];
 $maxGroups = 4;
-$requestedGroups = isset($_REQUEST['groups_required']) ? (int)$_REQUEST['groups_required'] : null;
-$groupsRequired = $requestedGroups !== null ? max(1, min($maxGroups, $requestedGroups)) : 4;
+$requestedGroups = isset($_REQUEST['groups_required']) ? (int)$_REQUEST['groups_required'] : 4;
+$groupsRequired = max(1, min($maxGroups, $requestedGroups));
 $allowedGroups = array_slice($groupLabels, 0, $groupsRequired);
 $teamRows = [];
 $teamCount = 0;

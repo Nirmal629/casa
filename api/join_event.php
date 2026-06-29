@@ -15,9 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, $query);
 
     if ($result) {
-             applyAutoConfirmAndMessage($conn, $gameId);
-
-
+        applyAutoConfirmAndMessage($conn, $gameId);
+        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined public game ID ' . $gameId);
 
         echo json_encode(['status' => 'success', 'message' => 'Event Joined successfully.','outputHTML'=>""]);
     } else {

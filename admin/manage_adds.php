@@ -299,15 +299,29 @@ $endItem = min($offset + count($advertisements), $totalItems);
 <section role="main" class="content-body">
     <header class="page-header">
         <h2>Manage Advertisements</h2>
+
+        <!-- <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="index.php">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Manage Ads</span></li>
+                <li><span>Advertisements</span></li>
+            </ol>
+
+            <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+        </div> -->
     </header>
 
     <section class="panel">
         <!-- <header class="panel-heading"> -->
-        <!-- <div class="panel-actions">
+            <!-- <div class="panel-actions">
                 <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
                 <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
             </div> -->
-        <!-- <h2 class="panel-title">All Advertisements</h2> -->
+            <!-- <h2 class="panel-title">All Advertisements</h2> -->
         <!-- </header> -->
         <div class="panel-body">
             <?php if ($message !== '') { ?>
@@ -317,12 +331,13 @@ $endItem = min($offset + count($advertisements), $totalItems);
             <?php } ?>
 
             <form method="GET" class="advertisements-toolbar">
+                <button type="button" class="btn btn-success" id="open-add-advertisement">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+
                 <div class="advertisements-toolbar-controls">
-                    <button type="button" class="btn btn-success" id="open-add-advertisement">
-                        <i class="fa fa-plus"></i>
-                    </button>
                     <div class="advertisements-limit-control">
-                        <!-- <label for="limit">Show</label> -->
+                        <label for="limit">Show</label>
                         <select class="form-control" id="limit" name="limit">
                             <?php foreach ($allowedLimits as $allowedLimit) { ?>
                                 <option value="<?php echo (int) $allowedLimit; ?>" <?php echo $limit === $allowedLimit ? 'selected' : ''; ?>>
@@ -330,7 +345,7 @@ $endItem = min($offset + count($advertisements), $totalItems);
                                 </option>
                             <?php } ?>
                         </select>
-                        <!-- <span>entries</span> -->
+                        <span>entries</span>
                     </div>
 
                     <div class="input-group advertisements-search-control">
@@ -420,7 +435,8 @@ $endItem = min($offset + count($advertisements), $totalItems);
                                             data-impressions_count="<?php echo h($row['impressions_count']); ?>"
                                             data-click_count="<?php echo h($row['click_count']); ?>"
                                             data-created_at="<?php echo h($row['created_at']); ?>"
-                                            data-updated_at="<?php echo h($row['updated_at']); ?>">
+                                            data-updated_at="<?php echo h($row['updated_at']); ?>"
+                                        >
                                             <i class="fa fa-eye"></i>
                                         </button>
                                         <button
@@ -438,7 +454,8 @@ $endItem = min($offset + count($advertisements), $totalItems);
                                             data-status="<?php echo h($row['status']); ?>"
                                             data-priority="<?php echo h($row['priority']); ?>"
                                             data-impressions_count="<?php echo h($row['impressions_count']); ?>"
-                                            data-click_count="<?php echo h($row['click_count']); ?>">
+                                            data-click_count="<?php echo h($row['click_count']); ?>"
+                                        >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                         <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this advertisement?');">
@@ -559,7 +576,6 @@ $endItem = min($offset + count($advertisements), $totalItems);
     }
 
     @media (max-width: 767px) {
-
         .advertisements-toolbar,
         .advertisements-toolbar-controls,
         .advertisements-pagination-row {
@@ -852,7 +868,7 @@ $endItem = min($offset + count($advertisements), $totalItems);
 </div>
 
 <script>
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         var $ = window.jQuery;
         var modal = document.getElementById('advertisementModal');
         var viewModal = document.getElementById('advertisementViewModal');
@@ -880,7 +896,7 @@ $endItem = min($offset + count($advertisements), $totalItems);
         var limitSelect = document.getElementById('limit');
 
         if (limitSelect) {
-            limitSelect.addEventListener('change', function() {
+            limitSelect.addEventListener('change', function () {
                 limitSelect.form.submit();
             });
         }
@@ -913,7 +929,7 @@ $endItem = min($offset + count($advertisements), $totalItems);
             var hasOption = false;
             var normalizedValue = value || '';
 
-            Array.prototype.forEach.call(element.options, function(option) {
+            Array.prototype.forEach.call(element.options, function (option) {
                 if (option.value === normalizedValue) {
                     hasOption = true;
                 }
@@ -1017,47 +1033,47 @@ $endItem = min($offset + count($advertisements), $totalItems);
                 'click_count',
                 'created_at',
                 'updated_at'
-            ].forEach(function(field) {
+            ].forEach(function (field) {
                 setViewValue(field, data[field] || '');
             });
         }
 
         if (openAddButton) {
-            openAddButton.addEventListener('click', function() {
+            openAddButton.addEventListener('click', function () {
                 setAdvertisementModal(getEmptyAdvertisement());
                 openModal();
             });
         }
 
-        document.querySelectorAll('.edit-advertisement').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.edit-advertisement').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setAdvertisementModal(button.dataset);
                 openModal();
             });
         });
 
-        document.querySelectorAll('.view-advertisement').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.view-advertisement').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setAdvertisementView(button.dataset);
                 openViewModal();
             });
         });
 
         if (closeTopButton) {
-            closeTopButton.addEventListener('click', function() {
+            closeTopButton.addEventListener('click', function () {
                 closeModal();
                 setAdvertisementModal(getEmptyAdvertisement());
             });
         }
 
         if (closeBottomButton) {
-            closeBottomButton.addEventListener('click', function() {
+            closeBottomButton.addEventListener('click', function () {
                 closeModal();
                 setAdvertisementModal(getEmptyAdvertisement());
             });
         }
 
-        modal.addEventListener('click', function(event) {
+        modal.addEventListener('click', function (event) {
             if (event.target === modal) {
                 closeModal();
                 setAdvertisementModal(getEmptyAdvertisement());
@@ -1072,13 +1088,13 @@ $endItem = min($offset + count($advertisements), $totalItems);
             closeViewBottomButton.addEventListener('click', closeViewModal);
         }
 
-        viewModal.addEventListener('click', function(event) {
+        viewModal.addEventListener('click', function (event) {
             if (event.target === viewModal) {
                 closeViewModal();
             }
         });
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && modal.classList.contains('is-open')) {
                 closeModal();
                 setAdvertisementModal(getEmptyAdvertisement());
@@ -1090,7 +1106,7 @@ $endItem = min($offset + count($advertisements), $totalItems);
         });
 
         <?php if ($showAdvertisementModal) { ?>
-            openModal();
+        openModal();
         <?php } ?>
     });
 </script>

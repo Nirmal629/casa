@@ -6,7 +6,8 @@ session_start();
 include 'dbConnection.php';
 include 'helpers/gameAutoConfirm.php';
 function validate_input($data) {
-    return htmlspecialchars(trim($data));
+    global $conn;
+    return mysqli_real_escape_string($conn, trim($data));
 }
 
 // Collect POST data (no validation, only basic sanitization)

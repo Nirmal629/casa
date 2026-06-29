@@ -303,6 +303,20 @@ $endItem = min($offset + count($mediaItems), $totalItems);
 <section role="main" class="content-body">
     <header class="page-header">
         <h2>Media Library</h2>
+
+        <!-- <div class="right-wrapper pull-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="index.php">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Media</span></li>
+                <li><span>List</span></li>
+            </ol>
+
+            <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+        </div> -->
     </header>
 
     <section class="panel">
@@ -319,52 +333,54 @@ $endItem = min($offset + count($mediaItems), $totalItems);
 
             <form method="GET" class="media-toolbar">
                 <div style="display: flex; align-items: center; gap:5px;">
-                    <button type="button" class="btn btn-success" id="open-add-media">
-                        <i class="fa fa-plus"></i>
-                    </button>
+                <button type="button" class="btn btn-success" id="open-add-media">
+                    <i class="fa fa-plus"></i> Add
+                </button>
 
-                    <div class="media-type-tabs" role="tablist" aria-label="Media Type">
+                <div class="media-type-tabs" role="tablist" aria-label="Media Type">
                         <a
                             href="media_list.php?<?php echo h(http_build_query(['limit' => $limit, 'search' => $search])); ?>"
                             class="btn btn-sm <?php echo $mediaTypeFilter === '' ? 'btn-primary' : 'btn-default'; ?>"
                             role="tab"
-                            aria-selected="<?php echo $mediaTypeFilter === '' ? 'true' : 'false'; ?>">All</a>
+                            aria-selected="<?php echo $mediaTypeFilter === '' ? 'true' : 'false'; ?>"
+                        >All</a>
                         <?php foreach ($mediaTypeOptions as $mediaTypeOption) { ?>
                             <a
                                 href="media_list.php?<?php echo h(http_build_query(['limit' => $limit, 'search' => $search, 'media_type' => $mediaTypeOption])); ?>"
                                 class="btn btn-sm <?php echo $mediaTypeFilter === $mediaTypeOption ? 'btn-primary' : 'btn-default'; ?>"
                                 role="tab"
-                                aria-selected="<?php echo $mediaTypeFilter === $mediaTypeOption ? 'true' : 'false'; ?>"><?php echo h(ucfirst($mediaTypeOption)); ?></a>
+                                aria-selected="<?php echo $mediaTypeFilter === $mediaTypeOption ? 'true' : 'false'; ?>"
+                            ><?php echo h(ucfirst($mediaTypeOption)); ?></a>
                         <?php } ?>
                     </div>
 
-                    <div class="media-toolbar-controls">
-                        <div class="media-limit-control">
-                            <!-- <label for="limit">Show</label> -->
-                            <select class="form-control" id="limit" name="limit">
-                                <?php foreach ($allowedLimits as $allowedLimit) { ?>
-                                    <option value="<?php echo (int) $allowedLimit; ?>" <?php echo $limit === $allowedLimit ? 'selected' : ''; ?>>
-                                        <?php echo (int) $allowedLimit; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                            <!-- <span>entries</span> -->
-                        </div>
+                </div>
 
-                        <div class="input-group media-search-control">
-                            <input type="hidden" name="media_type" value="<?php echo h($mediaTypeFilter); ?>">
-                            <input type="text" class="form-control" id="search" name="search" value="<?php echo h($search); ?>" placeholder="Search">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                                <?php if ($search !== '' || $mediaTypeFilter !== '') { ?>
-                                    <a href="media_list.php?limit=<?php echo (int) $limit; ?>" class="btn btn-default">Reset</a>
-                                <?php } ?>
-                            </span>
-                        </div>
+                <div class="media-toolbar-controls">
+                    <div class="media-limit-control">
+                        <label for="limit">Show</label>
+                        <select class="form-control" id="limit" name="limit">
+                            <?php foreach ($allowedLimits as $allowedLimit) { ?>
+                                <option value="<?php echo (int) $allowedLimit; ?>" <?php echo $limit === $allowedLimit ? 'selected' : ''; ?>>
+                                    <?php echo (int) $allowedLimit; ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                        <span>entries</span>
                     </div>
 
+                    <div class="input-group media-search-control">
+                        <input type="hidden" name="media_type" value="<?php echo h($mediaTypeFilter); ?>">
+                        <input type="text" class="form-control" id="search" name="search" value="<?php echo h($search); ?>" placeholder="Search">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <?php if ($search !== '' || $mediaTypeFilter !== '') { ?>
+                                <a href="media_list.php?limit=<?php echo (int) $limit; ?>" class="btn btn-default">Reset</a>
+                            <?php } ?>
+                        </span>
+                    </div>
                 </div>
             </form>
 
@@ -452,7 +468,8 @@ $endItem = min($offset + count($mediaItems), $totalItems);
                                             data-description="<?php echo h($row['description']); ?>"
                                             data-sort_order="<?php echo h($row['sort_order']); ?>"
                                             data-is_active="<?php echo h($row['is_active']); ?>"
-                                            data-created_at="<?php echo h($row['created_at']); ?>">
+                                            data-created_at="<?php echo h($row['created_at']); ?>"
+                                        >
                                             <i class="fa fa-eye"></i>
                                         </button>
                                         <button
@@ -466,7 +483,8 @@ $endItem = min($offset + count($mediaItems), $totalItems);
                                             data-thumbnail_url="<?php echo h($row['thumbnail_url']); ?>"
                                             data-description="<?php echo h($row['description']); ?>"
                                             data-sort_order="<?php echo h($row['sort_order']); ?>"
-                                            data-is_active="<?php echo h($row['is_active']); ?>">
+                                            data-is_active="<?php echo h($row['is_active']); ?>"
+                                        >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                         <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this media item?');">
@@ -595,7 +613,6 @@ $endItem = min($offset + count($mediaItems), $totalItems);
     }
 
     @media (max-width: 767px) {
-
         .media-toolbar,
         .media-toolbar-controls,
         .media-type-tabs,
@@ -760,12 +777,12 @@ $endItem = min($offset + count($mediaItems), $totalItems);
                         <div class="col-md-6 form-group">
                             <label for="modal_media_url">Media URL <span>*</span></label>
                             <input type="text" class="form-control" id="modal_media_url" name="media_url" value="<?php echo h($formData['media_url']); ?>" placeholder="assets/images/example.jpg or https://..." required>
-                            <img src="<?php echo h($formData['media_url']); ?>" alt="Media Preview" id="modal_media_preview" class="media-preview-image" <?php echo $formData['media_url'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
+                            <img src="<?php echo h($formData['media_url']); ?>" alt="Media Preview" id="modal_media_preview" class="media-preview-image"<?php echo $formData['media_url'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="modal_thumbnail_url">Thumbnail URL</label>
                             <input type="text" class="form-control" id="modal_thumbnail_url" name="thumbnail_url" value="<?php echo h($formData['thumbnail_url']); ?>" placeholder="Optional thumbnail for video">
-                            <img src="<?php echo h($formData['thumbnail_url']); ?>" alt="Thumbnail Preview" id="modal_thumbnail_preview" class="media-preview-image" <?php echo $formData['thumbnail_url'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
+                            <img src="<?php echo h($formData['thumbnail_url']); ?>" alt="Thumbnail Preview" id="modal_thumbnail_preview" class="media-preview-image"<?php echo $formData['thumbnail_url'] !== '' ? ' style="display:block; margin-top:10px;"' : ''; ?>>
                         </div>
                     </div>
 
@@ -846,7 +863,7 @@ $endItem = min($offset + count($mediaItems), $totalItems);
 </div>
 
 <script>
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         var $ = window.jQuery;
         var modal = document.getElementById('mediaModal');
         var viewModal = document.getElementById('mediaViewModal');
@@ -996,65 +1013,65 @@ $endItem = min($offset + count($mediaItems), $totalItems);
                 'sort_order',
                 'is_active',
                 'created_at'
-            ].forEach(function(field) {
+            ].forEach(function (field) {
                 setViewValue(field, data[field] || '', data);
             });
         }
 
         if (limitSelect) {
-            limitSelect.addEventListener('change', function() {
+            limitSelect.addEventListener('change', function () {
                 limitSelect.form.submit();
             });
         }
 
         if (openAddButton) {
-            openAddButton.addEventListener('click', function() {
+            openAddButton.addEventListener('click', function () {
                 setMediaModal(getEmptyMedia());
                 openModal();
             });
         }
 
-        document.querySelectorAll('.edit-media').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.edit-media').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setMediaModal(button.dataset);
                 openModal();
             });
         });
 
-        document.querySelectorAll('.view-media').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.view-media').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setMediaView(button.dataset);
                 openViewModal();
             });
         });
 
         if (mediaUrlInput) {
-            mediaUrlInput.addEventListener('input', function() {
+            mediaUrlInput.addEventListener('input', function () {
                 updatePreview(mediaPreview, mediaUrlInput.value.trim());
             });
         }
 
         if (thumbnailUrlInput) {
-            thumbnailUrlInput.addEventListener('input', function() {
+            thumbnailUrlInput.addEventListener('input', function () {
                 updatePreview(thumbnailPreview, thumbnailUrlInput.value.trim());
             });
         }
 
         if (closeTopButton) {
-            closeTopButton.addEventListener('click', function() {
+            closeTopButton.addEventListener('click', function () {
                 closeModal();
                 setMediaModal(getEmptyMedia());
             });
         }
 
         if (closeBottomButton) {
-            closeBottomButton.addEventListener('click', function() {
+            closeBottomButton.addEventListener('click', function () {
                 closeModal();
                 setMediaModal(getEmptyMedia());
             });
         }
 
-        modal.addEventListener('click', function(event) {
+        modal.addEventListener('click', function (event) {
             if (event.target === modal) {
                 closeModal();
                 setMediaModal(getEmptyMedia());
@@ -1069,13 +1086,13 @@ $endItem = min($offset + count($mediaItems), $totalItems);
             closeViewBottomButton.addEventListener('click', closeViewModal);
         }
 
-        viewModal.addEventListener('click', function(event) {
+        viewModal.addEventListener('click', function (event) {
             if (event.target === viewModal) {
                 closeViewModal();
             }
         });
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && modal.classList.contains('is-open')) {
                 closeModal();
                 setMediaModal(getEmptyMedia());
@@ -1087,7 +1104,7 @@ $endItem = min($offset + count($mediaItems), $totalItems);
         });
 
         <?php if ($showMediaModal) { ?>
-            openModal();
+        openModal();
         <?php } ?>
     });
 </script>

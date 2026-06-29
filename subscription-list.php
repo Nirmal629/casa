@@ -1,8 +1,5 @@
 <?php
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        include_once __DIR__ . '/dbConnection.php';
+// DB connection ($conn) is already provided by inner-header.php
         
         $eventsByDay = [
             'MONDAY'    => [],
@@ -15,13 +12,13 @@
         ];
         
         $dayColors = [
-            'MONDAY'    => 'bg-primary text-white p-1',
-            'TUESDAY'   => 'bg-success text-white p-1',
-            'WEDNESDAY' => 'bg-warning text-dark p-1',
-            'THURSDAY'  => 'bg-info text-dark p-1',
-            'FRIDAY'    => 'bg-secondary text-white p-1',
-            'SATURDAY'  => 'bg-dark text-white p-1',
-            'SUNDAY'    => 'bg-danger text-white p-1',
+            'MONDAY'    => 'bg-primary text-white',
+            'TUESDAY'   => 'bg-success text-white',
+            'WEDNESDAY' => 'bg-warning text-dark',
+            'THURSDAY'  => 'bg-info text-dark',
+            'FRIDAY'    => 'bg-secondary text-white',
+            'SATURDAY'  => 'bg-dark text-white',
+            'SUNDAY'    => 'bg-danger text-white',
         ];
         
         $sql = "SELECT * FROM ca_events_default WHERE 1";
@@ -45,7 +42,7 @@
             <?php if (!empty($dayEvents)): ?>
                 <div class="mb-4">
                     <h4 class="text-uppercase fw-bold mb-3"><?php echo $day; ?></h4>
-                    <div class="discoverGames_wraper hostWrapper">
+                    <div class="discoverGames_wraper subscriptionWrapper">
                         <?php foreach ($dayEvents as $event): 
                             $event_id = $event['ID'];
                             $event_day = $event['DAY'];
@@ -72,46 +69,44 @@
                             $gender_skill_level = $event['GENDER_SKILL_LEVEL'];
                         ?>
 
-                        <div class='discoverGames_card_sub'>
-                            <div class='d-flex align-items-center justify-content-between'>
-                                <p class='desc'><?php echo "$event_category - $gender_category"; ?></p>
-                                <div class='d-flex align-items-center justify-content-end gap-2'>
-                                    <span class='badge bg-info text-dark rounded-circle fw-bold' title='<?php echo $event_description; ?>'>i</span>
-                                    <i class='fa fa-user-plus joined_btn' data-id='<?php echo $event_id; ?>' style='cursor:pointer'></i>
-                                    <a href='javascript:void(0)' class='btn edit_btn' data-id='<?php echo $event_id; ?>'>
+                        <div class='discoverGames_card_sub card shadow-sm mb-3' style='padding: 0; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;'>
+                            <!-- Top Bar -->
+                            <div class='d-flex align-items-start justify-content-between p-3 pb-2 gap-2'>
+                                <p class='desc fw-bold m-0 text-dark' style='font-size: 1.05rem; line-height: 1.3;'><?php echo "$event_category - $gender_category"; ?></p>
+                                <div class='d-flex align-items-center justify-content-end gap-1 flex-shrink-0'>
+                                    <span class='badge bg-info text-white rounded-circle d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; cursor:help;' title='<?php echo htmlspecialchars($event_description, ENT_QUOTES); ?>'><i class='fa-solid fa-info'></i></span>
+                                    <span class='badge bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center view_btn' data-id='<?php echo $event_id; ?>' style='width: 28px; height: 28px; cursor:pointer'><i class='fa fa-user-plus'></i></span>
+                                    <a href='javascript:void(0)' class='badge bg-light text-dark border rounded-circle d-flex align-items-center justify-content-center edit_btn' data-id='<?php echo $event_id; ?>' style='width: 28px; height: 28px; text-decoration:none;'>
                                         <i class='fa-regular fa-pen-to-square'></i>
                                     </a>
                                     <input type='hidden' id='data_<?php echo $event_id; ?>' value='<?php echo $jsonStringy; ?>'/>
                                 </div>
                             </div>
 
-                            <h4 class='date_time <?php echo $dayColorClass; ?>'><?php echo "$event_day - $eventTimeFrom to $eventTimeTo"; ?></h4>
-
-                            <p class='location'>
-                                <i class='fa-solid fa-location-dot'></i>
-                                <?php echo $event_venue; ?>
-                            </p>
-
-                            <div class='d-flex align-items-center' style='gap: 15px; margin-bottom: 10px;'>
-                                <div class='d-flex align-items-center'>
-                                    <p><?php echo $event_message; ?></p>
-                                </div>
-                                <div class='Slots_book' style='visibility:hidden'>Only 2 Slots</div>
+                            <!-- Day and Time Banner -->
+                            <div class='<?php echo $dayColorClass; ?> px-3 py-2'>
+                                <h5 class='m-0 fw-bold text-uppercase' style='font-size: 0.85rem; letter-spacing: 0.5px;'><?php echo "$event_day - $eventTimeFrom to $eventTimeTo"; ?></h5>
                             </div>
 
-                            <div class='d-flex align-items-center justify-content-between' style='gap: 10px;'>
-                                <div class='d-flex align-items-center justify-content-start gap-1'>
-                                    <div class='play_status'>
-                                        <span><?php echo $gender_skill_level; ?></span>
+                            <div class='p-3 pt-2 d-flex flex-column h-100'>
+                                <!-- Location -->
+                                <p class='location text-muted mb-2' style='font-size: 0.85rem;'>
+                                    <i class='fa-solid fa-location-dot me-1'></i>
+                                    <?php echo $event_venue; ?>
+                                </p>
+
+                                <!-- Message -->
+                                <p class='mb-3 text-secondary' style='font-size: 0.9rem; line-height: 1.4;'><?php echo $event_message; ?></p>
+
+                                <!-- Bottom row: Tags and Create button -->
+                                <div class='d-flex align-items-end justify-content-between gap-2 mt-auto'>
+                                    <div class='d-flex flex-wrap gap-1'>
+                                        <span class='badge bg-secondary rounded-pill fw-normal px-2 py-1' style='font-size: 0.75rem;'><?php echo $gender_skill_level; ?></span>
+                                        <span class='badge <?php echo $event_type == 'Public' ? 'bg-primary' : 'bg-success'; ?> rounded-pill fw-normal px-2 py-1' style='font-size: 0.75rem;'><?php echo $event_type; ?></span>
+                                        <span class='badge bg-light text-dark border rounded-pill fw-normal px-2 py-1' style='font-size: 0.75rem;'><?php echo "$event_currency $event_cost"; ?></span>
                                     </div>
-                                    <span class='badge <?php echo $event_type == 'Public' ? 'bg-primary' : 'bg-success'; ?>' style="border-radius: 20px;">
-                                        <?php echo $event_type; ?>
-                                    </span>
-                                    <span class='amount' style="border-radius: 20px;">
-                                        <?php echo "$event_currency $event_cost"; ?>
-                                    </span>
+                                    <button id="create_btn" class="btn btn-success btn-sm fw-bold px-3 rounded-pill flex-shrink-0" style='font-size: 0.85rem;' data-id='<?php echo $event_id; ?>'>Create</button>
                                 </div>
-                                 <button id="create_btn" class="btn btn-success" data-id='<?php echo $event_id; ?>'>Create</button>
                             </div>
                         </div>
 
@@ -126,7 +121,7 @@
 
 
 <!-----View-modal------->
-<section class="customModal_wrap hostgameview_modal">
+<section class="customModal_wrap hostgameview_modal_sub">
     <div class="customModal_body">
         <h6 class="customModal_head">View Game</h6>
         <button type="submit" class="customModal_close btn">
@@ -197,7 +192,7 @@
 
             <!--<hr />-->
 
-            <div class="" id="playerList">
+            <div class="" id="playerList_sub">
                 <!--<h4 class="sub_text" style="text-decoration: underline;">Invite Player List</h4>-->
 
                 <!--<div id="search-wrapper">-->
@@ -286,7 +281,7 @@
 <!---view joined --->
 <section class="customModal_wrap hostgameviewjoined_modal">
     <div class="customModal_body">
-        <h6 class="customModal_head">View All Player's Joined</h6>
+        <h6 class="customModal_head">Joined Players</h6>
         <button type="submit" class="customModal_close btn">
             <i class="fa-solid fa-xmark"></i>
         </button>

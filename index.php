@@ -11,16 +11,11 @@ error_reporting(1);
 // exit;
 
 if (isset($_SESSION['user_id'])) {
-
-    if (!empty($_SERVER['HTTP_REFERER'])) {
-
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+    if (isset($_SESSION['usertype']) && ($_SESSION['usertype'] === 'Host' || $_SESSION['usertype'] === 'Trainer')) {
+        header("Location: host-dashboard.php");
     } else {
-
-        header("Location: index.php"); // Default fallback
-
+        header("Location: player-hub.php");
     }
-
     exit();
 }
 

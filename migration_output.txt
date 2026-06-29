@@ -1,0 +1,18 @@
+=== Starting DB Migration: 2026-06-07 02:26:03 ===
+• Index 'uq_host_id' does not exist or was already dropped.
+
+• Column 'join_type' already exists on ca_clubs.
+
+• Column 'created_by' does not exist on ca_clubs.
+
+• Column 'address' does not exist on ca_clubs.
+
+• Column 'area' does not exist on ca_clubs.
+
+Running: CREATE TABLE IF NOT EXISTS `player_club_status` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `club_id` IN...
+✓ SUCCESS
+
+Running: DROP TABLE IF EXISTS `player_Host_mapping`...
+✓ SUCCESS
+
+=== Migration Finished ===

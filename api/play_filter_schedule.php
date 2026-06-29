@@ -25,7 +25,7 @@ if($_POST['type']=='filter')
                         // echo "ok2";exit;
         $allowed_levels = implode("','", $skill_levels[$skill_level]);
 
-        $conditions = [" AND STATUS='Active'"]; // Always include active status
+        $conditions = ["STATUS='Active'"]; // Always include active status
 
         // Check and add conditions dynamically
         if (!empty($_POST['host'])) {
@@ -40,12 +40,13 @@ if($_POST['type']=='filter')
             $conditions[] = "MONTH(EVENT_DATE)='" . mysqli_real_escape_string($conn, $_POST['month']) . "'";
         }
 
+        if (!empty($_POST['event_category']) && $_POST['event_category'] !== 'All') {
+            $conditions[] = "EVENT_CATEGORY='" . mysqli_real_escape_string($conn, $_POST['event_category']) . "'";
+        }
         
         $sql = "SELECT * FROM ca_events";
         if (!empty($conditions)) {
-            // $sql .= " WHERE (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND GENDER_SKILL_LEVEL IN ('$allowed_levels')" . implode(" AND ", $conditions);
-            // $sql .= " WHERE (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND GENDER_SKILL_LEVEL = '$skill_level'" . implode(" AND ", $conditions);
-            $sql .= " WHERE (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND (GENDER_SKILL_LEVEL = '$skill_level' OR GENDER_SKILL_LEVEL = 'Mix') AND EVENT_CATEGORY ='".$_POST['event_category']."'" . implode(" AND ", $conditions);
+            $sql .= " WHERE (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND (GENDER_SKILL_LEVEL = '$skill_level' OR GENDER_SKILL_LEVEL = 'Mix') AND " . implode(" AND ", $conditions);
             
             // If selected month is the current month → exclude past games
             if (!empty($_POST['year']) && !empty($_POST['month'])) {
@@ -218,10 +219,16 @@ $jsonStringy = htmlspecialchars(
                         </span>
                     </div>--->
                     
-                    <div class='view_btnn d-flex align-items-center justify-content-between gap-1' title='View' data-id='$event_id' style='cursor: pointer;'>
+                    " . ($countRows > 0 ? "
+                    <div class='view_btnn d-flex align-items-center justify-content-between gap-1' title='View Players' data-id='$event_id' style='cursor: pointer;'>
                         <span>All Players:</span>
                         <span class='badge bg-info'><i class='fa-regular fa-eye'></i></span>
                     </div>
+                    " : "
+                    <div class='d-flex align-items-center justify-content-between gap-1' title='Not Joined'>
+                        <span style='font-size: 75%; color: #dc3545; font-style: italic;'>Please join the game to see further details.</span>
+                    </div>
+                    ") . "
                 </div>
             </div>
             
@@ -265,24 +272,26 @@ $jsonStringy = htmlspecialchars(
 }
 else
 {
-    $gender = $_SESSION['gender']; // Replace with logged-in user's gender
+        $gender = $_SESSION['gender']; // Replace with logged-in user's gender
         $skill_level = $_SESSION['vlevel']!=''?$_SESSION['vlevel']:$_SESSION['level']; // Replace with logged-in user's skill level
+        $defaultSport = !empty($_SESSION['games']) ? $_SESSION['games'] : 'Badminton Game';
         
         // Define skill hierarchy
         $skill_levels = [
             'Beginner' => ["Beginner"],
             'Amateur' => ["Beginner", "Amateur"],
+            'Intermediate' => ["Beginner", "Amateur", "Intermediate","Intermediate +"],
             'Intermediate +' => ["Beginner", "Amateur", "Intermediate","Intermediate +"],
             'Advance' => ["Beginner", "Amateur", "Intermediate","Intermediate +", "Advance"]
         ];
         $allowed_levels = implode("','", $skill_levels[$skill_level]);
         $currentYear = date('Y');
-$currentMonth = date('n'); // 1-12 (no leading zero)
+        $currentMonth = date('n'); // 1-12 (no leading zero)
 
 
         // Assuming you have a connection to the database ($conn)
         // $sql = "SELECT * FROM ca_events WHERE HOST_ID=21 AND STATUS='Active' AND (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND GENDER_SKILL_LEVEL IN ('$allowed_levels') ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; 
-        $sql = "SELECT * FROM ca_events WHERE STATUS='Active' AND (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND (GENDER_SKILL_LEVEL ='" . trim($skill_level) . "' OR GENDER_SKILL_LEVEL = 'Mix') AND EVENT_CATEGORY ='Badminton Game' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' AND EVENT_DATE >= CURDATE() ORDER BY EVENT_DATE ASC, EVENT_TIME DESC";
+        $sql = "SELECT * FROM ca_events WHERE STATUS='Active' AND (GENDER_CATEGORY='$gender' OR GENDER_CATEGORY='Mix') AND (GENDER_SKILL_LEVEL ='" . trim($skill_level) . "' OR GENDER_SKILL_LEVEL = 'Mix') AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' AND EVENT_DATE >= CURDATE() ORDER BY EVENT_DATE ASC, EVENT_TIME DESC";
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {
@@ -432,10 +441,16 @@ $jsonStringy = htmlspecialchars(
                         </span>
                     </div>--->
                     
-                    <div class='view_btnn d-flex align-items-center justify-content-between gap-1' title='View' data-id='$event_id' style='cursor: pointer;'>
+                    " . ($countRows > 0 ? "
+                    <div class='view_btnn d-flex align-items-center justify-content-between gap-1' title='View Players' data-id='$event_id' style='cursor: pointer;'>
                         <span>All Players:</span>
                         <span class='badge bg-info'><i class='fa-regular fa-eye'></i></span>
                     </div>
+                    " : "
+                    <div class='d-flex align-items-center justify-content-between gap-1' title='Not Joined'>
+                        <span style='font-size: 75%; color: #dc3545; font-style: italic;'>Please join the game to see further details.</span>
+                    </div>
+                    ") . "
                 </div>
             </div>
             

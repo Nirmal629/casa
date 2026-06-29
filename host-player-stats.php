@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include_once __DIR__ . '/dbConnection.php';
 
-$sql = "SELECT ID, NAME, EMAIL FROM ca_users LIMIT 5";
+$sql = "SELECT * FROM ca_users LIMIT 5";
 $result = $conn->query($sql);
 if($result->num_rows > 0){
     echo "<table class='table'><tr><th>Name</th><th>Email</th></tr>";

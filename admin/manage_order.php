@@ -63,15 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $item_id = intval($_POST['item_id']);
     $field   = $_POST['field'];
-    $value   = mysqli_real_escape_string($conn, $_POST['value']);
+    $value   = mysqli_real_escape_string($conn,$_POST['value']);
     $time    = date('Y-m-d H:i:s');
 
     switch ($field) {
 
         case 'STATUS':
 
-            if ($value == 'Cancelled') {
-                $sql = "UPDATE ca_orders_item SET
+            if($value == 'Cancelled'){
+                $sql="UPDATE ca_orders_item SET
                 STATUS='Cancelled',
                 STATUS_TIME='$time',
                 FULFILLED_STATUS=NULL,
@@ -84,43 +84,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 FULFILLEDBY_TIME=NULL
                 WHERE ITEM_ID=$item_id";
             } else {
-                $sql = "UPDATE ca_orders_item SET
+                $sql="UPDATE ca_orders_item SET
                 STATUS='$value',
                 STATUS_TIME='$time'
                 WHERE ITEM_ID=$item_id";
             }
-            break;
+        break;
 
         case 'FULFILLEDBY':
-            $sql = "UPDATE ca_orders_item SET
+            $sql="UPDATE ca_orders_item SET
             FULFILLEDBY='$value',
             FULFILLEDBY_TIME='$time'
             WHERE ITEM_ID=$item_id";
-            break;
+        break;
 
         case 'FULFILLED_STATUS':
-            $sql = "UPDATE ca_orders_item SET
+            $sql="UPDATE ca_orders_item SET
             FULFILLED_STATUS='$value',
             FULFILLED_STATUS_TIME='$time'
             WHERE ITEM_ID=$item_id";
-            break;
+        break;
 
         case 'PAYMENT_TYPE':
-            $sql = "UPDATE ca_orders_item SET
+            $sql="UPDATE ca_orders_item SET
             PAYMENT_TYPE='$value',
             PAYMENT_TYPE_TIME='$time'
             WHERE ITEM_ID=$item_id";
-            break;
+        break;
 
         case 'PAYMENT_STATUS':
-            $sql = "UPDATE ca_orders_item SET
+            $sql="UPDATE ca_orders_item SET
             PAYMENT_STATUS='$value',
             PAYMENT_STATUS_TIME='$time'
             WHERE ITEM_ID=$item_id";
-            break;
+        break;
 
-        default:
-            exit;
+        default: exit;
     }
 
     $conn->query($sql);
@@ -144,39 +143,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $where = [];
 
-if (!empty($_GET['customer'])) {
-    $customer = mysqli_real_escape_string($conn, $_GET['customer']);
+if(!empty($_GET['customer'])){
+    $customer = mysqli_real_escape_string($conn,$_GET['customer']);
     $where[] = "o.CUSTOMER_NAME LIKE '%$customer%'";
 }
 
-if (!empty($_GET['item'])) {
-    $item = mysqli_real_escape_string($conn, $_GET['item']);
+if(!empty($_GET['item'])){
+    $item = mysqli_real_escape_string($conn,$_GET['item']);
     $where[] = "i.PRODUCT_NAME LIKE '%$item%'";
 }
 
-if (!empty($_GET['status'])) {
-    $status = mysqli_real_escape_string($conn, $_GET['status']);
+if(!empty($_GET['status'])){
+    $status = mysqli_real_escape_string($conn,$_GET['status']);
     $where[] = "i.STATUS='$status'";
 }
 
-if (!empty($_GET['fulfilledby'])) {
+if(!empty($_GET['fulfilledby'])){
     $fulfilledby = intval($_GET['fulfilledby']);
     $where[] = "i.FULFILLEDBY='$fulfilledby'";
 }
 
-if (!empty($_GET['payment_type'])) {
-    $ptype = mysqli_real_escape_string($conn, $_GET['payment_type']);
+if(!empty($_GET['payment_type'])){
+    $ptype = mysqli_real_escape_string($conn,$_GET['payment_type']);
     $where[] = "i.PAYMENT_TYPE='$ptype'";
 }
 
-if (!empty($_GET['payment_status'])) {
-    $pstatus = mysqli_real_escape_string($conn, $_GET['payment_status']);
+if(!empty($_GET['payment_status'])){
+    $pstatus = mysqli_real_escape_string($conn,$_GET['payment_status']);
     $where[] = "i.PAYMENT_STATUS='$pstatus'";
 }
 
-$whereSql = count($where) ? "WHERE " . implode(" AND ", $where) : "";
+$whereSql = count($where) ? "WHERE ".implode(" AND ",$where) : "";
 
-$q = $conn->query("
+$q=$conn->query("
 SELECT o.BOOKING_NO,o.ORDER_DATE,o.CUSTOMER_NAME,o.PHONE,o.EMAIL,o.ADDRESS,d.NAME AS DEPARTMENT_NAME,
 pt.NAME AS PRODUCT_TYPE_NAME,
 i.*
@@ -752,205 +751,42 @@ include('sidebar.php');
 '<?= htmlspecialchars($r['TNAME'] ?? '') ?>',
 ''
 )">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                    </td>
+<i class="fa fa-eye"></i>
+</button>
+</td>
 
-                                </tr>
-                            <?php endwhile; ?>
+</tr>
+<?php endwhile; ?>
 
-                        </tbody>
-                    </table>
-                    <div class="custom-table-empty" id="ordersEmptyMessage">No matching orders found.</div>
-                </div>
-            </div>
-
-            <div class="custom-table-footer">
-                <div id="ordersTableInfo"></div>
-                <div class="custom-table-pagination" id="ordersPagination"></div>
-            </div>
-        </div>
-    </section>
-</section>
-
-<!-----manual order popup------->
-<div class="manual-order-modal" id="manualOrderModal" aria-labelledby="manualOrderModalTitle" aria-hidden="true">
-    <div class="manual-order-dialog" role="dialog" aria-modal="true">
-        <div class="manual-order-modal-header">
-            <h4 id="manualOrderModalTitle">Create Manual Order</h4>
-            <button type="button" class="manual-order-close" id="closeManualOrderModal" aria-label="Close">&times;</button>
-        </div>
-        <div class="manual-order-modal-body">
-            <form method="post" id="manualOrderForm">
-                <div class="form-group">
-                    <label><strong>Customer Name</strong></label>
-                    <input class="form-control" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Phone</strong></label>
-                    <input class="form-control" name="phone" required>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Email</strong></label>
-                    <input class="form-control" name="email">
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Address</strong></label>
-                    <textarea class="form-control" name="address" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Order Created By</strong></label>
-                    <select class="form-control" name="created_by" required>
-                        <option value="">Select Staff</option>
-                        <option value="1">Anurag</option>
-                        <option value="6">Aryan</option>
-                    </select>
-                </div>
-
-                <hr>
-
-                <h4>Select Products</h4>
-
-                <div class="manual-order-products">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>T-Shirt Name</th>
-                                <th>Size</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($p = mysqli_fetch_assoc($manualProducts)):
-                                $sizes = array_filter(array_map('trim', explode(',', $p['SIZE'] ?? '')));
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?= htmlspecialchars($p['PRODUCT_NAME']) ?>
-                                        <input type="hidden" name="product_id[]" value="<?= $p['ID'] ?>">
-                                        <input type="hidden" name="product_name[]" value="<?= htmlspecialchars($p['PRODUCT_NAME']) ?>">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="tname[]" placeholder="Enter name to print" maxlength="20">
-                                    </td>
-                                    <td>
-                                        <?php if ($sizes): ?>
-                                            <select class="form-control" name="size[]">
-                                                <option value="">--</option>
-                                                <?php foreach ($sizes as $s): ?>
-                                                    <option value="<?= htmlspecialchars($s) ?>"><?= htmlspecialchars($s) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        <?php else: ?>
-                                            <input type="hidden" name="size[]" value="">
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?= htmlspecialchars($p['PRICE']) ?>
-                                        <input type="hidden" name="price[]" value="<?= htmlspecialchars($p['PRICE']) ?>">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" name="qty[]" value="0" min="0" oninput="calcManualOrderTotal()">
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="text-right mt-3">
-                    <strong>Total: CAD <span id="manualOrderTotal">0.00</span></strong>
-                </div>
-
-                <br>
-
-                <button class="btn btn-primary" name="manual_order_submit" value="1">Place Manual Order</button>
-            </form>
-        </div>
-    </div>
+</tbody>
+</table>
 </div>
-
+</div>
+</section>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Export Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    (function() {
-        var modal = document.getElementById('manualOrderModal');
-        var openButton = document.getElementById('openManualOrderModal');
-        var closeButton = document.getElementById('closeManualOrderModal');
+function updateItem(itemId, field, value){
+let fd=new FormData();
+fd.append('item_id',itemId);
+fd.append('field',field);
+fd.append('value',value);
+fetch('',{method:'POST',body:fd})
+.then(()=>location.reload());
+}
 
-        function openManualOrderModal() {
-            modal.classList.add('is-open');
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('manual-order-modal-open');
-        }
-
-        function closeManualOrderModal() {
-            modal.classList.remove('is-open');
-            modal.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('manual-order-modal-open');
-        }
-
-        openButton.addEventListener('click', openManualOrderModal);
-        closeButton.addEventListener('click', closeManualOrderModal);
-
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                closeManualOrderModal();
-            }
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && modal.classList.contains('is-open')) {
-                closeManualOrderModal();
-            }
-        });
-    })();
-
-    function calcManualOrderTotal() {
-        var prices = document.querySelectorAll('#manualOrderForm [name="price[]"]');
-        var qtys = document.querySelectorAll('#manualOrderForm [name="qty[]"]');
-        var total = 0;
-
-        prices.forEach(function(price, index) {
-            total += parseFloat(price.value || 0) * parseInt(qtys[index].value || 0, 10);
-        });
-
-        document.getElementById('manualOrderTotal').innerText = total.toFixed(2);
-    }
-
-    <?php if (($_GET['manual_order'] ?? '') === 'success' && !empty($_GET['booking_no'])): ?>
-        Swal.fire({
-            icon: 'success',
-            title: 'Manual order placed!',
-            text: 'Booking No: ' + <?= json_encode($_GET['booking_no']) ?>,
-            confirmButtonText: 'Close'
-        });
-    <?php endif; ?>
-
-    function updateItem(itemId, field, value) {
-        let fd = new FormData();
-        fd.append('item_id', itemId);
-        fd.append('field', field);
-        fd.append('value', value);
-        fetch('', {
-                method: 'POST',
-                body: fd
-            })
-            .then(() => location.reload());
-    }
-
-    function viewCustomer(name, phone, email, address) {
-        Swal.fire({
-            title: 'Customer Details',
-            html: `
+function viewCustomer(name, phone, email, address){
+Swal.fire({
+title:'Customer Details',
+html:`
 <div style="text-align:left;line-height:1.8;">
 <strong>Name:</strong> ${name}<br>
 <strong>Contact:</strong> ${phone}<br>
@@ -962,41 +798,41 @@ include('sidebar.php');
 <strong>Area:</strong> GTA
 </div>
 `,
-            confirmButtonText: 'Close'
-        });
-    }
+confirmButtonText:'Close'
+});
+}
 
-    function viewFullDetails(
-        name, phone, email, address,
-        dept, type, image, product,
-        qty, price, total,
-        size, color, tname, number
-    ) {
+function viewFullDetails(
+name, phone, email, address,
+dept, type, image, product,
+qty, price, total,
+size, color, tname, number
+){
 
-        let sizeField = size ? `
+let sizeField = size ? `
 <div style="margin-bottom:6px;">
 <strong>Size:</strong> ${size}
 </div>` : '';
 
-        let colorField = color ? `
+let colorField = color ? `
 <div style="margin-bottom:6px;">
 <strong>Color:</strong> ${color}
 </div>` : '';
 
-        let nameField = tname ? `
+let nameField = tname ? `
 <div style="margin-bottom:6px;">
 <strong>Name:</strong> ${tname}
 </div>` : '';
 
-        let numberField = number ? `
+let numberField = number ? `
 <div style="margin-bottom:6px;">
 <strong>Number:</strong> ${number}
 </div>` : '';
 
-        Swal.fire({
-            title: 'Order Details',
-            width: 700,
-            html: `
+Swal.fire({
+title:'Order Details',
+width:700,
+html:`
 <div style="text-align:left;">
 
 <!-- CUSTOMER SECTION -->
@@ -1030,132 +866,26 @@ ${numberField}
 
 </div>
 `,
-            confirmButtonText: 'Close'
-        });
-    }
-    (function() {
-        var table = document.getElementById('ordersTable');
-        var searchInput = document.getElementById('ordersSearch');
-        var pageSizeSelect = document.getElementById('ordersPageSize');
-        var info = document.getElementById('ordersTableInfo');
-        var pagination = document.getElementById('ordersPagination');
-        var emptyMessage = document.getElementById('ordersEmptyMessage');
+confirmButtonText:'Close'
+});
+}
+$(document).ready(function() {
 
-        if (!table || !searchInput || !pageSizeSelect || !info || !pagination) {
-            return;
-        }
+    $('#ordersTable').DataTable({
+        pageLength: 20,
+        lengthMenu: [10, 20, 50, 100],
+order: [[0, "desc"]], // Sort by first column (Booking)        searching: true,
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'excel',
+            'csv',
+            'print'
+        ]
+    });
 
-        var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
-        var currentPage = 1;
-
-        function getFilteredRows() {
-            var search = searchInput.value.trim().toLowerCase();
-
-            if (!search) {
-                return rows;
-            }
-
-            return rows.filter(function(row) {
-                return row.innerText.toLowerCase().indexOf(search) !== -1;
-            });
-        }
-
-        function buildPageButton(label, page, disabled, active) {
-            var button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'custom-page-btn' + (active ? ' active' : '');
-            button.textContent = label;
-            button.disabled = disabled;
-
-            if (!disabled && !active) {
-                button.addEventListener('click', function() {
-                    currentPage = page;
-                    renderOrdersTable();
-                });
-            }
-
-            return button;
-        }
-
-        function renderPagination(totalPages) {
-            pagination.innerHTML = '';
-
-            pagination.appendChild(buildPageButton('Prev', currentPage - 1, currentPage === 1, false));
-
-            var startPage = Math.max(1, currentPage - 2);
-            var endPage = Math.min(totalPages, currentPage + 2);
-
-            if (startPage > 1) {
-                pagination.appendChild(buildPageButton('1', 1, false, currentPage === 1));
-            }
-
-            if (startPage > 2) {
-                var dotsBefore = document.createElement('span');
-                dotsBefore.textContent = '...';
-                dotsBefore.style.padding = '6px 2px';
-                pagination.appendChild(dotsBefore);
-            }
-
-            for (var page = startPage; page <= endPage; page++) {
-                pagination.appendChild(buildPageButton(String(page), page, false, currentPage === page));
-            }
-
-            if (endPage < totalPages - 1) {
-                var dotsAfter = document.createElement('span');
-                dotsAfter.textContent = '...';
-                dotsAfter.style.padding = '6px 2px';
-                pagination.appendChild(dotsAfter);
-            }
-
-            if (endPage < totalPages) {
-                pagination.appendChild(buildPageButton(String(totalPages), totalPages, false, currentPage === totalPages));
-            }
-
-            pagination.appendChild(buildPageButton('Next', currentPage + 1, currentPage === totalPages, false));
-        }
-
-        function renderOrdersTable() {
-            var pageSize = parseInt(pageSizeSelect.value, 10);
-            var filteredRows = getFilteredRows();
-            var totalRows = filteredRows.length;
-            var totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
-
-            if (currentPage > totalPages) {
-                currentPage = totalPages;
-            }
-
-            var startIndex = (currentPage - 1) * pageSize;
-            var endIndex = Math.min(startIndex + pageSize, totalRows);
-            var visibleRows = filteredRows.slice(startIndex, endIndex);
-
-            rows.forEach(function(row) {
-                row.style.display = 'none';
-            });
-
-            visibleRows.forEach(function(row) {
-                row.style.display = '';
-            });
-
-            emptyMessage.style.display = totalRows ? 'none' : 'block';
-            info.textContent = totalRows ?
-                'Showing ' + (startIndex + 1) + ' to ' + endIndex + ' of ' + totalRows + ' entries' :
-                'Showing 0 entries';
-
-            renderPagination(totalPages);
-        }
-
-        searchInput.addEventListener('input', function() {
-            currentPage = 1;
-            renderOrdersTable();
-        });
-
-        pageSizeSelect.addEventListener('change', function() {
-            currentPage = 1;
-            renderOrdersTable();
-        });
-
-        renderOrdersTable();
-    })();
+});
 </script>
 
-<?php include('footer.php'); ?>
+</body>
+</html>

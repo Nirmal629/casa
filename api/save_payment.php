@@ -28,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               VALUES ('$user_id', '$game_id', '$amount', '$payment_date', '$payment_time', '$payment_type', '$details', '$message')";
 
     if (mysqli_query($conn, $query)) {
+        logPlayerActivity($conn, $user_id, 'PAYMENT', 'Submitted payment for game ID ' . $game_id . ' amount ' . $amount);
+
         echo '<table class="table table-success table-striped table-bordered datatable paymentTab">
         <thead>
             <tr class="table-info">

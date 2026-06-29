@@ -45,6 +45,12 @@ $stmt = $conn->prepare("INSERT INTO ca_users (NAME, EMAIL, PASSWORD,LEVEL, EMAIL
 $stmt->bind_param('sssssssssssssssss', $NAME, $EMAIL, $PASSWORD,$LEVEL ,$EMAIL_PERMISSION, $WHATSAPP_NUMBER, $CALL_PERMISSION, $DATE_OF_BIRTH, $GENDER, $GAMES, $ADDRESS, $CITY, $COUNTRY, $PROVINCE, $CURRENCY, $TIMEZONE_OFFSET, $USERTYPE);
 
 if ($stmt->execute()) {
+    $new_user_id = $conn->insert_id;
+    if ($USERTYPE === 'Player') {
+        require_once __DIR__ . '/sync_home_clubs.php';
+        syncPlayerToHomeClubs($conn, $new_user_id, $COUNTRY, $PROVINCE, $CITY, $GAMES);
+    }
+
     echo json_encode(['status' => 'success', 'message' => 'Data inserted successfully.']);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Failed to insert data: ' . $stmt->error]);

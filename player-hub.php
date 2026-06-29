@@ -162,6 +162,52 @@ try {
 
     $user_premium = $premium_check->fetchColumn() ?: 'N';
 
+    // Fetch player's preferred game type and location
+    $player_pref_stmt = $pdo->prepare("SELECT GAMES, COUNTRY, PROVINCE, CITY FROM ca_users WHERE ID = ?");
+    $player_pref_stmt->execute([$current_user_id]);
+    $player_prefs = $player_pref_stmt->fetch();
+    $player_game = $player_prefs['GAMES'] ?? 'Badminton';
+    $player_country = $player_prefs['COUNTRY'] ?? '';
+    $player_province = $player_prefs['PROVINCE'] ?? '';
+    $player_city = $player_prefs['CITY'] ?? '';
+
+    // Fetch active clubs matching player's game preference AND location
+    $clubs_sql = "SELECT c.*, u.NAME as host_name, u.PROFILE_IMAGE as host_img
+                  FROM ca_clubs c
+                  JOIN ca_users u ON c.host_id = u.ID
+                  WHERE c.status = 'Active'
+                    AND c.game_type = :game_type";
+    
+    $params = ['game_type' => $player_game];
+
+    if (!empty($player_country)) {
+        $clubs_sql .= " AND c.country = :country";
+        $params['country'] = $player_country;
+    }
+    if (!empty($player_province)) {
+        $clubs_sql .= " AND c.province = :province";
+        $params['province'] = $player_province;
+    }
+    if (!empty($player_city)) {
+        $clubs_sql .= " AND c.city = :city";
+        $params['city'] = $player_city;
+    }
+
+    $clubs_sql .= " ORDER BY c.created_at DESC LIMIT 8";
+
+    $clubs_stmt = $pdo->prepare($clubs_sql);
+    $clubs_stmt->execute($params);
+    $clubs = $clubs_stmt->fetchAll();
+
+    // Check membership for each club in ca_player_club_status
+    $status_stmt = $pdo->prepare("SELECT status FROM ca_player_club_status WHERE player_id = ? AND club_id = ? LIMIT 1");
+    foreach ($clubs as &$club_row) {
+        $status_stmt->execute([$current_user_id, $club_row['id']]);
+        $club_status = $status_stmt->fetchColumn();
+        $club_row['membership_status'] = $club_status ?: 'not_joined';
+    }
+    unset($club_row); // break reference
+
 
 
     // SQL QUERY - Corrected with unique placeholders
@@ -546,9 +592,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- Country -->
                     <select name="country" disabled style="-webkit-appearance: none;">
                         <option value="">--Country--</option>
-                        <?php if (!empty($_SESSION['country'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['country']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['country']) ?>
+                        <?php if (!empty($player_country)): ?>
+                            <option value="<?= htmlspecialchars($player_country) ?>" selected>
+                                <?= htmlspecialchars($player_country) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -556,9 +602,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- Province -->
                     <select name="province" disabled style="-webkit-appearance: none;">
                         <option value="">--Province--</option>
-                        <?php if (!empty($_SESSION['province'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['province']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['province']) ?>
+                        <?php if (!empty($player_province)): ?>
+                            <option value="<?= htmlspecialchars($player_province) ?>" selected>
+                                <?= htmlspecialchars($player_province) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -566,9 +612,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- City -->
                     <select name="area" disabled style="-webkit-appearance: none;">
                         <option value="">--City--</option>
-                        <?php if (!empty($_SESSION['city'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['city']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['city']) ?>
+                        <?php if (!empty($player_city)): ?>
+                            <option value="<?= htmlspecialchars($player_city) ?>" selected>
+                                <?= htmlspecialchars($player_city) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -678,7 +724,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                 <p><b>Level:</b> <?= htmlspecialchars($_SESSION['vlevel'] ?? 'N/A') ?></p>
 
-                                <p><b>Area:</b> <?= htmlspecialchars($_SESSION['area'] ?? 'N/A') ?></p>
+                                <p><b>Area:</b> <?= htmlspecialchars($player_city ?: 'N/A') ?></p>
 
 
 
@@ -919,125 +965,110 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <div class="panel center-panel">
                     <h3 style="text-align: center;">All Clubs</h3>
                     <div class="scrollbox">
-<!-- -------------------------------------------------------------- CASA BADMINTON CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <!-- <h4>Casa Club</h4> -->
-                            <h4>Casa Badminton Club</h4>
-                            <div class="content">
-                                <!--<div class="">-->
-                                    <!-- <p class="label">Casa Badminton Club</p> -->
-                                <!--    <div class="info-grid">-->
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Infomodal"><i class="fa-solid fa-circle-info"></i> <span>Info</span></button>-->
-
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Costingmodal"><i class="fa-solid fa-comments-dollar"></i> <span>Costing</span></button>-->
-
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal"><i class="fa-solid fa-clipboard-list"></i> <span>Schedule</span></button>-->
-                                <!--    </div>-->
-                                <!--</div>-->
-
-                                <!--<div class="button_box">-->
-                                <!--    <a href="#" class="joinbtn"><i class="fa-solid fa-circle-user"></i> <span>You are member</span></a>-->
-                                <!--    <a href="player-dashboard.php" class="joinbtn"><i class="fa-solid fa-gamepad"></i> <span>View Game</span></a>-->
-                                <!--</div>-->
-                                <div class="action-bar-unified">
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Infomodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                        </svg>
-                                        <span>Info</span>
-                                    </button>
+<!-- ======================== DYNAMIC CLUB CARDS (from ca_clubs DB) ======================== -->
+                        <?php if (!empty($clubs)): ?>
+                            <?php foreach ($clubs as $club_data):
+                                $club_name_safe = htmlspecialchars($club_data['club_name']);
+                                $club_info_val = trim($club_data['club_info'] ?? '');
+                                $club_info_safe = htmlspecialchars(!empty($club_info_val) ? $club_info_val : 'There is no data available.');
                                 
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Costingmodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z"/>
-                                        </svg>
-                                        <span>Costing</span>
-                                    </button>
+                                $club_cost_val = trim($club_data['cost_info'] ?? '');
+                                $club_cost_safe = htmlspecialchars(!empty($club_cost_val) ? $club_cost_val : 'There is no data available.');
                                 
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z"/>
-                                        </svg>
-                                        <span>Schedule</span>
-                                    </button>
+                                $club_schedule_val = trim($club_data['schedule'] ?? '');
+                                $club_schedule_safe = htmlspecialchars(!empty($club_schedule_val) ? $club_schedule_val : 'There is no data available.');
                                 
-                                    <div class="btn-stacked-synced status-member">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                        </svg>
-                                        <span>Member</span>
+                                $is_new = (strtotime($club_data['created_at']) > strtotime('-30 days'));
+                            ?>
+                            <div class="card">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #334155; flex-shrink: 0; background: #e2e8f0;">
+                                        <img src="<?= !empty($club_data['logo']) ? 'uploads/clubs/' . htmlspecialchars($club_data['logo']) : 'assets/images/profile.jpg' ?>" alt="Logo" style="width:100%; height:100%; object-fit:cover;" />
                                     </div>
-                                
-                                    <a href="player-dashboard.php" class="btn-stacked-synced action-view">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-10.5a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                        </svg>
-                                        <span>Games</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-<!-- -------------------------------------------------------------- BIRDIE BUSTERS CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <!-- <h4>The Casamigos <span class="tag">New</span></h4> -->
-                            <h4>Birdie Busters Club <span class="tag">New</span></h4>
-                            <div class="content">
-                                <div class="">
-                                    <!-- <p class="label">Club joined tonight</p> -->
-                                    <div class="info-grid">
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Infomodal"><i class="fa-solid fa-circle-info"></i> <span>Info</span></button>
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Costingmodal"><i class="fa-solid fa-comments-dollar"></i> <span>Costing</span></button>
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal"><i class="fa-solid fa-clipboard-list"></i> <span>Schedule</span></button>
+                                    <div>
+                                        <h4 style="margin: 0;"><?= $club_name_safe ?></h4>
+                                        <div style="font-size: 0.75rem; color: #64748b;">By <?= htmlspecialchars($club_data['host_name'] ?? 'Unknown Host') ?></div>
                                     </div>
                                 </div>
-                                <div class="button_box">
-                                    <a href="#" class="joinbtn"><i class="fa-solid fa-user-plus"></i> <span>Request to Join</span></a>
-                                    <a href="player-dashboard.php" class="joinbtn"><i class="fa-solid fa-gamepad"></i> <span>View Game</span></a>
+                                <div class="content">
+                                    <div class="action-bar-unified">
+                                        <button class="btn-stacked-synced club-info-btn" data-bs-toggle="modal" data-bs-target="#Infomodal"
+                                                data-club-name="<?= $club_name_safe ?>"
+                                                data-club-info="<?= $club_info_safe ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                            </svg>
+                                            <span>Info</span>
+                                        </button>
+
+                                        <button class="btn-stacked-synced club-cost-btn" data-bs-toggle="modal" data-bs-target="#Costingmodal"
+                                                data-club-name="<?= $club_name_safe ?>"
+                                                data-club-cost="<?= $club_cost_safe ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z"/>
+                                            </svg>
+                                            <span>Costing</span>
+                                        </button>
+
+                                        <button class="btn-stacked-synced club-schedule-btn" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal"
+                                                data-club-name="<?= $club_name_safe ?>"
+                                                data-club-schedule="<?= $club_schedule_safe ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z"/>
+                                            </svg>
+                                            <span>Schedule</span>
+                                        </button>
+
+                                        <?php if ($club_data['membership_status'] === 'accepted'): ?>
+                                        <div class="btn-stacked-synced status-member">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                            </svg>
+                                            <span>Member</span>
+                                        </div>
+                                        <a href="player-dashboard.php?host_id=<?= $club_data['host_id'] ?>" class="btn-stacked-synced action-view">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                                            </svg>
+                                            <span>Games</span>
+                                        </a>
+                                        <?php elseif ($club_data['membership_status'] === 'pending'): ?>
+                                        <div class="btn-stacked-synced status-pending-state" style="border-color:#ffc107; color:#ffc107; background-color:#ffc10714;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="color:#ffc107; stroke:#ffc107;">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M7.5 4.5a.5.5 0 0 1 1 0V8H11a.5.5 0 0 1 0 1H8a.5.5 0 0 1-.5-.5v-4z"/>
+                                            </svg>
+                                            <span>Pending</span>
+                                        </div>
+                                        <a href="#" class="btn-stacked-synced action-view disabled" style="opacity: 0.5; pointer-events: none;" title="Awaiting host approval">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                                            </svg>
+                                            <span>Games</span>
+                                        </a>
+                                        <?php else: ?>
+                                        <button class="btn-stacked-synced join-club-btn" data-club-id="<?= $club_data['id'] ?>" style="cursor: pointer; border: 1px solid #ced4da; background: #f8f9fa;">
+                                            <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                                <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
+                                            </svg>
+                                            <span>Join</span>
+                                        </button>
+                                        <a href="#" class="btn-stacked-synced action-view disabled" style="opacity: 0.5; pointer-events: none;" title="Must join club first">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                                            </svg>
+                                            <span>Games</span>
+                                        </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-<!-- -------------------------------------------------------------- NET NINJA CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <h4>Net Ninjs Club <span class="tag">New</span></h4>
-                            <div class="content">
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Infomodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                    </svg>
-                                    <span>Info</span>
-                                </button>
-                            
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Costingmodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z"/>
-                                    </svg>
-                                    <span>Costing</span>
-                                </button>
-                            
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z"/>
-                                    </svg>
-                                    <span>Schedule</span>
-                                </button>
-                                
-                                <a href="#" class="btn-stacked-synced join-action">
-                                    <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                        <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg>
-                                    <span>Join</span>
-                                </a>
-                            
-                                <a href="player-dashboard.php" class="btn-stacked-synced action-view">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-10.5a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                    </svg>
-                                    <span>Games</span>
-                                </a>
-                            </div>        
-                        </div>                        
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="label" style="text-align:center; color: #94a3b8;">No clubs found matching your preferred game.</p>
+                        <?php endif; ?>
                     </div>
 
                     <h3 style="text-align: center;">Tournaments</h3>
@@ -1636,31 +1667,17 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 </section>
 
 
-<!-- Info modal -->
+<!-- Info modal (Dynamic - populated via JS) -->
 <div class="modal fade" id="Infomodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="InfomodalLabel" aria-hidden="true">
-
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="InfomodalLabel">Casa badminton club</h5>
+                <h5 class="modal-title" id="InfomodalLabel">Club Info</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-
-            <div class="modal-body">
-                <p>What We Offer:</p>
-                <ul>
-                    <li><strong>Family & Couples Games –</strong> We encourage husbands and wives, parents and kids, and even entire families to enjoy the sport together. Our family sessions create the perfect opportunity to bond, have fun, and stay active.</li>
-                    <li><strong>Skill-Level Based Matches –</strong> Players are grouped into beginner, intermediate, and advanced levels so everyone enjoys fair, balanced, and competitive games.</li>
-                    <li><strong>Mixed-Gender & Mixed-Level Games –</strong> We regularly host fun matches where men, women, and players of different levels can team up, learn from each other, and enjoy the social side of badminton.</li>
-                    <li><strong>Friendly Matches & Social Play –</strong> Connect with fellow badminton enthusiasts in a fun, inclusive setting.</li>
-                    <li><strong>Tournaments & Events –</strong> Regular competitions to challenge your skills and celebrate progress.</li>
-                    <li><strong>Community Spirit –</strong> A place where sportsmanship, teamwork, and enjoyment come first.</li>
-                </ul>
-                <p>At Casa Badminton Club, our mission is simple: to grow the love of badminton and create a community where everyone feels at home—whether you play for fitness, family bonding, training, or competition.</p>
-                <p>Come join us, pick up your racket, and be part of the Casa family!</p>
+            <div class="modal-body" id="InfomodalBody">
+                <p>Loading...</p>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -1740,7 +1757,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 </div>
 
-<!------ Costingmodal ------>
+<!------ Costingmodal (Dynamic - populated via JS) ------>
 <div class="modal fade" id="Costingmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="CostingmodalLabel" aria-hidden="true">
 
 
@@ -1754,96 +1771,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
             <div class="modal-header">
-
-
-
                 <h5 class="modal-title" id="CostingmodalLabel">Game Costing</h5>
-
-
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-
             </div>
-
-
-            <!-- old design -->
-            <div class="modal-body d-none">
-                <p>Here's the breakdown:</p>
-                <p>Men Double</p>
-                <ul>
-
-
-
-                    <li>(Court Cost + Birdie cost)/ no of players</li>
-
-
-
-                    <li>We consider two birdies per player</li>
-
-
-
-                    <li>4 players: $25 each</li>
-
-
-
-                    <li>5 players: $22 each</li>
-
-
-
-                    <li>6 players: $20 each</li>
-
-
-
-                </ul>
-                <p>Women Double</p>
-                <ul>
-
-
-
-                    <li>(Court Cost + Birdie cost)/ no of players</li>
-
-
-
-                    <li>We consider one birdies per player</li>
-
-
-
-                    <li>4 players: $18 each</li>
-
-
-
-                    <li>5 players: $15 each</li>
-
-
-
-                    <li>6 players: $14 each</li>
-
-
-
-                </ul>
-            </div>
-
-            <!-- new design -->
-            <div class="modal-body">
-                <p>Men Double</p>
-                <ul>
-                    <li>Price = (Court Cost + Birdie cost)/ no of players</li>
-                    <li>We consider two birdies per player</li>
-                    <li>4 players: $25 each</li>
-                    <li>5 players: $22 each</li>
-                    <li>6 players: $20 each</li>
-                </ul>
-                <p>Women Double</p>
-                <ul>
-                    <li>Price = (Court Cost + Birdie cost)/ no of players</li>
-                    <li>We consider one birdies per player</li>
-                    <li>4 players: $18 each</li>
-                    <li>5 players: $15 each</li>
-                    <li>6 players: $14 each</li>
-                </ul>
-                <p>Note: The portal dynamically adjusts the price based on players confirmed</p>
+            <div class="modal-body" id="CostingmodalBody">
+                <p>Loading...</p>
             </div>
 
 
@@ -1872,384 +1804,22 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-<!------ GameSchedulemodal ------>
+<!------ GameSchedulemodal (Dynamic - populated via JS) ------>
 <div class="modal fade" id="GameSchedulemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="GameSchedulemodalLabel" aria-hidden="true">
-
-
-
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-
-
-
         <div class="modal-content">
-
-
-
             <div class="modal-header">
-
-
-
                 <h5 class="modal-title" id="GameSchedulemodalLabel">Game Schedule</h5>
-
-
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-
             </div>
-
-
-
-            <div class="modal-body">
-                <!-- old design -->
-                <div class="row d-none">
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Monday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 8:30 pm- 10:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Tuesday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 8:30 pm- 10:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Wednesday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 6:00 pm- 8:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Thursday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 9:30 pm- 11:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Friday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Hymus</li>
-
-
-
-                            <li>⏰ Time: 6:00 pm- 8:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Saturday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 7:00 am- 9:00 am</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Sunday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Hymus</li>
-
-
-
-                            <li>⏰ Time: 4:00 pm- 6:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-                </div>
-
-                <!-- new design -->
-                <div class="scheduleTable">
-                    <table>
-                        <thead>
-                            <th>Day</th>
-                            <th>Gender</th>
-                            <th>Level</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Time</th>
-                        </thead>
-
-                        <tbody>
-                            <tr>
-                                <td>Monday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:00 pm to 11:00 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Tuesday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:00 pm to 11:00 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Wednesday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>6:30 pm to 8:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Thursday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:30 pm- 11:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Friday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>6:30 pm to 8:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Saturday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>7:00 am to 9:00 am</td>
-                            </tr>
-                            <tr>
-                                <td>Sunday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>4:00 pm- 6:00 pm</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="modal-body" id="GameSchedulemodalBody">
+                <p>Loading...</p>
             </div>
-
-
-
             <div class="modal-footer">
-
-
-
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-
-
             </div>
-
-
-
         </div>
-
-
-
     </div>
-
-
-
 </div>
 
 <!-- Payment Modal -->
@@ -2630,4 +2200,65 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
             var elements = document.querySelectorAll(query);
             return (elements.length > 1) ? elements : elements[0];
         }
+    </script>
+
+    <!-- Dynamic Modal Population for Club Cards (Info / Costing / Schedule) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Info modal: populate title + body from data attributes
+        document.querySelectorAll('.club-info-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('InfomodalLabel').textContent = this.dataset.clubName;
+                document.getElementById('InfomodalBody').innerHTML = this.dataset.clubInfo;
+            });
+        });
+
+        // Costing modal: populate title + body from data attributes
+        document.querySelectorAll('.club-cost-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('CostingmodalLabel').textContent = this.dataset.clubName + ' — Costing';
+                document.getElementById('CostingmodalBody').innerHTML = this.dataset.clubCost;
+            });
+        });
+
+        // Schedule modal: populate title + body from data attributes
+        document.querySelectorAll('.club-schedule-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('GameSchedulemodalLabel').textContent = this.dataset.clubName + ' — Schedule';
+                document.getElementById('GameSchedulemodalBody').innerHTML = this.dataset.clubSchedule;
+            });
+        });
+    });
+    </script>
+
+    <!-- AJAX handler for Join Club -->
+    <script>
+    $(document).on('click', '.join-club-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var clubId = btn.data('club-id');
+        
+        if (btn.prop('disabled')) return;
+        btn.prop('disabled', true).text('Joining...');
+        
+        $.ajax({
+            url: 'api/join_club.php',
+            type: 'POST',
+            data: { club_id: clubId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert(response.message || 'Error occurred.');
+                    btn.prop('disabled', false).html('<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg><span>Join</span>');
+                }
+            },
+            error: function() {
+                alert('Server error while joining. Please try again.');
+                btn.prop('disabled', false).html('<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg><span>Join</span>');
+            }
+        });
+    });
     </script>

@@ -1,25 +1,11 @@
-<?php
-date_default_timezone_set('America/Toronto');
- const DATABASE_NAME='casa_test';
-        const USERNAME="casa_test";
-        const PASSWORD="casa_test123#";
-        
-        // Database configuration
-        $host = "localhost"; // Database host (e.g., localhost)
-        
-        // Create connection
-        $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-        
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+    <?php
+// DB connection ($conn) is already provided by inner-header.php
         $currentYear = date('Y');
 $currentMonth = date('n'); // 1-12 (no leading zero)
-        $select_host = mysqli_query($conn,"select * from ca_users where USERTYPE!='Player' and LOG_STATUS='Y' and DEL_STATUS='N'");
         $check_player = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION['user_id']."'");
         $fetch_player = mysqli_fetch_assoc($check_player);
         $premiumStatus = $fetch_player['PREMIUM'];
+        $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
 ?>
 <!----player-Complete-game-------->
 <?php if ($premiumStatus != 'Y') { ?>
@@ -29,20 +15,8 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
     <div class="mb-4" >
         
                     <form>
-                        <div class="row">
-                                <div class="col-auto">
-                                <select class="form-select" id="host" aria-label="Default select example">
-                                    <option value="">All</option>
-                                    <?php
-                                    while ($fetchUser = mysqli_fetch_assoc($select_host)) {
-                                        $selected = ($fetchUser['ID'] == 21) ? 'selected' : ''; // Check if ID is 7
-                                    ?>
-                                        <option value="<?= $fetchUser['ID'] ?>"><?= $fetchUser['NAME'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                        <div class="row g-1">
+                                <input type="hidden" id="host" value="<?= htmlspecialchars($host_id) ?>" />
                             <!--<div class="col-auto">-->
                             <!--    <select class="form-select" id="comyear" aria-label="Default select example">-->
                             <!--        <option value="">Select the Year</option>-->
@@ -73,7 +47,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             <!--    </select>-->
                             <!--</div>-->
                             <div class="col-auto">
-                                <select class="form-select" id="comyear" aria-label="Default select example">
+                                <select class="form-select form-select-sm" id="comyear" aria-label="Default select example" style="width: 85px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                     <option value="">Year</option>
                                     <?php
                                     for ($year = 2024; $year <= 2030; $year++) {
@@ -84,13 +58,13 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <select class="form-select" id="commonth" aria-label="Default select example">
+                                <select class="form-select form-select-sm" id="commonth" aria-label="Default select example" style="width: 80px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                     <option value="">Month</option>
                                     <?php
                                     $months = [
-                                        1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                                        5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                                        9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                                        1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                                        5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+                                        9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
                                     ];
                                     foreach ($months as $num => $name) {
                                         $selected = ($num == $currentMonth) ? 'selected' : '';
@@ -100,9 +74,19 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                                 </select>
                             </div>
     
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-primary" id="play_com_filter">Submit</button>
-                                <button type="button" class="btn btn-danger" id="play_com_reset">Reset</button>
+                            <div class="col-auto ms-auto d-flex gap-1">
+                                <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="play_com_filter" title="Submit" style="width: 32px; height: 31px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>
+                                    </svg>
+                                </button>
+                            
+                                <button type="button" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" id="play_com_reset" title="Reset" style="width: 32px; height: 31px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -256,7 +240,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         <!--</div>-->
          <?php
             // Assuming you have a connection to the database ($conn)
-            $sql = "SELECT * FROM ca_events WHERE STATUS='Completed' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth'  ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
+            $sql = "SELECT * FROM ca_events WHERE STATUS='Completed' AND HOST_ID = '$host_id' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth'  ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
             $result = mysqli_query($conn, $sql);
             
             if (mysqli_num_rows($result) > 0) {

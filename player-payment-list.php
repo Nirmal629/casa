@@ -1,30 +1,16 @@
 <?php
-date_default_timezone_set('America/Toronto');
-const DATABASE_NAME='casa_test';
-        const USERNAME="casa_test";
-        const PASSWORD="casa_test123#";
-        
-        // Database configuration
-        $host = "localhost"; // Database host (e.g., localhost)
-        
-        // Create connection
-        $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-        
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-        
+// DB connection ($conn) is already provided by inner-header.php
+
 $currentDate = date('Y-m-d');
 $currentTime = date('H:i');
 
 $currentYear = date('Y');
 $currentMonth = date('n'); // 1-12 (no leading zero)
 
-        $select_host = mysqli_query($conn,"select * from ca_users where USERTYPE!='Player' and LOG_STATUS='Y' and DEL_STATUS='N'");
         $check_player = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION['user_id']."'");
         $fetch_player = mysqli_fetch_assoc($check_player);
         $premiumStatus = $fetch_player['PREMIUM'];
+        $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
 
 ?>
 <?php if ($premiumStatus != 'Y') { ?>
@@ -37,19 +23,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
     
                 <form>
                     <div class="row">
-                        <div class="col-auto">
-                            <select class="form-select" id="payhost" aria-label="Default select example">
-                                <option value="">All</option>
-                                <?php
-                                while ($fetchUser = mysqli_fetch_assoc($select_host)) {
-                                    $selected = ($fetchUser['ID'] == 21) ? 'selected' : ''; // Check if ID is 7
-                                ?>
-                                    <option value="<?= $fetchUser['ID'] ?>"><?= $fetchUser['NAME'] ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
+                        <input type="hidden" id="payhost" value="<?= htmlspecialchars($host_id) ?>" />
                         <!--<div class="col-auto">-->
                         <!--    <select class="form-select" id="payyear" aria-label="Default select example">-->
                         <!--        <option selected>Select the Year</option>-->
@@ -80,7 +54,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                         <!--    </select>-->
                         <!--</div>-->
                         <div class="col-auto">
-                            <select class="form-select" id="payyear" aria-label="Default select example">
+                            <select class="form-select py-0 px-2" id="payyear" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <option value="">Year</option>
                                 <?php
                                 for ($year = 2024; $year <= 2030; $year++) {
@@ -91,13 +65,13 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select class="form-select" id="paymonth" aria-label="Default select example">
+                            <select class="form-select py-0 px-2" id="paymonth" aria-label="Default select example" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <option value="">Month</option>
                                 <?php
                                 $months = [
-                                    1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                                    5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                                    9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                                    1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                                    5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+                                    9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
                                 ];
                                 foreach ($months as $num => $name) {
                                     $selected = ($num == $currentMonth) ? 'selected' : '';
@@ -107,9 +81,19 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
 
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-primary" id="pay_com_filter">Submit</button>
-                            <button type="button" class="btn btn-danger" id="pay_com_reset">Reset</button>
+                        <div class="col-auto ms-auto d-flex gap-1">
+                            <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="pay_com_filter" title="Submit" style="width: 32px; height: 31px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>
+                                </svg>
+                            </button>
+                        
+                            <button type="button" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" id="pay_com_reset" title="Reset" style="width: 32px; height: 31px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -138,7 +122,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                 <tbody>
                     <?php
                     // echo "SELECT cg.ID AS GAME_JOIN_ID,cg.USER_ID,cg.GAME_ID,cg.PRICE,cg.CURRENCY,cg.STATUS AS GAME_JOIN_STATUS,cg.CREATED_AT AS GAME_JOIN_CREATED_AT,ce.ID AS EVENT_ID,ce.EVENT_DATE,ce.EVENT_TIME,ce.EVENT_VENUE,ce.EVENT_COST AS EVENT_PRICE,ce.EVENT_CURRENCY AS EVENT_CURRENCY,ce.STATUS AS EVENT_STATUS,ce.CREATED_AT AS EVENT_CREATED_AT FROM ca_gamejoin AS cg INNER JOIN ca_events AS ce ON cg.GAME_ID = ce.ID WHERE cg.USER_ID = '".$_SESSION['user_id']."' AND cg.STATUS = 'Y' AND ce.STATUS = 'Completed'";
-                    $select_game = mysqli_query($conn,"SELECT cg.ID AS GAME_JOIN_ID,cg.USER_ID,cg.GAME_ID,cg.PRICE,cg.CURRENCY,cg.STATUS AS GAME_JOIN_STATUS,cg.CREATED_AT AS GAME_JOIN_CREATED_AT,ce.ID AS EVENT_ID,ce.HOST_NAME AS HOST_NAME,ce.EVENT_DATE,ce.EVENT_TIME,ce.EVENT_VENUE,ce.EVENT_COST AS EVENT_PRICE,ce.EVENT_CURRENCY AS EVENT_CURRENCY,ce.STATUS AS EVENT_STATUS,ce.CREATED_AT AS EVENT_CREATED_AT, ce.EVENT_CATEGORY as EVENT_CATEGORY  FROM ca_gamejoin AS cg INNER JOIN ca_events AS ce ON cg.GAME_ID = ce.ID WHERE cg.USER_ID = '".$_SESSION['user_id']."' AND cg.STATUS = 'Y' AND ce.STATUS = 'Completed' AND YEAR(ce.EVENT_DATE) = '$currentYear' AND MONTH(ce.EVENT_DATE) = '$currentMonth'   ORDER BY ce.EVENT_DATE DESC, ce.EVENT_TIME DESC
+                    $select_game = mysqli_query($conn,"SELECT cg.ID AS GAME_JOIN_ID,cg.USER_ID,cg.GAME_ID,cg.PRICE,cg.CURRENCY,cg.STATUS AS GAME_JOIN_STATUS,cg.CREATED_AT AS GAME_JOIN_CREATED_AT,ce.ID AS EVENT_ID,ce.HOST_NAME AS HOST_NAME,ce.EVENT_DATE,ce.EVENT_TIME,ce.EVENT_VENUE,ce.EVENT_COST AS EVENT_PRICE,ce.EVENT_CURRENCY AS EVENT_CURRENCY,ce.STATUS AS EVENT_STATUS,ce.CREATED_AT AS EVENT_CREATED_AT, ce.EVENT_CATEGORY as EVENT_CATEGORY  FROM ca_gamejoin AS cg INNER JOIN ca_events AS ce ON cg.GAME_ID = ce.ID WHERE cg.USER_ID = '".$_SESSION['user_id']."' AND cg.STATUS = 'Y' AND ce.STATUS = 'Completed' AND ce.HOST_ID = '$host_id' AND YEAR(ce.EVENT_DATE) = '$currentYear' AND MONTH(ce.EVENT_DATE) = '$currentMonth'   ORDER BY ce.EVENT_DATE DESC, ce.EVENT_TIME DESC
 ");
                     $count_game = mysqli_num_rows($select_game);
                     if($count_game>0)
@@ -289,6 +273,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                                 WHERE cg.USER_ID = '" . $_SESSION['user_id'] . "' 
                                   AND cg.STATUS = 'Y' 
                                   AND ce.STATUS = 'Completed'
+                                  AND ce.HOST_ID = '$host_id'
                                 ORDER BY ce.EVENT_DATE DESC, ce.EVENT_TIME DESC
                             ");
                             

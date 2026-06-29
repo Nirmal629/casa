@@ -47,7 +47,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                         <!--</div>-->
                         <div class="col-auto">
 
-                            <select class="form-select form-select-sm py-0" id="com_year" aria-label="Default select example" style=" width: auto; min-width: 130px; height: 31px;">
+                            <select class="form-select py-0 px-2" id="com_year" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <option value="">Year</option>
                                 <?php
                                 for ($year = 2025; $year <= $currentYear; $year++) {
@@ -58,7 +58,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select class="form-select form-select-sm py-0" id="com_month" aria-label="Default select example" style=" width: auto; min-width: 130px; height: 31px;">
+                            <select class="form-select py-0 px-2" id="com_month" aria-label="Default select example" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <option value="">Month</option>
                                 <?php
                                 $months = [
@@ -78,7 +78,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                         <!--    <button type="button" class="btn btn-primary" id="com_filter">Submit</button>-->
                         <!--    <button type="button" class="btn btn-danger" id="com_reset">Reset</button>-->
                         <!--</div>-->
-                        <div class="col-auto d-flex gap-1">
+                        <div class="col-auto ms-auto d-flex gap-1">
                             <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="com_filter" title="Submit" style="width: 32px; height: 31px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>

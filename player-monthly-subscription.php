@@ -1,20 +1,7 @@
 <?php
 session_start();
         date_default_timezone_set('America/Toronto');
-        const DATABASE_NAME='casa_test';
-        const USERNAME="casa_test";
-        const PASSWORD="casa_test123#";
-        
-        // Database configuration
-        $host = "localhost"; // Database host (e.g., localhost)
-        
-        // Create connection
-        $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-        
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+        // DB connection ($conn) is already provided by inner-header.php
         
         $eventsByDay = [
             'SUNDAY'    => [],
@@ -36,7 +23,8 @@ session_start();
             'SATURDAY'  => 'bg-dark text-white p-1'
         ];
         
-        $sql = "SELECT * FROM ca_events_default WHERE (GENDER_SKILL_LEVEL='".$_SESSION['vlevel']."' OR GENDER_SKILL_LEVEL = 'Mix') AND (GENDER_CATEGORY='".$_SESSION['gender']."' OR GENDER_CATEGORY = 'Mix') AND EVENT_CATEGORY !='Snacks And Kerala Knook'";
+        $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
+        $sql = "SELECT * FROM ca_events_default WHERE HOST_ID = '$host_id' AND (GENDER_SKILL_LEVEL='".$_SESSION['vlevel']."' OR GENDER_SKILL_LEVEL = 'Mix') AND (GENDER_CATEGORY='".$_SESSION['gender']."' OR GENDER_CATEGORY = 'Mix') AND EVENT_CATEGORY !='Snacks And Kerala Knook'";
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {
@@ -104,7 +92,7 @@ session_start();
                                 <input type='hidden' id='user_$event_id' value='{$_SESSION['user_id']}'/>
                             </div>
                         </div>
-                        <h4 style='padding: 5px;' class='date_time <?php echo $dayColorClass; ?>'>$event_day - " . date('h:i A', strtotime($event['FROM_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
+                        <h4 style='padding: 5px;' class='date_time $dayColorClass'>$event_day - " . date('h:i A', strtotime($event['EVENT_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
                         <p class='location'><i class='fa-solid fa-location-dot'></i> $event_venue</p>
                         <div class='d-flex align-items-center gap-3 mb-2'>
                             <p style='font-size: 12px;'>$event_message</p>
@@ -296,7 +284,7 @@ session_start();
 <!---view joined --->
 <section class="customModal_wrap hostgameviewjoined_modal">
     <div class="customModal_body">
-        <h6 class="customModal_head">View All Player's Joined</h6>
+        <h6 class="customModal_head">Joined Players</h6>
         <button type="submit" class="customModal_close btn">
             <i class="fa-solid fa-xmark"></i>
         </button>
