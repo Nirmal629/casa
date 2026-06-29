@@ -1,0 +1,40 @@
+CRITICAL - 2025-02-03 11:15:53 --> TypeError: App\Controllers\Admin::index(): Return value must be of type string, none returned
+[Method: GET, Route: /]
+in APPPATH/Controllers/Admin.php on line 10.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin->index()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-02-03 11:16:21 --> TypeError: App\Controllers\Admin::index(): Return value must be of type string, none returned
+[Method: GET, Route: /]
+in APPPATH/Controllers/Admin.php on line 10.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin->index()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-02-03 11:17:28 --> ErrorException: Undefined variable $baseURL
+[Method: GET, Route: /]
+in APPPATH/Controllers/Admin.php on line 9.
+ 1 APPPATH/Controllers/Admin.php(9): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $baseURL', '/Users/dibyenduaich/www/sites/ci4/app/Controllers/Admin.php', 9)
+ 2 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin->index()
+ 3 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 4 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-02-03 13:58:42 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/club-owner/list-booking.php"
+[Method: GET, Route: club-owner/list-booking]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/club-owner/list-booking.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/club-owner/list-booking', [], true)
+ 3 APPPATH/Controllers/Clubadmin.php(43): view('admin/club-owner/list-booking')
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Clubadmin->listBooking()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Clubadmin))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
