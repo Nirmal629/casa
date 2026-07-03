@@ -85,7 +85,7 @@ if ($skill_level !== 'Mix') {
         }
         $i = 1;
         echo "<div class='table-responsive'><table class='table table-sm table-bordered mt-2 text-center align-middle text-nowrap' style='font-size: 0.85rem;'>";
-        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 30px;' title='Gender'>G</th><th style='width: 40px;' title='Level'>Lvl</th><th style='width: 35px;' title='Add/Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
+        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 70px;'>Gender</th><th style='width: 80px;'>Level</th><th style='width: 35px;' title='Add/Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
         echo "<tbody>";
         while ($player = mysqli_fetch_assoc($select_Player)) {
             $is_joined = $player['IS_JOINED'] == 1;
@@ -180,7 +180,7 @@ else
     if (mysqli_num_rows($select_Player) > 0) {
         $i = 1;
         echo "<div class='table-responsive'><table class='table table-sm table-bordered mt-2 text-center align-middle text-nowrap' style='font-size: 0.85rem;'>";
-        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 30px;' title='Gender'>G</th><th style='width: 40px;' title='Level'>Lvl</th><th style='width: 35px;' title='Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
+        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 70px;'>Gender</th><th style='width: 80px;'>Level</th><th style='width: 35px;' title='Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
         echo "<tbody>";
         while ($player = mysqli_fetch_assoc($select_Player)) {
             $check_joined = mysqli_query($conn, "SELECT * FROM ca_gamejoin WHERE USER_ID='" . $player['ID'] . "' AND GAME_ID='" . $_POST['ID'] . "'");

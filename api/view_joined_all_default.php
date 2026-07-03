@@ -27,7 +27,7 @@ if (isset($_SESSION['user_id'])) {
         }
         $i = 1;
         echo "<div class='table-responsive'><table class='table table-sm table-bordered mt-2 text-center align-middle text-nowrap' style='font-size: 0.85rem;'>";
-        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 30px;' title='Gender'>G</th><th style='width: 40px;' title='Level'>Lvl</th></tr></thead>";
+        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 70px;'>Gender</th><th style='width: 80px;'>Level</th></tr></thead>";
         echo "<tbody>";
         while ($player = mysqli_fetch_assoc($select_Player)) {
             $is_joined = $player['IS_JOINED'] == 1;
