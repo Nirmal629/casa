@@ -67,3 +67,14 @@
     <link rel="stylesheet" href="assets/css/tournament.css?v=1.9.45" type="text/css">
 
     <link rel="stylesheet" href="assets/css/style.css?v=1.2.27" type="text/css">
+
+    <?php
+    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+    $projectRoot = realpath(__DIR__ . '/..'); 
+    $base_dir = str_replace(str_replace('\\', '/', $docRoot), '', str_replace('\\', '/', $projectRoot)) . '/';
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $base_url = $protocol . "://" . $_SERVER['HTTP_HOST'] . $base_dir;
+    ?>
+    <script>
+        const BASE_URL = '<?php echo $base_url; ?>';
+    </script>

@@ -1,6 +1,10 @@
 <?php
 session_start();
 include('dbConnection.php');
+
+if (isset($_SESSION['user_id'])) {
+    logPlayerActivity($conn, $_SESSION['user_id'], 'VIEW_PLAYERS', 'Viewed invited players for game ID ' . ($_POST['ID'] ?? 'unknown'));
+}
 // print_r($_POST);
 
 if($_POST['EVENT_TYPE'] == 'Public')
@@ -43,11 +47,14 @@ $skill_level = $fetch_game['GENDER_SKILL_LEVEL'];
 
 $gender_condition = "";
 if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
-    $gender_condition = "AND cu.GENDER IN ('Male', 'Female', 'Kid') AND cu.VERIFIED_LEVEL = '$skill_level'";
+    $gender_condition .= "AND cu.GENDER IN ('Male', 'Female', 'Kid') ";
 } else {
-    $gender_condition = "AND cu.GENDER = '" . $fetch_game['GENDER_CATEGORY'] . "' AND cu.VERIFIED_LEVEL = '$skill_level'";
+    $gender_condition .= "AND cu.GENDER = '" . $fetch_game['GENDER_CATEGORY'] . "' ";
 }
-   
+
+if ($skill_level !== 'Mix') {
+    $gender_condition .= "AND cu.VERIFIED_LEVEL = '$skill_level' ";
+}
    $select_Player = mysqli_query($conn, "
     SELECT cu.*,
            cg.CONFIRMED AS CONFIRMED,
@@ -55,7 +62,8 @@ if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
            IF(cg.USER_ID IS NOT NULL, 1, 0) AS IS_JOINED,
            IFNULL(gj.total_games, 0) AS TOTAL_GAMES
     FROM ca_users cu
-    LEFT JOIN ca_gamejoin cg ON cu.ID = cg.USER_ID AND cg.GAME_ID = '" . $_POST['ID'] . "'
+    INNER JOIN ca_player_club_status pcs ON cu.ID = pcs.player_id AND pcs.host_id = '" . mysqli_real_escape_string($conn, $_POST['HOST_ID']) . "' AND pcs.status = 'accepted'
+    LEFT JOIN ca_gamejoin cg ON cu.ID = cg.USER_ID AND cg.GAME_ID = '" . mysqli_real_escape_string($conn, $_POST['ID']) . "'
     LEFT JOIN (
         SELECT USER_ID, COUNT(*) AS total_games
         FROM ca_gamejoin
@@ -65,6 +73,7 @@ if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
       AND cu.LOG_STATUS='Y' 
       AND cu.DEL_STATUS='N' 
       $gender_condition
+    GROUP BY cu.ID
     ORDER BY IS_JOINED DESC,TOTAL_GAMES DESC
     ");
     
@@ -75,6 +84,9 @@ if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
             $fetch_event = mysqli_fetch_assoc($select_Event);
         }
         $i = 1;
+        echo "<div class='table-responsive'><table class='table table-sm table-bordered mt-2 text-center align-middle text-nowrap' style='font-size: 0.85rem;'>";
+        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 30px;' title='Gender'>G</th><th style='width: 40px;' title='Level'>Lvl</th><th style='width: 35px;' title='Add/Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
+        echo "<tbody>";
         while ($player = mysqli_fetch_assoc($select_Player)) {
             $is_joined = $player['IS_JOINED'] == 1;
             $price = $is_joined ? $player['JOINED_PRICE'] : $fetch_event['EVENT_COST']; // Get price from ca_gamejoin if joined
@@ -84,53 +96,67 @@ if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
             $disabled = $is_joined ? '' : 'disabled';
             
             $checked_con = $player['CONFIRMED'] == 'Y' ? 'checked' : '';
-            $disabled_con = $player['CONFIRMED'] == 'Y' ? 'disabled' : '';
+            $disabled_con = ''; // Removed 'disabled' so host can un-confirm
     
+            $level_map = [
+                'Beginner' => 'Beg',
+                'Amateur' => 'Ama',
+                'Intermediate' => 'Int',
+                'Intermediate +' => 'Int+',
+                'Pro' => 'Pro'
+            ];
+            $display_level = $level_map[$player['VERIFIED_LEVEL']] ?? $player['VERIFIED_LEVEL'];
+
+            $gender_map = [
+                'Male' => 'M',
+                'Female' => 'F',
+                'Kid' => 'K'
+            ];
+            $display_gender = $gender_map[$player['GENDER']] ?? $player['GENDER'];
+
+            $name_parts = explode(' ', trim($player['NAME']));
+            $display_name = $name_parts[0];
+            if (count($name_parts) > 1) {
+                $display_name .= ' ' . strtoupper(substr(end($name_parts), 0, 1)) . '.';
+            }
+
             // Display player details
             echo " 
-            <div class='Profiletable_wrap'>
-                <div class='plyardetails'>
-                    <div class='d-flex justify-content-start gap-2 w-50'>
-                        <div class='slno'>$i</div>
-                        <div class='d-flex align-items-center justify-content-start flex-wrap gap-2'>
-                            <h6 class='name mb-0'><strong>" . $player['NAME'] . " (" . $player['GENDER'] . ")</strong></h6>
-                            <p class='text-danger'>{$player['WHATSAPP_NUMBER']}</p>
-                            <p class='bg-info text-white rounded px-1'>".$player['VERIFIED_LEVEL']."</p>
-                        </div>
-                    </div>
-                    " . ($is_joined ? "
-                    <div class='price_input' style='display: flex; justify-content: end; gap: 5px;'>
-                        <input type='text' class='form-control player-price' id='price_".$player['ID']."' value='".$price."' style='max-width:80px; min-width: 55px; padding: 4px 5px;'/>
-                        <button class='btn badge btn-success save-price' data-user-id='".$player['ID']."' data-game-id='".$_POST['ID']."'>Save</button>
-                    </div>
-                    " : "") . "
-                    <div>
-                        <div class='invite_btn'>
-                            <span>Add Player</span>
-                            <input type='checkbox' class='invite-checkbox' data-type='Public' 
-                                data-user-id='".$player['ID']."' 
-                                data-game-id='".$_POST['ID']."' 
-                                data-host-id='".$_POST['HOST_ID']."' 
-                                data-price-id='".$fetch_event['EVENT_COST']."' 
-                                data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
-                                $checked />
-                        </div>
-                        <div class='invite_btnnn'>
-                            <span>Confirm</span>
-                            <input type='checkbox' class='invite-checkboxx' data-type='Public' 
-                                data-user-id='".$player['ID']."' 
-                                data-game-id='".$_POST['ID']."' 
-                                data-host-id='".$_POST['HOST_ID']."' 
-                                data-price-id='".$fetch_event['EVENT_COST']."' 
-                                data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
-                                $checked_con $disabled/>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>";
+            <tr>
+                <td>$i</td>
+                <td class='text-start fw-bold'>$display_name</td>
+                <td>$display_gender</td>
+                <td><span class='badge bg-info'>$display_level</span></td>
+                <td>
+                    <label class='m-0 p-0 d-flex align-items-center justify-content-center' style='cursor: pointer;' title='Add Player'>
+                        <input type='checkbox' class='invite-checkbox d-none' data-type='Public' 
+                            data-user-id='".$player['ID']."' 
+                            data-game-id='".$_POST['ID']."' 
+                            data-host-id='".$_POST['HOST_ID']."' 
+                            data-price-id='".$fetch_event['EVENT_COST']."' 
+                            data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
+                            $checked 
+                            onchange='this.nextElementSibling.className = this.checked ? \"fa-solid fa-user-check fs-5 text-success\" : \"fa-solid fa-user-plus fs-5 text-secondary\";' />
+                        <i class='" . ($checked ? "fa-solid fa-user-check fs-5 text-success" : "fa-solid fa-user-plus fs-5 text-secondary") . "' style='transition: 0.2s;'></i>
+                    </label>
+                </td>
+                <td>
+                    <label class='m-0 p-0 d-flex align-items-center justify-content-center' style='" . ($disabled_con ? "cursor: not-allowed; opacity: 0.5;" : "cursor: pointer;") . "' title='Confirm Player'>
+                        <input type='checkbox' class='invite-checkboxx d-none' data-type='Public' 
+                            data-user-id='".$player['ID']."' 
+                            data-game-id='".$_POST['ID']."' 
+                            data-host-id='".$_POST['HOST_ID']."' 
+                            data-price-id='".$fetch_event['EVENT_COST']."' 
+                            data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
+                            $checked_con $disabled_con 
+                            onchange='this.nextElementSibling.className = this.checked ? \"fa-solid fa-check-double fs-5 text-primary\" : \"fa-solid fa-check fs-5 text-secondary\";' />
+                        <i class='" . ($checked_con ? "fa-solid fa-check-double fs-5 text-primary" : "fa-solid fa-check fs-5 text-secondary") . "' style='transition: 0.2s;'></i>
+                    </label>
+                </td>
+            </tr>";
             $i++;
         }
+        echo "</tbody></table></div>";
     } else {
         echo "<input type='hidden' class='invite-checkbox' data-game-id='".$_POST['ID']."' data-host-id='".$_POST['HOST_ID']."' /><p>No players found.</p>";
     }
@@ -139,8 +165,23 @@ if ($fetch_game['GENDER_CATEGORY'] == 'Mix') {
 }
 else
 {
-    $select_Player = mysqli_query($conn,"select * from ca_users where USERTYPE='Player' and LOG_STATUS='Y' and DEL_STATUS='N' and GENDER='".$_SESSION['gender']."'");
+    $select_Player = mysqli_query($conn,"
+        SELECT cu.* 
+        FROM ca_users cu
+        INNER JOIN ca_player_club_status pcs ON cu.ID = pcs.player_id 
+            AND pcs.host_id = '" . mysqli_real_escape_string($conn, $_POST['HOST_ID']) . "' 
+            AND pcs.status = 'accepted'
+        WHERE cu.USERTYPE='Player' 
+          AND cu.LOG_STATUS='Y' 
+          AND cu.DEL_STATUS='N' 
+          AND cu.GENDER='".mysqli_real_escape_string($conn, $_SESSION['gender'])."'
+        GROUP BY cu.ID
+    ");
     if (mysqli_num_rows($select_Player) > 0) {
+        $i = 1;
+        echo "<div class='table-responsive'><table class='table table-sm table-bordered mt-2 text-center align-middle text-nowrap' style='font-size: 0.85rem;'>";
+        echo "<thead class='table-light'><tr><th style='width: 30px;'>#</th><th class='text-start'>Name</th><th style='width: 30px;' title='Gender'>G</th><th style='width: 40px;' title='Level'>Lvl</th><th style='width: 35px;' title='Invite Player'><i class='fa-solid fa-user-plus'></i></th><th style='width: 35px;' title='Confirm Player'><i class='fa-solid fa-check-double'></i></th></tr></thead>";
+        echo "<tbody>";
         while ($player = mysqli_fetch_assoc($select_Player)) {
             $check_joined = mysqli_query($conn, "SELECT * FROM ca_gamejoin WHERE USER_ID='" . $player['ID'] . "' AND GAME_ID='" . $_POST['ID'] . "'");
             $is_joined = mysqli_num_rows($check_joined) > 0; // True if the player is already joined
@@ -152,23 +193,68 @@ else
             // Determine if the checkbox should be checked and disabled
             $checked = $is_joined ? 'checked' : '';
             $disabled = $is_joined ? 'disabled' : '';
+            $checked_con = isset($fetch_Joined['CONFIRMED']) && $fetch_Joined['CONFIRMED'] == 'Y' ? 'checked' : '';
+            $disabled_con = ''; // Removed 'disabled' so host can un-confirm
+
+            $level_map = [
+                'Beginner' => 'Beg',
+                'Amateur' => 'Ama',
+                'Intermediate' => 'Int',
+                'Intermediate +' => 'Int+',
+                'Pro' => 'Pro'
+            ];
+            $display_level = $level_map[$player['VERIFIED_LEVEL']] ?? $player['VERIFIED_LEVEL'];
+
+            $gender_map = [
+                'Male' => 'M',
+                'Female' => 'F',
+                'Kid' => 'K'
+            ];
+            $display_gender = $gender_map[$player['GENDER']] ?? $player['GENDER'];
+
+            $name_parts = explode(' ', trim($player['NAME']));
+            $display_name = $name_parts[0];
+            if (count($name_parts) > 1) {
+                $display_name .= ' ' . strtoupper(substr(end($name_parts), 0, 1)) . '.';
+            }
+
             // Populate player details dynamically
             echo "
-            <div class='Profiletable_wrap'>
-                
-                <div class='plyardetails'>
-                    <div style='display: flex; flex-direction: column; align-items: flex-start; gap: 5px;'>
-
-                        <h6 class='name'><strong>" . $player['NAME'] . " (" . $player['GENDER'] . ")</strong></h6>
-                        <p>{$player['WHATSAPP_NUMBER']}</p>
-                    </div>
-                    <div class='invite_btn'>
-                        <span>Invite</span>
-                        <input type='checkbox' class='invite-checkbox' data-type='Invite' data-user-id='".$player['ID']."' data-game-id='".$_POST['ID']."' data-host-id='".$_POST['HOST_ID']."' data-price-id='".$fetch_event['EVENT_COST']."' data-currency-id='".$fetch_event['EVENT_CURRENCY']."' $checked />
-                    </div>
-                </div>
-            </div>";
+            <tr>
+                <td>$i</td>
+                <td class='text-start fw-bold'>$display_name</td>
+                <td>$display_gender</td>
+                <td><span class='badge bg-info'>$display_level</span></td>
+                <td>
+                    <label class='m-0 p-0 d-flex align-items-center justify-content-center' style='cursor: pointer;' title='Invite Player'>
+                        <input type='checkbox' class='invite-checkbox d-none' data-type='Invite' 
+                            data-user-id='".$player['ID']."' 
+                            data-game-id='".$_POST['ID']."' 
+                            data-host-id='".$_POST['HOST_ID']."' 
+                            data-price-id='".$fetch_event['EVENT_COST']."' 
+                            data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
+                            $checked 
+                            onchange='this.nextElementSibling.className = this.checked ? \"fa-solid fa-user-check fs-5 text-success\" : \"fa-solid fa-user-plus fs-5 text-secondary\";' />
+                        <i class='" . ($checked ? "fa-solid fa-user-check fs-5 text-success" : "fa-solid fa-user-plus fs-5 text-secondary") . "' style='transition: 0.2s;'></i>
+                    </label>
+                </td>
+                <td>
+                    <label class='m-0 p-0 d-flex align-items-center justify-content-center' style='" . ($disabled_con ? "cursor: not-allowed; opacity: 0.5;" : "cursor: pointer;") . "' title='Confirm Player'>
+                        <input type='checkbox' class='invite-checkboxx d-none' data-type='Invite' 
+                            data-user-id='".$player['ID']."' 
+                            data-game-id='".$_POST['ID']."' 
+                            data-host-id='".$_POST['HOST_ID']."' 
+                            data-price-id='".$fetch_event['EVENT_COST']."' 
+                            data-currency-id='".$fetch_event['EVENT_CURRENCY']."' 
+                            $checked_con $disabled_con 
+                            onchange='this.nextElementSibling.className = this.checked ? \"fa-solid fa-check-double fs-5 text-primary\" : \"fa-solid fa-check fs-5 text-secondary\";' />
+                        <i class='" . ($checked_con ? "fa-solid fa-check-double fs-5 text-primary" : "fa-solid fa-check fs-5 text-secondary") . "' style='transition: 0.2s;'></i>
+                    </label>
+                </td>
+            </tr>";
+            $i++;
         }
+        echo "</tbody></table></div>";
     } else {
         echo "<input type='hidden' class='invite-checkbox' data-game-id='".$_POST['ID']."' data-host-id='".$_POST['HOST_ID']."' /><p>No players found.</p>";
     }

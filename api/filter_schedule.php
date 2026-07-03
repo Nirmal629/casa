@@ -26,6 +26,7 @@ if($_POST['type']=='filter')
         $event_id = $event['ID'];
         $host_name = $event['HOST_NAME'];
         $event_date = date('D, d M Y, h:i A', strtotime($event['EVENT_DATE'] . ' ' . $event['EVENT_TIME']));
+        $is_today = (date('Y-m-d') == date('Y-m-d', strtotime($event['EVENT_DATE'])));
         $event_venue = $event['EVENT_VENUE'];
         $event_cost = $event['EVENT_COST'];
                 $event_court = $event['EVENT_DISCOUNT'];
@@ -118,99 +119,68 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
         <div class='discoverGames_card'>
             <div class='d-flex flex-wrap align-items-center justify-content-between gap-2' style='margin-bottom: 8px; background-color: #0d6efda1; padding: 8px 10px; border-radius: 8px 8px 0px 0px;'>
                 <p class='text-white desc fw-bold m-0' style='font-size: 85%;'>$event_category - $gender_category</p>
-                <div class='accessories_wrap'>
-                    <span class='joined_btn badge btn-success' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
-                    <a href='javascript:void(0)' class='badge btn-info copy_event' title='Copy' data-id='$event_id'>
+                <div class='accessories_wrap d-flex gap-1'>
+                    <span class='view_btn badge btn-success d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
+                    <a href='javascript:void(0)' class='badge btn-info copy_event d-flex align-items-center justify-content-center text-white' style='width: 28px; height: 28px; padding: 0;' title='Copy' data-id='$event_id'>
                         <i class='fa-regular fa-copy'></i>
-                      </a>
-                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary' title='Edit' data-id='$event_id'>
+                    </a>
+                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Edit' data-id='$event_id'>
                         <i class='fa-regular fa-pen-to-square'></i>
                     </a>
-                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger' title='Delete'>
+                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Delete'>
                         <i class='fa-regular fa-trash-can'></i>
                     </a>
                     <input type='hidden' id='data_$event_id' value='$jsonStringy'/>
                     <input type='hidden' id='event_data_$event_id' value='" . htmlspecialchars($eventData, ENT_QUOTES) . "'>
-
                 </div>
             </div>
-           <div class='d-flex align-items-center justify-content-between gap-1 mb-2'>
-                <div class=''>
-                    <div class='d-flex align-items-start gap-1 mb-2 p-1' style='border: 1px solid red; border-radius: 6px;'>
-                        <i class='fa-solid fa-clock' style='font-size: 80%; color: red; margin-top: 3px;'></i>
-                        <h4 class='date_time mb-0 " . ($is_today ? "blink" : "") . "' style='color: red;'><span>$event_date</span><span> to </span><span>" . date('h:i A', strtotime($event['TO_TIME'])) . "</span></h4>
+            <div class='row px-2 mb-2 g-2 align-items-stretch'>
+                <!-- Left Column: Date, Time, Location -->
+                <div class='col-7 d-flex align-items-center'>
+                    <div class='d-flex align-items-start gap-2 w-100'>
+                        <!-- Calendar Box -->
+                        <div class='p-1 rounded text-center flex-shrink-0' style='min-width: 40px; background-color: #fff1f0; border: 1px solid #ffccc7;'>
+                            <div class='fw-bold' style='font-size: 0.95rem; line-height: 1; color: #cf1322;'>" . date('d', strtotime($event['EVENT_DATE'])) . "</div>
+                            <div class='fw-semibold' style='font-size: 0.65rem; text-transform: uppercase; color: #cf1322;'>" . date('M', strtotime($event['EVENT_DATE'])) . "</div>
+                        </div>
+                        <!-- Details -->
+                        <div class='d-flex flex-column justify-content-center w-100'>
+                            <h6 class='mb-1 fw-bold text-dark' style='font-size: 0.75rem; line-height: 1.2;'>" . date('g:i A', strtotime($event['EVENT_TIME'])) . " - " . date('g:i A', strtotime($event['TO_TIME'])) . "</h6>
+                            <p class='mb-0 text-truncate' style='font-size: 0.75rem; color: #555;'>
+                                <i class='fa-solid fa-location-dot text-secondary me-1' style='font-size:0.7rem'></i>$event_venue
+                            </p>
+                            <p class='mb-0 text-muted' style='font-size: 0.65rem; line-height: 1.2; margin-top: 2px;'>
+                                <i class='fa-solid fa-snowflake me-1' style='font-size:0.6rem'></i>Freeze: " . date('M d, g:i A', strtotime($event['CANCEL_DATE'] . ' ' . $event['CANCEL_TIME'])) . "
+                            </p>
+                        </div>
                     </div>
-                    
-                    <p class='location mb-1'>
-                        <i class='fa-solid fa-location-dot'></i>
-                        $event_venue
-                    </p>
-                    <p style='font-size:60%; margin-bottom: 5px;'>Freeze Date & Time: $event_canceldate $event_cancelTime</p>
                 </div>
-                <div class='access_datebox'>
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Total Joined:</span>
-                        <span class='slots-count badge bg-secondary m-0'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Joined: $countTotalJoin'>
-                            $countTotalJoin
-                        </span>
+                
+                <!-- Right Column: Stats (Joined, Confirmed, Players) -->
+                <div class='col-5 d-flex flex-column justify-content-between gap-1'>
+                    <div class='d-flex gap-1 w-100'>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Joined</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalJoin</div>
+                         </div>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Confirm</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalConfirmed</div>
+                         </div>
                     </div>
-                    
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Confirmed:</span>
-                        <span class='slots-count badge bg-secondary m-0'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Confirmed: $countTotalConfirmed'>
-                            $countTotalConfirmed
-                        </span>
-                    </div>
-                   <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Game Info:</span>
-                        <span class='badge bg-info m-0' style='cursor: pointer;'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-html='true'
-                              data-bs-content='$event_description_html'>
-                            <i class='fa-solid fa-info'></i>
-                        </span>
-                    </div>
-                    <div class='d-flex align-items-center justify-content-between gap-1'>
-                        <span>View Players:</span>
-                        <span class='badge btn-dark view_btn' style='cursor: pointer;' title='View' data-id='$event_id'><i class='fa-regular fa-eye'></i></span>
-                    </div>
+                    <button class='btn btn-dark btn-sm w-100 joined_btn d-flex align-items-center justify-content-center gap-2 p-1 border-0 shadow-sm' style='font-size: 0.75rem; border-radius: 4px;' data-id='$event_id'>
+                         Players <i class='fa-regular fa-eye'></i>
+                    </button>
                 </div>
             </div>
-             <div class='d-flex align-items-center' style='gap: 15px; margin-bottom: 10px;'>
-                <div class='d-flex align-items-center'>
-                    <p class='gamesms_text'>$wrapped_message</p>
-                </div>
-                <!----<div class='Slots_book' style='visibility:hidden'>Only 2 Slots</div>--->
+             <div class='px-2 mb-2'>
+                <p class='gamesms_text m-0' style='font-size: 0.75rem; color: #6c757d; font-style: italic;'><i class='fa-solid fa-circle-info me-1' style='font-size: 0.7rem;'></i>$wrapped_message</p>
             </div>
-
-            <div class='d-flex align-items-center justify-content-start gap-1'>
-                <div class='play_status'>
-                    <span>$gender_skill_level</span>
-                </div>
-                <div class='play_status d-flex flex-wrap align-items-start gap-1'>
-                    <span>
-                    Court: ". ($event_court == 0 ?'NA':$event_court)."
-                    </span>
-                    <span class='amount'>
-                        $event_currency $event_cost
-                    </span>
-                    <span class='text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>
-                       $event_type
-                    </span>
-                </div>
+            <div class='d-flex flex-wrap align-items-center justify-content-start gap-1 px-2 pb-2'>
+                <span class='badge bg-secondary rounded-pill fw-normal'>$gender_skill_level</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>Court: ". ($event_court == 0 ?'NA':$event_court)."</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>$event_currency $event_cost</span>
+                <span class='badge rounded-pill fw-normal text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>$event_type</span>
             </div>
              " . (
     !empty($event['JOIN_MESSAGE'])
@@ -240,6 +210,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         $event_id = $event['ID'];
         $host_name = $event['HOST_NAME'];
         $event_date = date('D, d M Y, h:i A', strtotime($event['EVENT_DATE'] . ' ' . $event['EVENT_TIME']));
+        $is_today = (date('Y-m-d') == date('Y-m-d', strtotime($event['EVENT_DATE'])));
         $event_venue = $event['EVENT_VENUE'];
         $event_cost = $event['EVENT_COST'];
                 $event_court = $event['EVENT_DISCOUNT'];
@@ -254,7 +225,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         $event_canceldate = $event['CANCEL_DATE']!='' ? date('D, d M Y', strtotime($event['CANCEL_DATE'])) : '';
         $event_cancelTime = date('h:i A', strtotime($event['CANCEL_TIME']));
         
-        $jsonStringy = json_encode($event, JSON_HEX_APOS | JSON_HEX_QUOT);
+        $jsonStringy = htmlspecialchars(json_encode($event, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         
         $words = explode(" ", $event_message); // Split message into words
         $wrapped_message = implode(" ", array_slice($words, 0, 7)); // Get first 5 words
@@ -325,99 +296,69 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
         <div class='discoverGames_card'>
             <div class='d-flex flex-wrap align-items-center justify-content-between gap-2' style='margin-bottom: 8px; background-color: #0d6efda1; padding: 8px 10px; border-radius: 8px 8px 0px 0px;'>
                 <p class='text-white desc fw-bold m-0' style='font-size: 85%;'>$event_category - $gender_category</p>
-                <div class='accessories_wrap'>
-                    <span class='joined_btn badge btn-success' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
-                    <a href='javascript:void(0)' class='badge btn-info copy_event' title='Copy' data-id='$event_id'>
+                <div class='accessories_wrap d-flex gap-1'>
+                    <span class='view_btn badge btn-success d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
+                    <a href='javascript:void(0)' class='badge btn-info copy_event d-flex align-items-center justify-content-center text-white' style='width: 28px; height: 28px; padding: 0;' title='Copy' data-id='$event_id'>
                         <i class='fa-regular fa-copy'></i>
-                      </a>
-                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary' title='Edit' data-id='$event_id'>
+                    </a>
+                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Edit' data-id='$event_id'>
                         <i class='fa-regular fa-pen-to-square'></i>
                     </a>
-                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger' title='Delete'>
+                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Delete'>
                         <i class='fa-regular fa-trash-can'></i>
                     </a>
                     <input type='hidden' id='data_$event_id' value='$jsonStringy'/>
-                                        <input type='hidden' id='event_data_$event_id' value='" . htmlspecialchars($eventData, ENT_QUOTES) . "'>
-
+                    <input type='hidden' id='event_data_$event_id' value='" . htmlspecialchars($eventData, ENT_QUOTES) . "'>
                 </div>
             </div>
-           <div class='d-flex align-items-center justify-content-between gap-1 mb-2'>
-                <div class=''>
-                    <div class='d-flex align-items-start gap-1 mb-2 p-1' style='border: 1px solid red; border-radius: 6px;'>
-                        <i class='fa-solid fa-clock' style='font-size: 80%; color: red; margin-top: 3px;'></i>
-                        <h4 class='date_time mb-0 " . ($is_today ? "blink" : "") . "' style='color: red;'><span>$event_date</span><span> to </span><span>" . date('h:i A', strtotime($event['TO_TIME'])) . "</span></h4>
+           <div class='d-flex flex-column justify-content-between gap-2 mb-2 px-2'>
+                <div class='flex-grow-1'>
+                    <div class='d-inline-flex align-items-center gap-2 mb-2 p-1 px-2' style='border: 1px solid #dc3545; border-radius: 6px; background: #fff5f5;'>
+                        <i class='fa-solid fa-clock' style='font-size: 90%; color: #dc3545;'></i>
+                        <h4 class='date_time mb-0 " . ($is_today ? "blink" : "") . "' style='color: #dc3545; font-size: 0.85rem; font-weight: 600;'>$event_date<span class='fw-normal text-muted mx-1'>|</span>" . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
                     </div>
                     
-                    <p class='location mb-1'>
-                        <i class='fa-solid fa-location-dot'></i>
+                    <p class='location mb-1 text-truncate' style='max-width: 100%; font-size: 0.85rem; color: #333;'>
+                        <i class='fa-solid fa-location-dot text-secondary me-1'></i>
                         $event_venue
                     </p>
-                    <p style='font-size:60%; margin-bottom: 5px;'>Freeze Date & Time: $event_canceldate $event_cancelTime</p>
+                    <p class='text-secondary' style='font-size: 0.7rem; margin-bottom: 5px;'><i class='fa-solid fa-snowflake me-1'></i>Freeze: $event_canceldate $event_cancelTime</p>
                 </div>
-                <div class='access_datebox'>
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Total Joined:</span>
-                        <span class='slots-count badge bg-secondary m-0'
+                <div class='d-flex flex-column gap-2 w-100'>
+                    <div class='d-flex gap-2 w-100'>
+                        <span class='badge bg-light text-dark border d-flex align-items-center justify-content-between p-2 flex-grow-1'
                               tabindex='0'
                               data-bs-toggle='popover'
                               data-bs-trigger='click'
                               data-bs-placement='top'
                               data-bs-content='Total Joined: $countTotalJoin'>
-                            $countTotalJoin
+                            <span class='text-muted fw-normal'>Joined</span> <strong class='fs-6' style='line-height: 1;'>$countTotalJoin</strong>
                         </span>
-                    </div>
-                    
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Confirmed:</span>
-                        <span class='slots-count badge bg-secondary m-0'
+                        
+                        <span class='badge bg-light text-dark border d-flex align-items-center justify-content-between p-2 flex-grow-1'
                               tabindex='0'
                               data-bs-toggle='popover'
                               data-bs-trigger='click'
                               data-bs-placement='top'
                               data-bs-content='Total Confirmed: $countTotalConfirmed'>
-                            $countTotalConfirmed
+                            <span class='text-muted fw-normal'>Confirmed</span> <strong class='fs-6' style='line-height: 1;'>$countTotalConfirmed</strong>
                         </span>
                     </div>
-                   <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Game Info:</span>
-                        <span class='badge bg-info m-0' style='cursor: pointer;'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-html='true'
-                              data-bs-content='$event_description_html'>
-                            <i class='fa-solid fa-info'></i>
-                        </span>
-                    </div>
-                    <div class='d-flex align-items-center justify-content-between gap-1'>
-                        <span>View Players:</span>
-                        <span class='badge btn-dark view_btn' style='cursor: pointer;' title='View' data-id='$event_id'><i class='fa-regular fa-eye'></i></span>
-                    </div>
-                </div>
-            </div>
-             <div class='d-flex align-items-center' style='gap: 15px; margin-bottom: 10px;'>
-                <div class='d-flex align-items-center'>
-                    <p class='gamesms_text'>$wrapped_message</p>
-                </div>
-                <!----<div class='Slots_book' style='visibility:hidden'>Only 2 Slots</div>--->
-            </div>
 
-            <div class='d-flex align-items-center justify-content-start gap-1'>
-                <div class='play_status'>
-                    <span>$gender_skill_level</span>
-                </div>
-                <div class='play_status d-flex flex-wrap align-items-start gap-1'>
-                    <span>
-                    Court: ". ($event_court == 0 ?'NA':$event_court)."
-                    </span>
-                    <span class='amount'>
-                        $event_currency $event_cost
-                    </span>
-                    <span class='text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>
-                       $event_type
+                    <span class='badge bg-dark d-flex align-items-center justify-content-between p-2 w-100 joined_btn' 
+                          style='cursor: pointer;' title='View' data-id='$event_id'>
+                        <span class='fw-normal'>Players</span> <i class='fa-regular fa-eye fs-6' style='line-height: 1;'></i>
                     </span>
                 </div>
+            </div>
+             <div class='px-2 mb-2'>
+                <p class='gamesms_text m-0 p-2 rounded' style='background-color:#e9f2fb; font-size: 0.8rem; color: #0d6efd; border-left: 3px solid #0d6efd;'>$wrapped_message</p>
+            </div>
+            <div class='d-flex flex-wrap align-items-center justify-content-start gap-1 px-2 pb-2'>
+                <span class='badge bg-secondary rounded-pill fw-normal'>$gender_skill_level</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>Court: ". ($event_court == 0 ?'NA':$event_court)."</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>$event_currency $event_cost</span>
+                <span class='badge rounded-pill fw-normal text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>$event_type</span>
             </div>
              " . (
     !empty($event['JOIN_MESSAGE'])

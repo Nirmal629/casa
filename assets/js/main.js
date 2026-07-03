@@ -882,7 +882,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'api/get_player_cost.php', // 🔄 Adjust this URL to your PHP script
+            url: BASE_URL + 'api/get_player_cost.php', // 🔄 Adjust this URL to your PHP script
 
             method: 'POST',
 
@@ -2609,8 +2609,9 @@ $(document).ready(function () {
     })
 
 
-
-
+    $("#year, #month, #event_category").change(function () {
+        $("#play_filter").click();
+    });
 
     $("#play_filter").click(function () {
 
@@ -2680,7 +2681,9 @@ $(document).ready(function () {
 
     })
 
-
+    $("#comyear, #commonth").change(function () {
+        $("#play_com_filter").click();
+    });
 
     $("#play_com_filter").click(function () {
 
@@ -2752,7 +2755,9 @@ $(document).ready(function () {
 
     })
 
-
+    $("#payyear, #paymonth").change(function () {
+        $("#pay_com_filter").click();
+    });
 
     $("#pay_com_filter").click(function () {
 
@@ -3054,15 +3059,19 @@ nextBtn.addEventListener("click", () => {
 
 
 
-dateInput.addEventListener("click", () => {
+    dateInput.addEventListener("click", () => {
+        calendar.style.display = "block";
+        positionCalendar();
+    });
 
-    calendar.style.display = "block";
-
-    positionCalendar();
-
+// Close custom modals on outside click
+$(document).ready(function() {
+    $(document).on('click', '.customModal_wrap', function(e) {
+        if ($(e.target).hasClass('customModal_wrap')) {
+            $(this).removeClass('open');
+        }
+    });
 });
-
-
 
 document.addEventListener("click", (event) => {
 

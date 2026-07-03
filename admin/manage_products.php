@@ -253,12 +253,13 @@ $endItem = min($offset + count($products), $totalItems);
             <?php } ?>
 
             <form method="GET" class="products-toolbar">
+                <button type="button" class="btn btn-success" id="open-add-product">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+
                 <div class="products-toolbar-controls">
-                    <button type="button" class="btn btn-success" id="open-add-product">
-                        <i class="fa fa-plus"></i>
-                    </button>
                     <div class="products-limit-control">
-                        <!-- <label for="limit">Show</label> -->
+                        <label for="limit">Show</label>
                         <select class="form-control" id="limit" name="limit">
                             <?php foreach ($allowedLimits as $allowedLimit) { ?>
                                 <option value="<?php echo (int) $allowedLimit; ?>" <?php echo $limit === $allowedLimit ? 'selected' : ''; ?>>
@@ -266,7 +267,7 @@ $endItem = min($offset + count($products), $totalItems);
                                 </option>
                             <?php } ?>
                         </select>
-                        <!-- <span>entries</span> -->
+                        <span>entries</span>
                     </div>
 
                     <div class="input-group products-search-control">
@@ -329,7 +330,8 @@ $endItem = min($offset + count($products), $totalItems);
                                             data-price="<?php echo h(number_format((float) $row['PRICE'], 2)); ?>"
                                             data-quantity="<?php echo h($row['QUANTITY']); ?>"
                                             data-size="<?php echo h($row['SIZE']); ?>"
-                                            data-image="<?php echo h($row['IMAGE']); ?>">
+                                            data-image="<?php echo h($row['IMAGE']); ?>"
+                                        >
                                             <i class="fa fa-eye"></i>
                                         </button>
                                         <button
@@ -342,13 +344,15 @@ $endItem = min($offset + count($products), $totalItems);
                                             data-price="<?php echo h($row['PRICE']); ?>"
                                             data-quantity="<?php echo h($row['QUANTITY']); ?>"
                                             data-size="<?php echo h($row['SIZE']); ?>"
-                                            data-image="<?php echo h($row['IMAGE']); ?>">
+                                            data-image="<?php echo h($row['IMAGE']); ?>"
+                                        >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                         <button
                                             type="button"
                                             class="btn btn-danger btn-xs delete-product"
-                                            data-id="<?php echo (int) $row['ID']; ?>">
+                                            data-id="<?php echo (int) $row['ID']; ?>"
+                                        >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -558,7 +562,6 @@ $endItem = min($offset + count($products), $totalItems);
     }
 
     @media (max-width: 767px) {
-
         .products-toolbar,
         .products-toolbar-controls,
         .products-pagination-row {
@@ -618,7 +621,8 @@ $endItem = min($offset + count($products), $totalItems);
                                     <option
                                         value="<?php echo h($productType['ID']); ?>"
                                         data-department_id="<?php echo h($productType['DEPARTMENT_ID']); ?>"
-                                        <?php echo (string) $formData['product_type_id'] === (string) $productType['ID'] ? 'selected' : ''; ?>>
+                                        <?php echo (string) $formData['product_type_id'] === (string) $productType['ID'] ? 'selected' : ''; ?>
+                                    >
                                         <?php echo h($productType['NAME']); ?>
                                     </option>
                                 <?php } ?>
@@ -642,7 +646,7 @@ $endItem = min($offset + count($products), $totalItems);
                         <div class="col-md-6 form-group">
                             <label for="modal_image">Product Image <span id="modal_image_required_mark"><?php echo $formData['id'] ? '' : '*'; ?></span></label>
                             <input type="file" class="form-control" id="modal_image" name="image" accept="image/*" <?php echo $formData['id'] ? '' : 'required'; ?>>
-                            <img src="<?php echo h($formData['image']); ?>" alt="Product preview" id="modal_product_image_preview" class="product-image-preview" <?php echo $formData['image'] !== '' ? ' style="display:block;"' : ''; ?>>
+                            <img src="<?php echo h($formData['image']); ?>" alt="Product preview" id="modal_product_image_preview" class="product-image-preview"<?php echo $formData['image'] !== '' ? ' style="display:block;"' : ''; ?>>
                         </div>
                     </div>
                 </div>
@@ -710,7 +714,7 @@ $endItem = min($offset + count($products), $totalItems);
 <script>
     var productTypes = <?php echo json_encode($productTypes, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         var limitSelect = document.getElementById('limit');
         var formModal = document.getElementById('productFormModal');
         var viewModal = document.getElementById('productViewModal');
@@ -735,7 +739,7 @@ $endItem = min($offset + count($products), $totalItems);
         var formSubmitButton = document.getElementById('productFormSubmitButton');
 
         if (limitSelect) {
-            limitSelect.addEventListener('change', function() {
+            limitSelect.addEventListener('change', function () {
                 limitSelect.form.submit();
             });
         }
@@ -779,7 +783,7 @@ $endItem = min($offset + count($products), $totalItems);
 
             productTypeInput.innerHTML = '<option value="">Select Product Type</option>';
 
-            productTypes.forEach(function(productType) {
+            productTypes.forEach(function (productType) {
                 if (departmentId && String(productType.DEPARTMENT_ID) !== String(departmentId)) {
                     return;
                 }
@@ -870,40 +874,40 @@ $endItem = min($offset + count($products), $totalItems);
                 'quantity',
                 'size',
                 'image'
-            ].forEach(function(field) {
+            ].forEach(function (field) {
                 setViewValue(field, data[field] || '');
             });
         }
 
-        document.querySelectorAll('.view-product').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.view-product').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setProductView(button.dataset);
                 openViewModal();
             });
         });
 
         if (openAddButton) {
-            openAddButton.addEventListener('click', function() {
+            openAddButton.addEventListener('click', function () {
                 setProductForm(getEmptyProduct());
                 openFormModal();
             });
         }
 
-        document.querySelectorAll('.edit-product').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.edit-product').forEach(function (button) {
+            button.addEventListener('click', function () {
                 setProductForm(button.dataset);
                 openFormModal();
             });
         });
 
         if (departmentInput) {
-            departmentInput.addEventListener('change', function() {
+            departmentInput.addEventListener('change', function () {
                 updateProductTypeOptions(departmentInput.value, '');
             });
         }
 
         if (imageInput) {
-            imageInput.addEventListener('change', function() {
+            imageInput.addEventListener('change', function () {
                 var file = imageInput.files && imageInput.files[0];
 
                 if (file) {
@@ -912,8 +916,8 @@ $endItem = min($offset + count($products), $totalItems);
             });
         }
 
-        document.querySelectorAll('.delete-product').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.delete-product').forEach(function (button) {
+            button.addEventListener('click', function () {
                 var productId = button.getAttribute('data-id');
 
                 if (!confirm('Are you sure you want to delete this product?')) {
@@ -923,10 +927,8 @@ $endItem = min($offset + count($products), $totalItems);
                 window.jQuery.ajax({
                     url: 'api/delete_product.php',
                     type: 'POST',
-                    data: {
-                        id: productId
-                    },
-                    success: function(response) {
+                    data: { id: productId },
+                    success: function (response) {
                         var data = JSON.parse(response);
 
                         if (data.success) {
@@ -936,7 +938,7 @@ $endItem = min($offset + count($products), $totalItems);
                             alert('Error deleting product.');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         alert('An unexpected error occurred.');
                     }
                 });
@@ -959,19 +961,19 @@ $endItem = min($offset + count($products), $totalItems);
             closeFormBottomButton.addEventListener('click', closeFormModal);
         }
 
-        formModal.addEventListener('click', function(event) {
+        formModal.addEventListener('click', function (event) {
             if (event.target === formModal) {
                 closeFormModal();
             }
         });
 
-        viewModal.addEventListener('click', function(event) {
+        viewModal.addEventListener('click', function (event) {
             if (event.target === viewModal) {
                 closeViewModal();
             }
         });
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && viewModal.classList.contains('is-open')) {
                 closeViewModal();
             }
@@ -982,8 +984,8 @@ $endItem = min($offset + count($products), $totalItems);
         });
 
         <?php if ($showProductModal) { ?>
-            updateProductTypeOptions(<?php echo json_encode($formData['department_id']); ?>, <?php echo json_encode($formData['product_type_id']); ?>);
-            openFormModal();
+        updateProductTypeOptions(<?php echo json_encode($formData['department_id']); ?>, <?php echo json_encode($formData['product_type_id']); ?>);
+        openFormModal();
         <?php } ?>
     });
 </script>

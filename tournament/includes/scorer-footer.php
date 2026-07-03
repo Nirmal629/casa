@@ -180,8 +180,7 @@
     $('#config-voice-toggle')
       .toggleClass('btn-info', enabled)
       .toggleClass('btn-outline-info', !enabled)
-      .attr('title', 'Voice ' + (enabled ? 'on' : 'off'))
-      .html('<i class="fa-solid ' + (enabled ? 'fa-volume-high' : 'fa-volume-xmark') + ($('#config-voice-toggle').hasClass('match-config-icon-btn') ? '' : ' mr-1') + '"></i>' + ($('#config-voice-toggle').hasClass('match-config-icon-btn') ? '' : ' VOICE ' + (enabled ? 'ON' : 'OFF')));
+      .html('<i class="fa-solid ' + (enabled ? 'fa-volume-high' : 'fa-volume-xmark') + ' mr-1"></i> VOICE ' + (enabled ? 'ON' : 'OFF'));
   }
 
   function toggleVoice() {

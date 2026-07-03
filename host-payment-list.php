@@ -24,20 +24,25 @@ $currentMonth = date('n');
             <form>
                 <div class="row g-1 align-items-center">
                     <div class="col-auto">
-                        <select class="form-select form-select-sm py-0" id="hhost" style="width: auto; min-width: 130px; height: 31px;">
+                        <select class="form-select py-0 px-2" id="hhost" style="width: auto; max-width: 120px; height: 31px; font-size: 0.95rem;">
                         <option value="">Player</option>
                         <?php
                         $query = "SELECT ID, NAME FROM ca_users WHERE DEL_STATUS = 'N' AND LOG_STATUS='Y' ORDER BY NAME";
                         $result = mysqli_query($conn, $query);
                     
                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<option value=\"{$row['ID']}\">{$row['NAME']}</option>";
+                            $nameParts = explode(' ', trim($row['NAME']));
+                            $shortName = $nameParts[0];
+                            if (count($nameParts) > 1) {
+                                $shortName .= ' ' . strtoupper(substr(end($nameParts), 0, 1)) . '.';
+                            }
+                            echo "<option value=\"{$row['ID']}\">" . htmlspecialchars($shortName) . "</option>";
                         }
                         ?>
                     </select>
                     </div>
                     <div class="col-auto">
-                        <select class="form-select form-select-sm py-0" id="hpyear" style="width: auto; height: 31px;">
+                        <select class="form-select py-0 px-2" id="hpyear" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                             <option value="">Year</option>
                             <?php
                             for ($year = 2025; $year <= $currentYear; $year++) {
@@ -48,7 +53,7 @@ $currentMonth = date('n');
                         </select>
                     </div>
                     <div class="col-auto">
-                        <select class="form-select form-select-sm py-0" id="hpmonth" style="width: auto; height: 31px;">
+                        <select class="form-select py-0 px-2" id="hpmonth" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                             <option value="">Month</option>
                             <?php
                             $months = [
@@ -63,7 +68,7 @@ $currentMonth = date('n');
                             ?>
                         </select>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto ms-auto">
                         <!--<button type="button" class="btn btn-primary" id="hpfilter">Submit</button>-->
                         <!--<button type="button" class="btn btn-danger" id="reset">Reset</button>-->
                         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="hpfilter" style="height: 31px; width: 40px;">
@@ -184,6 +189,8 @@ $currentMonth = date('n');
         } else {
             echo "<p>No players found.</p>";
         }
+
+        // $conn->close(); // Do NOT close — other tabs still need $conn
         ?>
         
         <!-- Player Modal -->

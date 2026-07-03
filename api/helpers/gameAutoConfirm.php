@@ -1,6 +1,6 @@
 <?php
 
-function applyAutoConfirmAndMessage(mysqli $conn, int $gameId)
+function applyAutoConfirmAndMessage(mysqli $conn, int $gameId, bool $allowAutoConfirm = true)
 {
         /* ===========================
        1. Fetch Event
@@ -145,7 +145,9 @@ function applyAutoConfirmAndMessage(mysqli $conn, int $gameId)
                     WHERE ID = '$gameId'
                 ";
                 
-                mysqli_query($conn,"update ca_gamejoin set CONFIRMED='N' where GAME_ID='$gameId'");
+                if ($allowAutoConfirm) {
+                    mysqli_query($conn,"update ca_gamejoin set CONFIRMED='N' where GAME_ID='$gameId'");
+                }
     
                 
                 mysqli_query($conn,"update ca_gamejoin set PRICE='$per_player_cost' where GAME_ID='$gameId'");
@@ -187,31 +189,33 @@ function applyAutoConfirmAndMessage(mysqli $conn, int $gameId)
                         /* ===========================
                            4. Auto confirmation
                         =========================== */
-                        $autoConfirm = trim($ref['auto_confirm']);
-                    
-                        if ($autoConfirm === 'Confirm prior') {
-                            mysqli_query($conn, "
-                                UPDATE ca_gamejoin
-                                SET CONFIRMED = 'Y'
-                                WHERE GAME_ID = '$gameId'
-                                  AND STATUS = 'Y'
-                            ");
-                        }
-                        elseif ($autoConfirm === 'Auto confirm') {
-                            $lastPlayerId = end($players);
-                            mysqli_query($conn, "
-                                UPDATE ca_gamejoin
-                                SET CONFIRMED = 'Y'
-                                WHERE ID = '$lastPlayerId'
-                            ");
-                        }
-                        elseif ($autoConfirm === 'Wait') {
-                            $lastPlayerId = end($players);
-                            mysqli_query($conn, "
-                                UPDATE ca_gamejoin
-                                SET CONFIRMED = 'N'
-                                WHERE ID = '$lastPlayerId'
-                            ");
+                        if ($allowAutoConfirm) {
+                            $autoConfirm = trim($ref['auto_confirm']);
+                        
+                            if ($autoConfirm === 'Confirm prior') {
+                                mysqli_query($conn, "
+                                    UPDATE ca_gamejoin
+                                    SET CONFIRMED = 'Y'
+                                    WHERE GAME_ID = '$gameId'
+                                      AND STATUS = 'Y'
+                                ");
+                            }
+                            elseif ($autoConfirm === 'Auto confirm') {
+                                $lastPlayerId = end($players);
+                                mysqli_query($conn, "
+                                    UPDATE ca_gamejoin
+                                    SET CONFIRMED = 'Y'
+                                    WHERE ID = '$lastPlayerId'
+                                ");
+                            }
+                            elseif ($autoConfirm === 'Wait') {
+                                $lastPlayerId = end($players);
+                                mysqli_query($conn, "
+                                    UPDATE ca_gamejoin
+                                    SET CONFIRMED = 'N'
+                                    WHERE ID = '$lastPlayerId'
+                                ");
+                            }
                         }
                         // Wait → do nothing
                     

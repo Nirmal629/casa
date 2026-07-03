@@ -1,0 +1,5 @@
+=== Starting DB Migration at 2026-06-25 12:24:53 ===
+• Index 'uq_host_id' does not exist or already dropped in ca_clubs
+• Column 'join_type' already exists in ca_clubs
+• Column 'address' already exists in ca_clubs
+✗ Migration failed: Row size too large. The maximum row size for the used table type, not counting BLOBs, is 8126. This includes storage overhead, check the manual. You have to change some columns to TEXT or BLOBs

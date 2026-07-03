@@ -92,21 +92,21 @@ $initialTeam2Score = ($matchData && ($matchData['STATUS'] ?? '') === 'RUNNING') 
             </div>
 
             <div class="scoreboard-sets">
-                <div class="scoreboard-set-row" data-set-row="1">
+                <div class="scoreboard-set-row">
                     <span class="scoreboard-shuttle"></span>
                     <span class="scoreboard-set-score">
                         <span id="team-a-set-one"><?php echo (int)$initialTeam1Score; ?></span> - <span id="team-b-set-one"><?php echo (int)$initialTeam2Score; ?></span>
                     </span>
                     <span class="scoreboard-shuttle"></span>
                 </div>
-                <div class="scoreboard-set-row" data-set-row="2">
+                <div class="scoreboard-set-row">
                     <span class="scoreboard-shuttle"></span>
                     <span class="scoreboard-set-score">
                         <span id="team-a-set-two">0</span> - <span id="team-b-set-two">0</span>
                     </span>
                     <span class="scoreboard-shuttle"></span>
                 </div>
-                <div class="scoreboard-set-row" data-set-row="3">
+                <div class="scoreboard-set-row">
                     <span class="scoreboard-shuttle"></span>
                     <span class="scoreboard-set-score">
                         <span id="team-a-set-three">0</span> - <span id="team-b-set-three">0</span>
@@ -235,201 +235,359 @@ $initialTeam2Score = ($matchData && ($matchData['STATUS'] ?? '') === 'RUNNING') 
 <!-- **** Modal for Match Configuration **** -->
 
 <div class="modal fade" id="matchConfig" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="matchConfigLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-scrollable">
+
         <div class="modal-content">
+
             <div class="modal-header border-0 pb-0">
+
                 <h6 class="modal-title text-info fw-bold text-uppercase small" id="matchConfigLabel"><i class="fa-solid fa-gears mr-2"></i>Match Configuration</h6>
-                <div class="match-config-header-actions">
-                    <button type="button" id="config-voice-toggle" class="btn btn-outline-info btn-sm match-config-icon-btn" title="Voice announcements">
-                        <i class="fa-solid fa-volume-xmark"></i>
-                    </button>
-                    <button type="button" class="close match-config-icon-btn" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+
+                </button>
+
             </div>
+
             <div class="modal-body">
-                <div class="match-config-panel mx-auto">
-                    <div class="match-config-grid mb-4">
-                        <input type="text" id="t1_name" class="match-config-input" placeholder="Team 1 Name" value="<?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? ''); ?>">
-                        <button type="button" id="config-court-swap" class="btn btn-outline-info btn-sm match-config-icon-btn match-config-swap-btn" title="Swap court">
-                            <i class="fa-solid fa-right-left"></i>
-                        </button>
-                        <input type="text" id="t2_name" class="match-config-input match-config-right" placeholder="Team 2 Name" value="<?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? ''); ?>">
-                    </div>
-                    <div class="match-config-grid mb-3">
-                        <input type="text" id="t1_p1" class="match-config-input" placeholder="Player 1" value="<?php echo htmlspecialchars($team1Player1); ?>">
-                        <span></span>
-                        <input type="text" id="t2_p1" class="match-config-input match-config-right" placeholder="Player 1" value="<?php echo htmlspecialchars($team2Player1); ?>">
 
-                        <button type="button" class="btn btn-outline-info btn-sm match-config-icon-btn match-config-side-swap match-config-swap-team-a" title="Swap team 1 players">
-                            <i class="fa-solid fa-right-left"></i>
-                        </button>
-                        <span class="match-config-vs">VS</span>
-                        <button type="button" class="btn btn-outline-info btn-sm match-config-icon-btn match-config-right-btn match-config-swap-team-b" title="Swap team 2 players">
-                            <i class="fa-solid fa-right-left"></i>
-                        </button>
+                <div class="court-box mx-auto p-3 shadow-lg" style="border-radius: 20px; border: 1px solid rgba(13, 202, 240, 0.2); color: white;">
 
-                        <input type="text" id="t1_p2" class="match-config-input" placeholder="Player 2" value="<?php echo htmlspecialchars($team1Player2); ?>">
-                        <span></span>
-                        <input type="text" id="t2_p2" class="match-config-input match-config-right" placeholder="Player 2" value="<?php echo htmlspecialchars($team2Player2); ?>">
+
+
+                    <div class="p-3 rounded-3 mb-2" style="background: rgba(255,255,255,0.05);">
+
+                        <input type="text" id="t1_name" class="form-control form-control-sm bg-dark text-white border-0 mb-2" placeholder="Team 1 Name" value="<?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? ''); ?>">
+                        <div class="row gap-2">
+                            <div class="col-6"><input type="text" id="t1_p1" class="form-control form-control-sm bg-black text-white-50 border-0" placeholder="Player 1" value="<?php echo htmlspecialchars($team1Player1); ?>"></div>
+                            <div class="col-6"><input type="text" id="t1_p2" class="form-control form-control-sm bg-black text-white-50 border-0" placeholder="Player 2" value="<?php echo htmlspecialchars($team1Player2); ?>"></div>
+                        </div>
+
                     </div>
 
-                    <select id="match_type" class="sr-only" disabled>
-                        <option value="doubles">Doubles</option>
-                    </select>
-                    <select id="deuce_type" class="sr-only" disabled>
-                        <option value="deuce">Deuce On</option>
-                    </select>
 
-                    <button class="match-config-save-btn" type="button" onclick="startPlayableMatch()">
-                        SAVE
+
+                    <div class="p-3 rounded-3 mb-3" style="background: rgba(255,255,255,0.05);">
+
+                        <input type="text" id="t2_name" class="form-control form-control-sm bg-dark text-white border-0 mb-2" placeholder="Team 2 Name" value="<?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? ''); ?>">
+                        <div class="row g-2">
+                            <div class="col-6"><input type="text" id="t2_p1" class="form-control form-control-sm bg-black text-white-50 border-0" placeholder="Player 1" value="<?php echo htmlspecialchars($team2Player1); ?>"></div>
+                            <div class="col-6"><input type="text" id="t2_p2" class="form-control form-control-sm bg-black text-white-50 border-0" placeholder="Player 2" value="<?php echo htmlspecialchars($team2Player2); ?>"></div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="d-flex g-2 mb-4">
+                        <select id="match_type" class="form-select form-select-sm bg-dark text-white border-secondary" disabled>
+                            <option value="doubles">Doubles</option>
+                        </select>
+                        <select id="deuce_type" class="form-select form-select-sm bg-dark text-white border-secondary" disabled>
+                            <option value="deuce">Deuce On</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex g-2 mb-3">
+                        <button type="button" id="config-court-swap" class="btn btn-outline-info btn-sm w-50 fw-bold mr-2">
+                            <i class="fa-solid fa-right-left mr-1"></i> SWAP COURT
+                        </button>
+                        <button type="button" id="config-voice-toggle" class="btn btn-outline-info btn-sm w-50 fw-bold">
+                            <i class="fa-solid fa-volume-xmark mr-1"></i> VOICE OFF
+                        </button>
+                    </div>
+
+                    <button class="btn btn-info w-100 fw-bold py-2 mb-2 rounded-pill shadow" type="button" onclick="startPlayableMatch()">
+                        START MATCH <i class="fa-solid fa-play ms-2"></i>
                     </button>
+
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 
 
 <!-- **** Modal for Match Result **** -->
+
 <div class="modal fade" id="matchResult" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="matchResultLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-scrollable">
+
         <div class="modal-content">
+
             <div class="modal-header border-0 pb-0">
-                <div class="match-result-header-left">
-                    <h6 class="modal-title text-info fw-bold text-uppercase small mr-1" id="matchResultLabel"><i class="fa-solid fa-trophy mr-1"></i>Match</h6>
-                    <select class="match-result-mini-select" aria-label="Match type">
-                        <option>Doubles</option>
-                        <option>demo 1</option>
-                        <option>demo 2</option>
-                    </select>
-                    <select class="match-result-mini-select" aria-label="Deuce setting">
-                        <option>Deuce On</option>
-                        <option>demo 1</option>
-                        <option>demo 2</option>
-                    </select>
-                    <span class="match-result-set-indicator" id="match-result-set-indicator">Set - 1/3</span>
-                </div>
+
+                <h6 class="modal-title text-info fw-bold text-uppercase small" id="matchResultLabel"><i class="fa-solid fa-trophy mr-2"></i>Match Result</h6>
+
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
                     <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
+
             <div class="modal-body">
-                <div class="match-result-panel mx-auto">
-                    <div class="match-result-teams">
-                        <div class="match-result-team">
-                            <div class="match-result-team-name">
-                                <span class="match-result-status-dot"></span>
-                                <span id="match-result-team-a-name">Team 1</span>
-                            </div>
-                            <div class="match-result-score-line">
-                                <span class="match-result-set-count" id="match-result-team-a-sets">0</span>
-                                <i class="fa-solid fa-trophy match-result-trophy"></i>
-                            </div>
-                            <div class="match-result-winner-name" id="match-result-team-a-winner-name">-</div>
+
+                <div class="court-box mx-auto p-3 shadow-lg" style="border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+
+
+
+                    <div class="text-center mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+
+                        <!-- <div class="small text-uppercase opacity-50 fw-bold mb-1" style="letter-spacing: 2px;">Match Result</div> -->
+
+                        <h5 class="fw-bold text-success mb-0" id="match-result-winner">
+                            <i class="fa-solid fa-trophy mr-2 text-warning"></i> WINNER: -
+                        </h5>
+                    </div>
+
+
+
+                    <div class="row g-0 align-items-center mb-4 bg-black rounded-4 p-3 shadow-inner">
+
+                        <div class="col-5 text-center">
+
+                            <div class="p-1 rounded-circle bg-success d-inline-block mb-2" style="width: 8px; height: 8px;"></div>
+
+                            <h6 class="fw-bold text-white mb-0" id="match-result-team-a-name">Team 1</h6>
+                            <div class="display-4 fw-bold text-info" id="match-result-team-a-sets">0</div>
                         </div>
-                        <div class="match-result-versus">-</div>
-                        <div class="match-result-team">
-                            <div class="match-result-team-name">
-                                <span class="match-result-status-dot muted"></span>
-                                <span id="match-result-team-b-name">Team 2</span>
+
+
+
+                        <div class="col-2 text-center opacity-25">
+
+                            <div class="h4 mb-0">-</div>
+
+                        </div>
+
+
+
+                        <div class="col-5 text-center opacity-75">
+
+                            <div class="p-1 rounded-circle bg-secondary d-inline-block mb-2" style="width: 8px; height: 8px;"></div>
+
+                            <h6 class="fw-bold mb-0" id="match-result-team-b-name">Team 2</h6>
+                            <div class="display-4 fw-bold" id="match-result-team-b-sets">0</div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="set-breakdown vstack gap-2" id="match-result-set-breakdown">
+                        <div class="d-flex justify-content-between align-items-center p-2 rounded-3 bg-dark border border-secondary" style="font-size: 0.85rem;">
+                            <span class="opacity-50 fw-bold">SET 1</span>
+                            <div class="fw-bold">
+                                <span class="text-info">0</span> <span class="mx-2 opacity-25">|</span> 0
                             </div>
-                            <div class="match-result-score-line">
-                                <span class="match-result-set-count" id="match-result-team-b-sets">0</span>
-                                <i class="fa-solid fa-trophy match-result-trophy"></i>
-                            </div>
-                            <div class="match-result-winner-name" id="match-result-team-b-winner-name">-</div>
+                            <i class="fa-solid fa-hourglass-half text-secondary"></i>
                         </div>
                     </div>
-                    <div class="match-result-summary sr-only" id="match-result-winner">WINNER: -</div>
-                    <div class="match-result-set-breakdown" id="match-result-set-breakdown">
-                        <div class="match-result-set-row">
-                            <span class="match-result-set-label">SET 1</span>
-                            <div class="match-result-set-score">
-                                <span>0</span><span class="match-result-divider">|</span><span>0</span>
-                            </div>
-                            <div class="match-result-set-actions">
-                                <button type="button" onclick="startPlayableMatch()">Start</button>
-                            </div>
-                            <i class="fa-solid fa-hourglass-half match-result-set-icon"></i>
+
+
+                    <div class="mt-4 row g-2">
+
+                        <div class="col-6">
+
+                            <button class="btn btn-outline-light w-100 btn-sm rounded-pill fw-bold py-2">
+
+                                <i class="fa-solid fa-share-nodes mr-2"></i>SHARE
+
+                            </button>
+
                         </div>
+
+                        <div class="col-6">
+
+                            <button class="btn btn-info w-100 btn-sm rounded-pill fw-bold py-2 shadow" data-dismiss="modal">
+
+                                NEW MATCH
+
+                            </button>
+
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
+
 
 
 
 <!-- **** Modal for Set Score Board **** -->
 
 <div class="modal fade" id="setScoreBoard" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="setScoreBoardLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-scrollable">
+
         <div class="modal-content">
+
             <div class="modal-header border-0 pb-0">
+
                 <h6 class="modal-title text-info fw-bold text-uppercase small" id="setScoreBoardLabel"><i class="fa-regular fa-clipboard mr-2"></i>Set Score Board</h6>
-                <button type="button" class="close match-config-icon-btn" data-dismiss="modal" aria-label="Close">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
                     <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
+
             <div class="modal-body">
-                <div class="set-board-panel mx-auto">
-                    <div class="set-board-alert">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span>Saving a manual score will clear the game log.</span>
+
+                <div class="court-container mx-auto p-3 shadow-lg" style="border-radius: 24px; border: 2px solid #0ea5e9; color: white;">
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <button type="button" id="set-board-undo-point" class="btn btn-sm btn-outline-warning border-secondary text-warning fw-bold px-3">
+                            <i class="fa-solid fa-rotate-left me-1"></i> UNDO
+                        </button>
+                        <div class="text-center">
+
+                            <h6 class="mb-0 fw-bold" style="font-size: 0.8rem; letter-spacing: 1px;">SET 1 LIVE</h6>
+
+                            <span class="text-info small fw-bold">21 - 18</span>
+
+                        </div>
+
+                        <button class="btn btn-sm btn-outline-danger border-secondary text-danger fw-bold">FINISH</button>
+
                     </div>
 
-                    <div class="set-board-score-strip">
-                        <div class="set-board-score-box">
-                            <span>Team A</span>
-                            <input type="number" id="set-board-score-a" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam1Score; ?>" readonly>
+
+
+                    <div class="court-grid position-relative rounded-3 mb-4" style="background: #1e40af; border: 4px solid #fff; height: 320px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;">
+
+
+
+                        <div class="position-absolute start-50 top-0 bottom-0 border-start border-white border-3 opacity-75" style="z-index: 10; transform: translateX(-50%);"></div>
+
+                        <div class="position-absolute start-0 end-0 top-50 border-top border-white border-1 opacity-25" style="z-index: 5;"></div>
+
+
+
+                        <div class="d-flex flex-column align-items-center justify-content-center border border-white border-opacity-25 p-2">
+
+                            <div class="player-circle bg-white text-dark fw-bold rounded-circle shadow-sm mb-1 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">AZ</div>
+
+                            <span class="small opacity-75" style="font-size: 0.65rem;">Azhar</span>
+
+                            <div class="birdie-marker mt-2 text-warning animate-pulse"><i class="fa-solid fa-circle fa-xs"></i></div>
+
                         </div>
-                        <div class="set-board-score-center">
-                            <span>Current Score</span>
-                            <strong id="set-board-live-score" class="set-board-live-score"><?php echo (int)$initialTeam1Score; ?> - <?php echo (int)$initialTeam2Score; ?></strong>
+
+
+
+                        <div class="d-flex flex-column align-items-center justify-content-center border border-white border-opacity-25 p-2" style="background: rgba(0,0,0,0.15);">
+
+                            <div class="player-circle border border-white text-white fw-bold rounded-circle mb-1 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">SM</div>
+
+                            <span class="small opacity-75" style="font-size: 0.65rem;">Sam</span>
+
+                            <div class="birdie-marker mt-2 text-warning opacity-0"><i class="fa-solid fa-circle fa-xs"></i></div>
+
                         </div>
-                        <div class="set-board-score-box">
-                            <span>Team B</span>
-                            <input type="number" id="set-board-score-b" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam2Score; ?>" readonly>
+
+
+
+                        <div class="d-flex flex-column align-items-center justify-content-center border border-white border-opacity-25 p-2">
+
+                            <div class="player-circle border border-white text-white opacity-50 rounded-circle mb-1 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">ZD</div>
+
+                            <span class="small opacity-50" style="font-size: 0.65rem;">Zaid</span>
+
+                            <div class="birdie-marker mt-2 text-warning opacity-0"><i class="fa-solid fa-circle fa-xs"></i></div>
+
                         </div>
+
+
+
+                        <div class="d-flex flex-column align-items-center justify-content-center border border-white border-opacity-25 p-2" style="background: rgba(0,0,0,0.15);">
+
+                            <div class="player-circle border border-white text-white opacity-50 rounded-circle mb-1 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">RY</div>
+
+                            <span class="small opacity-50" style="font-size: 0.65rem;">Ray</span>
+
+                            <div class="birdie-marker mt-2 text-warning opacity-0"><i class="fa-solid fa-circle fa-xs"></i></div>
+
+                        </div>
+
                     </div>
 
-                    <div class="set-board-court">
-                        <div class="set-board-net"></div>
-                        <div class="set-board-team set-board-team-left">
-                            <div class="set-board-team-card">
-                                <strong id="set-board-team-a-name"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></strong>
-                                <span id="set-board-team-a-players"><?php echo htmlspecialchars($team1Player1); ?><br><?php echo htmlspecialchars($team1Player2); ?></span>
-                            </div>
-                            <div class="set-board-actions">
-                                <button type="button" class="set-board-action-btn" id="set-board-edit-a"><i class="fa-solid fa-pen"></i>Edit</button>
-                                <button type="button" class="set-board-plus" id="set-board-plus-a">+1</button>
-                                <button type="button" class="set-board-action-btn" id="set-board-save-a"><i class="fa-solid fa-check"></i>Save</button>
-                            </div>
+
+
+                    <div class="row g-2">
+
+                        <div class="col-6">
+
+                            <button class="btn btn-info w-100 py-3 rounded-4 d-flex flex-column align-items-center shadow">
+
+                                <span class="small fw-bold opacity-75">TEAM 1</span>
+
+                                <div class="d-flex align-items-center gap-2">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                    <span class="h2 mb-0 fw-bold">1</span>
+
+                                </div>
+
+                            </button>
+
                         </div>
-                        <div class="set-board-team set-board-team-right">
-                            <div class="set-board-team-card">
-                                <strong id="set-board-team-b-name"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></strong>
-                                <span id="set-board-team-b-players"><?php echo htmlspecialchars($team2Player1); ?><br><?php echo htmlspecialchars($team2Player2); ?></span>
-                            </div>
-                            <div class="set-board-actions">
-                                <button type="button" class="set-board-action-btn" id="set-board-edit-b"><i class="fa-solid fa-pen"></i>Edit</button>
-                                <button type="button" class="set-board-plus" id="set-board-plus-b">+1</button>
-                                <button type="button" class="set-board-action-btn" id="set-board-save-b"><i class="fa-solid fa-check"></i>Save</button>
-                            </div>
+
+                        <div class="col-6">
+
+                            <button class="btn btn-outline-info w-100 py-3 rounded-4 d-flex flex-column align-items-center">
+
+                                <span class="small fw-bold opacity-50">TEAM 2</span>
+
+                                <div class="d-flex align-items-center gap-2">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                    <span class="h2 mb-0 fw-bold">1</span>
+
+                                </div>
+
+                            </button>
+
                         </div>
+
                     </div>
-                    <div class="set-board-footer-actions">
-                        <button type="button" id="set-board-undo-point">Undo Last Point</button>
-                        <button type="button" id="set-board-save-all" class="set-board-save-all">Save Score</button>
-                    </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 

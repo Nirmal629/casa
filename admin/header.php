@@ -17,117 +17,102 @@ if (!isset($_SESSION['user_id'])) {
 
 <html class="fixed">
 
-<head>
+	<head>
 
 
 
-	<!-- Basic -->
+		<!-- Basic -->
 
-	<meta charset="UTF-8">
-
-
-
-	<title>Casa</title>
-
-	<meta name="keywords" content="HTML5 Admin Template" />
-
-	<meta name="description" content="Casa">
-
-	<meta name="author" content="okler.net">
+		<meta charset="UTF-8">
 
 
 
-	<!-- Mobile Metas -->
+		<title>Casa</title>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="keywords" content="HTML5 Admin Template" />
 
+		<meta name="description" content="Casa">
 
-
-	<!-- Web Fonts  -->
-
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+		<meta name="author" content="okler.net">
 
 
 
-	<!-- Vendor CSS -->
+		<!-- Mobile Metas -->
 
-	<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
-
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-	<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.css" />
-
-	<link rel="stylesheet" href="assets/vendor/magnific-popup/magnific-popup.css" />
-
-	<link rel="stylesheet" href="assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 
 
-	<!-- Specific Page Vendor CSS -->
+		<!-- Web Fonts  -->
 
-	<link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.css" />
-
-	<link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.theme.css" />
-
-	<link rel="stylesheet" href="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
-
-	<link rel="stylesheet" href="assets/vendor/morris.js/morris.css" />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
 
 
 
-	<!-- Theme CSS -->
-	<link rel="stylesheet" href="assets/stylesheets/theme.css?v=2.11" />
+		<!-- Vendor CSS -->
 
-	<!-- Skin CSS -->
-	<link rel="stylesheet" href="assets/stylesheets/skins/default.css" />
-
-
-	<!-- Theme Custom CSS -->
-	<link rel="stylesheet" href="assets/stylesheets/theme-custom.css?v=2.7">
-
-
-	<!-- Head Libs -->
-	<script src="assets/vendor/modernizr/modernizr.js"></script>
-
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+		<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
 
 
 
+		<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.css" />
 
+		<link rel="stylesheet" href="assets/vendor/magnific-popup/magnific-popup.css" />
 
-</head>
-
-<body>
-
-	<section class="body">
-
-		<header class="header admin-mobile-header">
-			<div class="logo-container">
-				<a href="dashboard.php" class="logo admin-mobile-logo">
-					Casa Admin
-				</a>
-				<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
-					<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
-				</div>
-			</div>
-
-			<div class="header-right admin-mobile-actions">
-				<!-- <a href="dashboard.php" class="admin-header-link">
-						<i class="fa fa-home" aria-hidden="true"></i>
-						<span>Dashboard</span>
-					</a> -->
-				<a href="logout.php" class="admin-header-link">
-					<i class="fa fa-power-off" aria-hidden="true"></i>
-					<span>Logout</span>
-				</a>
-			</div>
-		</header>
+		<link rel="stylesheet" href="assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
 
 
 
-		<!-- start: header -->
-		<!-- <header class="header">
+		<!-- Specific Page Vendor CSS -->
+
+		<link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.css" />
+
+		<link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.theme.css" />
+
+		<link rel="stylesheet" href="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
+
+		<link rel="stylesheet" href="assets/vendor/morris.js/morris.css" />
+
+
+
+		<!-- Theme CSS -->
+		<link rel="stylesheet" href="assets/stylesheets/theme.css?v=2" />
+
+
+
+		<!-- Skin CSS -->
+
+		<link rel="stylesheet" href="assets/stylesheets/skins/default.css" />
+
+
+
+		<!-- Theme Custom CSS -->
+
+		<link rel="stylesheet" href="assets/stylesheets/theme-custom.css">
+
+
+
+		<!-- Head Libs -->
+
+		<script src="assets/vendor/modernizr/modernizr.js"></script>
+
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+
+
+
+
+	</head>
+
+	<body>
+
+		<section class="body">
+
+
+
+			<!-- start: header -->
+<!-- 
+			<header class="header">
 
 				<div class="logo-container">
 

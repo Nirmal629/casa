@@ -8,12 +8,13 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         <h6 class="card_heading">Upcoming Game</h6>
         <div class="mb-4">
                 <form>
-                    <div class="row">
+                    <div class="row g-1">
                         <div class="col-auto">
-                            <select class="form-select" id="year" aria-label="Default select example">
-                                <option value="">Select the Year</option>
+                            <select class="form-select py-0 px-2" id="year" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
+
                                 <?php
-                                for ($year = 2024; $year <= 2030; $year++) {
+                                $prevYear = $currentYear - 1;
+                                for ($year = $prevYear; $year <= $currentYear; $year++) {
                                     $selected = ($year == $currentYear) ? 'selected' : '';
                                     echo "<option value=\"$year\" $selected>$year</option>";
                                 }
@@ -21,13 +22,12 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select class="form-select" id="month" aria-label="Default select example">
-                                <option value="">Select the Month</option>
+                            <select class="form-select py-0 px-2" id="month" aria-label="Default select example" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <?php
                                 $months = [
-                                    1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                                    5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                                    9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                                    1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                                    5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+                                    9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
                                 ];
                                 foreach ($months as $num => $name) {
                                     $selected = ($num == $currentMonth) ? 'selected' : '';
@@ -37,13 +37,24 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                             </select>
                         </div>
 
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-primary" id="filter">Submit</button>
-                            <button type="button" class="btn btn-danger" id="reset">Reset</button>
-                        </div>
+                        <!-- <div class="col-auto ms-auto d-flex gap-1">
+                            <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="filter" title="Submit" style="width: 32px; height: 31px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l2.552 2.55 5.92-5.903z"/>
+                                </svg>
+                            </button>
+                        
+                            <button type="button" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" id="reset" title="Reset" style="width: 32px; height: 31px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                </svg>
+                            </button>
+                        </div> -->
                     </div>
                 </form>
             </div>
+
 
         <div class="discoverGames_wraper hostWrapper">
 
@@ -176,97 +187,68 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
         <div class='discoverGames_card'>
             <div class='d-flex flex-wrap align-items-center justify-content-between gap-2' style='margin-bottom: 8px; background-color: #0d6efda1; padding: 8px 10px; border-radius: 8px 8px 0px 0px;'>
                 <p class='text-white desc fw-bold m-0' style='font-size: 85%;'>$event_category - $gender_category</p>
-                <div class='accessories_wrap'>
-                    <span class='joined_btn badge btn-success' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
-                    <a href='javascript:void(0)' class='badge btn-info copy_event' title='Copy' data-id='$event_id'>
+                <div class='accessories_wrap d-flex gap-1'>
+                    <span class='view_btn badge btn-success d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Join Now' data-id='$event_id'><i class='fa fa-user-plus'></i></span>
+                    <a href='javascript:void(0)' class='badge btn-info copy_event d-flex align-items-center justify-content-center text-white' style='width: 28px; height: 28px; padding: 0;' title='Copy' data-id='$event_id'>
                         <i class='fa-regular fa-copy'></i>
-                      </a>
-                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary' title='Edit' data-id='$event_id'>
+                    </a>
+                    <a href='javascript:void(0)' class='edit_btn badge btn-secondary d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Edit' data-id='$event_id'>
                         <i class='fa-regular fa-pen-to-square'></i>
                     </a>
-                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger' title='Delete'>
+                    <a href='javascript:void(0)' data-id='$event_id' class='delete_btn badge btn-danger d-flex align-items-center justify-content-center' style='width: 28px; height: 28px; padding: 0;' title='Delete'>
                         <i class='fa-regular fa-trash-can'></i>
                     </a>
                     <input type='hidden' id='data_$event_id' value='$jsonStringy'/>
                     <input type='hidden' id='event_data_$event_id' value='" . htmlspecialchars($eventData, ENT_QUOTES) . "'>
-
                 </div>
             </div>
-           <div class='d-flex align-items-center justify-content-between gap-1 mb-2'>
-                <div class=''>
-                    <div class='d-flex align-items-start gap-1 mb-2 p-1' style='border: 1px solid red; border-radius: 6px;'>
-                        <i class='fa-solid fa-clock' style='font-size: 80%; color: red; margin-top: 3px;'></i>
-                        <h4 class='date_time mb-0' style='color: red;'><span>$event_date</span><span> to </span><span>" . date('h:i A', strtotime($event['TO_TIME'])) . "</span></h4>
+            <div class='row px-2 mb-2 g-2 align-items-stretch'>
+                <!-- Left Column: Date, Time, Location -->
+                <div class='col-7 d-flex align-items-center'>
+                    <div class='d-flex align-items-start gap-2 w-100'>
+                        <!-- Calendar Box -->
+                        <div class='p-1 rounded text-center flex-shrink-0' style='min-width: 40px; background-color: #fff1f0; border: 1px solid #ffccc7;'>
+                            <div class='fw-bold' style='font-size: 0.95rem; line-height: 1; color: #cf1322;'>" . date('d', strtotime($event['EVENT_DATE'])) . "</div>
+                            <div class='fw-semibold' style='font-size: 0.65rem; text-transform: uppercase; color: #cf1322;'>" . date('M', strtotime($event['EVENT_DATE'])) . "</div>
+                        </div>
+                        <!-- Details -->
+                        <div class='d-flex flex-column justify-content-center w-100'>
+                            <h6 class='mb-1 fw-bold text-dark' style='font-size: 0.75rem; line-height: 1.2;'>" . date('g:i A', strtotime($event['EVENT_TIME'])) . " - " . date('g:i A', strtotime($event['TO_TIME'])) . "</h6>
+                            <p class='mb-0 text-truncate' style='font-size: 0.75rem; color: #555;'>
+                                <i class='fa-solid fa-location-dot text-secondary me-1' style='font-size:0.7rem'></i>$event_venue
+                            </p>
+                            <p class='mb-0 text-muted' style='font-size: 0.65rem; line-height: 1.2; margin-top: 2px;'>
+                                <i class='fa-solid fa-snowflake me-1' style='font-size:0.6rem'></i>Freeze: " . date('M d, g:i A', strtotime($event['CANCEL_DATE'] . ' ' . $event['CANCEL_TIME'])) . "
+                            </p>
+                        </div>
                     </div>
-                    
-                    <p class='location mb-1'>
-                        <i class='fa-solid fa-location-dot'></i>
-                        $event_venue
-                    </p>
-                    <p style='font-size:60%; margin-bottom: 5px;'>Freeze Date & Time: $event_canceldate $event_cancelTime</p>
                 </div>
-                <div class='access_datebox'>
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Total Joined:</span>
-                        <span class='slots-count badge bg-secondary m-0'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Joined: $countTotalJoin'>
-                            $countTotalJoin
-                        </span>
+                
+                <!-- Right Column: Stats (Joined, Confirmed, Players) -->
+                <div class='col-5 d-flex flex-column justify-content-between gap-1'>
+                    <div class='d-flex gap-1 w-100'>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Joined</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalJoin</div>
+                         </div>
+                         <div class='border rounded p-1 text-center flex-grow-1' style='background-color: #f8f9fa;'>
+                             <div style='font-size: 0.6rem; letter-spacing: 0.3px;' class='text-muted text-uppercase fw-semibold'>Confirm</div>
+                             <div class='fw-bold text-dark' style='font-size: 0.9rem; line-height: 1;'>$countTotalConfirmed</div>
+                         </div>
                     </div>
-                    
-                    <div class='d-flex align-items-center justify-content-between gap-1 mb-1'>
-                        <span>Confirmed:</span>
-                        <span class='slots-count badge bg-secondary m-0'
-                              tabindex='0'
-                              data-bs-toggle='popover'
-                              data-bs-trigger='click'
-                              data-bs-placement='top'
-                              data-bs-content='Total Confirmed: $countTotalConfirmed'>
-                            $countTotalConfirmed
-                        </span>
-                    </div>
-                    <!----<div class='d-flex align-items-center justify-content-between gap-1 mb-1 game-info-wrapper' 
-                         data-bs-toggle='popover' 
-                         data-bs-html='true'
-                         data-bs-content='<?php echo $event_description_html; ?>'
-                         style='cursor: pointer;'>
-                        <span>Game Info:</span>
-                        <span class='badge bg-info m-0'>
-                            <i class='fa-solid fa-info'></i>
-                        </span>
-                    </div>--->
-
-                    <div class='d-flex align-items-center justify-content-between gap-1'>
-                        <span>View Players:</span>
-                        <span class='badge btn-dark view_btn' style='cursor: pointer;' title='View' data-id='$event_id'><i class='fa-regular fa-eye'></i></span>
-                    </div>
+                    <button class='btn btn-dark btn-sm w-100 joined_btn d-flex align-items-center justify-content-center gap-2 p-1 border-0 shadow-sm' style='font-size: 0.75rem; border-radius: 4px;' data-id='$event_id'>
+                         Players <i class='fa-regular fa-eye'></i>
+                    </button>
                 </div>
             </div>
-             <div class='d-flex align-items-center' style='gap: 15px; margin-bottom: 10px;'>
-                <div class='d-flex align-items-center'>
-                    <p class='gamesms_text'>$wrapped_message</p>
-                </div>
-                <!----<div class='Slots_book' style='visibility:hidden'>Only 2 Slots</div>--->
+             <div class='px-2 mb-2'>
+                <p class='gamesms_text m-0' style='font-size: 0.75rem; color: #6c757d; font-style: italic;'><i class='fa-solid fa-circle-info me-1' style='font-size: 0.7rem;'></i>$wrapped_message</p>
             </div>
-            <div class='d-flex align-items-center justify-content-start gap-1'>
-                <div class='play_status'>
-                    <span>$gender_skill_level</span>
-                </div>
-                <div class='play_status d-flex flex-wrap align-items-start gap-1'>
-                    <span>
-                    Court: ". ($event_court == 0 ?'NA':$event_court)."
-                    </span>
-                    <span class='amount'>
-                        $event_currency $event_cost
-                    </span>
-                    <span class='text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>
-                       $event_type
-                    </span>
-                </div>
+            <div class='d-flex flex-wrap align-items-center justify-content-start gap-1 px-2 pb-2'>
+                <span class='badge bg-secondary rounded-pill fw-normal'>$gender_skill_level</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>Court: ". ($event_court == 0 ?'NA':$event_court)."</span>
+                <span class='badge bg-light text-dark border rounded-pill fw-normal'>$event_currency $event_cost</span>
+                <span class='badge rounded-pill fw-normal text-white " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>$event_type</span>
             </div>
             " . (
     !empty($event['JOIN_MESSAGE'])
@@ -294,19 +276,20 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
 <!-----View-modal------->
 <section class="customModal_wrap hostgameview_modal">
     <div class="customModal_body">
-        <h6 class="customModal_head">View Game</h6>
+        <h6 class="customModal_head">Add Players</h6>
         <button type="submit" class="customModal_close btn">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <div class="row align-items-end g-2">
-            <div class="col-md-3 col-12">
-                <input type="text" name="search" id="search" placeholder="Enter text to search" class="form-text" />
+            <div class="col-12 col-md-4">
+                <label for="search" class="form-label" style="visibility:hidden">Search</label>
+                <input type="text" name="search" id="search" placeholder="Enter text to search" class="form-control" />
                 <input type="hidden" id="playdt" data-game-id="" data-host-id="" />
             </div>
         
-            <div class="col-md-3 col-12">
-                <label for="sgenderCategoryy" class="form-label">Gender Category<span>*</span></label>
-                <select class="form-select" id="sgenderCategoryy">
+            <div class="col-6 col-md-4">
+                <label for="sgenderCategoryy" class="form-label">Gender<span>*</span></label>
+                <select class="form-select form-control" id="sgenderCategoryy">
                     <option selected value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Mix">Mix</option>
@@ -314,9 +297,9 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                 </select>
             </div>
         
-            <div class="col-md-3 col-12">
-                <label for="sgenderSkillLevell" class="form-label">Gender Skill Level<span>*</span></label>
-                <select class="form-select" id="sgenderSkillLevell">
+            <div class="col-6 col-md-4">
+                <label for="sgenderSkillLevell" class="form-label">Level<span>*</span></label>
+                <select class="form-select form-control" id="sgenderSkillLevell">
                     <option selected value="Beginner">Beginner</option>
                     <option value="Amateur">Amateur</option>
                     <option value="Intermediate">Intermediate</option>
@@ -373,6 +356,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                 <!--    <button id="search-button">Search</button>-->
                 <!--</div>-->
 
+                <!--
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">
@@ -385,6 +369,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         </div>
                     </div>
                 </div>
+                -->
 
                 <!--<div class="Profiletable_wrap">-->
                 <!--    <div class="hostProfile_small">-->
@@ -453,7 +438,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
 <!---view joined --->
 <section class="customModal_wrap hostgameviewjoined_modal">
     <div class="customModal_body">
-        <h6 class="customModal_head">View All Player's Joined</h6>
+        <h6 class="customModal_head">Joined Players</h6>
         <button type="submit" class="customModal_close btn">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -471,6 +456,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                 <!--    <button id="search-button">Search</button>-->
                 <!--</div>-->
 
+                <!--
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">
@@ -483,6 +469,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         </div>
                     </div>
                 </div>
+                -->
 
 
             </div>
@@ -501,50 +488,39 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
 
         <div class="customModal_content">
             <form>
-                <div class="row">
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="host-name" class="form-label">Host Name<span>*</span></label>
+                <div class="row g-2">
+                    <div class="col-12 col-md-4">
+                        <label for="host-namee" class="form-label">Host Name<span>*</span></label>
                         <input type="text" class="form-control" id="host-namee" placeholder="Enter Full Name" value="">
                         <input type="hidden" id="evnt_id" value=""/>
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventCountry" class="form-label">Event Country<span>*</span></label>
-                        <input type="text" class="form-control" id="eventCountryy" placeholder="Event Country">
+                    <div class="col-6 col-md-4">
+                        <label for="eventCountryy" class="form-label">Event Country<span>*</span></label>
+                        <input type="text" class="form-control" id="eventCountryy" placeholder="Country">
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventProvince" class="form-label">Event Province<span>*</span></label>
-                        <input type="text" class="form-control" id="eventProvincee" placeholder="Event Province">
+                    <div class="col-6 col-md-4">
+                        <label for="eventProvincee" class="form-label">Event Province<span>*</span></label>
+                        <input type="text" class="form-control" id="eventProvincee" placeholder="Province">
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventCity" class="form-label">Event City<span>*</span></label>
-                        <input type="text" class="form-control" id="eventCityy" placeholder="Event City">
+                    <div class="col-6 col-md-4">
+                        <label for="eventCityy" class="form-label">Event City<span>*</span></label>
+                        <input type="text" class="form-control" id="eventCityy" placeholder="City">
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventCurrency" class="form-label">Event Currency<span>*</span></label>
-                        <!--<input type="text" class="form-control" id="eventCurrencyy" placeholder="Event Currency">-->
+                    <div class="col-6 col-md-4">
+                        <label for="eventCurrencyy" class="form-label">Currency<span>*</span></label>
                         <select class="form-select form-control" id="eventCurrencyy" name="event_currency" required>
-                            <!--<option value="USD">USD</option>-->
                             <option value="INR">INR</option>
-                            <!--<option value="EUR">EUR</option>-->
-                            <!--<option value="GBP">GBP</option>-->
                             <option value="CAD">CAD</option>
-                            <!-- Add more currencies as needed -->
                         </select>
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventVenue" class="form-label">Event Venue<span>*</span></label>
-                        <!--<input type="text" class="form-control" id="eventVenuee" placeholder="Event Venue">-->
+                    <div class="col-12 col-md-4">
+                        <label for="eventVenuee" class="form-label">Event Venue<span>*</span></label>
                         <select class="form-select form-control" id="eventVenuee" name="eventVenue" required>
-                        <!--<option value="Epic Badminton">Epic Badminton</option>-->
-                        <!--<option value="Hymus Sports">Hymus Sports</option>-->
-                        <!--<option value="KeralaNook">Kerala Nook</option>-->
-                        <!--<option value="WillieStout">Willie Stout</option>-->
-                        <!--<option value="CornerBank">Corner Bank</option>-->
                         <?php
                     $sqlVenue = "SELECT NAME FROM ca_venue ORDER BY NAME ASC";
                     $resVenue = mysqli_query($conn, $sqlVenue);
@@ -552,34 +528,18 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                     if ($resVenue && mysqli_num_rows($resVenue) > 0) {
                         while ($row = mysqli_fetch_assoc($resVenue)) {
                             $venueName = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-            
-                            // If you want to pre-select based on edit mode:
                             $selected = ($venueName == $event_venue) ? "selected" : "";
-            
                             echo "<option value=\"$venueName\" $selected>$venueName</option>";
                         }
                     }
                     ?>
-
-                   
-                </select>
+                        </select>
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="eventCategory" class="form-label">Event Category<span>*</span></label>
+                    <div class="col-12 col-md-4">
+                        <label for="eventCategoryy" class="form-label">Event Category<span>*</span></label>
                         <select class="form-select form-control" id="eventCategoryy" aria-label="">
-                            <!--<option selected value="Badminton">Badminton Game</option>-->
-                            <!--<option disabled value="Tennis">Tennis Game</option>-->
-                            <!--<option disabled value="Cricket">Cricket Game</option>-->
-                            <!--<option disabled value="Football">Football Game</option>-->
                             <?php if ($_SESSION['usertype'] === 'Host'): ?>
-                            <!--<option value="Badminton Game">Badminton Game</option>-->
-                            <!--<option value="Tennis Game">Tennis Game</option>-->
-                            <!--<option value="Cricket Game">Cricket Game</option>-->
-                            <!--<option value="Football Game">Football Game</option>-->
-                            <!--<option value="Snacks at Kerala Knook">Snacks at Kerala Knook</option>-->
-                            <!--<option value="Outing">Outing</option>-->
-                            <!--<option value="Service">Service</option>-->
                             <?php
                     $sqlVenue = "SELECT NAME FROM ca_event_category ORDER BY NAME ASC";
                     $resVenue = mysqli_query($conn, $sqlVenue);
@@ -587,10 +547,7 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                     if ($resVenue && mysqli_num_rows($resVenue) > 0) {
                         while ($row = mysqli_fetch_assoc($resVenue)) {
                             $venueName = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-            
-                            // If you want to pre-select based on edit mode:
                             $selected = ($venueName == $event_venue) ? "selected" : "";
-            
                             echo "<option value=\"$venueName\" $selected>$venueName</option>";
                         }
                     }
@@ -604,24 +561,21 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         <?php else: ?>
                             <option disabled selected>Please select a valid user type</option>
                         <?php endif; ?>
-                            
                         </select>
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="genderCategory" class="form-label">Gender Category<span>*</span></label>
+                    <div class="col-6 col-md-4">
+                        <label for="genderCategoryy" class="form-label">Gender<span>*</span></label>
                         <select class="form-select form-control" id="genderCategoryy" aria-label="">
                             <option selected value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Mix">Mix</option>
                             <option value="Kid">Kids</option>
-                            <!--<option value="Training">Training</option>-->
-                            <!--<option value="Training">Kids + Training</option>-->
                         </select>
                     </div>
 
-                    <div class="col-md-4 col-4 sm-2">
-                        <label for="genderSkillLevel" class="form-label">Gender Skill Level<span>*</span></label>
+                    <div class="col-6 col-md-4">
+                        <label for="genderSkillLevell" class="form-label">Skill Level<span>*</span></label>
                         <select class="form-select form-control" id="genderSkillLevell" aria-label="">
                             <option selected value="Beginner">Beginner</option>
                             <option value="Amateur">Amateur</option>
@@ -632,52 +586,16 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                         </select>
                     </div>
 
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="eventType" class="form-label">Event Type<span>*</span></label>
+                    <div class="col-6 col-md-4">
+                        <label for="eventTypee" class="form-label">Event Type<span>*</span></label>
                         <select class="form-select form-control" id="eventTypee" aria-label="">
                             <option selected value="Public">Public</option>
                             <option value="Invite">Invite Only</option>
                         </select>
                     </div>
 
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="eventDate" class="form-label">Event Date<span>*</span></label>
-                        <input type="date" class="form-control" id="eventDatee" placeholder="Event Date">
-                    </div>
-
-                    <!--<div class="col-md-6 col-12 mb-3">-->
-                    <!--    <label for="eventTime" class="form-label">Event Time<span>*</span></label>-->
-                    <!--    <input type="time" class="form-control" id="eventTimee" placeholder="Event Time">-->
-                    <!--</div>-->
-                    
-            <div class="col-md-6 col-6 mb-3">
-                        <label for="eventDate" class="form-label">Freeze Date<span>*</span></label>
-                        <input type="date" class="form-control" id="freezeDatee" placeholder="Freeze Date">
-                    </div>
-
-            <div class="col-md-6 col-6 mb-3">
-                <label for="eventTime" class="form-label">Freeze Time<span>*</span></label>
-                <!--<input type="time" class="form-control" id="freezeTime" name="freeze_time" required step="1800">-->
-                                <select class="form-control" id="freezeTimee" name="freeze_time" required></select>
-
-            </div>
-
-                    
-
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="eventDescription" class="form-label">Event Description<span>*</span></label>
-                        <textarea class="form-control" id="eventDescriptionn" rows="5" placeholder="Bring own bat, shoe, guards....."></textarea>
-                    </div>
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="eventMessage" class="form-label">Event Message<span>*</span></label>
-                        <textarea class="form-control" id="eventMessagee" rows="5" placeholder="For Participants to put note....."></textarea>
-                    </div>
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="eventDiscount" class="form-label">Event Court<span>*</span></label>
-                        <input type="text" class="form-control" id="eventDiscountt" placeholder="Event Court">
-                    </div>
-                    <div class="col-md-6 col-6 mb-3">
-                        <label for="genderSkillLevel" class="form-label">Status<span>*</span></label>
+                    <div class="col-6 col-md-4">
+                        <label for="statusevent" class="form-label">Status<span>*</span></label>
                         <select class="form-select form-control" id="statusevent" aria-label="">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
@@ -685,125 +603,158 @@ $playersQuery = mysqli_query($conn, "SELECT ca_users.NAME, ca_gamejoin.CONFIRMED
                             <option value="Cancelled">Cancelled</option>
                         </select>
                     </div>
-                    <div style="width:100%;background-color:#eacc7f;display:flex;gap:10px;padding-bottom:10px;margin-bottom:2px;">
-                         <div class="col-md-2 col-2 sm-2">
-                            <label for="eventTime" class="form-label">From Time<span>*</span></label>
-                            <!--<input type="time" class="form-control" id="eventTime" name="event_time" required step="00:15">-->
-                            <select class="form-control" id="eventTimee" name="event_time" required></select>
-                        </div>
-                         <div class="col-md-2 col-2 sm-2">
-                            <label for="eventTime" class="form-label">To Time<span>*</span></label>
-                            <!--<input type="time" class="form-control" id="toTime" name="to_time" required step="1800">-->
-                            <select class="form-control" id="toTimee" name="to_Time" required ></select>
-    
-                        </div>
-                        <div class="col-md-2 col-2 sm-2">
-                            <label for="eventTime" class="form-label">Hours<span></span></label>
-                            <input type="text" class="form-control" id="hours" name="hours" readonly>
-    
-                        </div>
-                        <div class="col-md-2 col-2 sm-2">
-                            <label for="eventCost" class="form-label">Cost Per Hour</label>
-                            <input type="text" class="form-control" id="facilitycostperhour" placeholder="Facility Cost Per Hour">
-                        </div>
-                        <div class="col-md-2 col-2 sm-2">
-                            <label for="eventCost" class="form-label">Court Confirmed</label>
-                            <input type="text" class="form-control" id="courtconfirmed" placeholder="Court Confirmed">
-                        </div>
-                        <div class="col-md-2 col-2 sm-2">
-                            <label for="eventCost" class="form-label">Facility Cost ($)</label>
-                            <input type="text" class="form-control" id="facilitycost" placeholder="Event Facility Cost">
+
+                    <div class="col-6 col-md-4">
+                        <label for="eventDatee" class="form-label">Event Date<span>*</span></label>
+                        <input type="date" class="form-control" id="eventDatee" placeholder="Event Date">
+                    </div>
+                    
+                    <div class="col-6 col-md-4">
+                        <label for="freezeDatee" class="form-label">Freeze Date<span>*</span></label>
+                        <input type="date" class="form-control" id="freezeDatee" placeholder="Freeze Date">
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <label for="freezeTimee" class="form-label">Freeze Time<span>*</span></label>
+                        <select class="form-select form-control" id="freezeTimee" name="freeze_time" required></select>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <label for="eventDiscountt" class="form-label">Event Court<span>*</span></label>
+                        <input type="text" class="form-control" id="eventDiscountt" placeholder="Event Court">
+                    </div>
+                    
+                    <div class="col-12 col-md-6">
+                        <label for="eventDescriptionn" class="form-label">Event Description<span>*</span></label>
+                        <textarea class="form-control" id="eventDescriptionn" rows="3" placeholder="Bring own bat, shoe, guards....."></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="eventMessagee" class="form-label">Event Message<span>*</span></label>
+                        <textarea class="form-control" id="eventMessagee" rows="3" placeholder="For Participants to put note....."></textarea>
+                    </div>
+
+                    <!-- Time & Facility Block -->
+                    <div class="col-12 mt-3">
+                        <div class="row mx-0 p-2 rounded mb-2 g-2" style="background-color:#eacc7f;">
+                             <div class="col-6 col-sm-4 col-md-2">
+                                <label for="eventTimee" class="form-label text-dark">From Time<span>*</span></label>
+                                <select class="form-select form-control" id="eventTimee" name="event_time" required></select>
+                            </div>
+                             <div class="col-6 col-sm-4 col-md-2">
+                                <label for="toTimee" class="form-label text-dark">To Time<span>*</span></label>
+                                <select class="form-select form-control" id="toTimee" name="to_Time" required ></select>
+                            </div>
+                            <div class="col-6 col-sm-4 col-md-2">
+                                <label for="hours" class="form-label text-dark">Hours<span></span></label>
+                                <input type="text" class="form-control" id="hours" name="hours" readonly>
+                            </div>
+                            <div class="col-6 col-sm-4 col-md-2">
+                                <label for="facilitycostperhour" class="form-label text-dark">Cost Per Hour</label>
+                                <input type="text" class="form-control" id="facilitycostperhour" placeholder="Cost Per Hour">
+                            </div>
+                            <div class="col-6 col-sm-4 col-md-2">
+                                <label for="courtconfirmed" class="form-label text-dark">Court Confirmed</label>
+                                <input type="text" class="form-control" id="courtconfirmed" placeholder="Court Confirmed">
+                            </div>
+                            <div class="col-6 col-sm-4 col-md-2">
+                                <label for="facilitycost" class="form-label text-dark">Facility Cost ($)</label>
+                                <input type="text" class="form-control" id="facilitycost" placeholder="Facility Cost">
+                            </div>
                         </div>
                     </div>
-                    <div style="width:100%;background-color:#0000001f;display:flex;gap:10px;padding-bottom:10px;">
-                        <div class="col-md-3 col-3 mb-2">
-                            <label for="birdieUsed" class="form-label">Birdie Used<span>*</span></label>
-                            <input type="number" class="form-control" id="birdieUsed" placeholder="Birdie Used">
-                        </div>
-                        <div class="col-md-3 col-3 mb-2">
-                            <label for="birdieUsed" class="form-label">Birdie Price<span>*</span></label>
-                            <input type="number" class="form-control" id="nobirdieUsed" placeholder="Birdie Price">
-                        </div>
-                        
-                        <div class="col-md-3 col-3 mb-2">
-                            <label for="eventDiscount" class="form-label">Accessories Cost</label>
-                            <input type="text" class="form-control" id="accessoriesCost" placeholder="Event Accessories Cost">
+
+                    <!-- Birdie & Accessories Block -->
+                    <div class="col-12">
+                        <div class="row mx-0 p-2 rounded mb-2 g-2" style="background-color:#0000001f;">
+                            <div class="col-12 col-sm-4">
+                                <label for="birdieUsed" class="form-label text-dark">Birdie Used<span>*</span></label>
+                                <input type="number" class="form-control" id="birdieUsed" placeholder="Birdie Used">
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <label for="nobirdieUsed" class="form-label text-dark">Birdie Price<span>*</span></label>
+                                <input type="number" class="form-control" id="nobirdieUsed" placeholder="Birdie Price">
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <label for="accessoriesCost" class="form-label text-dark">Accessories Cost</label>
+                                <input type="text" class="form-control" id="accessoriesCost" placeholder="Accessories Cost">
+                            </div>
                         </div>
                     </div>
-                    <div style="width:100%;background-color:#d5eaae;display:flex;gap:10px;padding-bottom:10px;margin-bottom:2px;">
-                        <div class="col-md-3 col-3 mb-2">
-                                <label for="clubClost" class="form-label">Club Cost<span>*</span></label>
+
+                    <!-- Snacks & Event Cost Block -->
+                    <div class="col-12">
+                        <div class="row mx-0 p-2 rounded mb-2 g-2" style="background-color:#d5eaae;">
+                            <div class="col-12 col-sm-4">
+                                <label for="clubClost" class="form-label text-dark">Club Cost<span>*</span></label>
                                 <input type="number" class="form-control" id="clubClost" placeholder="Club Cost">
                             </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <label for="eventDiscount" class="form-label">Snacks Cost</label>
-                            <input type="text" class="form-control" id="snackscost" placeholder="Event Snacks Cost">
-                        </div>
-                        <div class="col-md-3 col-4 sm-2">
-                            <label for="eventCost" class="form-label">Total Event Cost ($)</label>
-                            <input type="text" class="form-control" id="eventtotalCostt" placeholder="Event Total Cost">
-                        </div>
-                    </div>
-                    <div style="width:100%;background-color:#78e1f7;display:flex;gap:10px;padding-bottom:10px;margin-bottom:2px;">
-                    <div class="col-md-2 col-2 mb-2">
-                            <label for="eventCost" class="form-label">Players Joined</label>
-                            <input type="text" class="form-control" id="playersJoined" placeholder="Players Joined" readonly>
-                        </div>
-                         <div class="col-md-2 col-2 mb-2">
-                            <label for="eventCost" class="form-label">Players Confirmed</label>
-                            <input type="text" class="form-control" id="playersConfirmed" placeholder="Players Confirmed" readonly>
-                        </div>
-                        <div class="col-md-3 col-3 mb-3">
-                            <label for="eventCost" class="form-label">Player Cost ($)<span>*</span></label>
-                            <input type="text" class="form-control" id="eventCostt" placeholder="Event Cost">
-                        </div>
-                         <div class="col-md-3 col-3 sm-3">
-                            <label for="eventCost" class="form-label">Total Player Cost ($)</label>
-                            <input type="text" class="form-control" id="eventtotalplayerCostt" placeholder="Event Total Player Cost">
+                            <div class="col-12 col-sm-4">
+                                <label for="snackscost" class="form-label text-dark">Snacks Cost</label>
+                                <input type="text" class="form-control" id="snackscost" placeholder="Snacks Cost">
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <label for="eventtotalCostt" class="form-label text-dark">Total Event Cost ($)</label>
+                                <input type="text" class="form-control" id="eventtotalCostt" placeholder="Total Cost">
+                            </div>
                         </div>
                     </div>
 
-            <div class="row align-items-end"
-                 style="width:100%; background-color:#bfd6f7; padding:10px 8px; margin-bottom:2px;margin-left:2px">
-            
-                <!-- Automation -->
-                <div class="col-md-4 col-12">
-                    <div class="form-check d-flex align-items-center gap-2 mt-4">
-                        <input class="form-check-input" type="checkbox" id="autoConfirm">
-                        <label class="form-check-label mb-0" for="autoConfirm">
-                            Automation On
-                        </label>
+                    <!-- Player Info Block -->
+                    <div class="col-12">
+                        <div class="row mx-0 p-2 rounded mb-2 g-2" style="background-color:#78e1f7;">
+                            <div class="col-6 col-sm-3">
+                                <label for="playersJoined" class="form-label text-dark">Players Joined</label>
+                                <input type="text" class="form-control" id="playersJoined" placeholder="Players Joined" readonly>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <label for="playersConfirmed" class="form-label text-dark">Players Confirmed</label>
+                                <input type="text" class="form-control" id="playersConfirmed" placeholder="Confirmed" readonly>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <label for="eventCostt" class="form-label text-dark">Player Cost ($)<span>*</span></label>
+                                <input type="text" class="form-control" id="eventCostt" placeholder="Event Cost">
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <label for="eventtotalplayerCostt" class="form-label text-dark">Total Player Cost ($)</label>
+                                <input type="text" class="form-control" id="eventtotalplayerCostt" placeholder="Total Player Cost">
+                            </div>
+                        </div>
                     </div>
-            </div>
-                <div class="col-md-4 col-12">
-                        <div class="form-check d-flex align-items-center gap-2 mt-4">
-                        <input class="form-check-input" type="checkbox" id="updatePlayerPrice">
-                        <label class="form-check-label mb-0" for="updatePlayerPrice">
-                            Update Player Price
-                        </label>
+
+                    <!-- Automation & Profit Block -->
+                    <div class="col-12">
+                        <div class="row mx-0 p-2 rounded mb-2 g-2 align-items-end" style="background-color:#bfd6f7;">
+                            <!-- Automation -->
+                            <div class="col-12 col-sm-4">
+                                <div class="form-check d-flex align-items-center gap-2 mb-2">
+                                    <input class="form-check-input" type="checkbox" id="autoConfirm">
+                                    <label class="form-check-label mb-0 text-dark" for="autoConfirm">
+                                        Automation On
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="form-check d-flex align-items-center gap-2 mb-2">
+                                    <input class="form-check-input" type="checkbox" id="updatePlayerPrice">
+                                    <label class="form-check-label mb-0 text-dark" for="updatePlayerPrice">
+                                        Update Player Price
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Profit Loss -->
+                            <div class="col-12 col-sm-4">
+                                <label for="profitloss" class="form-label mb-1 text-dark">Profit / Loss</label>
+                                <input type="text" class="form-control" id="profitloss" placeholder="Profit Loss">
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Profit Loss -->
-                <div class="col-md-4 col-12">
-                    <label for="profitloss" class="form-label mb-1">Profit / Loss</label>
-                    <input type="text" class="form-control" id="profitloss" placeholder="Profit Loss">
-                </div>
-                
-                </div>
-
-                       
-    
-                       
             
                     <input type="hidden" id="EVENT_IDD">
                     
-
-                    <div class="col-auto m-auto">
-                        <button type="button" class="btn btn-primary" id="save_btn">Submit</button>
-                    </div>
-                    <div class="col-auto m-auto">
-                        <button type="button" class="btn btn-primary" id="copy_btn">Copy Game</button>
+                    <div class="col-12 d-flex flex-wrap justify-content-center gap-2 mt-3 mb-2">
+                        <button type="button" class="btn btn-primary px-4" id="save_btn">Submit</button>
+                        <button type="button" class="btn btn-primary px-4" id="copy_btn">Copy Game</button>
                     </div>
                 </div>
             </form>
@@ -939,7 +890,7 @@ document.getElementById('autoConfirm').addEventListener('change', function () {
 });
 
 function hitAutomationAPI(value,eventID) {
-    fetch('https://casainfotech.com/staging/api/update-automation.php', {
+    fetch('api/update-automation.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
