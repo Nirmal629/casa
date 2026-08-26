@@ -22,6 +22,9 @@ $select_user = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION[
 
 $user = mysqli_fetch_assoc($select_user);
 
+$currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
+$hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPage === 'host-dashboard.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -49,16 +52,17 @@ $user = mysqli_fetch_assoc($select_user);
             <div class="wraper">
 
 
+                <div class="site-header-left">
+                    <button type="button" class="site-back-btn" <?php echo $hideSiteBackButton ? 'hidden' : ''; ?> aria-label="Go back to previous page" title="Go back">
+                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    </button>
 
-                <a href="index.php">
-
-                    <figure class="Logo_area m-0">
-
-                        <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
-
-                    </figure>
-
-                </a>
+                    <a href="index.php">
+                        <figure class="Logo_area m-0">
+                            <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
+                        </figure>
+                    </a>
+                </div>
 
 
 
@@ -195,6 +199,24 @@ $user = mysqli_fetch_assoc($select_user);
         </div>
 
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var siteBackButton = document.querySelector('.site-back-btn');
+            if (!siteBackButton) {
+                return;
+            }
+
+            siteBackButton.addEventListener('click', function () {
+                if (window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+
+                window.location.href = 'player-hub.php';
+            });
+        });
+    </script>
 
     <div id="profileModal" class="editProfileModal d-none">
         <div class="modal-overlay">

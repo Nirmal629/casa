@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 header('Content-Type: application/json');
 
 function jsonResponse(bool $success, array $payload = []): void
@@ -140,6 +143,39 @@ function stageMatchCount(string $stage): int
     return $stage === 'QUARTER_FINAL' ? 4 : ($stage === 'SEMI_FINAL' ? 2 : 1);
 }
 
+function applyConfiguredCourtsToStageMatches(PDO $pdo, int $tournamentId, string $stage): void
+{
+    try {
+        $courtStmt = $pdo->prepare("SELECT COURTS FROM to_tournament_court_assignments
+            WHERE TOURNAMENT_ID = :tournament_id AND CATEGORY_KEY = :category_key LIMIT 1");
+        $courtStmt->execute([
+            ':tournament_id' => $tournamentId,
+            ':category_key' => $stage,
+        ]);
+        $courts = array_values(array_unique(array_filter(array_map('intval', explode(',', (string)$courtStmt->fetchColumn())), static function ($court) {
+            return $court > 0;
+        })));
+        if (empty($courts)) {
+            return;
+        }
+
+        $matchStmt = $pdo->prepare("SELECT ID FROM to_matches
+            WHERE TOURNAMENT_ID = :tournament_id AND STAGE = :stage
+            ORDER BY ROUND_NO, MATCH_ORDER, ID");
+        $matchStmt->execute([':tournament_id' => $tournamentId, ':stage' => $stage]);
+        $matchIds = $matchStmt->fetchAll(PDO::FETCH_COLUMN);
+        $updateStmt = $pdo->prepare("UPDATE to_matches SET COURT_ID = :court_id WHERE ID = :match_id");
+        foreach ($matchIds as $index => $matchId) {
+            $updateStmt->execute([
+                ':court_id' => $courts[$index % count($courts)],
+                ':match_id' => (int)$matchId,
+            ]);
+        }
+    } catch (Exception $ignored) {
+        // Court tracking is optional; it must not interrupt stage generation.
+    }
+}
+
 function createStageMatches(PDO $pdo, int $tournamentId, string $stage, array $teamIds): void
 {
     if (count($teamIds) < stageMatchCount($stage) * 2) {
@@ -171,6 +207,8 @@ function createStageMatches(PDO $pdo, int $tournamentId, string $stage, array $t
             ':team_2_id' => (int)$teamIds[$i + 1]
         ]);
     }
+
+    applyConfiguredCourtsToStageMatches($pdo, $tournamentId, $stage);
 }
 
 function maybeCreateNextStage(PDO $pdo, int $tournamentId, string $completedStage): void
@@ -261,7 +299,7 @@ try {
     ]);
 
     $action = $_POST['action'] ?? '';
-    if (!in_array($action, ['start_match', 'record_point', 'undo_point', 'set_score_board'], true)) {
+    if (!in_array($action, ['start_match', 'pause_match', 'record_point', 'undo_point', 'set_score_board', 'reset_set'], true)) {
         jsonResponse(false, ['message' => 'Invalid action.']);
     }
 
@@ -269,6 +307,17 @@ try {
     $match = fetchMatch($pdo, $matchId);
     if (!$match) {
         jsonResponse(false, ['message' => 'Match not found.']);
+    }
+
+    // Only the tournament organizer (to_tournaments.HOST_ID == logged-in ca_users.ID) may change match state.
+    $hostStmt = $pdo->prepare("SELECT HOST_ID FROM to_tournaments WHERE ID = :tournament_id LIMIT 1");
+    $hostStmt->execute([':tournament_id' => (int)$match['TOURNAMENT_ID']]);
+    $tournamentHostId = (int)$hostStmt->fetchColumn();
+    $canManage = !empty($_SESSION['user_id'])
+        && $tournamentHostId > 0
+        && (int)$_SESSION['user_id'] === $tournamentHostId;
+    if (!$canManage) {
+        jsonResponse(false, ['message' => 'Only the tournament organizer can manage this match.']);
     }
     if ($action === 'record_point' && ($match['STATUS'] ?? '') === 'COMPLETED') {
         jsonResponse(false, ['message' => 'This match is already completed.']);
@@ -289,35 +338,78 @@ try {
         jsonResponse(true, ['status' => 'RUNNING']);
     }
 
+    if ($action === 'pause_match') {
+        if (($match['STATUS'] ?? '') === 'COMPLETED') {
+            jsonResponse(false, ['message' => 'This match is already completed.']);
+        }
+        $pauseStmt = $pdo->prepare("UPDATE to_matches SET STATUS = 'PAUSED' WHERE ID = :match_id");
+        $pauseStmt->execute([':match_id' => $matchId]);
+        jsonResponse(true, ['status' => 'PAUSED']);
+    }
+
+    if ($action === 'reset_set') {
+        $setNo = max(1, (int)($_POST['set_no'] ?? 1));
+        $deleteStmt = $pdo->prepare('DELETE FROM to_match_rally_logs WHERE MATCH_ID = :match_id AND SET_NO = :set_no');
+        $deleteStmt->execute([':match_id' => $matchId, ':set_no' => $setNo]);
+        $resetStmt = $pdo->prepare("UPDATE to_matches SET TEAM_1_SCORE = 0, TEAM_2_SCORE = 0, WINNER_TEAM_ID = NULL, STATUS = 'RUNNING' WHERE ID = :match_id");
+        $resetStmt->execute([':match_id' => $matchId]);
+        jsonResponse(true, ['status' => 'RUNNING']);
+    }
+
     if ($action === 'set_score_board') {
         $team1Score = max(0, (int)($_POST['team_1_score'] ?? 0));
         $team2Score = max(0, (int)($_POST['team_2_score'] ?? 0));
+        $setNo = max(1, (int)($_POST['set_no'] ?? 1));
+        $manualWinner = ($_POST['winner'] ?? '') === 'B' ? 'B' : 'A';
+        $team1Sets = max(0, (int)($_POST['team_1_sets'] ?? 0));
+        $team2Sets = max(0, (int)($_POST['team_2_sets'] ?? 0));
+        $isCompleted = (int)($_POST['completed'] ?? 0) === 1;
+        $winnerTeamId = $isCompleted
+            ? ($team1Sets > $team2Sets ? (int)$match['TEAM_1_ID'] : (int)$match['TEAM_2_ID'])
+            : null;
         $tournamentId = (int)$match['TOURNAMENT_ID'];
 
         $pdo->beginTransaction();
 
         $clearLogs = $pdo->prepare("
             DELETE FROM to_match_rally_logs
-            WHERE MATCH_ID = :match_id
+            WHERE MATCH_ID = :match_id AND SET_NO = :set_no
         ");
-        $clearLogs->execute([':match_id' => $matchId]);
+        $clearLogs->execute([':match_id' => $matchId, ':set_no' => $setNo]);
+
+        $manualLog = $pdo->prepare("INSERT INTO to_match_rally_logs
+            (MATCH_ID, TOURNAMENT_ID, SET_NO, RALLY_NO, TEAM_1_SCORE, TEAM_2_SCORE, EVENT_TYPE, COURT_SIDE, NOTES)
+            VALUES (:match_id, :tournament_id, :set_no, 0, :team_1_score, :team_2_score, 'MANUAL_SCORE', 'LEFT', :notes)");
+        $manualLog->execute([
+            ':match_id' => $matchId,
+            ':tournament_id' => $tournamentId,
+            ':set_no' => $setNo,
+            ':team_1_score' => $team1Score,
+            ':team_2_score' => $team2Score,
+            ':notes' => 'Manual set score saved. Winner: Team ' . $manualWinner . '.',
+        ]);
 
         $updateMatch = $pdo->prepare("
             UPDATE to_matches
             SET TEAM_1_SCORE = :team_1_score,
                 TEAM_2_SCORE = :team_2_score,
-                WINNER_TEAM_ID = NULL,
-                STATUS = 'RUNNING'
+                WINNER_TEAM_ID = :winner_team_id,
+                STATUS = :status
             WHERE ID = :match_id
         ");
         $updateMatch->execute([
-            ':team_1_score' => $team1Score,
-            ':team_2_score' => $team2Score,
+            ':team_1_score' => $isCompleted ? $team1Sets : $team1Score,
+            ':team_2_score' => $isCompleted ? $team2Sets : $team2Score,
+            ':winner_team_id' => $winnerTeamId,
+            ':status' => $isCompleted ? 'COMPLETED' : 'RUNNING',
             ':match_id' => $matchId
         ]);
 
         if (($match['STAGE'] ?? '') === 'GROUP' && !empty($match['GROUP_NAME'])) {
             recalculateGroupStandings($pdo, $tournamentId, (string)$match['GROUP_NAME']);
+        }
+        if ($isCompleted) {
+            maybeCreateNextStage($pdo, $tournamentId, (string)$match['STAGE']);
         }
 
         $pdo->commit();
@@ -325,7 +417,8 @@ try {
         jsonResponse(true, [
             'team_1_score' => $team1Score,
             'team_2_score' => $team2Score,
-            'status' => 'RUNNING'
+            'status' => $isCompleted ? 'COMPLETED' : 'RUNNING',
+            'winner_team_id' => $winnerTeamId
         ]);
     }
 

@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // CSRF token generation
 if (empty($_SESSION['csrf_token'])) {
@@ -53,13 +55,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['gender'] = $user['GENDER'];
                 $_SESSION['vlevel'] = $user['VERIFIED_LEVEL'];
                 $_SESSION['level'] = $user['LEVEL'];
+                $_SESSION['country'] = $user['COUNTRY'];
+                $_SESSION['province'] = $user['PROVINCE'];
+                $_SESSION['city'] = $user['CITY'];
+                $_SESSION['games'] = $user['GAMES'];
 
                 unset($_SESSION['csrf_token']); // refresh CSRF
+
+                // ✅ Log Activity
+                mysqli_query($conn, "INSERT INTO `ca_player_logs` (`USER_ID`, `ACTIVITY_TYPE`, `DESCRIPTION`) VALUES ('".$user['ID']."', 'LOGIN', 'Successful login')");
 
                 // ✅ Use PHP redirect (not JS)
                 if ($user['USERTYPE'] === 'Host' || $user['USERTYPE'] === 'Trainer') {
                     header("Location: host-dashboard.php");
                 } elseif ($user['USERTYPE'] === 'Player') {
+                    // Auto-sync player with matching Home Clubs
+                    require_once __DIR__ . '/../../api/sync_home_clubs.php';
+                    syncPlayerToHomeClubs($conn, $user['ID'], $user['COUNTRY'], $user['PROVINCE'], $user['CITY'], $user['GAMES']);
+
+                    // Always redirect players to the hub
                     header("Location: player-hub.php");
                 } else {
                     header("Location: trainer-dashboard.php");

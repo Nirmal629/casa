@@ -23,11 +23,17 @@ if (isset($_SESSION['user_id'])) {
         <div class="cust_container">
             <div class="wraper">
 
-                <a href="index.php">
-                    <figure class="Logo_area m-0">
-                        <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
-                    </figure>
-                </a>
+                <div class="site-header-left">
+                    <button type="button" class="site-back-btn" aria-label="Go back to previous page" title="Go back">
+                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+
+                    <a href="index.php">
+                        <figure class="Logo_area m-0">
+                            <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
+                        </figure>
+                    </a>
+                </div>
 
                 <ul class="innerpagemenu_wrap">
                     <li><a href="index.php" class="nav_link btn active">
@@ -75,3 +81,21 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var siteBackButton = document.querySelector('.site-back-btn');
+            if (!siteBackButton) {
+                return;
+            }
+
+            siteBackButton.addEventListener('click', function () {
+                if (window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+
+                window.location.href = 'player-hub.php';
+            });
+        });
+    </script>

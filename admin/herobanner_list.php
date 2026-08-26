@@ -457,7 +457,6 @@ $endItem = min($offset + count($heroBanners), $totalItems);
     @media (max-width: 767px) {
 
         .herobanner-toolbar,
-        .herobanner-toolbar-controls,
         .herobanner-pagination-row {
             align-items: stretch;
             flex-direction: column;

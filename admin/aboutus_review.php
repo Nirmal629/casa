@@ -124,7 +124,8 @@ $result = mysqli_query($conn, "SELECT * FROM ca_reviews ORDER BY ID DESC");
         display: flex;
         align-items: center;
         gap: 10px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        overflow-x: auto;
         margin-bottom: 12px;
     }
 

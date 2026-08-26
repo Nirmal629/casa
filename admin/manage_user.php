@@ -158,18 +158,15 @@ include('sidebar.php');
 
     .custom-table-toolbar,
     .custom-table-footer {
-
         display: flex;
-
         align-items: center;
-
         gap: 15px;
         /* Space between Button, Dropdown, and Search */
-
         margin-bottom: 15px;
+    }
 
+    .custom-table-footer {
         flex-wrap: wrap;
-
     }
 
     .custom-table-length select {
@@ -337,7 +334,6 @@ include('sidebar.php');
     }
 
     @media (max-width: 767px) {
-        .custom-table-toolbar,
         .custom-table-footer,
         .user-detail-row,
         .user-form-row {
@@ -345,9 +341,7 @@ include('sidebar.php');
             flex-direction: column;
         }
 
-        .custom-table-search,
-        .custom-table-length,
-        .custom-table-length select {
+        .custom-table-search {
             width: 100%;
         }
 

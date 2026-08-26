@@ -39,7 +39,7 @@ $eventtotalplayerCostt = isset($_POST['eventtotalplayerCostt']) ? validate_input
 $profitloss = isset($_POST['profitloss']) ? validate_input($_POST['profitloss']) : null;
 
 // Check required fields
-if (!$id || !$host_name || !$event_country || !$event_date || !$event_time || !$event_cost) {
+if (!$id || !$event_date || !$event_time || !$event_cost) {
     $response['success'] = false;
     $response['error'] = 'Missing required fields.';
     echo json_encode($response);
@@ -56,10 +56,7 @@ if (!is_numeric($event_cost)) {
 
 // Update query
 $sql = "UPDATE ca_events 
-        SET HOST_NAME = '$host_name',
-            EVENT_COUNTRY = '$event_country',
-            EVENT_PROVINCE = '$event_province',
-            EVENT_CITY = '$event_city',
+        SET EVENT_CITY = '$event_city',
             EVENT_CURRENCY = '$event_currency',
             EVENT_VENUE = '$event_venue',
             EVENT_CATEGORY = '$event_category',

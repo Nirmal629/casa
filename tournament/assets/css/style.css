@@ -201,22 +201,30 @@ breadcrumbs
     gap: 15px;
 }
 
-.breadcrumbs a {
+.breadcrumbs .breadcrumb-link,
+.breadcrumbs .breadcrumb-item {
     display: inline-block;
-    padding: 2px 5px;
+    padding: 5px 8px;
     position: relative;
     color: #fff;
+    border: 1px solid transparent;
+    border-radius: 5px;
 }
 
-.breadcrumbs a:hover {
+.breadcrumbs .breadcrumb-link:hover {
     text-decoration: underline;
 }
 
-.breadcrumbs a.active {
-    color: var(--bs-primary);
+.breadcrumbs .breadcrumb-link.active {
+    color: #d7f3ff;
+    background: rgba(56, 189, 248, .16);
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, .12);
+    text-decoration: none;
 }
 
-.breadcrumbs a::after {
+.breadcrumbs .breadcrumb-link::after,
+.breadcrumbs .breadcrumb-item::after {
     content: "\f105";
     font-family: "FontAwesome";
     position: absolute;
@@ -227,7 +235,7 @@ breadcrumbs
     font-weight: 300;
 }
 
-.breadcrumbs a:last-child::after {
+.breadcrumbs > :last-child::after {
    display: none;
 }
 
@@ -742,7 +750,38 @@ Main header
     height: auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.tournament-back-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(56, 189, 248, .8);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    color: #d7f3ff;
+    background: rgba(8, 18, 30, .95);
+    box-shadow: none;
+    cursor: pointer;
+    transition: .2s ease;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.tournament-back-btn:hover,
+.tournament-back-btn:focus {
+    color: #020617;
+    background: #38bdf8;
+    border-color: #38bdf8;
+    outline: none;
+}
+
+.main_header .breadcrumbs {
+    margin-left: auto;
 }
 
 .Logo_area {
@@ -2178,6 +2217,12 @@ Home banner
 @media (max-width: 480px) {
     html {
         font-size: 12px;
+    }
+
+    .tournament-back-btn {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
     }
 
     .Logo_area {

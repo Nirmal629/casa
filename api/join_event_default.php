@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, $query);
 
     if ($result) {
-        
+        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined subscription game ID ' . $gameId);
+
         $eventsByDay = [
             'SUNDAY'    => [],
             'MONDAY'    => [],
@@ -102,7 +103,7 @@ echo '<h6 class="card_heading">Scheduled Games (Grouped by Weekday)</h6>';
                                 <input type='hidden' id='user_$event_id' value='{$_SESSION['user_id']}'/>
                             </div>
                         </div>
-                        <h4 style='padding: 5px;' class='date_time <?php echo $dayColorClass; ?>'>$event_day - " . date('h:i A', strtotime($event['FROM_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
+                        <h4 style='padding: 5px;' class='date_time $dayColorClass'>$event_day - " . date('h:i A', strtotime($event['EVENT_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
                         <p class='location'><i class='fa-solid fa-location-dot'></i> $event_venue</p>
                         <div class='d-flex align-items-center gap-3 mb-2'>
                             <p style='font-size: 12px;'>$event_message</p>

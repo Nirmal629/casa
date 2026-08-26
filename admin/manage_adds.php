@@ -561,7 +561,6 @@ $endItem = min($offset + count($advertisements), $totalItems);
     @media (max-width: 767px) {
 
         .advertisements-toolbar,
-        .advertisements-toolbar-controls,
         .advertisements-pagination-row {
             align-items: stretch;
             flex-direction: column;

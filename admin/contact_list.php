@@ -280,14 +280,11 @@ if (isset($_POST['add_contact'])) {
         }
 
         @media (max-width: 767px) {
-            .custom-table-toolbar,
             .custom-table-footer {
                 align-items: stretch;
                 flex-direction: column;
             }
 
-            .custom-table-search,
-            .custom-table-length,
             .custom-table-length select {
                 width: 100%;
             }
@@ -355,7 +352,7 @@ if (isset($_POST['add_contact'])) {
                         </select>
                     </label>
 
-                    <div style="width: 320px;">
+                    <div>
                         <input type="search" class="form-control custom-table-search" id="contactsSearch" placeholder="Search contacts">
                     </div>
 

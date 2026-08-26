@@ -84,7 +84,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
 	<!-- Theme Custom CSS -->
-	<link rel="stylesheet" href="assets/stylesheets/theme-custom.css?v=2.7">
+	<link rel="stylesheet" href="assets/stylesheets/theme-custom.css?v=2.8">
 
 
 	<!-- Head Libs -->

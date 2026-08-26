@@ -383,8 +383,8 @@ include('sidebar.php');
 
         .top-bar {
             align-items: stretch;
-            flex-wrap: wrap;
-            overflow-x: visible;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             white-space: normal;
         }
 
@@ -432,7 +432,6 @@ include('sidebar.php');
         }
 
         .custom-table-search,
-        .custom-table-length,
         .custom-table-length select {
             width: 100%;
         }
@@ -509,6 +508,9 @@ include('sidebar.php');
 
         .manual-order-dialog {
             height: 92vh;
+        }
+        #ordersTable tr th {
+            white-space: nowrap;
         }
     }
 </style>

@@ -318,7 +318,7 @@ $endItem = min($offset + count($mediaItems), $totalItems);
             <?php } ?>
 
             <form method="GET" class="media-toolbar">
-                <div style="display: flex; align-items: center; gap:5px;">
+                <div style="display: flex; align-items: center; flex-wrap: wrap; gap:5px;">
                     <button type="button" class="btn btn-success" id="open-add-media">
                         <i class="fa fa-plus"></i>
                     </button>
@@ -597,8 +597,6 @@ $endItem = min($offset + count($mediaItems), $totalItems);
     @media (max-width: 767px) {
 
         .media-toolbar,
-        .media-toolbar-controls,
-        .media-type-tabs,
         .media-pagination-row {
             align-items: stretch;
             flex-direction: column;

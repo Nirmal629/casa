@@ -30,15 +30,25 @@
     let pendingRemoval = "";
     let removalTimer = null;
     let colorMap = {};
+    let selectedLabels = {};
     const colors = ["#ff4757", "#ffa502", "#2ed573", "#1e90ff",
         "#e84393", "#00cec9", "#fdcb6e", "#6c5ce7"
     ];
 
-    function rememberItemColor(name) {
-        if (!colorMap[name]) {
-            colorMap[name] = colors[Object.keys(colorMap).length % colors.length];
+    function itemValue(item) {
+        return item && typeof item === "object" ? String(item.value) : String(item);
+    }
+
+    function itemLabel(item) {
+        return item && typeof item === "object" ? String(item.label) : String(item);
+    }
+
+    function rememberItemColor(item) {
+        const value = itemValue(item);
+        if (!colorMap[value]) {
+            colorMap[value] = colors[Object.keys(colorMap).length % colors.length];
         }
-        return colorMap[name];
+        return colorMap[value];
     }
 
     function addTeam() {
@@ -46,8 +56,9 @@
         const name = input.value.trim();
         if (name === "") return;
 
-        teams.push(name);
-        rememberItemColor(name);
+        const item = { value: name, label: name };
+        teams.push(item);
+        rememberItemColor(item);
         input.value = "";
         createWheel();
     }
@@ -74,7 +85,7 @@
         teams.forEach((team, index) => {
             const label = document.createElement("div");
             label.className = "label";
-            label.innerText = team;
+            label.innerText = itemLabel(team);
 
             const angle = index * sliceAngle + sliceAngle / 2;
             label.style.transform =
@@ -87,7 +98,7 @@
     function removePendingWinnerBeforeNextSpin() {
         if (!pendingRemoval) return;
 
-        teams = teams.filter((team) => team !== pendingRemoval);
+        teams = teams.filter((team) => itemValue(team) !== pendingRemoval);
         pendingRemoval = "";
         currentRotation = 0;
 
@@ -138,13 +149,19 @@
             const selectedIndex = Math.floor(pointerDeg / sliceAngle);
 
             const winner = teams[selectedIndex];
+            const winnerValue = itemValue(winner);
 
-            winners.push(winner);
-            pendingRemoval = winner;
+            winners.push(winnerValue);
+            selectedLabels[winnerValue] = itemLabel(winner);
+            pendingRemoval = winnerValue;
 
             showResults();
             if (typeof spinSelectionCallback === "function") {
-                spinSelectionCallback(winners.slice(), teams.filter((team) => team !== winner), winner);
+                spinSelectionCallback(
+                    winners.slice(),
+                    teams.filter((team) => itemValue(team) !== winnerValue).map(itemValue),
+                    winnerValue
+                );
             }
 
             schedulePendingWinnerRemoval();
@@ -165,7 +182,12 @@
             else if (index === 2) position = "3rd";
             else position = `${index + 1}th`;
 
-            resultDiv.innerHTML += `${position}: <b>${team}</b><br>`;
+            const resultRow = document.createElement("div");
+            resultRow.append(document.createTextNode(position + ": "));
+            const resultName = document.createElement("b");
+            resultName.textContent = selectedLabels[team] || team;
+            resultRow.append(resultName);
+            resultDiv.append(resultRow);
         });
     }
 
@@ -178,6 +200,7 @@
         clearTimeout(removalTimer);
         removalTimer = null;
         colorMap = {};
+        selectedLabels = {};
 
         const wheel = document.getElementById("wheel");
         wheel.style.transition = "";
@@ -189,7 +212,12 @@
     }
 
     window.loadSpinItems = function (items, callback) {
-        teams = Array.isArray(items) ? items.slice() : [];
+        teams = Array.isArray(items) ? items.map((item) => {
+            if (item && typeof item === "object") {
+                return { value: String(item.value), label: String(item.label) };
+            }
+            return { value: String(item), label: String(item) };
+        }) : [];
         winners = [];
         currentRotation = 0;
         isSpinning = false;
@@ -197,6 +225,7 @@
         clearTimeout(removalTimer);
         removalTimer = null;
         colorMap = {};
+        selectedLabels = {};
         teams.forEach(rememberItemColor);
         spinSelectionCallback = typeof callback === "function" ? callback : null;
 

@@ -1,3 +1,63 @@
+<?php
+// Ensure the login session is available before any output is sent by this header,
+// so tournament pages can read $_SESSION (host detection, etc.).
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$isHostTournamentUser = in_array(trim((string)($_SESSION['usertype'] ?? '')), ['Host', 'Trainer'], true);
+$tournamentHubLabel = $isHostTournamentUser ? 'Host Dashboard' : 'The Player Hub';
+$tournamentHubUrl = $isHostTournamentUser
+    ? 'https://casainfotech.com/staging/host-dashboard.php'
+    : 'https://casainfotech.com/staging/player-hub.php';
+$tournamentBackTarget = $tournamentHubUrl;
+$tournamentCurrentPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
+$headerTournamentId = isset($tournamentId) ? (int)$tournamentId : (int)($_GET['id'] ?? 0);
+$headerTournamentName = 'Tournament';
+$headerTournamentDashboardUrl = 'index.php';
+$headerPlayoffDashboardUrl = 'court-dashboard.php';
+
+try {
+    include_once __DIR__ . '/../../dbConnection_PDO.php';
+    $headerPdo = isset($pdo) && $pdo instanceof PDO
+        ? $pdo
+        : new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+
+    if ($headerTournamentId <= 0) {
+        $latestTournament = $headerPdo->query("SELECT * FROM to_tournaments ORDER BY ID DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+        $headerTournamentId = (int)($latestTournament['ID'] ?? 0);
+        $headerTournamentRow = $latestTournament ?: [];
+    } else {
+        $headerTournamentStmt = $headerPdo->prepare("SELECT * FROM to_tournaments WHERE ID = :id LIMIT 1");
+        $headerTournamentStmt->execute([':id' => $headerTournamentId]);
+        $headerTournamentRow = $headerTournamentStmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    foreach (['CUP_NAME', 'HOST_NAME', 'NAME', 'EVENT_NAME', 'TITLE'] as $headerNameColumn) {
+        if (!empty($headerTournamentRow[$headerNameColumn])) {
+            $headerTournamentName = (string)$headerTournamentRow[$headerNameColumn];
+            break;
+        }
+    }
+} catch (Exception $e) {
+    $headerTournamentRow = [];
+}
+
+if ($headerTournamentId > 0) {
+    $headerTournamentDashboardUrl = 'index.php?id=' . $headerTournamentId;
+    $headerPlayoffDashboardUrl = 'court-dashboard.php?id=' . $headerTournamentId;
+}
+
+if ($tournamentCurrentPage === 'court-dashboard.php') {
+    $backTournamentId = $headerTournamentId;
+    $tournamentBackTarget = 'index.php' . ($backTournamentId > 0 ? '?id=' . $backTournamentId : '');
+}
+
+$isTournamentDashboard = ($tournamentCurrentPage === 'index.php' || $tournamentCurrentPage === '');
+$isPlayoffDashboard = ($tournamentCurrentPage === 'court-dashboard.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +98,7 @@
     <!-----css file link----->
     <link rel="stylesheet" href="assets/css/bracket.css" type="text/css">
 
-    <link rel="stylesheet" href="assets/css/style.css?v=1.21" type="text/css">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.24" type="text/css">
 </head>
 
 <body>
@@ -46,6 +106,10 @@
     <section class="main_header" id="main_Header">
         <div class="cust_container">
             <div class="wraper">
+                <button type="button" class="tournament-back-btn" data-back-target="<?php echo htmlspecialchars($tournamentBackTarget); ?>" aria-label="Go back to previous page" title="Go back">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                </button>
+
                 <a href="index.php">
                     <figure class="Logo_area m-0">
                         <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
@@ -53,9 +117,17 @@
                 </a>
 
                 <div class="breadcrumbs">
-                    <a href="https://casainfotech.com/staging/player-hub.php">The Player Hub</a>
-                    <a class="active" href="#">Winter - Mini Casa Tournament 2025</a>
-                    <a href="#">The Court Dashboard</a>
+                    <a class="breadcrumb-link breadcrumb-player" href="<?php echo htmlspecialchars($tournamentHubUrl); ?>"><?php echo htmlspecialchars($tournamentHubLabel); ?></a>
+                    <a class="breadcrumb-link breadcrumb-tournament <?php echo $isTournamentDashboard ? 'active' : ''; ?>" href="<?php echo htmlspecialchars($headerTournamentDashboardUrl); ?>" <?php echo $isTournamentDashboard ? 'aria-current="page"' : ''; ?>>
+                        <span>The Tournament Dashboard</span>
+                        <strong><?php echo htmlspecialchars($headerTournamentName); ?></strong>
+                    </a>
+                    <a class="breadcrumb-link breadcrumb-playoff <?php echo $isPlayoffDashboard ? 'active' : ''; ?>" href="<?php echo htmlspecialchars($headerPlayoffDashboardUrl); ?>" <?php echo $isPlayoffDashboard ? 'aria-current="page"' : ''; ?>>
+                        <span>The Playoff Dashboard</span>
+                    </a>
+                    <span class="breadcrumb-item breadcrumb-court">
+                        <span>The Court Dashboard</span>
+                    </span>
                 </div>
 
                 <!-- <div class="menubar_box">
@@ -87,3 +159,16 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tournamentBackButton = document.querySelector('.tournament-back-btn');
+            if (!tournamentBackButton) {
+                return;
+            }
+
+            tournamentBackButton.addEventListener('click', function () {
+                window.location.href = tournamentBackButton.getAttribute('data-back-target') || 'https://casainfotech.com/staging/player-hub.php';
+            });
+        });
+    </script>

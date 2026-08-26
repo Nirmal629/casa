@@ -366,7 +366,7 @@ html.fixed .page-header {
 @media only screen and (max-width: 767px) {
 	.page-header,
 	html.fixed .page-header {
-		margin-bottom: 18px;
+		margin-bottom: 6px;
 		padding: 0px 16px 15px 18px !important;
 	}
 
