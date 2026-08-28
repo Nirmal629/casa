@@ -14,7 +14,7 @@ if (isset($_SESSION['user_id'])) {
     $user = mysqli_fetch_assoc($res);
 }
 ?>
-    <?php include "header-links.php"; ?>
+<?php include "header-links.php"; ?>
 </head>
 
 <body>
@@ -42,48 +42,73 @@ if (isset($_SESSION['user_id'])) {
                     </li>
 
                     <li><a href="product-listing.php" class="nav_link btn"><span class="">Store</span></a></li>
-                    <li><a href="<?=isset($_SESSION['usertype']) && $_SESSION['usertype']=='Host'?'host-dashboard.php':'player-dashboard.php'?>" class="nav_link btn"><span class="">Play</span></a></li>
+                    <li><a href="<?= isset($_SESSION['usertype']) && $_SESSION['usertype'] == 'Host' ? 'host-dashboard.php' : 'player-dashboard.php' ?>"
+                            class="nav_link btn"><span class="">Play</span></a></li>
                 </ul>
 
                 <!---Account------>
-                 
+
                 <!-----Account----->
-                    <div  class="d-flex align-items-center gap-1 justify-content-end">
-                    <div class="d-flex align-items-center gap-1" style="<?=isset($_SESSION['user_id'])?'display:block':'visibility:hidden'?>">
+                <div class="d-flex align-items-center gap-1 justify-content-end">
+                    <div class="d-flex align-items-center gap-1"
+                        style="<?= isset($_SESSION['user_id']) ? 'display:block' : 'visibility:hidden' ?>">
                         <a href="addToCart.php" class="btn headeraddtocart_btn">
                             <i class="fa-solid fa-cart-shopping"></i>
-                            <span class="count"><?=$cartCount?></span>
+                            <span class="count">
+                                <?= $cartCount ?>
+                            </span>
                         </a>
                     </div>
-                    <div class="d-flex align-items-center gap-1" style="<?=isset($_SESSION['user_id'])?'display:block':'visibility:hidden'?>">
+                    <div class="d-flex align-items-center gap-1"
+                        style="<?= isset($_SESSION['user_id']) ? 'display:block' : 'visibility:hidden' ?>">
                         <!--<a href="addToCart.php" class="btn headeraddtocart_btn">-->
                         <!--    <i class="fa-solid fa-cart-shopping"></i>-->
                         <!--    <span class="count">12</span>-->
                         <!--</a>-->
                         <div style="position: relative;">
-                            <div class="navigation">
-                                <div class="user-box">
-                                    <div class="image-box">
-                                        <img src="<?=$user['PROFILE_IMAGE']!=''?'profile_img/'.$user['PROFILE_IMAGE']:'assets/images/profile.jpg'?>" alt="avatar">
-                                    </div>
-                                    <p class="username"><?=$_SESSION['name']?></p>
+                            <div class="user-profile-dropdown">
+                                <div class="avatar-trigger" id="profileDropdownTrigger">
+                                    <img src="<?= $user['PROFILE_IMAGE'] != '' ? 'profile_img/' . $user['PROFILE_IMAGE'] : 'assets/images/profile.jpg' ?>"
+                                        alt="avatar">
                                 </div>
-                                <div class="menu-toggle"></div>
-                                <ul class="menu">
-                                    <li><a href="player-profile.php"><i class="fa-regular fa-user"></i>My Profile</a></li>
-                                    <!--<li><a href="notification.php"><i class="fa-regular fa-bell"></i>Notification</a></li>-->
-                                    <li><a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a></li>
-                                </ul>
+                                <div class="dropdown-menu-container" id="profileDropdownMenu">
+                                    <div class="dropdown-user-info">
+                                        <span class="user-name"><?= htmlspecialchars($_SESSION['name'] ?? '') ?></span>
+                                    </div>
+                                    <ul class="dropdown-menu-list">
+                                        <li><a href="player-profile.php"><i class="fa-regular fa-user"></i>My
+                                                Profile</a></li>
+                                        <li><a href="my-order.php"><i class="fa-regular fa-user"></i>My Order</a></li>
+                                        <li><a href="logout.php"><i
+                                                    class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-</div>
+                </div>
             </div>
         </div>
     </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Profile Dropdown Toggle
+            var trigger = document.getElementById('profileDropdownTrigger');
+            var menu = document.getElementById('profileDropdownMenu');
+            if (trigger && menu) {
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('show');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.remove('show');
+                    }
+                });
+            }
+
             var siteBackButton = document.querySelector('.site-back-btn');
             if (!siteBackButton) {
                 return;

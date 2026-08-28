@@ -5,122 +5,65 @@ include('dbConnection.php');
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $game_id = mysqli_real_escape_string($conn, $_POST['game_id']);
     $user_id = mysqli_real_escape_string($conn, $_POST['user_id']);
-    $year = $_POST['year'] ?? date('Y');
-    $month = $_POST['month'] ?? date('n');
+    $year = (int) ($_POST['year'] ?? 0);
+    $month = (int) ($_POST['month'] ?? 0);
+    if ($year <= 0) {
+        $year = (int) date('Y');
+    }
+    if ($month <= 0) {
+        $month = (int) date('n');
+    }
+
+    $isPlayerSide = (isset($_SESSION['usertype']) && $_SESSION['usertype'] === 'Player');
+    if ($isPlayerSide) {
+        require_once __DIR__ . '/render_player_pay_html.php';
+        echo renderPlayerPayHtml($conn, $user_id, $year, $month, true);
+        mysqli_close($conn);
+        exit;
+    }
+
+    // Month locking: rollback is blocked for a month that has already been
+    // carried forward (a Carry Forward record exists for the next month).
+    $uid = (int) $user_id;
+    $host_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+    $nMonth = ($month % 12) + 1;
+    $nYear = ($month == 12) ? ($year + 1) : $year;
+    $isOverrideActive = (isset($_SESSION['ledger_override'][$user_id][$year][$month]) && $_SESSION['ledger_override'][$user_id][$year][$month] === true) || (isset($_POST['override']) && (int)$_POST['override'] === 1);
+
+    if (!$isOverrideActive) {
+        $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
+                WHERE host_id = $host_id AND player_id = $uid
+                  AND carry_month = $nMonth AND carry_year = $nYear
+                LIMIT 1");
+        if ($lockRes && mysqli_num_rows($lockRes) > 0) {
+            // Month is locked — re-render the locked UI, do NOT rollback
+            require_once __DIR__ . '/render_player_pay_html.php';
+            echo renderPlayerPayHtml($conn, $user_id, $year, $month);
+            mysqli_close($conn);
+            exit;
+        }
+    }
+
+    // Only the CURRENT month allows rollback. Previous months are read-only
+    // (carry forward only) — enforce server-side as well.
+    $nowYear  = (int) date('Y');
+    $nowMonth = (int) date('n');
+    if (!$isOverrideActive) {
+        if ($year != $nowYear || $month != $nowMonth) {
+            require_once __DIR__ . '/render_player_pay_html.php';
+            echo renderPlayerPayHtml($conn, $user_id, $year, $month);
+            mysqli_close($conn);
+            exit;
+        }
+    }
 
     // Delete the payment entry
-    $query = "DELETE FROM ca_payment WHERE GAME_ID = '$game_id' AND USER_ID = '$user_id'";
+    $query = "DELETE FROM ca_payment WHERE GAME_ID = '$game_id' AND USER_ID = '$user_id' AND STATUS = 'Y'";
 
     if (mysqli_query($conn, $query)) {
-        $query = "
-        SELECT 
-            cg.ID AS GAME_JOIN_ID,
-            cg.GAME_ID,
-            cg.PRICE,
-            cg.CURRENCY,
-            ce.EVENT_DATE,
-            ce.EVENT_TIME,
-            ce.EVENT_VENUE
-        FROM ca_gamejoin cg
-        INNER JOIN ca_events ce ON ce.ID = cg.GAME_ID
-        WHERE cg.USER_ID = '$user_id'
-            AND cg.HOST_ID = '{$_SESSION['user_id']}'
-            AND cg.STATUS = 'Y'
-            AND ce.STATUS = 'Completed'
-            AND MONTH(ce.EVENT_DATE) = '$month'
-            AND YEAR(ce.EVENT_DATE) = '$year'
-        ORDER BY ce.EVENT_DATE DESC, ce.EVENT_TIME DESC
-    ";
-
-    $result = mysqli_query($conn, $query);
-    $count = mysqli_num_rows($result);
-
-    if ($count > 0) {
-        $i = 1;
-        $totalAmount = 0;
-        $totalPaid = 0;
-        $totalDue = 0;
-
-        echo '<table class="table table-striped table-bordered">
-                <thead>
-                    <tr class="table-info">
-                        <th>Sl.</th>
-                        <th>Date & Time</th>
-                        <th>Venue</th>
-                        <th>Amount</th>
-                        <th>Payment</th>
-                        <th>Due</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>';
-
-        while ($row = mysqli_fetch_assoc($result)) {
-            $game_id = $row['GAME_ID'];
-            $price = $row['PRICE'];
-            $currency = $row['CURRENCY'];
-
-            $payResult = mysqli_query($conn, "
-                SELECT SUM(p.AMOUNT) AS Total, MAX(p.STATUS) AS STATUS
-                FROM ca_payment p
-                INNER JOIN ca_events e ON p.GAME_ID = e.ID
-                WHERE p.GAME_ID = '$game_id'
-                  AND p.USER_ID = '$user_id'
-                  AND p.STATUS != 'R'
-                  AND MONTH(e.EVENT_DATE) = '$month'
-                  AND YEAR(e.EVENT_DATE) = '$year'
-            ");
-            $payData = mysqli_fetch_assoc($payResult);
-            $paid = $payData['Total'] ?? 0;
-            $due = $price - $paid;
-
-            $rowClass = '';
-            if ($paid == 0) $rowClass = 'table-danger';
-            elseif ($due == 0) $rowClass = 'table-success';
-
-            $actionHtml = '';
-            if ($due == 0 && $payData['STATUS'] === 'N') {
-                $actionHtml = "
-                    <button class='btn btn-success btn-sm approveBtnnn' data-id='{$game_id}' data-user='{$user_id}' data-year='{$year}' data-month='{$month}'>Approve</button>
-                    <button class='btn btn-danger btn-sm rejectBtnnn' data-id='{$game_id}' data-user='{$user_id}' data-year='{$year}' data-month='{$month}'>Reject</button>
-                ";
-            } elseif ($paid == 0) {
-                $actionHtml = "<button class='btn btn-warning btn-sm payBtnnn' data-id='{$game_id}' data-user='{$user_id}' data-due='{$due}' data-year='{$year}' data-month='{$month}'>Pay</button>";
-            } else {
-                $actionHtml = "
-        <span class='badge bg-secondary'>Paid</span><br/>
-        <button class='btn btn-danger btn-sm rollbackBtnnn mt-1' data-id='{$game_id}' data-user='{$user_id}' data-amount='{$paid}'>Rollback</button>
-    ";
-            }
-
-            echo "<tr class='{$rowClass}'>
-                    <td>{$i}</td>
-                    <td>{$row['EVENT_DATE']} {$row['EVENT_TIME']}</td>
-                    <td>{$row['EVENT_VENUE']}</td>
-                    <td>{$currency} {$price}</td>
-                    <td>{$currency} {$paid}</td>
-                    <td>{$currency} {$due}</td>
-                    <td>{$actionHtml}</td>
-                </tr>";
-
-            $totalAmount += $price;
-            $totalPaid += $paid;
-            $totalDue += $due;
-            $i++;
-        }
-
-        echo "<tr class='table-dark'>
-                <th colspan='3'>Total</th>
-                <td>{$currency} {$totalAmount}</td>
-                <td>{$currency} {$totalPaid}</td>
-                <td>{$currency} {$totalDue}</td>
-                <td></td>
-              </tr>
-            </tbody>
-        </table>";
-    } else {
-        echo "<p>No Record(s)</p>";
-    }
+        // Shared renderer — grouped Event Cost / Payments / Balance layout
+        require_once __DIR__ . '/render_player_pay_html.php';
+        echo renderPlayerPayHtml($conn, $user_id, $year, $month);
     } else {
         echo "Failed to delete payment: " . mysqli_error($conn);
     }

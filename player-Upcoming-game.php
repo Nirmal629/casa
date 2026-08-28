@@ -363,7 +363,7 @@ $sql = "
 </div>
 
 <!-----View-modal------->
-<section class="customModal_wrap hostgameview_modal">
+<section class="customModal_wrap hostgameview_modal hostgameview_modal_upcoming">
     <div class="customModal_body">
         <h6 class="customModal_head">View Players</h6>
         <button class="customModal_close btn">
@@ -371,7 +371,7 @@ $sql = "
         </button>
         <hr />
         <div class="customModal_content">
-            <div class="" id="playerList">
+            <div class="playerList-container" id="playerList_upcoming">
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">

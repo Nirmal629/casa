@@ -1,26 +1,15 @@
 <?php
+require_once __DIR__ . '/../init.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+$conn = getDbConnection();
+$user = getCurrentUser($conn);
 
-include_once __DIR__ . '/../dbConnection.php';
-
-// print_r($_SESSION);exit;
-
-if(!$_SESSION['user_id'])
-
-{
-
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_id']) {
     header('location:index.php');
-
     exit;
-
 }
 
-$select_user = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION['user_id']."'");
-
-$user = mysqli_fetch_assoc($select_user);
+$currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 
 $currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPage === 'host-dashboard.php');
@@ -28,35 +17,240 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
-
-
-
 <head>
-
     <?php include "header-links.php"; ?>
+    <style>
+        .main_header.innerpageHeader {
+            background-color: #fff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+            padding: 0 !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+        }
+        .main_header.innerpageHeader .cust_container { padding: 0 20px !important; }
+        .main_header.innerpageHeader .wraper {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            height: 60px !important;
+            gap: 12px !important;
+        }
 
+        /* LOGO */
+        .site-header-left { display: flex; align-items: center; gap: 10px; }
+        .main_header .Logo_area img { height: 36px !important; width: auto !important; }
+
+        /* NAV LINKS */
+        .innerpagemenu_wrap {
+            display: flex !important;
+            align-items: center !important;
+            list-style: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 4px !important;
+        }
+        .innerpagemenu_wrap .nav_link {
+            display: inline-flex !important;
+            align-items: center !important;
+            padding: 6px 14px !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+            color: #475569 !important;
+            text-decoration: none !important;
+            border-radius: 8px !important;
+            border: 1px solid transparent !important;
+            letter-spacing: 0.04em !important;
+            transition: all 0.2s !important;
+            background: transparent !important;
+            text-transform: uppercase !important;
+        }
+        .innerpagemenu_wrap .nav_link:hover {
+            color: #0f172a !important;
+            background: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+        .innerpagemenu_wrap .nav_link.active {
+            color: #0067b7 !important;
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+        }
+
+        /* PROFILE CHIP */
+        .nav-profile-chip, .nav-profile-chip * {
+            box-sizing: border-box !important;
+        }
+        .nav-profile-chip, .nav-profile-chip *:not(i) {
+            font-family: 'Figtree', 'DM Sans', system-ui, -apple-system, sans-serif !important;
+        }
+        .nav-profile-chip { position: relative; }
+        .nav-chip-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 12px 5px 5px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .nav-chip-trigger:hover { border-color: #0067b7; background: #eff6ff; }
+
+        .nav-chip-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #0067b7;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0067b7, #6366f1);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .nav-chip-avatar img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;
+        }
+        .nav-chip-text { display: flex; flex-direction: column; }
+        .nav-chip-name {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        .nav-chip-role {
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #0067b7;
+            line-height: 1;
+        }
+        .nav-chip-role.host   { color: #7c3aed; }
+        .nav-chip-role.trainer{ color: #059669; }
+
+        .nav-chip-arrow {
+            color: #94a3b8;
+            font-size: 0.65rem;
+            transition: transform 0.2s;
+            margin-left: 2px;
+        }
+        .nav-profile-chip.open .nav-chip-arrow { transform: rotate(180deg); }
+
+        /* Dropdown */
+        .nav-chip-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 210px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+            z-index: 2000;
+            overflow: hidden;
+        }
+        .nav-profile-chip.open .nav-chip-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Dropdown header */
+        .ncd-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #1a3660;
+        }
+        .ncd-header-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #38bdf8;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #fff; font-size: 1.1rem; font-weight: 800;
+        }
+        .ncd-header-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+        .ncd-header-info { flex: 1; min-width: 0; }
+        .ncd-name { font-size: 0.85rem; font-weight: 700; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ncd-badge {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.55rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+            color: #38bdf8;
+        }
+        .ncd-badge.host    { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.25); color: #a78bfa; }
+        .ncd-badge.trainer { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.25); color: #34d399; }
+
+        /* Dropdown links */
+        .ncd-links { padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+        .ncd-links a {
+            display: grid;
+            grid-template-columns: 20px 1fr;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+        .ncd-links a:hover { background: #f1f5f9; color: #0f172a; text-decoration: none; }
+        .ncd-links a i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ncd-links a:hover i { color: #0067b7; }
+        .ncd-links .ncd-logout { color: #ef4444 !important; }
+        .ncd-links .ncd-logout i { color: #ef4444 !important; }
+        .ncd-links .ncd-logout:hover { background: rgba(239,68,68,0.06) !important; color: #ef4444 !important; }
+        .ncd-divider { height: 1px; background: #e2e8f0; margin: 4px 2px; }
+
+        @media(max-width:768px){
+            .innerpagemenu_wrap { display: none !important; }
+            .nav-chip-name { max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+        }
+    </style>
 </head>
 
-
-
 <body>
-
     <!------Main Header------->
-
     <section class="main_header innerpageHeader" id="main_Header">
-
         <div class="cust_container">
-
             <div class="wraper">
 
-
+                <!-- LEFT: Logo -->
                 <div class="site-header-left">
                     <button type="button" class="site-back-btn" <?php echo $hideSiteBackButton ? 'hidden' : ''; ?> aria-label="Go back to previous page" title="Go back">
                         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
                     </button>
-
                     <a href="index.php">
                         <figure class="Logo_area m-0">
                             <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
@@ -64,157 +258,98 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                     </a>
                 </div>
 
-
-
+                <!-- CENTER: Nav Links -->
                 <ul class="innerpagemenu_wrap">
-
-                    <!-- <li><a href="index.php" class="nav_link btn active">
-
-                            <span class="">Home</span>
-
-                        </a>
-
-                    </li> -->
-
-                    <?php
-
-                    if($_SESSION['usertype']=='Player')
-
-                    {
-
-                    ?>
-
-                    <li><a href="player-hub.php" class="nav_link btn">
-
-                            <span class="">The Player hub</span>
-
-                        </a>
-
-                    </li>
-
-                    <?php
-
-                    }
-
-                     if($_SESSION['usertype']=='Host' || $_SESSION['usertype']=='Trainer')
-
-                    {
-
-                    ?>
-
-                    <li><a href="host-dashboard.php" class="nav_link btn">
-
-                            <span class="">Host/Trainer</span>
-
-                        </a>
-
-                    </li>
-
-                    <?php
-
-                    }
-
-                    // if($_SESSION['usertype']=='Trainer')
-
-                    // {
-
-                    ?>
-
-                    <!--<li><a href="train-dashboard.php" class="nav_link btn">-->
-
-                    <!--        <span class="">Train</span>-->
-
-                    <!--    </a>-->
-
-                    <!--</li>-->
-
-                    <?php
-
-                    
-
-                    // }
-
-                    ?>
-
-                    <li><a href="product-listing.php" class="nav_link btn"><span class="">The Casa Store</span></a></li>
-
+                    <?php if (strcasecmp($_SESSION['usertype'], 'Player') === 0): ?>
+                        <li><a href="player-hub.php" class="nav_link btn <?php echo $currentInnerPage === 'player-hub.php' ? 'active' : ''; ?>">
+                            <span>The Player Hub</span></a></li>
+                    <?php endif; ?>
+                    <?php if (strcasecmp($_SESSION['usertype'], 'Host') === 0 || strcasecmp($_SESSION['usertype'], 'Trainer') === 0): ?>
+                        <li><a href="host-dashboard.php" class="nav_link btn <?php echo $currentInnerPage === 'host-dashboard.php' ? 'active' : ''; ?>">
+                            <span>Dashboard</span></a></li>
+                    <?php endif; ?>
+                    <li><a href="product-listing.php" class="nav_link btn <?php echo $currentInnerPage === 'product-listing.php' ? 'active' : ''; ?>">
+                        <span>Casa Store</span></a></li>
                 </ul>
 
-
-
-                <!---Account------>
-
-                 <div class="d-flex align-items-center gap-1">
-
-                    <!--<a href="addToCart.php" class="btn headeraddtocart_btn">-->
-
-                    <!--    <i class="fa-solid fa-cart-shopping"></i>-->
-
-                    <!--    <span class="count">12</span>-->
-
-                    <!--</a>-->
-
-                    <div style="position: relative;">
-
-                        <div class="navigation">
-
-                            <div class="user-box">
-
-                                <div class="image-box">
-
-                                    <img src="<?=$user['PROFILE_IMAGE']!=''?'profile_img/'.$user['PROFILE_IMAGE']:'assets/images/profile.jpg'?>" alt="avatar">
-
-                                </div>
-
-                                <p class="username"><?=$_SESSION['name']?></p>
-
-                            </div>
-
-                            <div class="menu-toggle"></div>
-
-                            <ul class="menu">
-
-                                <li><a href="player-profile.php"><i class="fa-regular fa-user"></i>My Profile</a></li>
-
-                                <li><a href="my-order.php"><i class="fa-regular fa-user"></i>My Order</a></li>
-
-                                <!--<li><a href="notification.php"><i class="fa-regular fa-bell"></i>Notification</a></li>-->
-
-                                <li><a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a></li>
-
-                            </ul>
-
+                <!-- RIGHT: Profile Chip -->
+                <?php
+                    $userDisplayName = htmlspecialchars($_SESSION['name'] ?? 'User');
+                    $userType        = $_SESSION['usertype'] ?? 'Player';
+                    $userInitial     = strtoupper(substr($userDisplayName, 0, 1));
+                    $profileImg      = !empty($user['PROFILE_IMAGE']) ? 'profile_img/' . htmlspecialchars($user['PROFILE_IMAGE']) : '';
+                    $chipRoleClass   = strcasecmp($userType, 'Host') === 0 ? 'host' : (strcasecmp($userType, 'Trainer') === 0 ? 'trainer' : '');
+                ?>
+                <div class="nav-profile-chip" id="navProfileChip">
+                    <div class="nav-chip-trigger" id="navChipTrigger">
+                        <div class="nav-chip-avatar">
+                            <?php if ($profileImg): ?>
+                                <img src="<?= $profileImg ?>" alt="avatar" onerror="this.parentElement.innerHTML='<?= $userInitial ?>'">
+                            <?php else: ?>
+                                <?= $userInitial ?>
+                            <?php endif; ?>
                         </div>
-
+                        <div class="nav-chip-text">
+                            <span class="nav-chip-name"><?= $userDisplayName ?></span>
+                            <span class="nav-chip-role <?= $chipRoleClass ?>"><?= htmlspecialchars($userType) ?></span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down nav-chip-arrow"></i>
                     </div>
 
+                    <div class="nav-chip-dropdown" id="navChipDropdown">
+                        <div class="ncd-links">
+                            <a href="player-profile.php">
+                                <i class="fa-regular fa-user"></i> My Profile
+                            </a>
+                            <a href="my-order.php">
+                                <i class="fa-solid fa-bag-shopping"></i> My Orders
+                            </a>
+                            <?php if (strcasecmp($userType, 'Player') === 0): ?>
+                            <a href="player-hub.php">
+                                <i class="fa-solid fa-house"></i> Player Hub
+                            </a>
+                            <?php elseif (strcasecmp($userType, 'Host') === 0 || strcasecmp($userType, 'Trainer') === 0): ?>
+                            <a href="host-dashboard.php">
+                                <i class="fa-solid fa-gauge"></i> Host Dashboard
+                            </a>
+                            <?php endif; ?>
+                            <div class="ncd-divider"></div>
+                            <a href="logout.php" class="ncd-logout">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <!-----Account----->
-
-
-
             </div>
-
         </div>
-
     </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var siteBackButton = document.querySelector('.site-back-btn');
-            if (!siteBackButton) {
-                return;
+            // ── Profile Chip Toggle ──
+            var chip    = document.getElementById('navProfileChip');
+            var trigger = document.getElementById('navChipTrigger');
+            if (chip && trigger) {
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    chip.classList.toggle('open');
+                });
+                document.addEventListener('click', function (e) {
+                    if (!chip.contains(e.target)) chip.classList.remove('open');
+                });
             }
 
-            siteBackButton.addEventListener('click', function () {
-                if (window.history.length > 1) {
-                    window.history.back();
-                    return;
-                }
-
-                window.location.href = 'player-hub.php';
-            });
+            var siteBackButton = document.querySelector('.site-back-btn');
+            if (siteBackButton) {
+                siteBackButton.addEventListener('click', function () {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                        return;
+                    }
+                    window.location.href = 'player-hub.php';
+                });
+            }
         });
     </script>
 
@@ -251,7 +386,8 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                         <div class="form-group">
                             <label class="form-label">Email</label>
                             <div style="display: flex; gap: 12px; align-items: flex-start;">
-                                <input type="email" class="field-input-readonly" style="flex: 1;" value="john.smith@example.com" readonly>
+                                <input type="email" class="field-input-readonly" style="flex: 1;"
+                                    value="john.smith@example.com" readonly>
                                 <div class="permission-group" style="margin-top: 3px; gap: 12px;">
                                     <div class="radio-wrapper">
                                         <input type="radio" id="emailYes" name="emailPermission" value="yes" checked>
@@ -268,8 +404,9 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                         <!-- Contact (Non-editable) + Permissions -->
                         <div class="form-group">
                             <label class="form-label">Contact</label>
-                            <input type="text" class="field-input-readonly" value="+1 (555) 123-4567" readonly style="margin-bottom: 12px;">
-                            
+                            <input type="text" class="field-input-readonly" value="+1 (555) 123-4567" readonly
+                                style="margin-bottom: 12px;">
+
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                                 <div class="permission-group">
                                     <div class="radio-wrapper">
@@ -352,7 +489,8 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                                         <option>United Kingdom</option>
                                         <option>Australia</option>
                                     </select>
-                                    <button type="button" class="edit-btn" id="countryEditBtn" onclick="toggleEdit('country')">
+                                    <button type="button" class="edit-btn" id="countryEditBtn"
+                                        onclick="toggleEdit('country')">
                                         <i class="fas fa-pencil"></i>
                                     </button>
                                 </div>
@@ -365,7 +503,8 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                                         <option>Alberta</option>
                                         <option>Quebec</option>
                                     </select>
-                                    <button type="button" class="edit-btn" id="provinceEditBtn" onclick="toggleEdit('province')">
+                                    <button type="button" class="edit-btn" id="provinceEditBtn"
+                                        onclick="toggleEdit('province')">
                                         <i class="fas fa-pencil"></i>
                                     </button>
                                 </div>
@@ -378,7 +517,8 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                                         <option>Calgary</option>
                                         <option>Montreal</option>
                                     </select>
-                                    <button type="button" class="edit-btn" id="cityEditBtn" onclick="toggleEdit('city')">
+                                    <button type="button" class="edit-btn" id="cityEditBtn"
+                                        onclick="toggleEdit('city')">
                                         <i class="fas fa-pencil"></i>
                                     </button>
                                 </div>
@@ -391,7 +531,8 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                                         <option>Uptown</option>
                                         <option>Suburbs</option>
                                     </select>
-                                    <button type="button" class="edit-btn" id="areaEditBtn" onclick="toggleEdit('area')">
+                                    <button type="button" class="edit-btn" id="areaEditBtn"
+                                        onclick="toggleEdit('area')">
                                         <i class="fas fa-pencil"></i>
                                     </button>
                                 </div>

@@ -8,10 +8,10 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Database constants
-const DATABASE_NAME = 'casa_test';
-const USERNAME = "casa_test";
-const PASSWORD = "casa_test123#";
+// Database constants (guarded so they don't collide with config/database.php when init.php is already loaded)
+if (!defined('DATABASE_NAME')) define('DATABASE_NAME', 'casa_test');
+if (!defined('USERNAME'))      define('USERNAME', 'casa_test');
+if (!defined('PASSWORD'))      define('PASSWORD', 'casa_test123#');
 
 $host = "localhost";
 $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);

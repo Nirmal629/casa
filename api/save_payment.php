@@ -22,7 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $details = mysqli_real_escape_string($conn, $details);
     $message = mysqli_real_escape_string($conn, $message);
 
-    mysqli_query($conn,"DELETE FROM ca_payment where USER_ID='$user_id' AND GAME_ID='$game_id'");
+    // Prevent duplicate pending payment requests
+    $checkPending = mysqli_query($conn, "SELECT 1 FROM ca_payment WHERE USER_ID='$user_id' AND GAME_ID='$game_id' AND STATUS='N' LIMIT 1");
+    if ($checkPending && mysqli_num_rows($checkPending) > 0) {
+        http_response_code(400);
+        echo "A payment request is already pending approval for this game.";
+        mysqli_close($conn);
+        exit;
+    }
+
     // SQL query to insert data
     $query = "INSERT INTO `ca_payment` (`USER_ID`, `GAME_ID`, `AMOUNT`, `PAYMENT_DATE`, `PAYMENT_TIME`, `PAYMENT_TYPE`, `DETAILS`, `MESSAGE`) 
               VALUES ('$user_id', '$game_id', '$amount', '$payment_date', '$payment_time', '$payment_type', '$details', '$message')";
@@ -71,12 +79,13 @@ $sql = "
     SELECT 
         cg.ID AS GAME_JOIN_ID, cg.USER_ID, cg.GAME_ID, cg.PRICE, cg.CURRENCY, cg.STATUS AS GAME_JOIN_STATUS, cg.CREATED_AT AS GAME_JOIN_CREATED_AT, 
         ce.ID AS EVENT_ID, ce.HOST_NAME, ce.EVENT_DATE, ce.EVENT_TIME, ce.EVENT_VENUE, ce.EVENT_COST AS EVENT_PRICE, ce.EVENT_CURRENCY, 
-        ce.STATUS AS EVENT_STATUS, ce.CREATED_AT AS EVENT_CREATED_AT 
+        ce.STATUS AS EVENT_STATUS, ce.CREATED_AT AS EVENT_CREATED_AT, ce.EVENT_CATEGORY 
     FROM ca_gamejoin AS cg 
     INNER JOIN ca_events AS ce ON cg.GAME_ID = ce.ID 
     WHERE cg.USER_ID = '" . mysqli_real_escape_string($conn, $_SESSION['user_id']) . "' 
     AND cg.STATUS = 'Y' 
     AND ce.STATUS = 'Completed'
+    AND NOT (ce.EVENT_CATEGORY = 'PreviousDue' OR ce.EVENT_CATEGORY LIKE 'Carry Forward from %')
 ";
 
 // Append dynamic conditions

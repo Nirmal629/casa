@@ -1690,9 +1690,9 @@ $(document).ready(function () {
 
             success: function (response) {
 
-                $("#playerList").html(response)
+                $("#playerList_upcoming").html(response)
 
-                $('.hostgameview_modal').addClass('open');
+                $('.hostgameview_modal_upcoming').addClass('open');
 
             }
 
@@ -2118,6 +2118,78 @@ $(document).ready(function () {
 
 
 
+    $('#search_subscription').on('keyup', function () {
+
+
+
+        let searchText = $(this).val().trim();
+
+        let firstCheckbox = $("#playerList_subscription .invite-checkbox").first();
+
+
+
+        let gameId = firstCheckbox.data("game-id");
+
+        let hostId = firstCheckbox.data("host-id");
+
+
+
+        $("#playdt_subscription").attr('data-game-id', gameId)
+
+        $("#playdt_subscription").attr('data-host-id', hostId)
+
+
+
+        let gameIdN = $("#playdt_subscription").attr('data-game-id');
+
+        let hostIdN = $("#playdt_subscription").attr('data-host-id');
+
+
+
+
+
+        if (searchText.length >= 2) {
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "../../api/search_result.php",
+
+                data: { query: searchText, ID: gameIdN, HOST_ID: hostIdN },
+
+                success: function (response) {
+
+                    $("#playerList_subscription").html(response);
+
+                }
+
+            });
+
+        } else if (searchText.length == 0) {
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "../../api/search_result.php",
+
+                data: { query: "", ID: gameIdN, HOST_ID: hostIdN },
+
+                success: function (response) {
+
+                    $("#playerList_subscription").html(response);
+
+                }
+
+            });
+
+        }
+
+    });
+
+
+
 
 
     $(".save_payment").click(function () {
@@ -2222,13 +2294,12 @@ $(document).ready(function () {
 
                 $('.PayAmountModal').removeClass('open');
 
-                $(".custom_card .patmentTb").html(response);
-
+                location.reload();
             },
 
-            error: function () {
+            error: function (xhr) {
 
-                alert("Error saving data.");
+                alert(xhr.responseText || "Error saving data.");
 
             }
 
@@ -2328,9 +2399,9 @@ $(document).ready(function () {
 
             success: function (response) {
 
-                $(".hostgameview_modal #playerList").html(response)
+                $(".hostgameview_modal_payment #playerList_payment").html(response)
 
-                $('.hostgameview_modal').addClass('open');
+                $('.hostgameview_modal_payment').addClass('open');
 
             }
 
@@ -3069,20 +3140,19 @@ nextBtn.addEventListener("click", () => {
 
 
 
-    dateInput.addEventListener("click", () => {
-        calendar.style.display = "block";
-        positionCalendar();
-    });
+dateInput.addEventListener("click", () => {
+    calendar.style.display = "block";
+    positionCalendar();
+});
 
 // Close custom modals on outside click
-$(document).ready(function() {
-    $(document).on('click', '.customModal_wrap', function(e) {
+$(document).ready(function () {
+    $(document).on('click', '.customModal_wrap', function (e) {
         if ($(e.target).hasClass('customModal_wrap')) {
             $(this).removeClass('open');
         }
     });
 });
-
 document.addEventListener("click", (event) => {
 
     if (!dateInput.contains(event.target) && !calendar.contains(event.target)) {

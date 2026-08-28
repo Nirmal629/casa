@@ -41,6 +41,11 @@ if($_POST['type']=='filter')
         $event_canceldate = $event['CANCEL_DATE']!='' ? date('D, d M Y', strtotime($event['CANCEL_DATE'])) : '';
         $event_cancelTime = date('h:i A', strtotime($event['CANCEL_TIME']));
         
+        $event_datetime = strtotime($event['EVENT_DATE']);
+        $today = strtotime(date('Y-m-d'));
+        
+        $is_today = ($event_datetime === $today);
+        
         $jsonStringy = htmlspecialchars(json_encode($event, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         
         $words = explode(" ", $event_message); // Split message into words

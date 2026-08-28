@@ -22,14 +22,14 @@ $currentMonth = date('n');
 
         <div class="mb-3">
             <form>
-                <div class="row g-1 align-items-center">
+                <div class="row g-1 align-items-center flex-wrap">
+                    <!-- Player filter -->
                     <div class="col-auto">
-                        <select class="form-select py-0 px-2" id="hhost" style="width: auto; max-width: 120px; height: 31px; font-size: 0.95rem;">
+                        <select class="form-select form-select-sm py-0" id="hhost" style="width: auto; min-width: 120px; height: 31px;">
                         <option value="">Player</option>
                         <?php
                         $query = "SELECT ID, NAME FROM ca_users WHERE DEL_STATUS = 'N' AND LOG_STATUS='Y' ORDER BY NAME";
                         $result = mysqli_query($conn, $query);
-                    
                         while ($row = mysqli_fetch_assoc($result)) {
                             $nameParts = explode(' ', trim($row['NAME']));
                             $shortName = $nameParts[0];
@@ -39,22 +39,23 @@ $currentMonth = date('n');
                             echo "<option value=\"{$row['ID']}\">" . htmlspecialchars($shortName) . "</option>";
                         }
                         ?>
-                    </select>
+                        </select>
                     </div>
+                    <!-- Year filter -->
                     <div class="col-auto">
-                        <select class="form-select py-0 px-2" id="hpyear" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                            <option value="">Year</option>
+                        <select class="form-select form-select-sm py-0" id="hpyear" style="width: auto; height: 31px;">
+                            <option value="" selected>Year</option>
                             <?php
                             for ($year = 2025; $year <= $currentYear; $year++) {
-                                $selected = ($year == $currentYear) ? 'selected' : '';
-                                echo "<option value=\"$year\" $selected>$year</option>";
+                                echo "<option value=\"$year\">$year</option>";
                             }
                             ?>
                         </select>
                     </div>
+                    <!-- Month filter -->
                     <div class="col-auto">
-                        <select class="form-select py-0 px-2" id="hpmonth" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
-                            <option value="">Month</option>
+                        <select class="form-select form-select-sm py-0" id="hpmonth" style="width: auto; height: 31px;">
+                            <option value="" selected>Month</option>
                             <?php
                             $months = [
                                 1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
@@ -62,16 +63,42 @@ $currentMonth = date('n');
                                 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
                             ];
                             foreach ($months as $num => $name) {
-                                $selected = ($num == $currentMonth) ? 'selected' : '';
-                                echo "<option value=\"$num\" $selected>$name</option>";
+                                echo "<option value=\"$num\">$name</option>";
                             }
                             ?>
                         </select>
                     </div>
-                    <div class="col-auto ms-auto">
-                        <!--<button type="button" class="btn btn-primary" id="hpfilter">Submit</button>-->
-                        <!--<button type="button" class="btn btn-danger" id="reset">Reset</button>-->
-                        <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="hpfilter" style="height: 31px; width: 40px;">
+                    <!-- Search box -->
+                    <div class="col-auto">
+                        <input
+                            type="text"
+                            class="form-control form-control-sm py-0"
+                            id="hpsearch"
+                            placeholder="Search name / email / phone…"
+                            style="height: 31px; min-width: 200px;"
+                            autocomplete="off"
+                        >
+                    </div>
+                    <!-- Sort by -->
+                    <div class="col-auto d-none">
+                        <select class="form-select form-select-sm py-0" id="hpsortby" style="width: auto; min-width: 120px; height: 31px;" title="Sort by">
+                            <option value="name">Name</option>
+                            <option value="games">Games</option>
+                            <option value="amount">Amount</option>
+                            <option value="paid">Payment</option>
+                            <option value="due">Due</option>
+                        </select>
+                    </div>
+                    <!-- Sort direction toggle -->
+                    <div class="col-auto d-none">
+                        <button type="button" id="hpsortdir" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" style="height: 31px;" data-dir="asc" title="Toggle sort direction">
+                            <span id="hpsortdir-icon">▲</span>
+                            <span id="hpsortdir-label" style="font-size:0.7rem;">ASC</span>
+                        </button>
+                    </div>
+                    <!-- Search / Filter button -->
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" id="hpfilter" style="height: 31px; width: 40px;" title="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                         </svg>
@@ -81,117 +108,15 @@ $currentMonth = date('n');
             </form>
         </div>
 
-        <?php
-        $players = $conn->query("SELECT * FROM ca_users WHERE USERTYPE = 'Player' ORDER BY ID ASC");
-        if ($players->num_rows > 0) {
-            echo '<div class="table-responsive host_payment" style="font-size: 0.75rem;">
-                <table class="table table-success table-striped table-bordered table-sm text-nowrap align-middle">
-                    <thead class="table-dark text-center">
-                        <tr>
-                            <th>SN</th>
-                            <th>Profile</th>
-                            <th>Player</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Premium</th>
-                            <th>Games</th>
-                            <th>Amount$</th>
-                            <th>Payment$</th>
-                            <th>Due$</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>';
-
-            $sl = 1;
-            while ($player = $players->fetch_assoc()) {
-                $user_id = $player['ID'];
-                $profile_pic = !empty($player['PROFILE_IMAGE']) ? 'profile_img/' . $player['PROFILE_IMAGE'] : 'assets/images/profile.jpg';
-
-                // Get all joined games for this player for selected month/year
-                $gamesQuery = "
-                    SELECT cg.ID, cg.GAME_ID, cg.PRICE, cg.CURRENCY
-                    FROM ca_gamejoin cg
-                    INNER JOIN ca_events ce ON ce.ID = cg.GAME_ID
-                    WHERE cg.USER_ID = '$user_id'
-                        AND cg.HOST_ID = '{$_SESSION['user_id']}'
-                        AND cg.STATUS = 'Y'
-                        AND ce.STATUS = 'Completed'
-                        AND MONTH(ce.EVENT_DATE) = '$currentMonth'
-                        AND YEAR(ce.EVENT_DATE) = '$currentYear'
-                ";
-
-                $gamesResult = $conn->query($gamesQuery);
-                $gameCount = $gamesResult->num_rows;
-
-                if ($gameCount > 0) {
-                    $totalAmount = 0;
-                    $totalPaid = 0;
-
-                    while ($game = $gamesResult->fetch_assoc()) {
-                        $game_id = $game['GAME_ID'];
-                        $price = $game['PRICE'];
-                        $currency = $game['CURRENCY'];
-                        $totalAmount += $price;
-
-                        // Get payments for this game
-                        $paymentQuery = "
-                            SELECT SUM(p.AMOUNT) AS PAYED
-                            FROM ca_payment p
-                            INNER JOIN ca_events e ON p.GAME_ID = e.ID
-                            WHERE p.USER_ID = '$user_id'
-                                AND p.GAME_ID = '$game_id'
-                                AND p.STATUS != 'R'
-                                AND MONTH(e.EVENT_DATE) = '$currentMonth'
-                                AND YEAR(e.EVENT_DATE) = '$currentYear'
-                        ";
-                        $paymentResult = $conn->query($paymentQuery);
-                        $paymentData = $paymentResult->fetch_assoc();
-                        $totalPaid += $paymentData['PAYED'] ?? 0;
-                    }
-
-                    $totalDue = $totalAmount - $totalPaid;
-                    
-                    $isPremium = (isset($player['PREMIUM']) && $player['PREMIUM'] === 'Y');
-                    $premiumChecked = $isPremium ? 'checked' : '';
-                    $premiumLabel = $isPremium ? 'Premium' : 'Non Premium';
-                    $switchId = 'premium-switch-' . $user_id;
-
-                    echo "<tr>
-                            <th scope='row'>{$sl}</th>
-                            <td><div class='profile_pic'><img src='{$profile_pic}' class='img-fluid' alt='profile pic' /></div></td>
-                            <td>{$player['NAME']}</td>
-                            <td><span style='color:#1a73e8;'>{$player['EMAIL']}</span><br></td>
-                            <td><span style='color:#34a853;'>{$player['WHATSAPP_NUMBER']}</span></td>
-                            <td>
-                                <div class='form-check form-switch mb-0'>
-                                    <input 
-                                        class='form-check-input premium-switch' 
-                                        type='checkbox' 
-                                        id='{$switchId}'
-                                        data-user-id='{$user_id}'
-                                        {$premiumChecked}
-                                        style='cursor:pointer'
-                                    >
-                                </div>
-                            </td>
-                            <td>{$gameCount}</td>
-                            <td>{$currency} {$totalAmount}</td>
-                            <td>{$currency} {$totalPaid}</td>
-                            <td>{$currency} {$totalDue}</td>
-                            <td><button type='button' class='playPaymentModal_open btn btn-primary btn-sm' data-id='{$user_id}'>View More</button></td>
-                          </tr>";
-                    $sl++;
-                }
-            }
-
-            echo '</tbody></table></div>';
-        } else {
-            echo "<p>No players found.</p>";
-        }
-
-        // $conn->close(); // Do NOT close — other tabs still need $conn
-        ?>
+        <!-- Player list table — populated via AJAX on page load -->
+        <div id="hostPaymentTableContainer" class="host_payment">
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted mt-2 mb-0" style="font-size:0.85rem;">Loading players...</p>
+            </div>
+        </div>
         
         <!-- Player Modal -->
         <section class="customModal_wrap playPaymentModal">

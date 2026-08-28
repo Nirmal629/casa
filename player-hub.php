@@ -125,11 +125,11 @@ $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 $options = [
 
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 
-    PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_EMULATE_PREPARES => false,
 
 ];
 
@@ -458,13 +458,13 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 <!-----Anurag Added for icon and text------->
 <style>
-
     /* 1: The Eye-Catcher Card */
     .card {
         background: #fff;
         border-radius: 12px;
-        padding: 12px 12px 8px 12px; /* Tightened bottom padding */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 12px 12px 8px 12px;
+        /* Tightened bottom padding */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         border: 1px solid #eef0f2;
         margin-bottom: 15px;
         font-family: 'Segoe UI', Roboto, sans-serif;
@@ -474,17 +474,19 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         margin: 0 0 10px 0;
         font-size: 1.05rem;
         font-weight: 800;
-        color: #ffffff; /* Club name is now white */
+        color: #ffffff;
+        /* Club name is now white */
         letter-spacing: -0.02em;
         text-align: left;
     }
-    
+
     /* 2: The Order Info Capsule */
     .order-capsule {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.08); /* Glass effect */
+        background: rgba(255, 255, 255, 0.08);
+        /* Glass effect */
         border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 50px;
         padding: 2px 8px;
@@ -502,7 +504,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         opacity: 0.3;
         color: #fff;
     }
-    
+
     /* Dynamic Status Pill inside Capsule */
     .stat-pill {
         padding: 1px 5px;
@@ -511,15 +513,27 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         font-weight: 900;
         font-size: 0.48rem;
     }
-    .stat-completed { background: #166534; color: #4ade80; }
-    .stat-pending { background: #854d0e; color: #fbbf24; }
-    .stat-default { background: #334155; color: #cbd5e1; }
-    
+
+    .stat-completed {
+        background: #166534;
+        color: #4ade80;
+    }
+
+    .stat-pending {
+        background: #854d0e;
+        color: #fbbf24;
+    }
+
+    .stat-default {
+        background: #334155;
+        color: #cbd5e1;
+    }
+
     /* Unified straight-line container */
     .action-bar-unified {
         display: flex;
         align-items: center;
-        gap: 4px; 
+        gap: 4px;
         width: 100%;
         margin-bottom: 0;
     }
@@ -530,42 +544,52 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        flex: 1; 
+        flex: 1;
         padding: 6px 2px;
-        font-size: 0.58rem; 
-        font-weight: 800; /* Extra bold text to match icons */
+        font-size: 0.58rem;
+        font-weight: 800;
+        /* Extra bold text to match icons */
         text-transform: uppercase;
         color: #333;
         background-color: #f8f9fa;
         border: 1px solid #ced4da;
         border-radius: 8px;
         text-decoration: none;
-        min-height: 45px; 
+        min-height: 45px;
     }
 
     /* Bold Icon Styling */
     .btn-stacked-synced svg {
-        width: 18px; 
+        width: 18px;
         height: 18px;
         margin-bottom: 3px;
         color: #0d6efd;
-        stroke-width: 0.5px; /* Adds slight weight */
+        stroke-width: 0.5px;
+        /* Adds slight weight */
         stroke: #0d6efd;
     }
 
-    .btn-stacked-synced.status-member { 
-        border-color: #198754; 
-        color: #198754; 
-        background-color: #f0fff4; 
+    .btn-stacked-synced.status-member {
+        border-color: #198754;
+        color: #198754;
+        background-color: #f0fff4;
     }
-    .btn-stacked-synced.status-member svg { color: #198754; stroke: #198754; }
-    
-    .btn-stacked-synced.action-view { 
-        background-color: #0d6efd; 
-        color: white; 
-        border-color: #0d6efd; 
+
+    .btn-stacked-synced.status-member svg {
+        color: #198754;
+        stroke: #198754;
     }
-    .btn-stacked-synced.action-view svg { color: white; stroke: white; }
+
+    .btn-stacked-synced.action-view {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+
+    .btn-stacked-synced.action-view svg {
+        color: white;
+        stroke: white;
+    }
 </style>
 
 
@@ -795,11 +819,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                                $totalSessions = (int)$resultsession['total_session'];
+                                $totalSessions = (int) $resultsession['total_session'];
 
 
 
-                            ?>
+                                ?>
 
 
 
@@ -829,7 +853,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                            <?php
+                                <?php
 
 
 
@@ -957,11 +981,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                        <button class="refer" type="button" data-bs-toggle="modal" data-bs-target="#ReferModal">Refer Good Player</button>
+                        <button class="refer" type="button" data-bs-toggle="modal" data-bs-target="#ReferModal">Refer
+                            Good Player</button>
                     </div>
                 </div>
-                
-<!-- -------------------------------------------------------------- THE CENTER PANNEL CLUBS AND TOURNAMENT ---------------------------------------------------------------------------------------------------------->
+
+                <!-- -------------------------------------------------------------- THE CENTER PANNEL CLUBS AND TOURNAMENT ---------------------------------------------------------------------------------------------------------->
                 <div class="panel center-panel">
                     <h3 style="text-align: center;">All Clubs</h3>
                     <div class="scrollbox">
@@ -1161,7 +1186,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                     }
                                 }
 
-                        ?>
+                                ?>
 
 
 
@@ -1183,7 +1208,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             </div>
                                             <div class="subtitle">
                                                 <p><?php echo htmlspecialchars($row['EVENT_CATEGORY']); ?> -
-                                                    <?php echo $row['GENDER_CATEGORY']; ?> - <?php echo $row['EVENT_TYPE']; ?></p>
+                                                    <?php echo $row['GENDER_CATEGORY']; ?> - <?php echo $row['EVENT_TYPE']; ?>
+                                                </p>
                                             </div>
                                         </div>
 
@@ -1197,7 +1223,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 </div>
                                             <?php else: ?>
                                                 <!-- Grayed out Registration Closed button -->
-                                                <div class="regBtn" style="background: #475569 !important; border-color: #334155 !important;">
+                                                <div class="regBtn"
+                                                    style="background: #475569 !important; border-color: #334155 !important;">
                                                     <p style="color: #cbd5e1 !important;">Registration Closed</p>
                                                 </div>
                                             <?php endif; ?>
@@ -1205,14 +1232,19 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                         <div class="content">
                                             <div class="info-grid">
-                                                <div class="info"><i class="fa fa-calendar-alt"></i><span>Date:</span> <?php echo $date; ?></div>
-                                                <div class="info"><i class="fa fa-clock"></i><span>Time:</span> <?php echo $time; ?></div>
-                                                <div class="info"><i class="fa fa-map-marker-alt"></i><span>Venue:</span> <?php echo htmlspecialchars($row['EVENT_VENUE']); ?></div>
-                                                <div class="info"><i class="fa-solid fa-comment-dollar"></i><span>40 <strong>per player</strong></span></div>
-                                                <div class="info"><i class="fa-solid fa-feather-pointed"></i></i><span>Birdie: <strong> Feather</strong></span></div>
+                                                <div class="info"><i class="fa fa-calendar-alt"></i><span>Date:</span>
+                                                    <?php echo $date; ?></div>
+                                                <div class="info"><i class="fa fa-clock"></i><span>Time:</span>
+                                                    <?php echo $time; ?></div>
+                                                <div class="info"><i class="fa fa-map-marker-alt"></i><span>Venue:</span>
+                                                    <?php echo htmlspecialchars($row['EVENT_VENUE']); ?></div>
+                                                <div class="info"><i class="fa-solid fa-comment-dollar"></i><span>40 <strong>per
+                                                            player</strong></span></div>
+                                                <div class="info"><i class="fa-solid fa-feather-pointed"></i></i><span>Birdie:
+                                                        <strong> Feather</strong></span></div>
                                                 <div class="info">
                                                     <i class="fa fa-check-circle"></i>
-                                                    <span><?php echo $row['joined_count']; ?> <?php echo $row['MAX_TEAMS']; ?>
+                                                    <span><?php echo $row['joined_count']; ?>         <?php echo $row['MAX_TEAMS']; ?>
                                                         <strong>teams joined</strong>
                                                     </span>
                                                 </div>
@@ -1233,21 +1265,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Updated Pay Now Button -->
 
-                                                        <button type="button"
-
-                                                            class="joinbtn pay-now-trigger"
-
-                                                            style="background: #fb172e; border: none;"
-
-                                                            data-bs-toggle="modal"
-
-                                                            data-bs-target="#PaymentModal"
-
-                                                            data-id="<?php echo $row['ID']; ?>"
-
+                                                        <button type="button" class="joinbtn pay-now-trigger"
+                                                            style="background: #fb172e; border: none;" data-bs-toggle="modal"
+                                                            data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
-
-                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>"> <!-- Added this line -->
+                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
+                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1257,7 +1280,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 2: Paid but admin hasn't approved yet (STATUS = Y and APPROVED_BY is NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #ffc107; color: #000; cursor: default;">Pending</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
 
 
@@ -1265,7 +1289,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #28a745; cursor: default;">Payment Success</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #28a745; cursor: default;">Payment Success</a>
 
 
 
@@ -1277,9 +1302,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                     <!-- Show 'Join Now' only if they haven't joined yet -->
                                                     <?php if ($isRegistrationOpen): ?>
-                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>" class="joinbtn">Join Now</a>
+                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>"
+                                                            class="joinbtn">Join Now</a>
                                                     <?php else: ?>
-                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn" style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join Now</a>
+                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn"
+                                                            style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join
+                                                            Now</a>
                                                     <?php endif; ?>
 
                                                 <?php endif; ?>
@@ -1298,7 +1326,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         // Combine DB Date with 10:00 AM EST
                                                         $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
                                                         $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-
+                                        
                                                         // Check if current time is before the draw time
                                                         if ($nowEst < $drawEst) {
                                                             $isDrawLive = false;
@@ -1312,7 +1340,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 <?php if ($isDrawLive): ?>
                                                     <a href="tournament/?id=<?php echo (int)$row['ID']; ?>" class="joinbtn">View Live</a>
                                                 <?php else: ?>
-                                                    <a href="javascript:void(0);" onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');" class="joinbtn">View Live</a>
+                                                    <a href="javascript:void(0);"
+                                                        onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');"
+                                                        class="joinbtn">View Live</a>
                                                 <?php endif; ?>
                                             </div>
 
@@ -1328,7 +1358,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                     </div>
                                                 <?php else: ?>
                                                     <!-- Grayed out Registration Closed button -->
-                                                    <div class="regBtn" style="background: #475569 !important; border-color: #334155 !important;">
+                                                    <div class="regBtn"
+                                                        style="background: #475569 !important; border-color: #334155 !important;">
                                                         <p style="color: #cbd5e1 !important;">Registration Closed</p>
                                                     </div>
                                                 <?php endif; ?>
@@ -1348,21 +1379,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Updated Pay Now Button -->
 
-                                                        <button type="button"
-
-                                                            class="joinbtn pay-now-trigger"
-
-                                                            style="background: #fb172e; border: none;"
-
-                                                            data-bs-toggle="modal"
-
-                                                            data-bs-target="#PaymentModal"
-
-                                                            data-id="<?php echo $row['ID']; ?>"
-
+                                                        <button type="button" class="joinbtn pay-now-trigger"
+                                                            style="background: #fb172e; border: none;" data-bs-toggle="modal"
+                                                            data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
-
-                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>"> <!-- Added this line -->
+                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
+                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1372,7 +1394,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 2: Paid but admin hasn't approved yet (STATUS = Y and APPROVED_BY is NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #ffc107; color: #000; cursor: default;">Pending</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
 
 
@@ -1380,7 +1403,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #28a745; cursor: default;">Payment Success</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #28a745; cursor: default;">Payment Success</a>
 
 
 
@@ -1392,9 +1416,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                     <!-- Show 'Join Now' only if they haven't joined yet -->
                                                     <?php if ($isRegistrationOpen): ?>
-                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>" class="joinbtn">Join Now</a>
+                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>"
+                                                            class="joinbtn">Join Now</a>
                                                     <?php else: ?>
-                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn" style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join Now</a>
+                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn"
+                                                            style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join
+                                                            Now</a>
                                                     <?php endif; ?>
 
                                                 <?php endif; ?>
@@ -1413,7 +1440,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         // Combine DB Date with 10:00 AM EST
                                                         $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
                                                         $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-
+                                        
                                                         // Check if current time is before the draw time
                                                         if ($nowEst < $drawEst) {
                                                             $isDrawLive = false;
@@ -1427,7 +1454,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 <?php if ($isDrawLive): ?>
                                                     <a href="tournament/?id=<?php echo (int)$row['ID']; ?>" class="joinbtn">View Live</a>
                                                 <?php else: ?>
-                                                    <a href="javascript:void(0);" onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');" class="joinbtn">View Live</a>
+                                                    <a href="javascript:void(0);"
+                                                        onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');"
+                                                        class="joinbtn">View Live</a>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -1443,7 +1472,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                        <?php
+                                <?php
 
 
 
@@ -1499,7 +1528,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <?php
                             try {
 
-                                session_start();
+                                if (session_status() === PHP_SESSION_NONE) {
+                                    session_start();
+                                }
                                 $userEmail = $_SESSION['email'] ?? null;
 
                                 // 1️⃣ Get all products
@@ -1536,7 +1567,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                     foreach ($products as $product) {
 
-                                        $productID   = $product['ID'];
+                                        $productID = $product['ID'];
                                         $productName = !empty($product['PRODUCT_NAME'])
                                             ? htmlspecialchars($product['PRODUCT_NAME'])
                                             : 'N/A';
@@ -1552,7 +1583,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             : 'assets/images/default.jpg';
 
                                         $orderData = $orderMap[$productID] ?? null;
-                            ?>
+                                        ?>
 
                                         <div class="store-item">
                                             <img src="<?= $imagePath ?>" alt="Product Image">
@@ -1572,7 +1603,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                             CAD <?= htmlspecialchars($orderData['PRICE']) ?>
                                                         </b>
                                                     </p>
-                                                    
+
                                                     <div class="order-capsule">
                                                         <span>Last Order </span>
                                                         <b><?= htmlspecialchars($orderData['QUANTITY']) ?> Pcs</b>
@@ -1599,7 +1630,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             </div>
                                         </div>
 
-                            <?php
+                                        <?php
                                     }
                                 } else {
                                     echo "<p>No products found.</p>";
@@ -1638,7 +1669,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <div class="reviewSlide">
                         <div class="reviewCard">
                             <div class="reviewTextDiv">
-                                <p>I am really satisfied with casa tournaments. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus laboriosam hic voluptates necessitatibus totam natus quae blanditiis, illum id veniam atque accusamus harum animi cupiditate rem possimus quidem esse nemo nam ratione! Minus optio amet soluta veniam inventore, porro illum ab quidem ut tenetur veritatis tempore ex, quo similique corrupti?</p>
+                                <p>I am really satisfied with casa tournaments. Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Minus laboriosam hic voluptates necessitatibus totam natus quae
+                                    blanditiis, illum id veniam atque accusamus harum animi cupiditate rem possimus
+                                    quidem esse nemo nam ratione! Minus optio amet soluta veniam inventore, porro illum
+                                    ab quidem ut tenetur veritatis tempore ex, quo similique corrupti?</p>
                             </div>
                         </div>
                     </div>
@@ -1646,7 +1681,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <div class="reviewSlide">
                         <div class="reviewCard">
                             <div class="reviewTextDiv">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto recusandae tempora ad beatae dolorum quod.</p>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto recusandae
+                                    tempora ad beatae dolorum quod.</p>
                             </div>
                         </div>
                     </div>
@@ -1686,7 +1722,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 </div>
 
 <!-- Costingmodal -->
-<div class="modal fade" id="ReferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ReferModalLabel" aria-hidden="true">
+<div class="modal fade" id="ReferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ReferModalLabel" aria-hidden="true">
 
 
 
@@ -1834,7 +1871,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                 <h5 class="modal-title" id="PaymentModalLabel">Notify Payment</h5>
 
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
 
             </div>
 
@@ -1869,7 +1907,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                         <label>Enter Payment Amount</label>
 
                         <!-- <input type="number" step="0.01" name="payment_amount" class="form-control" required placeholder="0.00"> -->
-                        <input type="number" step="0.01" name="payment_amount" class="form-control" value="40.00" required readonly>
+                        <input type="number" step="0.01" name="payment_amount" class="form-control" value="40.00"
+                            required readonly>
 
                     </div>
 
@@ -1882,7 +1921,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <label>Enter Payment Date</label>
 
                             <!-- <input type="date" name="payment_date" class="form-control" required> -->
-                            <input type="date" id="payment_date" name="payment_date" class="form-control" required readonly>
+                            <input type="date" id="payment_date" name="payment_date" class="form-control" required
+                                readonly>
 
 
                         </div>
@@ -1892,7 +1932,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <label>Enter Payment Time</label>
 
                             <!-- <input type="time" name="payment_time" class="form-control" required> -->
-                            <input type="time" id="payment_time" name="payment_time" class="form-control" required readonly>
+                            <input type="time" id="payment_time" name="payment_time" class="form-control" required
+                                readonly>
 
 
                         </div>
@@ -1923,7 +1964,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         <label>Any Payment Details (Optional)</label>
 
-                        <input type="text" name="payment_details" class="form-control" placeholder="e.g. Reference number">
+                        <input type="text" name="payment_details" class="form-control"
+                            placeholder="e.g. Reference number">
 
                     </div>
 
@@ -1933,7 +1975,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         <label>Message (Optional)</label>
 
-                        <textarea name="payment_message" class="form-control" rows="2" placeholder="Your message here..."></textarea>
+                        <textarea name="payment_message" class="form-control" rows="2"
+                            placeholder="Your message here..."></textarea>
 
                     </div>
 
@@ -1967,19 +2010,23 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
         <h1 style="color:white; margin-top:20px; font-weight: 800;">Transaction Pending Verification!</h1>
 
-        <p style="color:#94a3b8; font-size: 1.2rem;">We have logged your <br><strong style="color:white;">CAD <span id="dispAmt"></span>(Interac/Cash) payment</strong></p>
+        <p style="color:#94a3b8; font-size: 1.2rem;">We have logged your <br><strong style="color:white;">CAD <span
+                    id="dispAmt"></span>(Interac/Cash) payment</strong></p>
 
-        <p style="color:#94a3b8;">Admin verifies the transfer and confirms your entry.Your button will turn green and display "Payment Success".See you on the court soon!
+        <p style="color:#94a3b8;">Admin verifies the transfer and confirms your entry.Your button will turn green and
+            display "Payment Success".See you on the court soon!
         </p>
 
-        <button onclick="location.reload()" class="btn btn-danger mt-4" style="background:#fb172e; border:none; padding:12px 40px; font-weight:bold;">Close</button>
+        <button onclick="location.reload()" class="btn btn-danger mt-4"
+            style="background:#fb172e; border:none; padding:12px 40px; font-weight:bold;">Close</button>
 
     </div>
 
 </div>
 
 <!-- review modal -->
-<div class="modal fade" id="reviewmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reviewmodalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="reviewmodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2043,7 +2090,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <p class="edit-text" contenteditable="true" rows="15"></p>
 
                 <div class="d-flex justify-content-center" style="gap: 12px;">
-                    
+
                     <form action="">
                         <input class="reviewBtn" type="submit" value="Submit">
                     </form>
@@ -2054,15 +2101,13 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
     </div>
 </div>
 
-<
-
-    <?php include "includes/footer.php"; ?>
+< <?php include "includes/footer.php"; ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js">
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             var paymentModalEl = document.getElementById('PaymentModal');
 
@@ -2072,7 +2117,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
             // Populate data when modal opens
 
-            paymentModalEl.addEventListener('show.bs.modal', function(event) {
+            paymentModalEl.addEventListener('show.bs.modal', function (event) {
 
                 var button = event.relatedTarget;
 
@@ -2090,7 +2135,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
             // AJAX Form Submission
 
-            $('#paymentForm').on('submit', function(e) {
+            $('#paymentForm').on('submit', function (e) {
 
                 e.preventDefault();
 
@@ -2112,7 +2157,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     dataType: 'json',
 
-                    success: function(response) {
+                    success: function (response) {
 
                         if (response.success) {
 
@@ -2132,7 +2177,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     },
 
-                    error: function() {
+                    error: function () {
 
                         $('#paymentError').text('Server error. Please try again.').removeClass('d-none');
 
@@ -2147,7 +2192,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const dateInput = document.getElementById('payment_date');
             const timeInput = document.getElementById('payment_time');
 
@@ -2171,14 +2216,14 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         var wyg = select('.text');
         console.log(wyg);
 
-        wys.addEventListener('keyup', function(e) {
+        wys.addEventListener('keyup', function (e) {
             wyg.innerHTML = this.innerHTML;
         });
 
         var buttons = select('.formatter button');
 
-        buttons.forEach(function(button) {
-            button.addEventListener('click', function() {
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
                 formatText(this.getAttribute('data-command'));
             })
         });
