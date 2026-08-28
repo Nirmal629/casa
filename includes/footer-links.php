@@ -24,7 +24,7 @@
 
 <!----main-js----->
 
-<script src="assets/js/script.js?v=12.1.0"></script>
+<script src="assets/js/script.js?v=<?php echo time(); ?>"></script>
 
 
 

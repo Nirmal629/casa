@@ -11,6 +11,9 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_id']) {
 
 $currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 
+$currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
+$hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPage === 'host-dashboard.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -245,6 +248,9 @@ $currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 
                 <!-- LEFT: Logo -->
                 <div class="site-header-left">
+                    <button type="button" class="site-back-btn" <?php echo $hideSiteBackButton ? 'hidden' : ''; ?> aria-label="Go back to previous page" title="Go back">
+                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    </button>
                     <a href="index.php">
                         <figure class="Logo_area m-0">
                             <img src="assets/images/logo/Final-Logo.png" class="img-fluid" alt="logo" />
@@ -331,6 +337,17 @@ $currentInnerPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
                 });
                 document.addEventListener('click', function (e) {
                     if (!chip.contains(e.target)) chip.classList.remove('open');
+                });
+            }
+
+            var siteBackButton = document.querySelector('.site-back-btn');
+            if (siteBackButton) {
+                siteBackButton.addEventListener('click', function () {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                        return;
+                    }
+                    window.location.href = 'player-hub.php';
                 });
             }
         });

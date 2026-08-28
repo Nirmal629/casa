@@ -1,23 +1,5 @@
 <?php
-date_default_timezone_set('America/Toronto');
-if (!defined('DATABASE_NAME'))
-    define('DATABASE_NAME', 'casa_test');
-if (!defined('USERNAME'))
-    define('USERNAME', 'casa_test');
-if (!defined('PASSWORD'))
-    define('PASSWORD', 'casa_test123#');
-
-// Database configuration
-$host = "localhost"; // Database host (e.g., localhost)
-
-// Create connection
-$conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
-require_once __DIR__ . '/api/helpers/ledger_helper.php';
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// DB connection ($conn) is already provided by inner-header.php
 
 $currentDate = date('Y-m-d');
 $currentTime = date('H:i');
@@ -46,7 +28,6 @@ while ($fetchUser = mysqli_fetch_assoc($select_host)) {
 }
 
 $player_id = $_SESSION['user_id'];
-
 // 1. Calculate overall summary cards using the shared helper (filtered by current Host ID)
 $summary = calculateLedgerSummary($conn, $player_id, $host_id);
 $totalGames = $summary['games'];
@@ -369,28 +350,27 @@ if (!function_exists('formatDate')) {
                             for ($year = 2024; $year <= 2030; $year++) {
                                 $selected = ($year == $currentYear) ? 'selected' : '';
                                 echo "<option value=\"$year\" $selected>$year</option>";
-                            }
-                            ?>
-                        </select>
-                        <div class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
-                    </div>
+        $check_player = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION['user_id']."'");
+        $fetch_player = mysqli_fetch_assoc($check_player);
+        $premiumStatus = $fetch_player['PREMIUM'];
+        $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
 
-                    <button id="viewLedgerBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold h-[36px] px-3.5 rounded-[6px] transition-colors border-none cursor-pointer text-xs shadow-sm flex items-center justify-center">
-                        View Monthly Ledger
-                    </button>
-                </div>
-            </div>
-            <div class="overflow-x-auto patmentTb w-full">
-                <table class="w-full text-sm text-left paymentTab table-fixed min-w-[800px] excel-table">
-                    <thead class="bg-slate-50/80 text-slate-500 uppercase font-bold text-[11px] tracking-wider border-b border-slate-200">
-                        <tr>
-                            <th class="px-4 py-3 w-[16%]">Host</th>
-                            <th class="px-4 py-3 w-[20%]">Date & Time</th>
-                            <th class="px-4 py-3 w-[17%]">Venue</th>
-                            <th class="px-4 py-3 w-[21%]">Event Type</th>
-                            <th class="px-4 py-3 w-[10%] text-right">Amount</th>
+?>
+<?php if ($premiumStatus != 'Y') { ?>
+        <p style="color:red; font-weight:bold;text-align:center">Contact admin to enable the premium account</p>
+    <?php } ?>
+<!-----player-payment-list------>
+<div class="" style="<?php echo ($premiumStatus != 'Y') ? 'opacity:0; pointer-events:none;' : ''; ?>">
+<!----player-Complete-game-------->
+<div class="mb-4" >
+    
+                <form>
+                    <div class="row">
+                        <input type="hidden" id="payhost" value="<?= htmlspecialchars($host_id) ?>" />
+                        <!--<div class="col-auto">-->
+                        <!--    <select class="form-select" id="payyear" aria-label="Default select example">-->
+                        <!--        <option selected>Select the Year</option>-->
+                        <!--        <option value="2024">2024</option>-->
                             <th class="px-4 py-3 w-[10%] text-center">Payment</th>
                             <th class="px-4 py-3 w-[6%] text-center">History</th>
                         </tr>
@@ -1032,6 +1012,7 @@ window.addEventListener('load', function() {
                                 WHERE cg.USER_ID = '" . $_SESSION['user_id'] . "' 
                                   AND cg.STATUS = 'Y' 
                                   AND ce.STATUS = 'Completed'
+                                  AND ce.HOST_ID = '$host_id'
                                 ORDER BY ce.EVENT_DATE DESC, ce.EVENT_TIME DESC
                             ");
 

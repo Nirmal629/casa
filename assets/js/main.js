@@ -3153,7 +3153,6 @@ $(document).ready(function () {
         }
     });
 });
-
 document.addEventListener("click", (event) => {
 
     if (!dateInput.contains(event.target) && !calendar.contains(event.target)) {

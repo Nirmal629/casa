@@ -33459,3 +33459,847 @@ Stack trace:
 [26-Jun-2026 17:33:19 UTC] PHP Warning:  Undefined array key "csrf_token" in /home/qpof8lg3h9cm/public_html/staging/api/save_registration.php on line 12
 [27-Jun-2026 09:14:33 America/Toronto] PHP Warning:  Undefined variable $is_today in /home/qpof8lg3h9cm/public_html/staging/api/filter_schedule.php on line 141
 [27-Jun-2026 09:14:37 America/Toronto] PHP Warning:  Undefined variable $is_today in /home/qpof8lg3h9cm/public_html/staging/api/filter_schedule.php on line 141
+[29-Jun-2026 01:05:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:52 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:54 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:54 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:54 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:55 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:56 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:05:58 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:08:03 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:08:03 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:08:03 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:08:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:12:30 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:12:30 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:12:30 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:13:27 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:27 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:27 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:27 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:27 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:32 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:32 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:32 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:33 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:33 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:33 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:36 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:36 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:36 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:39 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:39 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:39 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:40 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 11
+[29-Jun-2026 01:13:40 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:40 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 12
+[29-Jun-2026 01:13:40 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:13:40 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:24
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(24): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 24
+[29-Jun-2026 01:14:10 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 48
+[29-Jun-2026 01:14:10 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 61
+[29-Jun-2026 01:14:10 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php(79): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[29-Jun-2026 01:14:14 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 48
+[29-Jun-2026 01:14:14 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 61
+[29-Jun-2026 01:14:14 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php(79): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[29-Jun-2026 01:14:16 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 48
+[29-Jun-2026 01:14:16 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 89
+[29-Jun-2026 01:14:16 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 95
+[29-Jun-2026 01:14:20 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 48
+[29-Jun-2026 01:14:20 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 61
+[29-Jun-2026 01:14:20 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php(79): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[29-Jun-2026 01:15:13 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 42
+[29-Jun-2026 01:15:42 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:15:42 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:15:42 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 42
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 45
+[29-Jun-2026 01:15:43 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 48
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 11
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 21
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 61
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 62
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 63
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 64
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 72
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 73
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 74
+[29-Jun-2026 01:19:04 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 75
+[01-Jul-2026 06:16:12 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php(79): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[01-Jul-2026 10:10:36 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 61
+[01-Jul-2026 10:10:36 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/join_event.php(18): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[01-Jul-2026 10:10:42 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/join_event.php(18): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[01-Jul-2026 10:11:08 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 61
+[01-Jul-2026 10:11:08 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:153
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(153): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/join_event.php(18): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 153
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[01-Jul-2026 10:11:31 America/Toronto] PHP Warning:  Undefined array key "FROM_TIME" in /home/qpof8lg3h9cm/public_html/staging/api/join_event_default.php on line 105
+[03-Jul-2026 08:33:15 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[03-Jul-2026 08:33:15 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[03-Jul-2026 08:33:16 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[03-Jul-2026 09:49:00 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 09:49:00 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 09:49:04 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 09:49:04 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 09:49:32 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 09:49:32 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 10:24:36 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 10:24:36 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 10:24:39 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 10:24:39 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 10:25:10 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[03-Jul-2026 10:25:15 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[03-Jul-2026 10:25:18 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[03-Jul-2026 10:25:18 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[03-Jul-2026 10:28:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 46
+[03-Jul-2026 10:28:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 49
+[03-Jul-2026 10:28:51 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 52
+[25-Jul-2026 23:10:24 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:10:24 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:10:39 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:10:39 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:10:47 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:10:47 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:10:54 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:10:54 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:11:22 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:11:22 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:11:25 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:11:25 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:11:40 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:11:40 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[25-Jul-2026 23:18:56 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[25-Jul-2026 23:18:56 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[02-Aug-2026 12:02:21 America/Toronto] PHP Warning:  Undefined array key "EVENT_CATEGORY" in /home/qpof8lg3h9cm/public_html/staging/api/save_payment.php on line 141
+[02-Aug-2026 12:02:21 America/Toronto] PHP Warning:  Undefined array key "EVENT_CATEGORY" in /home/qpof8lg3h9cm/public_html/staging/api/save_payment.php on line 141
+[02-Aug-2026 12:02:21 America/Toronto] PHP Warning:  Undefined array key "EVENT_CATEGORY" in /home/qpof8lg3h9cm/public_html/staging/api/save_payment.php on line 141
+[02-Aug-2026 12:02:21 America/Toronto] PHP Warning:  Undefined array key "EVENT_CATEGORY" in /home/qpof8lg3h9cm/public_html/staging/api/save_payment.php on line 141
+[06-Aug-2026 10:24:55 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 15
+[06-Aug-2026 10:24:55 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all.php on line 25
+[06-Aug-2026 10:26:19 America/Toronto] PHP Warning:  Undefined array key "type" in /home/qpof8lg3h9cm/public_html/staging/api/player_filter_complete.php on line 4
+[06-Aug-2026 10:28:56 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/update_price.php on line 5
+[06-Aug-2026 10:28:56 America/Toronto] PHP Warning:  Undefined array key "game_id" in /home/qpof8lg3h9cm/public_html/staging/api/update_price.php on line 6
+[06-Aug-2026 10:28:56 America/Toronto] PHP Warning:  Undefined array key "price" in /home/qpof8lg3h9cm/public_html/staging/api/update_price.php on line 7
+[06-Aug-2026 10:37:28 America/Toronto] PHP Warning:  Undefined array key "type" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 6
+[06-Aug-2026 10:37:28 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 275
+[06-Aug-2026 10:37:28 America/Toronto] PHP Warning:  Undefined array key "vlevel" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 276
+[06-Aug-2026 10:37:28 America/Toronto] PHP Warning:  Undefined array key "level" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 276
+[06-Aug-2026 10:37:28 America/Toronto] PHP Warning:  Undefined array key "" in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 287
+[06-Aug-2026 10:37:28 America/Toronto] PHP Fatal error:  Uncaught TypeError: implode(): Argument #1 ($array) must be of type array, string given in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php:287
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php(287): implode()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/play_filter_schedule.php on line 287
+[06-Aug-2026 10:39:56 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 49
+[06-Aug-2026 10:39:56 America/Toronto] PHP Warning:  Undefined array key "id" in /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php on line 61
+[06-Aug-2026 10:45:20 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/view_game_player.php on line 5
+[06-Aug-2026 10:45:20 America/Toronto] PHP Warning:  Undefined array key "game_id" in /home/qpof8lg3h9cm/public_html/staging/api/view_game_player.php on line 6
+[06-Aug-2026 10:45:20 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_game_player.php on line 40
+[06-Aug-2026 10:45:20 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_game_player.php on line 40
+[06-Aug-2026 10:50:14 America/Toronto] PHP Warning:  Undefined array key "event_id" in /home/qpof8lg3h9cm/public_html/staging/api/rollback_event.php on line 4
+[06-Aug-2026 10:50:14 America/Toronto] PHP Warning:  Undefined array key "host_id" in /home/qpof8lg3h9cm/public_html/staging/api/rollback_event.php on line 5
+[06-Aug-2026 10:56:15 America/Toronto] PHP Warning:  Undefined array key "USER_ID" in /home/qpof8lg3h9cm/public_html/staging/api/cancel_event.php on line 7
+[06-Aug-2026 10:56:15 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/cancel_event.php on line 8
+[06-Aug-2026 10:56:15 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/cancel_event.php on line 9
+[06-Aug-2026 10:56:15 America/Toronto] PHP Warning:  Undefined array key "EVENT_COST" in /home/qpof8lg3h9cm/public_html/staging/api/cancel_event.php on line 10
+[06-Aug-2026 10:56:15 America/Toronto] PHP Warning:  Undefined array key "EVENT_CURRENCY" in /home/qpof8lg3h9cm/public_html/staging/api/cancel_event.php on line 11
+[06-Aug-2026 11:12:58 America/Toronto] PHP Warning:  Undefined array key "type" in /home/qpof8lg3h9cm/public_html/staging/api/com_filter_schedule.php on line 4
+[06-Aug-2026 11:12:58 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/com_filter_schedule.php on line 158
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "host_name" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 20
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 20
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_country" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 21
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 21
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_province" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 22
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 22
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_city" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 23
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 23
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_currency" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 24
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 24
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_venue" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 25
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 25
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_category" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 26
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 26
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "gender_category" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 27
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 27
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "gender_skill_level" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 28
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 28
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_type" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 29
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 29
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_date" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 30
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 30
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_time" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 31
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 31
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "to_Time" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 32
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 32
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "freeze_date" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 33
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 33
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "freeze_time" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 34
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 34
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_cost" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 35
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 35
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_discount" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 36
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 36
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_description" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 37
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 37
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "event_message" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 38
+[06-Aug-2026 11:51:57 America/Toronto] PHP Deprecated:  mysqli::real_escape_string(): Passing null to parameter #1 ($string) of type string is deprecated in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 38
+[06-Aug-2026 11:51:57 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/new-game-host.php on line 42
+[06-Aug-2026 11:57:59 America/Toronto] PHP Warning:  Undefined array key "EVENT_TYPE" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 10
+[06-Aug-2026 11:57:59 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 172
+[06-Aug-2026 11:57:59 America/Toronto] PHP Warning:  Undefined array key "gender" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 177
+[06-Aug-2026 11:57:59 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 259
+[06-Aug-2026 11:57:59 America/Toronto] PHP Warning:  Undefined array key "HOST_ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_invited.php on line 259
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:20:00 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_host_payment.php on line 48
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "host_name" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 6
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_country" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 7
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_province" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 8
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_city" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 9
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_currency" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 10
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_venue" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 11
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_category" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 12
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "gender_category" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 13
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "gender_skill_level" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 14
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_type" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 15
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_date" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 16
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_time" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 17
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "to_time" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 18
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "freeze_date" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 19
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "freeze_time" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 20
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_cost" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 21
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_discount" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 22
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_description" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 23
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "event_message" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 24
+[06-Aug-2026 12:47:41 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/copy_event.php on line 28
+[06-Aug-2026 12:52:36 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 6
+[06-Aug-2026 12:52:36 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 19
+[06-Aug-2026 12:52:36 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 29
+[06-Aug-2026 12:52:36 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 29
+[06-Aug-2026 13:34:16 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 6
+[06-Aug-2026 13:34:16 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 19
+[06-Aug-2026 13:34:16 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 29
+[06-Aug-2026 13:34:16 America/Toronto] PHP Warning:  Trying to access array offset on value of type null in /home/qpof8lg3h9cm/public_html/staging/api/view_player.php on line 29
+[06-Aug-2026 13:36:29 America/Toronto] PHP Warning:  Undefined array key "type" in /home/qpof8lg3h9cm/public_html/staging/api/filter_schedule.php on line 4
+[06-Aug-2026 13:36:29 America/Toronto] PHP Warning:  Undefined array key "user_id" in /home/qpof8lg3h9cm/public_html/staging/api/filter_schedule.php on line 205
+[06-Aug-2026 13:41:46 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all_default.php on line 15
+[06-Aug-2026 13:41:46 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all_default.php on line 25
+[08-Aug-2026 10:42:52 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all_default.php on line 15
+[08-Aug-2026 10:42:52 America/Toronto] PHP Warning:  Undefined array key "ID" in /home/qpof8lg3h9cm/public_html/staging/api/view_joined_all_default.php on line 25
+[08-Aug-2026 14:05:36 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/create_event_sub.php(80): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:20 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:24 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:27 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:30 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:07:30 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(45): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[08-Aug-2026 14:07:50 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:51 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:51 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:52 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(62): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:07:56 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:08:02 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:08:03 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:155
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(155): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 155
+[08-Aug-2026 14:08:24 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:08:24 America/Toronto] PHP Fatal error:  Uncaught DivisionByZeroError: Division by zero in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:277
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/save_invitation.php(50): applyAutoConfirmAndMessage()
+#1 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 277
+[08-Aug-2026 14:09:01 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:09:01 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[08-Aug-2026 14:09:04 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:09:04 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[08-Aug-2026 14:09:07 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:09:07 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[08-Aug-2026 14:09:11 America/Toronto] PHP Warning:  Undefined variable $autoConfirm in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 226
+[08-Aug-2026 14:09:11 America/Toronto] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'COURTS_CONFIRMED' in 'SET' in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php:299
+Stack trace:
+#0 /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php(299): mysqli_query()
+#1 /home/qpof8lg3h9cm/public_html/staging/api/save_confirm.php(27): applyAutoConfirmAndMessage()
+#2 {main}
+  thrown in /home/qpof8lg3h9cm/public_html/staging/api/helpers/gameAutoConfirm.php on line 299
+[08-Aug-2026 14:11:52 America/Toronto] PHP Warning:  Undefined array key "EVENT_CATEGORY" in /home/qpof8lg3h9cm/public_html/staging/api/save_payment.php on line 141

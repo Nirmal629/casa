@@ -254,7 +254,13 @@ $endItem = min($offset + count($products), $totalItems);
 
             <form method="GET" class="products-toolbar">
                 <div class="products-toolbar-controls">
-                    <button type="button" class="btn btn-success" id="open-add-product">
+                    <a href="manage_department.php" class="btn btn-primary" title="Department">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                    </a>
+                    <a href="manage_product_type.php" class="btn btn-info" title="Product Type">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </a>
+                    <button type="button" class="btn btn-success" id="open-add-product" title="Add Product">
                         <i class="fa fa-plus"></i>
                     </button>
                     <div class="products-limit-control">
@@ -560,18 +566,23 @@ $endItem = min($offset + count($products), $totalItems);
     @media (max-width: 767px) {
 
         .products-toolbar,
-        .products-toolbar-controls,
         .products-pagination-row {
             align-items: stretch;
             flex-direction: column;
         }
 
-        .products-search-control {
-            width: 100%;
-        }
-
         .product-view-grid {
             grid-template-columns: 1fr;
+        }
+
+        .products-toolbar-controls {
+            flex-wrap: wrap;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .products-search-control {
+            width: 100%;
         }
     }
 </style>

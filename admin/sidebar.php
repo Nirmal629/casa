@@ -154,9 +154,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 							<!-- Product Section -->
 
-							<li class="nav-parent">
+							<li>
 
-								<a href="javascript:void(0)">
+								<a href="manage_products.php">
 
 									<i class="fa-solid fa-baseball" aria-hidden="true"></i>
 
@@ -164,7 +164,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 								</a>
 
-								<ul class="nav nav-children">
+								<!-- <ul class="nav nav-children">
 									<li>
 
 										<a href="manage_products.php">
@@ -195,7 +195,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 									</li>
 
-								</ul>
+								</ul> -->
 
 							</li>
 

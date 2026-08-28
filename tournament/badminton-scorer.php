@@ -13,6 +13,7 @@ $team1PlayerRows = [];
 $team2PlayerRows = [];
 $rallyLogs = [];
 $completedSetScores = [];
+$matchRuleConfigs = [];
 
 try {
     include_once __DIR__ . '/../dbConnection_PDO.php';
@@ -100,6 +101,25 @@ try {
                 $completedSetScores[$setNo]['team2'] = max($completedSetScores[$setNo]['team2'], $team2);
             }
             ksort($completedSetScores);
+
+            try {
+                $rulesStmt = $pdo->prepare("SELECT STAGE, GAME_SETS, DEUCE_ENABLED, DEUCE_LIMIT
+                    FROM to_tournament_match_rules WHERE TOURNAMENT_ID = :tournament_id");
+                $rulesStmt->execute([':tournament_id' => $tournamentId]);
+                foreach ($rulesStmt->fetchAll(PDO::FETCH_ASSOC) as $storedRule) {
+                    $stage = (string)$storedRule['STAGE'];
+                    $deuceEnabled = (int)$storedRule['DEUCE_ENABLED'] === 1;
+                    $matchRuleConfigs[$stage] = [
+                        'sets' => (int)$storedRule['GAME_SETS'] === 1 ? 1 : 3,
+                        'deuce' => $deuceEnabled,
+                        'deuceLimit' => $deuceEnabled && in_array((int)$storedRule['DEUCE_LIMIT'], [25, 30], true)
+                            ? (int)$storedRule['DEUCE_LIMIT']
+                            : null,
+                    ];
+                }
+            } catch (Exception $ignored) {
+                // The scorer safely uses its stage defaults until match rules are first saved.
+            }
         }
     }
 } catch (Exception $e) {
@@ -132,6 +152,16 @@ $team2IsWinner = $isMatchCompleted && $winnerTeamId > 0 && $winnerTeamId === (in
 $winnerTeamName = $team1IsWinner
     ? ($matchData['TEAM_1_NAME'] ?? 'Team 1')
     : ($team2IsWinner ? ($matchData['TEAM_2_NAME'] ?? 'Team 2') : '');
+$initialSetScores = [['a' => $initialTeam1Score, 'b' => $initialTeam2Score], ['a' => 0, 'b' => 0], ['a' => 0, 'b' => 0]];
+$initialSetNo = 1;
+if (!empty($completedSetScores)) {
+    $initialSetNo = max(1, min(3, max(array_keys($completedSetScores))));
+    foreach ($completedSetScores as $setNo => $setScore) {
+        if ($setNo >= 1 && $setNo <= 3) {
+            $initialSetScores[$setNo - 1] = ['a' => (int)$setScore['team1'], 'b' => (int)$setScore['team2']];
+        }
+    }
+}
 ?>
 <!-----Header------>
 <?php include "includes/scorer-header.php"; ?>
@@ -150,6 +180,7 @@ $winnerTeamName = $team1IsWinner
         <div class="player-score-board-container">
             <div class="scoreboard-side-score" id="team-a-match-score">0</div>
             <div class="team-a-players">
+                <i id="team-a-winner-crown" class="fa-solid fa-crown scorer-winner-crown" title="Match winner" aria-label="Match winner"></i>
                 <p id="team-a-names" class="m-0"><?php echo htmlspecialchars($team1Player1); ?><br><?php echo htmlspecialchars($team1Player2); ?></p>
             </div>
 
@@ -178,6 +209,7 @@ $winnerTeamName = $team1IsWinner
             </div>
 
             <div class="team-b-players">
+                <i id="team-b-winner-crown" class="fa-solid fa-crown scorer-winner-crown" title="Match winner" aria-label="Match winner"></i>
                 <p id="team-b-names" class="m-0"><?php echo htmlspecialchars($team2Player1); ?><br><?php echo htmlspecialchars($team2Player2); ?></p>
             </div>
             <div class="scoreboard-side-score" id="team-b-match-score">0</div>
@@ -194,10 +226,7 @@ $winnerTeamName = $team1IsWinner
                         <i class="fa-solid fa-gear"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" id="menu-dropdown-list" aria-labelledby="navSetupMenuDropdownMenuLink">
-                        <a class="dropdown-item" data-toggle="modal" data-target="#matchConfig">Match Configuration</a>
-                        <a class="dropdown-item" data-toggle="modal" data-target="#matchResult">Match Result</a>
-                        <a class="dropdown-item" data-toggle="modal" data-target="#setScoreBoard">Set Score Board</a>
-                        <a class="dropdown-item" data-toggle="modal" data-target="#matchLog">Match Log</a>
+                        <a class="dropdown-item" data-toggle="modal" data-target="#matchResult"><i class="fa-solid fa-sliders mr-2"></i>Match Setup</a>
                     </div>
                 </li>
             </ul>
@@ -406,23 +435,15 @@ $winnerTeamName = $team1IsWinner
 
 
 
-<!-- **** Modal for Match Result **** -->
+<!-- **** Modal for Match Setup **** -->
 <div class="modal fade" id="matchResult" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="matchResultLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="match-result-header-left">
-                    <h6 class="modal-title text-info fw-bold text-uppercase small mr-1" id="matchResultLabel"><i class="fa-solid fa-trophy mr-1"></i>Match</h6>
-                    <select class="match-result-mini-select" aria-label="Match type">
-                        <option>Doubles</option>
-                        <option>demo 1</option>
-                        <option>demo 2</option>
-                    </select>
-                    <select class="match-result-mini-select" aria-label="Deuce setting">
-                        <option>Deuce On</option>
-                        <option>demo 1</option>
-                        <option>demo 2</option>
-                    </select>
+                    <h6 class="modal-title text-info fw-bold text-uppercase small mr-1" id="matchResultLabel"><i class="fa-solid fa-sliders mr-1"></i>Match Setup</h6>
+                    <span class="match-result-mini-select">Doubles</span>
+                    <span class="match-result-mini-select" id="match-setup-deuce">Deuce On</span>
                     <span class="match-result-set-indicator" id="match-result-set-indicator">Set - 1/3</span>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -439,7 +460,7 @@ $winnerTeamName = $team1IsWinner
                             </div>
                             <div class="match-result-score-line">
                                 <span class="match-result-set-count" id="match-result-team-a-sets">0</span>
-                                <i class="fa-solid fa-trophy match-result-trophy"></i>
+                                <i id="match-result-team-a-crown" class="fa-solid fa-crown match-result-trophy" title="Match winner"></i>
                             </div>
                             <div class="match-result-winner-name" id="match-result-team-a-winner-name">-</div>
                         </div>
@@ -451,7 +472,7 @@ $winnerTeamName = $team1IsWinner
                             </div>
                             <div class="match-result-score-line">
                                 <span class="match-result-set-count" id="match-result-team-b-sets">0</span>
-                                <i class="fa-solid fa-trophy match-result-trophy"></i>
+                                <i id="match-result-team-b-crown" class="fa-solid fa-crown match-result-trophy" title="Match winner"></i>
                             </div>
                             <div class="match-result-winner-name" id="match-result-team-b-winner-name">-</div>
                         </div>
@@ -499,7 +520,7 @@ $winnerTeamName = $team1IsWinner
 
                     <div class="set-board-score-strip">
                         <div class="set-board-score-box">
-                            <span>Team A</span>
+                            <span id="set-board-score-a-label"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></span>
                             <input type="number" id="set-board-score-a" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam1Score; ?>" readonly>
                         </div>
                         <div class="set-board-score-center">
@@ -507,10 +528,20 @@ $winnerTeamName = $team1IsWinner
                             <strong id="set-board-live-score" class="set-board-live-score"><?php echo (int)$initialTeam1Score; ?> - <?php echo (int)$initialTeam2Score; ?></strong>
                         </div>
                         <div class="set-board-score-box">
-                            <span>Team B</span>
+                            <span id="set-board-score-b-label"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></span>
                             <input type="number" id="set-board-score-b" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam2Score; ?>" readonly>
                         </div>
                     </div>
+                    <?php if ($canManage): ?>
+                    <div class="mt-2 text-center">
+                        <label for="set-board-winner" class="small text-muted mb-1">Set winner (for manual score)</label>
+                        <select id="set-board-winner" class="form-control form-control-sm mx-auto" style="max-width: 220px;">
+                            <option value="">Choose winner</option>
+                            <option value="A"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></option>
+                            <option value="B"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></option>
+                        </select>
+                    </div>
+                    <?php endif; ?>
 
                     <div class="set-board-court">
                         <div class="set-board-net"></div>
@@ -762,9 +793,15 @@ $winnerTeamName = $team1IsWinner
         teamAPlayers: <?php echo json_encode($team1PlayerRows); ?>,
         teamBPlayers: <?php echo json_encode($team2PlayerRows); ?>,
         matchStatus: <?php echo json_encode($matchData['STATUS'] ?? 'PENDING'); ?>,
+        winnerTeamId: <?php echo (int)$winnerTeamId; ?>,
+        initialSetsA: <?php echo (int)$team1SetsWon; ?>,
+        initialSetsB: <?php echo (int)$team2SetsWon; ?>,
         initialScoreA: <?php echo (int)$initialTeam1Score; ?>,
         initialScoreB: <?php echo (int)$initialTeam2Score; ?>,
+        initialSetScores: <?php echo json_encode($initialSetScores); ?>,
+        initialSetNo: <?php echo (int)$initialSetNo; ?>,
         canManage: <?php echo $canManage ? 'true' : 'false'; ?>,
+        matchRules: <?php echo json_encode($matchRuleConfigs); ?>,
         defaultSetLimit: <?php echo (($matchData['STAGE'] ?? '') === 'GROUP') ? 1 : 3; ?>
     };
 </script>

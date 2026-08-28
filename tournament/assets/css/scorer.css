@@ -491,6 +491,15 @@ body {
     line-height: 1.3;
 }
 
+.scorer-winner-crown {
+    display: none;
+    color: #ffd23f;
+    font-size: 1rem;
+    margin-right: 6px;
+    vertical-align: middle;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8);
+}
+
 .team-a-players {
     text-align: left;
 }

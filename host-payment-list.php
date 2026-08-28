@@ -31,7 +31,12 @@ $currentMonth = date('n');
                         $query = "SELECT ID, NAME FROM ca_users WHERE DEL_STATUS = 'N' AND LOG_STATUS='Y' ORDER BY NAME";
                         $result = mysqli_query($conn, $query);
                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<option value=\"{$row['ID']}\">{$row['NAME']}</option>";
+                            $nameParts = explode(' ', trim($row['NAME']));
+                            $shortName = $nameParts[0];
+                            if (count($nameParts) > 1) {
+                                $shortName .= ' ' . strtoupper(substr(end($nameParts), 0, 1)) . '.';
+                            }
+                            echo "<option value=\"{$row['ID']}\">" . htmlspecialchars($shortName) . "</option>";
                         }
                         ?>
                         </select>

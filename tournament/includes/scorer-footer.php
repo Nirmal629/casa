@@ -18,18 +18,38 @@
 <!----main-js----->
 <script src="assets/js/score.js?v=1.1"></script>
 <script>
-  function getConfiguredSetLimit(initialMatchData) {
-    const defaultLimit = parseInt(initialMatchData.defaultSetLimit || 3, 10) === 1 ? 1 : 3;
-    if ((initialMatchData.stage || '') !== 'GROUP') {
-      return 3;
-    }
+  // Read-only guard: only the tournament organizer (canManage) may trigger scoring AJAX.
+  // For players/viewers this is false, so scoring actions below no-op (no request is sent).
+  function scorerCanManage() {
+    return !!(window.initialMatchData && window.initialMatchData.canManage);
+  }
+
+  function getConfiguredMatchRules(initialMatchData) {
+    const stage = String(initialMatchData.stage || 'GROUP');
+    const defaultsByStage = {
+      GROUP: { sets: 1, deuce: false, deuceLimit: 'NA' },
+      QUARTER_FINAL: { sets: 3, deuce: true, deuceLimit: '25' },
+      SEMI_FINAL: { sets: 3, deuce: true, deuceLimit: '30' },
+      FINAL: { sets: 3, deuce: true, deuceLimit: '30' },
+      BRONZE_FINAL: { sets: 3, deuce: true, deuceLimit: '30' }
+    };
+    const defaults = defaultsByStage[stage] || { sets: parseInt(initialMatchData.defaultSetLimit || 3, 10) === 1 ? 1 : 3, deuce: true, deuceLimit: '30' };
 
     try {
-      const storageKey = 'badmintonTournamentGameSets_' + parseInt(initialMatchData.tournamentId || 0, 10);
-      const config = JSON.parse(localStorage.getItem(storageKey) || '{}') || {};
-      return parseInt(config.GROUP || defaultLimit, 10) === 3 ? 3 : 1;
+      const config = initialMatchData.matchRules || {};
+      const storedRules = config[stage];
+      const rules = storedRules && typeof storedRules === 'object' ? storedRules : {};
+      const storedSets = typeof storedRules === 'number' ? storedRules : rules.sets;
+      const deuce = typeof rules.deuce === 'boolean' ? rules.deuce : defaults.deuce;
+      const deuceLimit = ['25', '30'].includes(String(rules.deuceLimit)) ? String(rules.deuceLimit) : defaults.deuceLimit;
+
+      return {
+        sets: parseInt(storedSets || defaults.sets, 10) === 1 ? 1 : 3,
+        deuce: deuce,
+        deuceLimit: deuce ? parseInt(deuceLimit, 10) : 0
+      };
     } catch (error) {
-      return defaultLimit;
+      return { sets: defaults.sets, deuce: defaults.deuce, deuceLimit: defaults.deuce ? parseInt(defaults.deuceLimit, 10) : 0 };
     }
   }
 
@@ -49,7 +69,13 @@
       return;
     }
 
-    const configuredSetLimit = getConfiguredSetLimit(window.initialMatchData);
+    const configuredMatchRules = getConfiguredMatchRules(window.initialMatchData);
+    const configuredSetLimit = configuredMatchRules.sets;
+    const restoredSetScores = (window.initialMatchData.initialSetScores || [{a: window.initialMatchData.initialScoreA || 0, b: window.initialMatchData.initialScoreB || 0}, {a: 0, b: 0}, {a: 0, b: 0}]).map(function (score) {
+      return {a: parseInt(score.a || 0, 10), b: parseInt(score.b || 0, 10)};
+    });
+    const restoredSetNo = parseInt(window.initialMatchData.initialSetNo || 1, 10);
+    const restoredCurrentScore = restoredSetScores[restoredSetNo - 1] || {a: 0, b: 0};
     const teamA = window.initialMatchData.teamA || [];
     const teamB = window.initialMatchData.teamB || [];
     const teamAPlayers = normalizeDoublesPlayers(window.initialMatchData.teamAPlayers, teamA);
@@ -75,17 +101,14 @@
 
     window.liveMatchState = {
       matchId: parseInt(window.initialMatchData.matchId || 0, 10),
-      setNo: 1,
-      scoreA: parseInt(window.initialMatchData.initialScoreA || 0, 10),
-      scoreB: parseInt(window.initialMatchData.initialScoreB || 0, 10),
-      setsA: 0,
-      setsB: 0,
-      setScores: [
-        {a: parseInt(window.initialMatchData.initialScoreA || 0, 10), b: parseInt(window.initialMatchData.initialScoreB || 0, 10)},
-        {a: 0, b: 0},
-        {a: 0, b: 0}
-      ],
+      setNo: restoredSetNo,
+      scoreA: restoredCurrentScore.a,
+      scoreB: restoredCurrentScore.b,
+      setsA: parseInt(window.initialMatchData.initialSetsA || 0, 10),
+      setsB: parseInt(window.initialMatchData.initialSetsB || 0, 10),
+      setScores: restoredSetScores,
       completedSets: [],
+      manualWinners: {},
       players: {
         A: teamAPlayers,
         B: teamBPlayers
@@ -102,12 +125,15 @@
       sidesSwitched: false,
       thirdGameIntervalSwitched: false,
       setLimit: configuredSetLimit,
+      deuceEnabled: configuredMatchRules.deuce,
+      deuceLimit: configuredMatchRules.deuceLimit,
       isStarted: (window.initialMatchData.matchStatus || '') === 'RUNNING',
       isSaving: false,
-      isCompleted: false
+      isCompleted: (window.initialMatchData.matchStatus || '') === 'COMPLETED'
     };
 
     applySetLimitVisibility(configuredSetLimit);
+    syncMatchConfigFromState();
     renderPlayableScore();
     renderDoublesCourt();
     renderMatchResult();
@@ -120,14 +146,15 @@
     $('#config-court-swap').on('click', function () {
       window.liveMatchState.courtSwapped = !window.liveMatchState.courtSwapped;
       renderDoublesCourt();
+      syncMatchConfigFromState();
       updateCourtSwapButton();
       speakScore('Court swapped. ' + buildServeAnnouncement());
     });
     $('.match-config-swap-team-a').on('click', function () {
-      swapInputValues('#t1_p1', '#t1_p2');
+      swapPlayersOnDisplayedCourtSide('left');
     });
     $('.match-config-swap-team-b').on('click', function () {
-      swapInputValues('#t2_p1', '#t2_p2');
+      swapPlayersOnDisplayedCourtSide('right');
     });
     $('#setScoreBoard').on('shown.bs.modal', function () {
       renderSetScoreBoard(true);
@@ -147,7 +174,8 @@
     });
     $('#set-board-score-a, #set-board-score-b').on('input', updateSetBoardLiveScore);
     $('#undo-point, #set-board-undo-point').on('click', undoLastPoint);
-    $('#matchConfig').modal('show');
+    $('#matchResult').on('shown.bs.modal', renderMatchResult);
+    $('#match-result-set-breakdown').on('click', '[data-setup-action]', handleMatchSetupAction);
   });
 
   function normalizeDoublesPlayers(playerRows, names) {
@@ -203,12 +231,24 @@
       .html('<i class="fa-solid fa-right-left' + ($('#config-court-swap').hasClass('match-config-icon-btn') ? '' : ' mr-1') + '"></i>' + ($('#config-court-swap').hasClass('match-config-icon-btn') ? '' : ' ' + (swapped ? 'COURT SWAPPED' : 'SWAP COURT')));
   }
 
-  function swapInputValues(firstSelector, secondSelector) {
-    const first = $(firstSelector);
-    const second = $(secondSelector);
-    const firstValue = first.val();
-    first.val(second.val());
-    second.val(firstValue);
+  function syncMatchConfigFromState() {
+    const state = window.liveMatchState;
+    if (!state) { return; }
+    const leftTeam = teamOnCourtSide('left');
+    const rightTeam = teamOnCourtSide('right');
+    $('#t1_name').val(getTeamName(leftTeam));
+    $('#t2_name').val(getTeamName(rightTeam));
+    $('#t1_p1').val(state.players[leftTeam][state.positions[leftTeam].odd].name);
+    $('#t1_p2').val(state.players[leftTeam][state.positions[leftTeam].even].name);
+    $('#t2_p1').val(state.players[rightTeam][state.positions[rightTeam].odd].name);
+    $('#t2_p2').val(state.players[rightTeam][state.positions[rightTeam].even].name);
+  }
+
+  function swapPlayersOnDisplayedCourtSide(side) {
+    const teamKey = teamOnCourtSide(side);
+    swapServingPair(teamKey);
+    renderDoublesCourt();
+    syncMatchConfigFromState();
   }
 
   function applyMatchConfigToState() {
@@ -216,12 +256,20 @@
     if (!state) {
       return;
     }
-    const team1Name = String($('#t1_name').val() || '').trim() || 'Team 1';
-    const team2Name = String($('#t2_name').val() || '').trim() || 'Team 2';
-    const teamAPlayer1 = String($('#t1_p1').val() || '').trim() || 'PLAYER NAME';
-    const teamAPlayer2 = String($('#t1_p2').val() || '').trim() || 'PLAYER NAME';
-    const teamBPlayer1 = String($('#t2_p1').val() || '').trim() || 'PLAYER NAME';
-    const teamBPlayer2 = String($('#t2_p2').val() || '').trim() || 'PLAYER NAME';
+    const leftTeam = teamOnCourtSide('left');
+    const rightTeam = teamOnCourtSide('right');
+    const leftName = String($('#t1_name').val() || '').trim() || 'Team 1';
+    const rightName = String($('#t2_name').val() || '').trim() || 'Team 2';
+    const leftPlayer1 = String($('#t1_p1').val() || '').trim() || 'PLAYER NAME';
+    const leftPlayer2 = String($('#t1_p2').val() || '').trim() || 'PLAYER NAME';
+    const rightPlayer1 = String($('#t2_p1').val() || '').trim() || 'PLAYER NAME';
+    const rightPlayer2 = String($('#t2_p2').val() || '').trim() || 'PLAYER NAME';
+    const team1Name = leftTeam === 'A' ? leftName : rightName;
+    const team2Name = leftTeam === 'B' ? leftName : rightName;
+    const teamAPlayer1 = leftTeam === 'A' ? leftPlayer1 : rightPlayer1;
+    const teamAPlayer2 = leftTeam === 'A' ? leftPlayer2 : rightPlayer2;
+    const teamBPlayer1 = leftTeam === 'B' ? leftPlayer1 : rightPlayer1;
+    const teamBPlayer2 = leftTeam === 'B' ? leftPlayer2 : rightPlayer2;
 
     window.initialMatchData.team1Name = team1Name;
     window.initialMatchData.team2Name = team2Name;
@@ -280,6 +328,7 @@
   }
 
   function startPlayableMatch() {
+    if (!scorerCanManage()) { return; }
     const state = window.liveMatchState;
     if (!state || !state.matchId) {
       alert('No match selected. Open this page from a Play button.');
@@ -314,6 +363,89 @@
     });
   }
 
+  function openSetupChildModal(selector) {
+    $('#matchResult').one('hidden.bs.modal', function () {
+      $(selector).modal('show');
+    }).modal('hide');
+  }
+
+  function saveMatchPause(paused) {
+    const formData = new FormData();
+    formData.append('action', paused ? 'pause_match' : 'start_match');
+    formData.append('match_id', window.liveMatchState.matchId);
+    return fetch('api-match-score.php', {method: 'POST', body: formData})
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        if (!data.success) { throw new Error(data.message || 'Match status could not be saved.'); }
+        return data;
+      });
+  }
+
+  function resetSet(setIndex) {
+    const state = window.liveMatchState;
+    if (!state || state.isSaving) { return; }
+    if (!window.confirm('Reset Set ' + (setIndex + 1) + '? This clears its score.')) { return; }
+    state.isSaving = true;
+    const formData = new FormData();
+    formData.append('action', 'reset_set');
+    formData.append('match_id', state.matchId);
+    formData.append('set_no', setIndex + 1);
+    fetch('api-match-score.php', {method: 'POST', body: formData})
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        if (!data.success) { throw new Error(data.message || 'Set reset failed.'); }
+        state.setScores[setIndex] = {a: 0, b: 0};
+        delete state.manualWinners[setIndex];
+        if (setIndex === state.setNo - 1) {
+          state.scoreA = 0;
+          state.scoreB = 0;
+          state.undoStack = [];
+        }
+        state.completedSets = state.completedSets.filter(function (_, index) { return index !== setIndex; });
+        state.setsA = state.completedSets.filter(function (score) { return score.a > score.b; }).length;
+        state.setsB = state.completedSets.filter(function (score) { return score.b > score.a; }).length;
+        renderPlayableScore();
+        renderDoublesCourt();
+        renderMatchResult();
+      }).catch(function (error) { alert(error.message); }).finally(function () { state.isSaving = false; });
+  }
+
+  function handleMatchSetupAction(event) {
+    const button = $(event.currentTarget);
+    const action = button.data('setup-action');
+    const setIndex = parseInt(button.data('set-index'), 10);
+    const state = window.liveMatchState;
+    if (!state) { return; }
+    if (action === 'position') {
+      if (state.isStarted) {
+        alert('Player positions are locked after the match starts. Pause or reset the match before changing positions.');
+        return;
+      }
+      $('#matchResult').one('hidden.bs.modal', function () {
+        syncMatchConfigFromState();
+        $('#matchConfig').modal('show');
+      }).modal('hide');
+    } else if (action === 'pause') {
+      if (!scorerCanManage() || state.isSaving) { return; }
+      state.isSaving = true;
+      const willPause = state.isStarted;
+      saveMatchPause(willPause).then(function () {
+        state.isStarted = !willPause;
+        setScoreButtonsEnabled(state.isStarted);
+        renderMatchResult();
+      }).catch(function (error) { alert(error.message); }).finally(function () { state.isSaving = false; });
+    } else if (action === 'edit') {
+      state.editingSetNo = setIndex + 1;
+      state.scoreA = state.setScores[setIndex].a;
+      state.scoreB = state.setScores[setIndex].b;
+      openSetupChildModal('#setScoreBoard');
+    } else if (action === 'reset') {
+      resetSet(setIndex);
+    } else if (action === 'log') {
+      openSetupChildModal('#matchLog');
+    }
+  }
+
   function renderPlayableScore() {
     if (!window.liveMatchState) {
       return;
@@ -328,6 +460,9 @@
     $('#team-b-set-two').text(state.setScores[1].b);
     $('#team-a-set-three').text(state.setScores[2].a);
     $('#team-b-set-three').text(state.setScores[2].b);
+    const winner = getCompletedMatchWinner();
+    $('#team-a-winner-crown').toggle(winner === 'A');
+    $('#team-b-winner-crown').toggle(winner === 'B');
     applySetLimitVisibility(state.setLimit || 3);
     renderSetScoreBoard();
   }
@@ -343,16 +478,22 @@
     }
 
     if (!setBoardIsEditing('A')) {
-      $('#set-board-score-a').val(state.scoreA);
+      const selectedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: state.scoreA, b: state.scoreB};
+      $('#set-board-score-a').val(selectedScore.a);
     }
     if (!setBoardIsEditing('B')) {
-      $('#set-board-score-b').val(state.scoreB);
+      const selectedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: state.scoreA, b: state.scoreB};
+      $('#set-board-score-b').val(selectedScore.b);
     }
     updateSetBoardLiveScore();
     $('#set-board-team-a-name').text(getTeamName('A'));
     $('#set-board-team-b-name').text(getTeamName('B'));
+    $('#set-board-score-a-label').text(getTeamName('A'));
+    $('#set-board-score-b-label').text(getTeamName('B'));
     $('#set-board-team-a-players').html(state.players.A[0].name + '<br>' + state.players.A[1].name);
     $('#set-board-team-b-players').html(state.players.B[0].name + '<br>' + state.players.B[1].name);
+    const displayedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: 0, b: 0};
+    $('#set-board-winner').val(displayedScore.a > displayedScore.b ? 'A' : (displayedScore.b > displayedScore.a ? 'B' : ''));
     updateSetBoardEditingUi();
   }
 
@@ -410,6 +551,7 @@
   }
 
   function saveSetBoardManualScore() {
+    if (!scorerCanManage()) { return; }
     const state = window.liveMatchState;
     if (!state || state.isSaving) {
       return;
@@ -417,21 +559,39 @@
 
     const scoreA = readSetBoardScore('#set-board-score-a');
     const scoreB = readSetBoardScore('#set-board-score-b');
+    const setIndex = (state.editingSetNo || state.setNo) - 1;
+    const naturalWinner = isBadmintonSetWon(scoreA, scoreB) ? (scoreA > scoreB ? 'A' : 'B') : '';
+    const winner = naturalWinner || String($('#set-board-winner').val() || '');
+    if (!winner) {
+      alert('Choose the winner of this set before saving the manual score.');
+      return;
+    }
+    state.completedSets[setIndex] = {a: scoreA, b: scoreB};
+    state.manualWinners[setIndex] = winner;
+    state.setsA = state.completedSets.filter(function (score, index) { return score && (state.manualWinners[index] || (score.a > score.b ? 'A' : 'B')) === 'A'; }).length;
+    state.setsB = state.completedSets.filter(function (score, index) { return score && (state.manualWinners[index] || (score.b > score.a ? 'B' : 'A')) === 'B'; }).length;
+    const matchCompleted = state.setsA === setsNeededToWin(state.setLimit || 3) || state.setsB === setsNeededToWin(state.setLimit || 3);
     state.isSaving = true;
-    saveManualSetScore(scoreA, scoreB).then(function () {
-      state.scoreA = scoreA;
-      state.scoreB = scoreB;
-      state.setScores[state.setNo - 1] = {a: scoreA, b: scoreB};
+    saveManualSetScore(scoreA, scoreB, winner, state.setsA, state.setsB, matchCompleted).then(function () {
+      state.setScores[setIndex] = {a: scoreA, b: scoreB};
+      if (setIndex === state.setNo - 1) {
+        state.scoreA = scoreA;
+        state.scoreB = scoreB;
+      }
       state.undoStack = [];
       state.isStarted = true;
-      state.isCompleted = false;
+      state.isCompleted = matchCompleted;
       startGame = true;
       setSetBoardReadOnly(true);
       renderPlayableScore();
       renderDoublesCourt();
       renderMatchResult();
-      setScoreButtonsEnabled(true);
+      setScoreButtonsEnabled(!matchCompleted);
+      state.editingSetNo = null;
       speakScore('Manual score saved. ' + buildScoreAnnouncement());
+      if (matchCompleted) {
+        $('#setScoreBoard').one('hidden.bs.modal', function () { $('#matchResult').modal('show'); }).modal('hide');
+      }
     }).catch(function (error) {
       alert(error.message);
     }).finally(function () {
@@ -439,15 +599,18 @@
     });
   }
 
-  function saveManualSetScore(scoreA, scoreB) {
+  function saveManualSetScore(scoreA, scoreB, winner, setsA, setsB, completed) {
     const state = window.liveMatchState;
     const formData = new FormData();
     formData.append('action', 'set_score_board');
     formData.append('match_id', state.matchId);
     formData.append('team_1_score', scoreA);
     formData.append('team_2_score', scoreB);
-    formData.append('team_1_sets', state.setsA);
-    formData.append('team_2_sets', state.setsB);
+    formData.append('set_no', state.editingSetNo || state.setNo);
+    formData.append('winner', winner);
+    formData.append('team_1_sets', setsA);
+    formData.append('team_2_sets', setsB);
+    formData.append('completed', completed ? '1' : '0');
 
     return fetch('api-match-score.php', {
       method: 'POST',
@@ -589,7 +752,7 @@
       return;
     }
 
-    const winnerTeam = state.setsA > state.setsB ? 'A' : (state.setsB > state.setsA ? 'B' : '');
+    const winnerTeam = getCompletedMatchWinner() || (state.setsA > state.setsB ? 'A' : (state.setsB > state.setsA ? 'B' : ''));
     $('#match-result-winner').html('<i class="fa-solid fa-trophy mr-2 text-warning"></i> WINNER: ' + (winnerTeam ? getTeamName(winnerTeam) : '-'));
     $('#match-result-team-a-name').text(getTeamName('A'));
     $('#match-result-team-b-name').text(getTeamName('B'));
@@ -597,20 +760,27 @@
     $('#match-result-team-b-sets').text(state.setsB);
     $('#match-result-team-a-winner-name').text(getTeamName('A'));
     $('#match-result-team-b-winner-name').text(getTeamName('B'));
+    $('#match-result-team-a-crown').toggle(winnerTeam === 'A');
+    $('#match-result-team-b-crown').toggle(winnerTeam === 'B');
     $('#match-result-set-indicator').text('Set - ' + state.setNo + '/' + (state.setLimit || 3));
+    $('#match-setup-deuce').text(state.deuceEnabled ? 'Deuce On' : 'Deuce Off');
 
     const rows = state.setScores.slice(0, state.setLimit || 3).map(function (score, index) {
       const played = index < state.completedSets.length || index === state.setNo - 1;
-      if (!played && score.a === 0 && score.b === 0) {
-        return '';
-      }
-      const aWon = score.a > score.b;
-      const bWon = score.b > score.a;
+      const selectedWinner = state.manualWinners[index] || '';
+      const aWon = selectedWinner ? selectedWinner === 'A' : score.a > score.b;
+      const bWon = selectedWinner ? selectedWinner === 'B' : score.b > score.a;
       const completed = index < state.completedSets.length;
       const current = index === state.setNo - 1 && !completed;
-      const actions = completed
-        ? '<button type="button">Pos</button><button type="button" onclick="startPlayableMatch()">Start</button><button type="button">Edit</button><button type="button">Reset</button>'
-        : '<button type="button" onclick="startPlayableMatch()">' + (state.isStarted || current ? 'Resume' : 'Start') + '</button>';
+      const manageable = scorerCanManage();
+      const disabled = manageable ? '' : ' disabled';
+      const pauseLabel = state.isStarted ? 'Pause' : (played ? 'Resume' : 'Start');
+      const actions = '<button type="button" data-setup-action="position" data-set-index="' + index + '" title="Position"' + disabled + '><i class="fa-solid fa-right-left"></i></button>'
+        + '<button type="button" data-setup-action="pause" data-set-index="' + index + '" title="' + pauseLabel + '"' + disabled + '><i class="fa-solid ' + (state.isStarted ? 'fa-pause' : 'fa-play') + '"></i> ' + pauseLabel + '</button>'
+        + '<button type="button" data-setup-action="edit" data-set-index="' + index + '" title="Edit set score"' + disabled + '><i class="fa-solid fa-pen"></i></button>'
+        + '<button type="button" data-setup-action="reset" data-set-index="' + index + '" title="Reset set"' + disabled + '><i class="fa-solid fa-rotate-left"></i></button>'
+        + '<button type="button" data-setup-action="log" data-set-index="' + index + '" title="Match log"><i class="fa-solid fa-list-ul"></i></button>'
+        + '<button type="button" disabled title="Coming soon"><i class="fa-solid fa-check"></i></button>';
       return '<div class="match-result-set-row">'
         + '<span class="match-result-set-label">SET ' + (index + 1) + '</span>'
         + '<div class="match-result-set-score"><span class="' + (aWon ? 'match-result-set-winner' : '') + '">' + score.a + '</span>'
@@ -621,6 +791,15 @@
         + '</div>';
     }).join('');
     $('#match-result-set-breakdown').html(rows || '<div class="match-result-empty">Match not started</div>');
+  }
+
+  function getCompletedMatchWinner() {
+    const state = window.liveMatchState;
+    if (!state || !state.isCompleted) { return ''; }
+    const savedWinnerId = parseInt(window.initialMatchData.winnerTeamId || 0, 10);
+    if (savedWinnerId === getTeamId('A')) { return 'A'; }
+    if (savedWinnerId === getTeamId('B')) { return 'B'; }
+    return state.setsA > state.setsB ? 'A' : (state.setsB > state.setsA ? 'B' : '');
   }
 
   function clonePlayableState() {
@@ -694,6 +873,7 @@
   }
 
   function undoLastPoint() {
+    if (!scorerCanManage()) { return; }
     const state = window.liveMatchState;
     if (!state || state.isSaving) {
       return;
@@ -723,15 +903,17 @@
   }
 
   function isBadmintonSetWon(scoreA, scoreB) {
-    if ((scoreA === 21 && scoreB <= 19) || (scoreB === 21 && scoreA <= 19)) {
+    const state = window.liveMatchState;
+    if (!state || !state.deuceEnabled) {
+      return scoreA >= 21 || scoreB >= 21;
+    }
+
+    const deuceLimit = state.deuceLimit === 25 ? 25 : 30;
+    if (scoreA >= deuceLimit || scoreB >= deuceLimit) {
       return true;
     }
 
-    if ((scoreA > 21 || scoreB > 21) && Math.abs(scoreA - scoreB) >= 2) {
-      return true;
-    }
-
-    return scoreA === 30 || scoreB === 30;
+    return (scoreA >= 21 || scoreB >= 21) && Math.abs(scoreA - scoreB) >= 2;
   }
 
   function savePlayablePoint(pointData, completed) {
@@ -766,6 +948,7 @@
   }
 
   function incrementScore(scoreSide) {
+    if (!scorerCanManage()) { return; }
     const state = window.liveMatchState;
     if (!state || !state.matchId) {
       alert('No match selected. Open this page from a Play button.');
