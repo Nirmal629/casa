@@ -1,9 +1,11 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
         date_default_timezone_set('America/Toronto');
-        const DATABASE_NAME='casa_test';
-        const USERNAME="casa_test";
-        const PASSWORD="casa_test123#";
+        if (!defined('DATABASE_NAME')) define('DATABASE_NAME', 'casa_test');
+        if (!defined('USERNAME'))      define('USERNAME', 'casa_test');
+        if (!defined('PASSWORD'))      define('PASSWORD', 'casa_test123#');
         
         // Database configuration
         $host = "localhost"; // Database host (e.g., localhost)
@@ -104,7 +106,7 @@ session_start();
                                 <input type='hidden' id='user_$event_id' value='{$_SESSION['user_id']}'/>
                             </div>
                         </div>
-                        <h4 style='padding: 5px;' class='date_time <?php echo $dayColorClass; ?>'>$event_day - " . date('h:i A', strtotime($event['FROM_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
+                        <h4 style='padding: 5px;' class='date_time <?php echo $dayColorClass; ?>'>$event_day - " . date('h:i A', strtotime($event['EVENT_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
                         <p class='location'><i class='fa-solid fa-location-dot'></i> $event_venue</p>
                         <div class='d-flex align-items-center gap-3 mb-2'>
                             <p style='font-size: 12px;'>$event_message</p>
@@ -136,7 +138,7 @@ session_start();
 
 
 <!-----View-modal------->
-<section class="customModal_wrap hostgameview_modal">
+<section class="customModal_wrap hostgameview_modal hostgameview_modal_subscription">
     <div class="customModal_body">
         <h6 class="customModal_head">View Game</h6>
         <button type="submit" class="customModal_close btn">
@@ -144,13 +146,13 @@ session_start();
         </button>
         <div class="row align-items-end g-2">
             <div class="col-md-3 col-12">
-                <input type="text" name="search" id="search" placeholder="Enter text to search" class="form-text" />
-                <input type="hidden" id="playdt" data-game-id="" data-host-id="" />
+                <input type="text" name="search" id="search_subscription" placeholder="Enter text to search" class="form-text" />
+                <input type="hidden" id="playdt_subscription" data-game-id="" data-host-id="" />
             </div>
         
             <div class="col-md-3 col-12">
-                <label for="sgenderCategoryy" class="form-label">Gender Category<span>*</span></label>
-                <select class="form-select" id="sgenderCategoryy">
+                <label for="sgenderCategoryy_subscription" class="form-label">Gender Category<span>*</span></label>
+                <select class="form-select" id="sgenderCategoryy_subscription">
                     <option selected value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Mix">Mix</option>
@@ -159,8 +161,8 @@ session_start();
             </div>
         
             <div class="col-md-3 col-12">
-                <label for="sgenderSkillLevell" class="form-label">Gender Skill Level<span>*</span></label>
-                <select class="form-select" id="sgenderSkillLevell">
+                <label for="sgenderSkillLevell_subscription" class="form-label">Gender Skill Level<span>*</span></label>
+                <select class="form-select" id="sgenderSkillLevell_subscription">
                     <option selected value="Beginner">Beginner</option>
                     <option value="Amateur">Amateur</option>
                     <option value="Intermediate">Intermediate</option>
@@ -178,7 +180,7 @@ session_start();
             <!--        <h2 class="heading">Badminton play</h2>-->
             <!--        <h6 class="sub_text">Hosted by Anurag</h6>-->
             <!--    </div>-->
-
+ 
             <!--    <div class="hostProfile_big">-->
             <!--        <img src="assets/images/profile.jpg" class="img-fluid" alt="..">-->
             <!--    </div>-->
@@ -207,7 +209,7 @@ session_start();
 
             <!--<hr />-->
 
-            <div class="" id="playerList">
+            <div class="playerList-container" id="playerList_subscription">
                 <!--<h4 class="sub_text" style="text-decoration: underline;">Invite Player List</h4>-->
 
                 <!--<div id="search-wrapper">-->

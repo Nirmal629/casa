@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 header('Content-Type: application/json');
 
 function jsonResponse(bool $success, array $payload = []): void
@@ -269,6 +272,17 @@ try {
     $match = fetchMatch($pdo, $matchId);
     if (!$match) {
         jsonResponse(false, ['message' => 'Match not found.']);
+    }
+
+    // Only the tournament organizer (to_tournaments.HOST_ID == logged-in ca_users.ID) may change match state.
+    $hostStmt = $pdo->prepare("SELECT HOST_ID FROM to_tournaments WHERE ID = :tournament_id LIMIT 1");
+    $hostStmt->execute([':tournament_id' => (int)$match['TOURNAMENT_ID']]);
+    $tournamentHostId = (int)$hostStmt->fetchColumn();
+    $canManage = !empty($_SESSION['user_id'])
+        && $tournamentHostId > 0
+        && (int)$_SESSION['user_id'] === $tournamentHostId;
+    if (!$canManage) {
+        jsonResponse(false, ['message' => 'Only the tournament organizer can manage this match.']);
     }
     if ($action === 'record_point' && ($match['STATUS'] ?? '') === 'COMPLETED') {
         jsonResponse(false, ['message' => 'This match is already completed.']);

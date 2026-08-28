@@ -1,8 +1,18 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $tournamentId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $selectedGroup = trim($_GET['group'] ?? '');
 $selectedMatchId = isset($_GET['match_id']) ? (int)$_GET['match_id'] : 0;
 $dbError = '';
+$tournamentHostId = 0;
+$canManage = false;
+// Role-based action buttons. App stores the role in $_SESSION['usertype']
+// ('Host' | 'Trainer' | 'Player'); $_SESSION['role'] kept as a fallback.
+$sessionRole = strtolower(trim((string)($_SESSION['usertype'] ?? $_SESSION['role'] ?? '')));
+$isPlayerRole = ($sessionRole === 'player');
+$isHostRole = ($sessionRole === 'host' || $sessionRole === 'trainer');
 $groups = [];
 $groupMatches = [];
 $stageMatches = [
@@ -14,10 +24,52 @@ $standings = [];
 $matrixTeams = [];
 $matrixResults = [];
 $rallyLogs = [];
+$tournamentSummary = null;
 
 function courtDashboardPlayers(?string $players): array
 {
     return array_values(array_filter(explode('||', $players ?? '')));
+}
+
+function courtDashboardShortText($value, int $wordLimit = 8): string
+{
+    $plainText = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$value), ENT_QUOTES, 'UTF-8')));
+    if ($plainText === '') {
+        return 'N/A';
+    }
+
+    $words = preg_split('/\s+/', $plainText);
+    if ($words === false || count($words) <= $wordLimit) {
+        return $plainText;
+    }
+
+    return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
+}
+
+function courtDashboardDate($value): string
+{
+    if (empty($value) || $value === '0000-00-00') {
+        return 'TBD';
+    }
+
+    $timestamp = strtotime((string)$value);
+    return $timestamp ? date('d M Y', $timestamp) : (string)$value;
+}
+
+function courtDashboardTime($time): string
+{
+    if (empty($time)) {
+        return 'TBD';
+    }
+
+    $timestamp = strtotime((string)$time);
+    return $timestamp ? date('h:i A', $timestamp) : (string)$time;
+}
+
+function courtDashboardValue($value, string $fallback = 'N/A'): string
+{
+    $text = trim((string)($value ?? ''));
+    return $text !== '' ? $text : $fallback;
 }
 
 function courtDashboardTeamLabel(array $row, string $prefix): string
@@ -49,6 +101,18 @@ try {
         $latestTournament = $pdo->query("SELECT ID FROM to_tournaments ORDER BY ID DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
         $tournamentId = (int)($latestTournament['ID'] ?? 0);
     }
+
+    if ($tournamentId > 0) {
+        $summaryStmt = $pdo->prepare("SELECT * FROM to_tournaments WHERE ID = :tournament_id LIMIT 1");
+        $summaryStmt->execute([':tournament_id' => $tournamentId]);
+        $tournamentSummary = $summaryStmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    // Only the organizer (to_tournaments.HOST_ID == logged-in ca_users.ID) can play/manage matches.
+    $tournamentHostId = (int)($tournamentSummary['HOST_ID'] ?? 0);
+    $canManage = !empty($_SESSION['user_id'])
+        && $tournamentHostId > 0
+        && (int)$_SESSION['user_id'] === $tournamentHostId;
 
     if ($tournamentId > 0) {
         $groupStmt = $pdo->prepare("
@@ -158,9 +222,60 @@ try {
 } catch (Exception $e) {
     $dbError = $e->getMessage();
 }
+
+// Action-column visibility (role-based):
+//   Host/Trainer (or the tournament organizer) -> "Play" only.
+//   Player / any other viewer                  -> "View" only.
+$showPlayAction = !$isPlayerRole && ($isHostRole || $canManage);
+
+$summaryClubName = 'N/A';
+$summaryEventType = 'N/A';
+$summaryTagline = 'N/A';
+$summaryDate = 'TBD';
+$summaryGender = 'N/A';
+$summaryTime = 'TBD';
+$summaryCategory = 'N/A';
+$summaryVenue = 'N/A';
+
+if (is_array($tournamentSummary)) {
+    $summaryClubName = trim((string)($tournamentSummary['CUP_NAME'] ?? ''));
+    if ($summaryClubName === '') {
+        $summaryClubName = trim((string)($tournamentSummary['HOST_NAME'] ?? ''));
+    }
+    if ($summaryClubName === '') {
+        $summaryClubName = 'N/A';
+    }
+
+    $summaryEventType = courtDashboardValue($tournamentSummary['EVENT_TYPE'] ?? '');
+    $summaryTagline = courtDashboardShortText($tournamentSummary['EVENT_DESCRIPTION'] ?? '');
+    $summaryDate = courtDashboardDate($tournamentSummary['EVENT_DATE'] ?? '');
+    $summaryGender = courtDashboardValue(str_replace("'s", '', (string)($tournamentSummary['GENDER_CATEGORY'] ?? '')));
+    $summaryTime = courtDashboardTime($tournamentSummary['EVENT_TIME'] ?? '');
+    $summaryCategory = courtDashboardValue($tournamentSummary['EVENT_CATEGORY'] ?? '');
+
+    $summaryVenue = trim((string)($tournamentSummary['EVENT_VENUE'] ?? ''));
+    if ($summaryVenue === '') {
+        $summaryVenueParts = array_filter([
+            trim((string)($tournamentSummary['EVENT_CITY'] ?? '')),
+            trim((string)($tournamentSummary['EVENT_COUNTRY'] ?? ''))
+        ]);
+        $summaryVenue = !empty($summaryVenueParts) ? implode(', ', $summaryVenueParts) : 'N/A';
+    }
+}
 ?>
 <!-----Header------>
 <?php include "includes/header.php"; ?>
+
+<!-- Offset anchored stage sections below the fixed header when reached via #anchor from the tournament view buttons -->
+<style>
+    #league-stage,
+    #quarter-final,
+    #semi-final,
+    #championship-final,
+    #bronze-final {
+        scroll-margin-top: 100px;
+    }
+</style>
 
 <section class="tournament_page bottomSide_gap">
     <div class="cust_container">
@@ -172,19 +287,19 @@ try {
             <!-- EVENT DETAILS -->
             <div class="card input-box">
                 <div class="grid-4">
-                    <div class="detail">Club Name: <span>Casa Badminton Club</span></div>
-                    <div class="detail">Event Type: <span>Tournament</span></div>
-                    <div class="detail">Tag Line: <span>Smash the Game</span></div>
-                    <div class="detail">Date: <span>06/02/2026</span></div>
-                    <div class="detail">Gender Category: <span>Men</span></div>
-                    <div class="detail">Time: <span>9:00 AM</span></div>
-                    <div class="detail">Event Category: <span>Doubles Open</span></div>
-                    <div class="detail">Venue: <span>Casa Badminton Club</span></div>
+                    <div class="detail">Club Name: <span><?php echo htmlspecialchars($summaryClubName); ?></span></div>
+                    <div class="detail">Event Type: <span><?php echo htmlspecialchars($summaryEventType); ?></span></div>
+                    <div class="detail">Tag Line: <span><?php echo htmlspecialchars($summaryTagline); ?></span></div>
+                    <div class="detail">Date: <span><?php echo htmlspecialchars($summaryDate); ?></span></div>
+                    <div class="detail">Gender Category: <span><?php echo htmlspecialchars($summaryGender); ?></span></div>
+                    <div class="detail">Time: <span><?php echo htmlspecialchars($summaryTime); ?></span></div>
+                    <div class="detail">Event Category: <span><?php echo htmlspecialchars($summaryCategory); ?></span></div>
+                    <div class="detail">Venue: <span><?php echo htmlspecialchars($summaryVenue); ?></span></div>
                 </div>
             </div>
 
             <!-- LEAGUE STAGE -->
-            <div class="card">
+            <div class="card" id="league-stage">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="section-title">League Stage</h4>
                     <select class="form-control w-auto" onchange="window.location.href='court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&group=' + encodeURIComponent(this.value)">
@@ -242,50 +357,12 @@ try {
                                         <td><?php echo htmlspecialchars($match['CREATED_AT'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($match['UPDATED_AT'] ?? '-'); ?></td>
                                         <td>
-                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
-                                            <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&group=<?php echo urlencode($match['GROUP_NAME'] ?? ''); ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                            <?php if ($showPlayAction): // Host/Trainer or organizer: Play only ?>
+                                                <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
+                                            <?php else: // Player / viewer: View only -> opens the scorer read-only ?>
+                                                <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                            <?php endif; ?>
                                         </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- LIVE RALLY LOG -->
-            <div class="card">
-                <h4 class="section-title">Live Match Log</h4>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Rally</th>
-                                <th>Set</th>
-                                <th>Scoring Team</th>
-                                <th>Serving Team</th>
-                                <th>Score</th>
-                                <th>Side</th>
-                                <th>Event</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if ($selectedMatchId <= 0): ?>
-                                <tr><td colspan="8">Select View on a match to see rally log.</td></tr>
-                            <?php elseif (empty($rallyLogs)): ?>
-                                <tr><td colspan="8">No rally log yet.</td></tr>
-                            <?php else: ?>
-                                <?php foreach ($rallyLogs as $log): ?>
-                                    <tr>
-                                        <td><?php echo (int)$log['RALLY_NO']; ?></td>
-                                        <td><?php echo (int)$log['SET_NO']; ?></td>
-                                        <td><?php echo htmlspecialchars($log['SCORING_TEAM_NAME'] ?? '-'); ?></td>
-                                        <td><?php echo htmlspecialchars($log['SERVING_TEAM_NAME'] ?? '-'); ?></td>
-                                        <td><?php echo (int)$log['TEAM_1_SCORE']; ?> - <?php echo (int)$log['TEAM_2_SCORE']; ?></td>
-                                        <td><?php echo htmlspecialchars($log['COURT_SIDE'] ?? '-'); ?></td>
-                                        <td><?php echo htmlspecialchars($log['EVENT_TYPE'] ?? '-'); ?></td>
-                                        <td><?php echo htmlspecialchars($log['CREATED_AT'] ?? '-'); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -368,7 +445,7 @@ try {
             </div>
 
             <!-- QUARTER FINAL -->
-            <div class="card">
+            <div class="card" id="quarter-final">
                 <h4 class="section-title">Quarter Final</h4>
                 <div class="table-responsive">
                     <table>
@@ -396,8 +473,11 @@ try {
                                         <td><?php echo (int)($match['TEAM_2_SCORE'] ?? 0); ?></td>
                                         <td><?php echo courtDashboardWinner($match); ?></td>
                                         <td>
-                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
-                                            <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                            <?php if ($showPlayAction): // Host/Trainer or organizer: Play only ?>
+                                                <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
+                                            <?php else: // Player / viewer: View only -> opens the scorer read-only ?>
+                                                <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -408,7 +488,7 @@ try {
             </div>
 
             <!-- SEMI FINAL -->
-            <div class="card">
+            <div class="card" id="semi-final">
                 <h4 class="section-title">Semi Final</h4>
                 <div class="table-responsive">
                     <table>
@@ -433,8 +513,11 @@ try {
                                     <td><?php echo (int)($match['TEAM_2_SCORE'] ?? 0); ?></td>
                                     <td><?php echo courtDashboardWinner($match); ?></td>
                                     <td>
-                                        <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
-                                        <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                        <?php if ($showPlayAction): // Host/Trainer or organizer: Play only ?>
+                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
+                                        <?php else: // Player / viewer: View only -> opens the scorer read-only ?>
+                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -444,7 +527,7 @@ try {
             </div>
 
             <!-- FINAL -->
-            <div class="card winner">
+            <div class="card winner" id="championship-final">
                 <h4 class="section-title">Championship Final</h4>
                 <div class="table-responsive">
                     <table>
@@ -469,8 +552,11 @@ try {
                                     <td><?php echo (int)($match['TEAM_2_SCORE'] ?? 0); ?></td>
                                     <td><?php echo courtDashboardWinner($match); ?></td>
                                     <td>
-                                        <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
-                                        <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                        <?php if ($showPlayAction): // Host/Trainer or organizer: Play only ?>
+                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">Play</a>
+                                        <?php else: // Player / viewer: View only -> opens the scorer read-only ?>
+                                            <a href="badminton-scorer.php?id=<?php echo (int)$tournamentId; ?>&match_id=<?php echo (int)$match['ID']; ?>" class="btn">View</a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -480,7 +566,7 @@ try {
             </div>
 
             <!-- BRONZE FINAL -->
-            <div class="card">
+            <div class="card" id="bronze-final">
                 <h4 class="section-title">Bronze Final</h4>
                 <div class="table-responsive">
                     <table>
@@ -496,7 +582,11 @@ try {
                             <td>L1</td>
                             <td>L2</td>
                             <td>-</td>
-                            <td><a href="#" class="btn">Play</a></td>
+                            <td>
+                                <?php if ($showPlayAction): // Host/Trainer or organizer: Play only ?>
+                                    <a href="#" class="btn">Play</a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     </table>
                 </div>

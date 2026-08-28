@@ -125,11 +125,11 @@ $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 $options = [
 
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 
-    PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_EMULATE_PREPARES => false,
 
 ];
 
@@ -161,6 +161,52 @@ try {
     $premium_check->execute([$current_user_id]);
 
     $user_premium = $premium_check->fetchColumn() ?: 'N';
+
+    // Fetch player's preferred game type and location
+    $player_pref_stmt = $pdo->prepare("SELECT GAMES, COUNTRY, PROVINCE, CITY FROM ca_users WHERE ID = ?");
+    $player_pref_stmt->execute([$current_user_id]);
+    $player_prefs = $player_pref_stmt->fetch();
+    $player_game = $player_prefs['GAMES'] ?? 'Badminton';
+    $player_country = $player_prefs['COUNTRY'] ?? '';
+    $player_province = $player_prefs['PROVINCE'] ?? '';
+    $player_city = $player_prefs['CITY'] ?? '';
+
+    // Fetch active clubs matching player's game preference AND location
+    $clubs_sql = "SELECT c.*, u.NAME as host_name, u.PROFILE_IMAGE as host_img
+                  FROM ca_clubs c
+                  JOIN ca_users u ON c.host_id = u.ID
+                  WHERE c.status = 'Active'
+                    AND c.game_type = :game_type";
+
+    $params = ['game_type' => $player_game];
+
+    if (!empty($player_country)) {
+        $clubs_sql .= " AND c.country = :country";
+        $params['country'] = $player_country;
+    }
+    if (!empty($player_province)) {
+        $clubs_sql .= " AND c.province = :province";
+        $params['province'] = $player_province;
+    }
+    if (!empty($player_city)) {
+        $clubs_sql .= " AND c.city = :city";
+        $params['city'] = $player_city;
+    }
+
+    $clubs_sql .= " ORDER BY c.created_at DESC LIMIT 8";
+
+    $clubs_stmt = $pdo->prepare($clubs_sql);
+    $clubs_stmt->execute($params);
+    $clubs = $clubs_stmt->fetchAll();
+
+    // Check membership for each club in ca_player_club_status
+    $status_stmt = $pdo->prepare("SELECT status FROM ca_player_club_status WHERE player_id = ? AND club_id = ? LIMIT 1");
+    foreach ($clubs as &$club_row) {
+        $status_stmt->execute([$current_user_id, $club_row['id']]);
+        $club_status = $status_stmt->fetchColumn();
+        $club_row['membership_status'] = $club_status ?: 'not_joined';
+    }
+    unset($club_row); // break reference
 
 
 
@@ -412,13 +458,13 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 <!-----Anurag Added for icon and text------->
 <style>
-
     /* 1: The Eye-Catcher Card */
     .card {
         background: #fff;
         border-radius: 12px;
-        padding: 12px 12px 8px 12px; /* Tightened bottom padding */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 12px 12px 8px 12px;
+        /* Tightened bottom padding */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         border: 1px solid #eef0f2;
         margin-bottom: 15px;
         font-family: 'Segoe UI', Roboto, sans-serif;
@@ -428,17 +474,19 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         margin: 0 0 10px 0;
         font-size: 1.05rem;
         font-weight: 800;
-        color: #ffffff; /* Club name is now white */
+        color: #ffffff;
+        /* Club name is now white */
         letter-spacing: -0.02em;
         text-align: left;
     }
-    
+
     /* 2: The Order Info Capsule */
     .order-capsule {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.08); /* Glass effect */
+        background: rgba(255, 255, 255, 0.08);
+        /* Glass effect */
         border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 50px;
         padding: 2px 8px;
@@ -456,7 +504,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         opacity: 0.3;
         color: #fff;
     }
-    
+
     /* Dynamic Status Pill inside Capsule */
     .stat-pill {
         padding: 1px 5px;
@@ -465,15 +513,27 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         font-weight: 900;
         font-size: 0.48rem;
     }
-    .stat-completed { background: #166534; color: #4ade80; }
-    .stat-pending { background: #854d0e; color: #fbbf24; }
-    .stat-default { background: #334155; color: #cbd5e1; }
-    
+
+    .stat-completed {
+        background: #166534;
+        color: #4ade80;
+    }
+
+    .stat-pending {
+        background: #854d0e;
+        color: #fbbf24;
+    }
+
+    .stat-default {
+        background: #334155;
+        color: #cbd5e1;
+    }
+
     /* Unified straight-line container */
     .action-bar-unified {
         display: flex;
         align-items: center;
-        gap: 4px; 
+        gap: 4px;
         width: 100%;
         margin-bottom: 0;
     }
@@ -484,42 +544,52 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        flex: 1; 
+        flex: 1;
         padding: 6px 2px;
-        font-size: 0.58rem; 
-        font-weight: 800; /* Extra bold text to match icons */
+        font-size: 0.58rem;
+        font-weight: 800;
+        /* Extra bold text to match icons */
         text-transform: uppercase;
         color: #333;
         background-color: #f8f9fa;
         border: 1px solid #ced4da;
         border-radius: 8px;
         text-decoration: none;
-        min-height: 45px; 
+        min-height: 45px;
     }
 
     /* Bold Icon Styling */
     .btn-stacked-synced svg {
-        width: 18px; 
+        width: 18px;
         height: 18px;
         margin-bottom: 3px;
         color: #0d6efd;
-        stroke-width: 0.5px; /* Adds slight weight */
+        stroke-width: 0.5px;
+        /* Adds slight weight */
         stroke: #0d6efd;
     }
 
-    .btn-stacked-synced.status-member { 
-        border-color: #198754; 
-        color: #198754; 
-        background-color: #f0fff4; 
+    .btn-stacked-synced.status-member {
+        border-color: #198754;
+        color: #198754;
+        background-color: #f0fff4;
     }
-    .btn-stacked-synced.status-member svg { color: #198754; stroke: #198754; }
-    
-    .btn-stacked-synced.action-view { 
-        background-color: #0d6efd; 
-        color: white; 
-        border-color: #0d6efd; 
+
+    .btn-stacked-synced.status-member svg {
+        color: #198754;
+        stroke: #198754;
     }
-    .btn-stacked-synced.action-view svg { color: white; stroke: white; }
+
+    .btn-stacked-synced.action-view {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+
+    .btn-stacked-synced.action-view svg {
+        color: white;
+        stroke: white;
+    }
 </style>
 
 
@@ -546,9 +616,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- Country -->
                     <select name="country" disabled style="-webkit-appearance: none;">
                         <option value="">--Country--</option>
-                        <?php if (!empty($_SESSION['country'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['country']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['country']) ?>
+                        <?php if (!empty($player_country)): ?>
+                            <option value="<?= htmlspecialchars($player_country) ?>" selected>
+                                <?= htmlspecialchars($player_country) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -556,9 +626,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- Province -->
                     <select name="province" disabled style="-webkit-appearance: none;">
                         <option value="">--Province--</option>
-                        <?php if (!empty($_SESSION['province'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['province']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['province']) ?>
+                        <?php if (!empty($player_province)): ?>
+                            <option value="<?= htmlspecialchars($player_province) ?>" selected>
+                                <?= htmlspecialchars($player_province) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -566,9 +636,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <!-- City -->
                     <select name="area" disabled style="-webkit-appearance: none;">
                         <option value="">--City--</option>
-                        <?php if (!empty($_SESSION['city'])): ?>
-                            <option value="<?= htmlspecialchars($_SESSION['city']) ?>" selected>
-                                <?= htmlspecialchars($_SESSION['city']) ?>
+                        <?php if (!empty($player_city)): ?>
+                            <option value="<?= htmlspecialchars($player_city) ?>" selected>
+                                <?= htmlspecialchars($player_city) ?>
                             </option>
                         <?php endif; ?>
                     </select>
@@ -678,7 +748,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                 <p><b>Level:</b> <?= htmlspecialchars($_SESSION['vlevel'] ?? 'N/A') ?></p>
 
-                                <p><b>Area:</b> <?= htmlspecialchars($_SESSION['area'] ?? 'N/A') ?></p>
+                                <p><b>Area:</b> <?= htmlspecialchars($player_city ?: 'N/A') ?></p>
 
 
 
@@ -749,11 +819,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                                $totalSessions = (int)$resultsession['total_session'];
+                                $totalSessions = (int) $resultsession['total_session'];
 
 
 
-                            ?>
+                                ?>
 
 
 
@@ -783,7 +853,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                            <?php
+                                <?php
 
 
 
@@ -911,133 +981,145 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                        <button class="refer" type="button" data-bs-toggle="modal" data-bs-target="#ReferModal">Refer Good Player</button>
+                        <button class="refer" type="button" data-bs-toggle="modal" data-bs-target="#ReferModal">Refer
+                            Good Player</button>
                     </div>
                 </div>
-                
-<!-- -------------------------------------------------------------- THE CENTER PANNEL CLUBS AND TOURNAMENT ---------------------------------------------------------------------------------------------------------->
+
+                <!-- -------------------------------------------------------------- THE CENTER PANNEL CLUBS AND TOURNAMENT ---------------------------------------------------------------------------------------------------------->
                 <div class="panel center-panel">
                     <h3 style="text-align: center;">All Clubs</h3>
                     <div class="scrollbox">
-<!-- -------------------------------------------------------------- CASA BADMINTON CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <!-- <h4>Casa Club</h4> -->
-                            <h4>Casa Badminton Club</h4>
-                            <div class="content">
-                                <!--<div class="">-->
-                                    <!-- <p class="label">Casa Badminton Club</p> -->
-                                <!--    <div class="info-grid">-->
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Infomodal"><i class="fa-solid fa-circle-info"></i> <span>Info</span></button>-->
+                        <!-- ======================== DYNAMIC CLUB CARDS (from ca_clubs DB) ======================== -->
+                        <?php if (!empty($clubs)): ?>
+                            <?php foreach ($clubs as $club_data):
+                                $club_name_safe = htmlspecialchars($club_data['club_name']);
+                                $club_info_val = trim($club_data['club_info'] ?? '');
+                                $club_info_safe = htmlspecialchars(!empty($club_info_val) ? $club_info_val : 'There is no data available.');
 
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Costingmodal"><i class="fa-solid fa-comments-dollar"></i> <span>Costing</span></button>-->
+                                $club_cost_val = trim($club_data['cost_info'] ?? '');
+                                $club_cost_safe = htmlspecialchars(!empty($club_cost_val) ? $club_cost_val : 'There is no data available.');
 
-                                <!--        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal"><i class="fa-solid fa-clipboard-list"></i> <span>Schedule</span></button>-->
-                                <!--    </div>-->
-                                <!--</div>-->
+                                $club_schedule_val = trim($club_data['schedule'] ?? '');
+                                $club_schedule_safe = htmlspecialchars(!empty($club_schedule_val) ? $club_schedule_val : 'There is no data available.');
 
-                                <!--<div class="button_box">-->
-                                <!--    <a href="#" class="joinbtn"><i class="fa-solid fa-circle-user"></i> <span>You are member</span></a>-->
-                                <!--    <a href="player-dashboard.php" class="joinbtn"><i class="fa-solid fa-gamepad"></i> <span>View Game</span></a>-->
-                                <!--</div>-->
-                                <div class="action-bar-unified">
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Infomodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                        </svg>
-                                        <span>Info</span>
-                                    </button>
-                                
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Costingmodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z"/>
-                                        </svg>
-                                        <span>Costing</span>
-                                    </button>
-                                
-                                    <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z"/>
-                                        </svg>
-                                        <span>Schedule</span>
-                                    </button>
-                                
-                                    <div class="btn-stacked-synced status-member">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                        </svg>
-                                        <span>Member</span>
+                                $is_new = (strtotime($club_data['created_at']) > strtotime('-30 days'));
+                                ?>
+                                <div class="card">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div
+                                            style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #334155; flex-shrink: 0; background: #e2e8f0;">
+                                            <img src="<?= !empty($club_data['logo']) ? 'uploads/clubs/' . htmlspecialchars($club_data['logo']) : 'assets/images/profile.jpg' ?>"
+                                                alt="Logo" style="width:100%; height:100%; object-fit:cover;" />
+                                        </div>
+                                        <div>
+                                            <h4 style="margin: 0;"><?= $club_name_safe ?></h4>
+                                            <div style="font-size: 0.75rem; color: #64748b;">By
+                                                <?= htmlspecialchars($club_data['host_name'] ?? 'Unknown Host') ?></div>
+                                        </div>
                                     </div>
-                                
-                                    <a href="player-dashboard.php" class="btn-stacked-synced action-view">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-10.5a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                        </svg>
-                                        <span>Games</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-<!-- -------------------------------------------------------------- BIRDIE BUSTERS CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <!-- <h4>The Casamigos <span class="tag">New</span></h4> -->
-                            <h4>Birdie Busters Club <span class="tag">New</span></h4>
-                            <div class="content">
-                                <div class="">
-                                    <!-- <p class="label">Club joined tonight</p> -->
-                                    <div class="info-grid">
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Infomodal"><i class="fa-solid fa-circle-info"></i> <span>Info</span></button>
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#Costingmodal"><i class="fa-solid fa-comments-dollar"></i> <span>Costing</span></button>
-                                        <button class="joinbtn" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal"><i class="fa-solid fa-clipboard-list"></i> <span>Schedule</span></button>
+                                    <div class="content">
+                                        <div class="action-bar-unified">
+                                            <button class="btn-stacked-synced club-info-btn" data-bs-toggle="modal"
+                                                data-bs-target="#Infomodal" data-club-name="<?= $club_name_safe ?>"
+                                                data-club-info="<?= $club_info_safe ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path
+                                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                                </svg>
+                                                <span>Info</span>
+                                            </button>
+
+                                            <button class="btn-stacked-synced club-cost-btn" data-bs-toggle="modal"
+                                                data-bs-target="#Costingmodal" data-club-name="<?= $club_name_safe ?>"
+                                                data-club-cost="<?= $club_cost_safe ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z" />
+                                                </svg>
+                                                <span>Costing</span>
+                                            </button>
+
+                                            <button class="btn-stacked-synced club-schedule-btn" data-bs-toggle="modal"
+                                                data-bs-target="#GameSchedulemodal" data-club-name="<?= $club_name_safe ?>"
+                                                data-club-schedule="<?= $club_schedule_safe ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z" />
+                                                </svg>
+                                                <span>Schedule</span>
+                                            </button>
+
+                                            <?php if ($club_data['membership_status'] === 'accepted'): ?>
+                                                <div class="btn-stacked-synced status-member">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                                        <path
+                                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                                    </svg>
+                                                    <span>Member</span>
+                                                </div>
+                                                <a href="player-dashboard.php?host_id=<?= $club_data['host_id'] ?>"
+                                                    class="btn-stacked-synced action-view">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                                    </svg>
+                                                    <span>Games</span>
+                                                </a>
+                                            <?php elseif ($club_data['membership_status'] === 'pending'): ?>
+                                                <div class="btn-stacked-synced status-pending-state"
+                                                    style="border-color:#ffc107; color:#ffc107; background-color:#ffc10714;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                        fill="currentColor" viewBox="0 0 16 16"
+                                                        style="color:#ffc107; stroke:#ffc107;">
+                                                        <path
+                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path
+                                                            d="M7.5 4.5a.5.5 0 0 1 1 0V8H11a.5.5 0 0 1 0 1H8a.5.5 0 0 1-.5-.5v-4z" />
+                                                    </svg>
+                                                    <span>Pending</span>
+                                                </div>
+                                                <a href="#" class="btn-stacked-synced action-view disabled"
+                                                    style="opacity: 0.5; pointer-events: none;" title="Awaiting host approval">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                                    </svg>
+                                                    <span>Games</span>
+                                                </a>
+                                            <?php else: ?>
+                                                <button class="btn-stacked-synced join-club-btn"
+                                                    data-club-id="<?= $club_data['id'] ?>"
+                                                    style="cursor: pointer; border: 1px solid #ced4da; background: #f8f9fa;">
+                                                    <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                        <path
+                                                            d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z" />
+                                                    </svg>
+                                                    <span>Join</span>
+                                                </button>
+                                                <a href="#" class="btn-stacked-synced action-view disabled"
+                                                    style="opacity: 0.5; pointer-events: none;" title="Must join club first">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                                    </svg>
+                                                    <span>Games</span>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="button_box">
-                                    <a href="#" class="joinbtn"><i class="fa-solid fa-user-plus"></i> <span>Request to Join</span></a>
-                                    <a href="player-dashboard.php" class="joinbtn"><i class="fa-solid fa-gamepad"></i> <span>View Game</span></a>
-                                </div>
-                            </div>
-                        </div>
-<!-- -------------------------------------------------------------- NET NINJA CLUB ----------------------------------------------------------------------------------------------------------------------------->
-                        <div class="card">
-                            <h4>Net Ninjs Club <span class="tag">New</span></h4>
-                            <div class="content">
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Infomodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                    </svg>
-                                    <span>Info</span>
-                                </button>
-                            
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#Costingmodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm7.76 4.085c-1.202-.29-1.547-.582-1.547-1.012 0-.396.314-.721.986-.826v1.838zm1.043 2.505c1.238.31 1.62.66 1.62 1.144 0 .524-.424.89-1.202.99V9.59h-.418zM7.5 4.3c-1.63.266-2.5 1.3-2.5 2.622 0 1.253.86 2.072 2.3 2.441v3.31c-.964-.175-1.5-.722-1.603-1.465H4.155c.133 1.54 1.362 2.5 3.345 2.68V15h1.043v-1.12c1.868-.18 3-.98 3-2.43 0-1.427-.922-2.144-2.585-2.54V5.514c.85.116 1.3.565 1.403 1.242h1.53c-.15-1.403-1.196-2.333-2.933-2.5V1h-1.043v1.168c-1.348.165-2.288.75-2.457 1.832H6.1c.148-.734.6-1.166 1.4-1.31v2.61z"/>
-                                    </svg>
-                                    <span>Costing</span>
-                                </button>
-                            
-                                <button class="btn-stacked-synced" data-bs-toggle="modal" data-bs-target="#GameSchedulemodal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132z"/>
-                                    </svg>
-                                    <span>Schedule</span>
-                                </button>
-                                
-                                <a href="#" class="btn-stacked-synced join-action">
-                                    <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                        <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg>
-                                    <span>Join</span>
-                                </a>
-                            
-                                <a href="player-dashboard.php" class="btn-stacked-synced action-view">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-10.5a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                    </svg>
-                                    <span>Games</span>
-                                </a>
-                            </div>        
-                        </div>                        
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="label" style="text-align:center; color: #94a3b8;">No clubs found matching your
+                                preferred game.</p>
+                        <?php endif; ?>
                     </div>
 
                     <h3 style="text-align: center;">Tournaments</h3>
@@ -1130,7 +1212,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                     }
                                 }
 
-                        ?>
+                                ?>
 
 
 
@@ -1152,7 +1234,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             </div>
                                             <div class="subtitle">
                                                 <p><?php echo htmlspecialchars($row['EVENT_CATEGORY']); ?> -
-                                                    <?php echo $row['GENDER_CATEGORY']; ?> - <?php echo $row['EVENT_TYPE']; ?></p>
+                                                    <?php echo $row['GENDER_CATEGORY']; ?> - <?php echo $row['EVENT_TYPE']; ?>
+                                                </p>
                                             </div>
                                         </div>
 
@@ -1166,7 +1249,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 </div>
                                             <?php else: ?>
                                                 <!-- Grayed out Registration Closed button -->
-                                                <div class="regBtn" style="background: #475569 !important; border-color: #334155 !important;">
+                                                <div class="regBtn"
+                                                    style="background: #475569 !important; border-color: #334155 !important;">
                                                     <p style="color: #cbd5e1 !important;">Registration Closed</p>
                                                 </div>
                                             <?php endif; ?>
@@ -1174,14 +1258,19 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                         <div class="content">
                                             <div class="info-grid">
-                                                <div class="info"><i class="fa fa-calendar-alt"></i><span>Date:</span> <?php echo $date; ?></div>
-                                                <div class="info"><i class="fa fa-clock"></i><span>Time:</span> <?php echo $time; ?></div>
-                                                <div class="info"><i class="fa fa-map-marker-alt"></i><span>Venue:</span> <?php echo htmlspecialchars($row['EVENT_VENUE']); ?></div>
-                                                <div class="info"><i class="fa-solid fa-comment-dollar"></i><span>40 <strong>per player</strong></span></div>
-                                                <div class="info"><i class="fa-solid fa-feather-pointed"></i></i><span>Birdie: <strong> Feather</strong></span></div>
+                                                <div class="info"><i class="fa fa-calendar-alt"></i><span>Date:</span>
+                                                    <?php echo $date; ?></div>
+                                                <div class="info"><i class="fa fa-clock"></i><span>Time:</span>
+                                                    <?php echo $time; ?></div>
+                                                <div class="info"><i class="fa fa-map-marker-alt"></i><span>Venue:</span>
+                                                    <?php echo htmlspecialchars($row['EVENT_VENUE']); ?></div>
+                                                <div class="info"><i class="fa-solid fa-comment-dollar"></i><span>40 <strong>per
+                                                            player</strong></span></div>
+                                                <div class="info"><i class="fa-solid fa-feather-pointed"></i></i><span>Birdie:
+                                                        <strong> Feather</strong></span></div>
                                                 <div class="info">
                                                     <i class="fa fa-check-circle"></i>
-                                                    <span><?php echo $row['joined_count']; ?> <?php echo $row['MAX_TEAMS']; ?>
+                                                    <span><?php echo $row['joined_count']; ?>         <?php echo $row['MAX_TEAMS']; ?>
                                                         <strong>teams joined</strong>
                                                     </span>
                                                 </div>
@@ -1202,21 +1291,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Updated Pay Now Button -->
 
-                                                        <button type="button"
-
-                                                            class="joinbtn pay-now-trigger"
-
-                                                            style="background: #fb172e; border: none;"
-
-                                                            data-bs-toggle="modal"
-
-                                                            data-bs-target="#PaymentModal"
-
-                                                            data-id="<?php echo $row['ID']; ?>"
-
+                                                        <button type="button" class="joinbtn pay-now-trigger"
+                                                            style="background: #fb172e; border: none;" data-bs-toggle="modal"
+                                                            data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
-
-                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>"> <!-- Added this line -->
+                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
+                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1226,7 +1306,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 2: Paid but admin hasn't approved yet (STATUS = Y and APPROVED_BY is NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #ffc107; color: #000; cursor: default;">Pending</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
 
 
@@ -1234,7 +1315,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #28a745; cursor: default;">Payment Success</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #28a745; cursor: default;">Payment Success</a>
 
 
 
@@ -1246,9 +1328,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                     <!-- Show 'Join Now' only if they haven't joined yet -->
                                                     <?php if ($isRegistrationOpen): ?>
-                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>" class="joinbtn">Join Now</a>
+                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>"
+                                                            class="joinbtn">Join Now</a>
                                                     <?php else: ?>
-                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn" style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join Now</a>
+                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn"
+                                                            style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join
+                                                            Now</a>
                                                     <?php endif; ?>
 
                                                 <?php endif; ?>
@@ -1267,7 +1352,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         // Combine DB Date with 10:00 AM EST
                                                         $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
                                                         $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-
+                                        
                                                         // Check if current time is before the draw time
                                                         if ($nowEst < $drawEst) {
                                                             $isDrawLive = false;
@@ -1279,9 +1364,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 ?>
 
                                                 <?php if ($isDrawLive): ?>
-                                                    <a href="https://casainfotech.com/staging/tournament/" class="joinbtn">View Live</a>
+                                                    <a href="tournament/?id=<?php echo (int) $row['ID']; ?>" class="joinbtn">View
+                                                        Live</a>
                                                 <?php else: ?>
-                                                    <a href="javascript:void(0);" onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');" class="joinbtn">View Live</a>
+                                                    <a href="javascript:void(0);"
+                                                        onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');"
+                                                        class="joinbtn">View Live</a>
                                                 <?php endif; ?>
                                             </div>
 
@@ -1297,7 +1385,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                     </div>
                                                 <?php else: ?>
                                                     <!-- Grayed out Registration Closed button -->
-                                                    <div class="regBtn" style="background: #475569 !important; border-color: #334155 !important;">
+                                                    <div class="regBtn"
+                                                        style="background: #475569 !important; border-color: #334155 !important;">
                                                         <p style="color: #cbd5e1 !important;">Registration Closed</p>
                                                     </div>
                                                 <?php endif; ?>
@@ -1317,21 +1406,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Updated Pay Now Button -->
 
-                                                        <button type="button"
-
-                                                            class="joinbtn pay-now-trigger"
-
-                                                            style="background: #fb172e; border: none;"
-
-                                                            data-bs-toggle="modal"
-
-                                                            data-bs-target="#PaymentModal"
-
-                                                            data-id="<?php echo $row['ID']; ?>"
-
+                                                        <button type="button" class="joinbtn pay-now-trigger"
+                                                            style="background: #fb172e; border: none;" data-bs-toggle="modal"
+                                                            data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
-
-                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>"> <!-- Added this line -->
+                                                            data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
+                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1341,7 +1421,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 2: Paid but admin hasn't approved yet (STATUS = Y and APPROVED_BY is NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #ffc107; color: #000; cursor: default;">Pending</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
 
 
@@ -1349,7 +1430,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
 
-                                                        <a href="javascript:void(0);" class="joinbtn" style="background: #28a745; cursor: default;">Payment Success</a>
+                                                        <a href="javascript:void(0);" class="joinbtn"
+                                                            style="background: #28a745; cursor: default;">Payment Success</a>
 
 
 
@@ -1361,9 +1443,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                     <!-- Show 'Join Now' only if they haven't joined yet -->
                                                     <?php if ($isRegistrationOpen): ?>
-                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>" class="joinbtn">Join Now</a>
+                                                        <a href="tournament-details.php?id=<?php echo $row['ID']; ?>"
+                                                            class="joinbtn">Join Now</a>
                                                     <?php else: ?>
-                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn" style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join Now</a>
+                                                        <a href="javascript:void(0);" onclick="return false;" class="joinbtn"
+                                                            style="background: #475569 !important; color: #94a3b8 !important; border-color: #334155 !important; cursor: not-allowed; opacity: 0.8;">Join
+                                                            Now</a>
                                                     <?php endif; ?>
 
                                                 <?php endif; ?>
@@ -1382,7 +1467,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         // Combine DB Date with 10:00 AM EST
                                                         $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
                                                         $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-
+                                        
                                                         // Check if current time is before the draw time
                                                         if ($nowEst < $drawEst) {
                                                             $isDrawLive = false;
@@ -1394,9 +1479,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 ?>
 
                                                 <?php if ($isDrawLive): ?>
-                                                    <a href="https://casainfotech.com/staging/tournament/" class="joinbtn">View Live</a>
+                                                    <a href="tournament/?id=<?php echo (int) $row['ID']; ?>" class="joinbtn">View
+                                                        Live</a>
                                                 <?php else: ?>
-                                                    <a href="javascript:void(0);" onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');" class="joinbtn">View Live</a>
+                                                    <a href="javascript:void(0);"
+                                                        onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?php echo $drawDisplayDate; ?> at 10:00 am EST. Stay tuned!');"
+                                                        class="joinbtn">View Live</a>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -1412,7 +1500,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-                        <?php
+                                <?php
 
 
 
@@ -1468,7 +1556,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <?php
                             try {
 
-                                session_start();
+                                if (session_status() === PHP_SESSION_NONE) {
+                                    session_start();
+                                }
                                 $userEmail = $_SESSION['email'] ?? null;
 
                                 // 1️⃣ Get all products
@@ -1505,7 +1595,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                     foreach ($products as $product) {
 
-                                        $productID   = $product['ID'];
+                                        $productID = $product['ID'];
                                         $productName = !empty($product['PRODUCT_NAME'])
                                             ? htmlspecialchars($product['PRODUCT_NAME'])
                                             : 'N/A';
@@ -1521,7 +1611,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             : 'assets/images/default.jpg';
 
                                         $orderData = $orderMap[$productID] ?? null;
-                            ?>
+                                        ?>
 
                                         <div class="store-item">
                                             <img src="<?= $imagePath ?>" alt="Product Image">
@@ -1541,7 +1631,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                             CAD <?= htmlspecialchars($orderData['PRICE']) ?>
                                                         </b>
                                                     </p>
-                                                    
+
                                                     <div class="order-capsule">
                                                         <span>Last Order </span>
                                                         <b><?= htmlspecialchars($orderData['QUANTITY']) ?> Pcs</b>
@@ -1568,7 +1658,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                             </div>
                                         </div>
 
-                            <?php
+                                        <?php
                                     }
                                 } else {
                                     echo "<p>No products found.</p>";
@@ -1607,7 +1697,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <div class="reviewSlide">
                         <div class="reviewCard">
                             <div class="reviewTextDiv">
-                                <p>I am really satisfied with casa tournaments. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus laboriosam hic voluptates necessitatibus totam natus quae blanditiis, illum id veniam atque accusamus harum animi cupiditate rem possimus quidem esse nemo nam ratione! Minus optio amet soluta veniam inventore, porro illum ab quidem ut tenetur veritatis tempore ex, quo similique corrupti?</p>
+                                <p>I am really satisfied with casa tournaments. Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Minus laboriosam hic voluptates necessitatibus totam natus quae
+                                    blanditiis, illum id veniam atque accusamus harum animi cupiditate rem possimus
+                                    quidem esse nemo nam ratione! Minus optio amet soluta veniam inventore, porro illum
+                                    ab quidem ut tenetur veritatis tempore ex, quo similique corrupti?</p>
                             </div>
                         </div>
                     </div>
@@ -1615,7 +1709,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <div class="reviewSlide">
                         <div class="reviewCard">
                             <div class="reviewTextDiv">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto recusandae tempora ad beatae dolorum quod.</p>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto recusandae
+                                    tempora ad beatae dolorum quod.</p>
                             </div>
                         </div>
                     </div>
@@ -1636,31 +1731,18 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 </section>
 
 
-<!-- Info modal -->
-<div class="modal fade" id="Infomodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="InfomodalLabel" aria-hidden="true">
-
+<!-- Info modal (Dynamic - populated via JS) -->
+<div class="modal fade" id="Infomodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="InfomodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="InfomodalLabel">Casa badminton club</h5>
+                <h5 class="modal-title" id="InfomodalLabel">Club Info</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-
-            <div class="modal-body">
-                <p>What We Offer:</p>
-                <ul>
-                    <li><strong>Family & Couples Games –</strong> We encourage husbands and wives, parents and kids, and even entire families to enjoy the sport together. Our family sessions create the perfect opportunity to bond, have fun, and stay active.</li>
-                    <li><strong>Skill-Level Based Matches –</strong> Players are grouped into beginner, intermediate, and advanced levels so everyone enjoys fair, balanced, and competitive games.</li>
-                    <li><strong>Mixed-Gender & Mixed-Level Games –</strong> We regularly host fun matches where men, women, and players of different levels can team up, learn from each other, and enjoy the social side of badminton.</li>
-                    <li><strong>Friendly Matches & Social Play –</strong> Connect with fellow badminton enthusiasts in a fun, inclusive setting.</li>
-                    <li><strong>Tournaments & Events –</strong> Regular competitions to challenge your skills and celebrate progress.</li>
-                    <li><strong>Community Spirit –</strong> A place where sportsmanship, teamwork, and enjoyment come first.</li>
-                </ul>
-                <p>At Casa Badminton Club, our mission is simple: to grow the love of badminton and create a community where everyone feels at home—whether you play for fitness, family bonding, training, or competition.</p>
-                <p>Come join us, pick up your racket, and be part of the Casa family!</p>
+            <div class="modal-body" id="InfomodalBody">
+                <p>Loading...</p>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -1669,7 +1751,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 </div>
 
 <!-- Costingmodal -->
-<div class="modal fade" id="ReferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ReferModalLabel" aria-hidden="true">
+<div class="modal fade" id="ReferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ReferModalLabel" aria-hidden="true">
 
 
 
@@ -1740,8 +1823,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 </div>
 
-<!------ Costingmodal ------>
-<div class="modal fade" id="Costingmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="CostingmodalLabel" aria-hidden="true">
+<!------ Costingmodal (Dynamic - populated via JS) ------>
+<div class="modal fade" id="Costingmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="CostingmodalLabel" aria-hidden="true">
 
 
 
@@ -1754,96 +1838,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
             <div class="modal-header">
-
-
-
                 <h5 class="modal-title" id="CostingmodalLabel">Game Costing</h5>
-
-
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-
             </div>
-
-
-            <!-- old design -->
-            <div class="modal-body d-none">
-                <p>Here's the breakdown:</p>
-                <p>Men Double</p>
-                <ul>
-
-
-
-                    <li>(Court Cost + Birdie cost)/ no of players</li>
-
-
-
-                    <li>We consider two birdies per player</li>
-
-
-
-                    <li>4 players: $25 each</li>
-
-
-
-                    <li>5 players: $22 each</li>
-
-
-
-                    <li>6 players: $20 each</li>
-
-
-
-                </ul>
-                <p>Women Double</p>
-                <ul>
-
-
-
-                    <li>(Court Cost + Birdie cost)/ no of players</li>
-
-
-
-                    <li>We consider one birdies per player</li>
-
-
-
-                    <li>4 players: $18 each</li>
-
-
-
-                    <li>5 players: $15 each</li>
-
-
-
-                    <li>6 players: $14 each</li>
-
-
-
-                </ul>
-            </div>
-
-            <!-- new design -->
-            <div class="modal-body">
-                <p>Men Double</p>
-                <ul>
-                    <li>Price = (Court Cost + Birdie cost)/ no of players</li>
-                    <li>We consider two birdies per player</li>
-                    <li>4 players: $25 each</li>
-                    <li>5 players: $22 each</li>
-                    <li>6 players: $20 each</li>
-                </ul>
-                <p>Women Double</p>
-                <ul>
-                    <li>Price = (Court Cost + Birdie cost)/ no of players</li>
-                    <li>We consider one birdies per player</li>
-                    <li>4 players: $18 each</li>
-                    <li>5 players: $15 each</li>
-                    <li>6 players: $14 each</li>
-                </ul>
-                <p>Note: The portal dynamically adjusts the price based on players confirmed</p>
+            <div class="modal-body" id="CostingmodalBody">
+                <p>Loading...</p>
             </div>
 
 
@@ -1872,384 +1871,23 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 
 
-<!------ GameSchedulemodal ------>
-<div class="modal fade" id="GameSchedulemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="GameSchedulemodalLabel" aria-hidden="true">
-
-
-
+<!------ GameSchedulemodal (Dynamic - populated via JS) ------>
+<div class="modal fade" id="GameSchedulemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="GameSchedulemodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-
-
-
         <div class="modal-content">
-
-
-
             <div class="modal-header">
-
-
-
                 <h5 class="modal-title" id="GameSchedulemodalLabel">Game Schedule</h5>
-
-
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-
             </div>
-
-
-
-            <div class="modal-body">
-                <!-- old design -->
-                <div class="row d-none">
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Monday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 8:30 pm- 10:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Tuesday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 8:30 pm- 10:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Wednesday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 6:00 pm- 8:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Thursday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 9:30 pm- 11:30 pm</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Friday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Hymus</li>
-
-
-
-                            <li>⏰ Time: 6:00 pm- 8:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Saturday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Epic</li>
-
-
-
-                            <li>⏰ Time: 7:00 am- 9:00 am</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-
-                    <div class="col-md-6 col-12 mb-2">
-
-
-
-                        <p>📅 Sunday</p>
-
-
-
-                        <ul>
-
-
-
-                            <li>👨‍👩‍👧 Category: Male & Female</li>
-
-
-
-                            <li>⭐ Level: Intermediate / Intermediate+</li>
-
-
-
-                            <li>📍 Venue: Hymus</li>
-
-
-
-                            <li>⏰ Time: 4:00 pm- 6:00 pm</li>
-
-
-
-                            <li><b>Note:</b> More ladies join in (seperate court)</li>
-
-
-
-                        </ul>
-
-
-
-                    </div>
-                </div>
-
-                <!-- new design -->
-                <div class="scheduleTable">
-                    <table>
-                        <thead>
-                            <th>Day</th>
-                            <th>Gender</th>
-                            <th>Level</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Time</th>
-                        </thead>
-
-                        <tbody>
-                            <tr>
-                                <td>Monday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:00 pm to 11:00 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Tuesday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:00 pm to 11:00 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Wednesday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>6:30 pm to 8:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Thursday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>9:30 pm- 11:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Friday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>6:30 pm to 8:30 pm</td>
-                            </tr>
-                            <tr>
-                                <td>Saturday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Epic</td>
-                                <td>7:00 am to 9:00 am</td>
-                            </tr>
-                            <tr>
-                                <td>Sunday</td>
-                                <td>Male & Female</td>
-                                <td>Intermediate / Intermediate+</td>
-                                <td>Doubles</td>
-                                <td>Hymus</td>
-                                <td>4:00 pm- 6:00 pm</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="modal-body" id="GameSchedulemodalBody">
+                <p>Loading...</p>
             </div>
-
-
-
             <div class="modal-footer">
-
-
-
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-
-
             </div>
-
-
-
         </div>
-
-
-
     </div>
-
-
-
 </div>
 
 <!-- Payment Modal -->
@@ -2264,7 +1902,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                 <h5 class="modal-title" id="PaymentModalLabel">Notify Payment</h5>
 
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
 
             </div>
 
@@ -2299,7 +1938,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                         <label>Enter Payment Amount</label>
 
                         <!-- <input type="number" step="0.01" name="payment_amount" class="form-control" required placeholder="0.00"> -->
-                        <input type="number" step="0.01" name="payment_amount" class="form-control" value="40.00" required readonly>
+                        <input type="number" step="0.01" name="payment_amount" class="form-control" value="40.00"
+                            required readonly>
 
                     </div>
 
@@ -2312,7 +1952,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <label>Enter Payment Date</label>
 
                             <!-- <input type="date" name="payment_date" class="form-control" required> -->
-                            <input type="date" id="payment_date" name="payment_date" class="form-control" required readonly>
+                            <input type="date" id="payment_date" name="payment_date" class="form-control" required
+                                readonly>
 
 
                         </div>
@@ -2322,7 +1963,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <label>Enter Payment Time</label>
 
                             <!-- <input type="time" name="payment_time" class="form-control" required> -->
-                            <input type="time" id="payment_time" name="payment_time" class="form-control" required readonly>
+                            <input type="time" id="payment_time" name="payment_time" class="form-control" required
+                                readonly>
 
 
                         </div>
@@ -2353,7 +1995,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         <label>Any Payment Details (Optional)</label>
 
-                        <input type="text" name="payment_details" class="form-control" placeholder="e.g. Reference number">
+                        <input type="text" name="payment_details" class="form-control"
+                            placeholder="e.g. Reference number">
 
                     </div>
 
@@ -2363,7 +2006,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         <label>Message (Optional)</label>
 
-                        <textarea name="payment_message" class="form-control" rows="2" placeholder="Your message here..."></textarea>
+                        <textarea name="payment_message" class="form-control" rows="2"
+                            placeholder="Your message here..."></textarea>
 
                     </div>
 
@@ -2397,19 +2041,23 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
         <h1 style="color:white; margin-top:20px; font-weight: 800;">Transaction Pending Verification!</h1>
 
-        <p style="color:#94a3b8; font-size: 1.2rem;">We have logged your <br><strong style="color:white;">CAD <span id="dispAmt"></span>(Interac/Cash) payment</strong></p>
+        <p style="color:#94a3b8; font-size: 1.2rem;">We have logged your <br><strong style="color:white;">CAD <span
+                    id="dispAmt"></span>(Interac/Cash) payment</strong></p>
 
-        <p style="color:#94a3b8;">Admin verifies the transfer and confirms your entry.Your button will turn green and display "Payment Success".See you on the court soon!
+        <p style="color:#94a3b8;">Admin verifies the transfer and confirms your entry.Your button will turn green and
+            display "Payment Success".See you on the court soon!
         </p>
 
-        <button onclick="location.reload()" class="btn btn-danger mt-4" style="background:#fb172e; border:none; padding:12px 40px; font-weight:bold;">Close</button>
+        <button onclick="location.reload()" class="btn btn-danger mt-4"
+            style="background:#fb172e; border:none; padding:12px 40px; font-weight:bold;">Close</button>
 
     </div>
 
 </div>
 
 <!-- review modal -->
-<div class="modal fade" id="reviewmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reviewmodalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="reviewmodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2473,7 +2121,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <p class="edit-text" contenteditable="true" rows="15"></p>
 
                 <div class="d-flex justify-content-center" style="gap: 12px;">
-                    
+
                     <form action="">
                         <input class="reviewBtn" type="submit" value="Submit">
                     </form>
@@ -2484,15 +2132,13 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
     </div>
 </div>
 
-<
-
-    <?php include "includes/footer.php"; ?>
+< <?php include "includes/footer.php"; ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js">
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             var paymentModalEl = document.getElementById('PaymentModal');
 
@@ -2502,7 +2148,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
             // Populate data when modal opens
 
-            paymentModalEl.addEventListener('show.bs.modal', function(event) {
+            paymentModalEl.addEventListener('show.bs.modal', function (event) {
 
                 var button = event.relatedTarget;
 
@@ -2520,7 +2166,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
             // AJAX Form Submission
 
-            $('#paymentForm').on('submit', function(e) {
+            $('#paymentForm').on('submit', function (e) {
 
                 e.preventDefault();
 
@@ -2542,7 +2188,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     dataType: 'json',
 
-                    success: function(response) {
+                    success: function (response) {
 
                         if (response.success) {
 
@@ -2562,7 +2208,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     },
 
-                    error: function() {
+                    error: function () {
 
                         $('#paymentError').text('Server error. Please try again.').removeClass('d-none');
 
@@ -2577,7 +2223,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const dateInput = document.getElementById('payment_date');
             const timeInput = document.getElementById('payment_time');
 
@@ -2601,14 +2247,14 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         var wyg = select('.text');
         console.log(wyg);
 
-        wys.addEventListener('keyup', function(e) {
+        wys.addEventListener('keyup', function (e) {
             wyg.innerHTML = this.innerHTML;
         });
 
         var buttons = select('.formatter button');
 
-        buttons.forEach(function(button) {
-            button.addEventListener('click', function() {
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
                 formatText(this.getAttribute('data-command'));
             })
         });
@@ -2630,4 +2276,65 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
             var elements = document.querySelectorAll(query);
             return (elements.length > 1) ? elements : elements[0];
         }
+    </script>
+
+    <!-- Dynamic Modal Population for Club Cards (Info / Costing / Schedule) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Info modal: populate title + body from data attributes
+            document.querySelectorAll('.club-info-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.getElementById('InfomodalLabel').textContent = this.dataset.clubName;
+                    document.getElementById('InfomodalBody').innerHTML = this.dataset.clubInfo;
+                });
+            });
+
+            // Costing modal: populate title + body from data attributes
+            document.querySelectorAll('.club-cost-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.getElementById('CostingmodalLabel').textContent = this.dataset.clubName + ' — Costing';
+                    document.getElementById('CostingmodalBody').innerHTML = this.dataset.clubCost;
+                });
+            });
+
+            // Schedule modal: populate title + body from data attributes
+            document.querySelectorAll('.club-schedule-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.getElementById('GameSchedulemodalLabel').textContent = this.dataset.clubName + ' — Schedule';
+                    document.getElementById('GameSchedulemodalBody').innerHTML = this.dataset.clubSchedule;
+                });
+            });
+        });
+    </script>
+
+    <!-- AJAX handler for Join Club -->
+    <script>
+        $(document).on('click', '.join-club-btn', function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var clubId = btn.data('club-id');
+
+            if (btn.prop('disabled')) return;
+            btn.prop('disabled', true).text('Joining...');
+
+            $.ajax({
+                url: 'api/join_club.php',
+                type: 'POST',
+                data: { club_id: clubId },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Error occurred.');
+                        btn.prop('disabled', false).html('<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg><span>Join</span>');
+                    }
+                },
+                error: function () {
+                    alert('Server error while joining. Please try again.');
+                    btn.prop('disabled', false).html('<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/></svg><span>Join</span>');
+                }
+            });
+        });
     </script>

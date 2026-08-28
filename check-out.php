@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "includes/store-header.php";
+include "includes/inner-header.php";
 include "dbConnection.php";
 
 // print_r($_SESSION);exit;

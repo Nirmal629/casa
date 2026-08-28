@@ -4,6 +4,21 @@
 
 jQuery(document).ready(function () {
 
+    // Parse URL parameter to activate specific tab on load
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab');
+    if (activeTab) {
+        let tabButton = jQuery('#' + activeTab);
+        if (tabButton.length === 0) {
+            tabButton = jQuery('button[data-bs-target="#' + activeTab + '"]');
+        }
+        if (tabButton.length > 0) {
+            setTimeout(function () {
+                tabButton.trigger('click');
+            }, 100);
+        }
+    }
+
     // Main Menu
 
     jQuery("#open_Sidebar").click(function () {
@@ -1081,7 +1096,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: "https://casainfotech.com/staging/api/fetch_payment.php",
+                url: BASE_URL + "api/fetch_payment.php",
 
                 type: "POST",
 
@@ -1171,7 +1186,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "https://casainfotech.com/staging/api/view_player_pay.php",
+            url: BASE_URL + "api/view_player_ledger.php",
 
             type: "POST",
 
@@ -1215,7 +1230,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/filter_host_payment.php',
+            url: BASE_URL + 'api/filter_host_payment.php',
 
             data: {
 
@@ -1236,6 +1251,167 @@ $(document).ready(function () {
             }
 
         })
+
+    });
+
+});
+
+
+
+
+////Player Financial Ledger — filter bar + pagination
+
+$(document).ready(function () {
+
+    // Year / Month filter change → reload ledger (month selected = existing Month History UI)
+    $(document).on('change', '.pay-ledger-year, .pay-ledger-month', function () {
+
+        var $bar = $(this).closest('.pay-ledger-filter');
+
+        var user_id = $bar.find('.pay-ledger-year').data('user');
+
+        var year = $bar.find('.pay-ledger-year').val();
+
+        var month = $bar.find('.pay-ledger-month').val();
+
+        var pageSize = $('.pay-ledger-pagesize').val() || 20;
+
+        if (user_id === undefined || user_id === '') return;
+
+        $.ajax({
+
+            url: BASE_URL + "api/view_player_ledger.php",
+
+            type: "POST",
+
+            data: { user_id: user_id, year: year, month: month, pageSize: pageSize, page: 1 },
+
+            success: function (response) {
+
+                $(".patmentTb").html(response);
+
+            },
+
+            error: function () {
+
+                alert("Error saving data.");
+
+            }
+
+        });
+
+    });
+
+    // "Full Ledger" button → reset filters, show complete ledger
+    $(document).on('click', '.pay-ledger-full', function () {
+
+        var user_id = $(this).data('user');
+
+        var pageSize = $('.pay-ledger-pagesize').val() || 20;
+
+        if (user_id === undefined || user_id === '') return;
+
+        $.ajax({
+
+            url: BASE_URL + "api/view_player_ledger.php",
+
+            type: "POST",
+
+            data: { user_id: user_id, pageSize: pageSize, page: 1 },
+
+            success: function (response) {
+
+                $(".patmentTb").html(response);
+
+            },
+
+            error: function () {
+
+                alert("Error saving data.");
+
+            }
+
+        });
+
+    });
+
+    // Ledger page size change → reload ledger on page 1
+    $(document).on('change', '.pay-ledger-pagesize', function () {
+
+        var user_id = $(this).data('user');
+
+        var pageSize = $(this).val();
+
+        var $bar = $(this).closest('.patmentTb').find('.pay-ledger-filter');
+
+        var year = $bar.find('.pay-ledger-year').val() || '';
+
+        var month = $bar.find('.pay-ledger-month').val() || '';
+
+        if (user_id === undefined || user_id === '') return;
+
+        $.ajax({
+
+            url: BASE_URL + "api/view_player_ledger.php",
+
+            type: "POST",
+
+            data: { user_id: user_id, page: 1, pageSize: pageSize, year: year, month: month },
+
+            success: function (response) {
+
+                $(".patmentTb").html(response);
+
+            },
+
+            error: function () {
+
+                alert("Error saving data.");
+
+            }
+
+        });
+
+    });
+
+    // Ledger pagination — only displayed rows change, totals stay from full ledger
+    $(document).on('click', '.pay-ledger-page', function () {
+
+        var user_id = $(this).data('user');
+
+        var page = $(this).data('page');
+
+        var pageSize = $('.pay-ledger-pagesize').val() || 20;
+
+        var $bar = $(this).closest('.patmentTb').find('.pay-ledger-filter');
+
+        var year = $bar.find('.pay-ledger-year').val() || '';
+
+        var month = $bar.find('.pay-ledger-month').val() || '';
+
+        if (user_id === undefined || user_id === '') return;
+
+        $.ajax({
+
+            url: BASE_URL + "api/view_player_ledger.php",
+
+            type: "POST",
+
+            data: { user_id: user_id, page: page, pageSize: pageSize, year: year, month: month },
+
+            success: function (response) {
+
+                $(".patmentTb").html(response);
+
+            },
+
+            error: function () {
+
+                alert("Error saving data.");
+
+            }
+
+        });
 
     });
 
@@ -1427,7 +1603,7 @@ $(document).ready(function () {
         }
         $('.hostgameupdate_modal').addClass('open');
         $.ajax({
-            url: 'api/get_player_cost.php', // ðŸ”„ Adjust this URL to your PHP script
+            url: BASE_URL + 'api/get_player_cost.php', // ðŸ”„ Adjust this URL to your PHP script
             method: 'POST',
             data: { event_id: id },
             dataType: 'json',
@@ -1458,9 +1634,6 @@ $(document).ready(function () {
     $('.hostgameupdate_modal #save_btn').click(function () {
         let formData = {
             id: $('#evnt_id').val(),
-            host_name: $('#host-namee').val(),
-            event_country: $('#eventCountryy').val(),
-            event_province: $('#eventProvincee').val(),
             event_city: $('#eventCityy').val(),
             event_currency: $('#eventCurrencyy').val(),
             event_venue: $('#eventVenuee').val(),
@@ -1494,9 +1667,6 @@ $(document).ready(function () {
 
         // Simple validation
         let errors = [];
-        if (!formData.host_name) errors.push("Host name is required.");
-        if (!formData.event_country) errors.push("Event country is required.");
-        if (!formData.event_province) errors.push("Event province is required.");
         if (!formData.event_city) errors.push("Event city is required.");
         if (!formData.event_currency) errors.push("Event currency is required.");
         if (!formData.event_venue) errors.push("Event venue is required.");
@@ -1521,7 +1691,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '../../api/update_event.php',
+            url: BASE_URL + 'api/update_event.php',
             type: 'POST',
             data: formData,
             success: function (response) {
@@ -1535,7 +1705,7 @@ $(document).ready(function () {
                     var month = $("#month").val()
                     $.ajax({
                         type: "POST",
-                        url: '../../api/filter_schedule.php',
+                        url: BASE_URL + 'api/filter_schedule.php',
                         data: {
                             year: year,
                             month: month,
@@ -1685,7 +1855,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'https://casainfotech.com/staging/api/create_event_sub.php',
+            url: BASE_URL + 'api/create_event_sub.php',
 
             type: 'POST',
 
@@ -1879,7 +2049,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'https://casainfotech.com/staging/api/create_event_sub.php',
+            url: BASE_URL + 'api/create_event_sub.php',
 
             type: 'POST',
 
@@ -1895,7 +2065,7 @@ $(document).ready(function () {
 
                     // return false
 
-                    window.location.href = 'host-dashboard.php';
+                    window.location.href = 'host-dashboard.php?tab=Subscription';
 
                 } else {
 
@@ -2035,7 +2205,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: 'https://casainfotech.com/staging/api/copy_event.php',
+            url: BASE_URL + 'api/copy_event.php',
 
             type: 'POST',
 
@@ -2065,7 +2235,7 @@ $(document).ready(function () {
 
                         type: "POST",
 
-                        url: 'https://casainfotech.com/staging/api/filter_schedule.php',
+                        url: BASE_URL + 'api/filter_schedule.php',
 
                         data: {
 
@@ -2119,7 +2289,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'https://casainfotech.com/staging/api/delete_event.php',
+                url: BASE_URL + 'api/delete_event.php',
 
                 type: 'POST',
 
@@ -2133,7 +2303,11 @@ $(document).ready(function () {
 
                         alert('Event deleted successfully.');
 
-                        location.reload(); // Refresh the page to reflect changes
+                        if ($("#month").length > 0) {
+                            $("#month").trigger("change");
+                        } else {
+                            location.reload();
+                        }
 
                     } else {
 
@@ -2183,7 +2357,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'https://casainfotech.com/staging/api/join_event.php',
+                url: BASE_URL + 'api/join_event.php',
 
                 type: 'POST',
 
@@ -2253,7 +2427,7 @@ $(document).ready(function () {
     
             $.ajax({
     
-                url: 'https://casainfotech.com/staging/api/join_event_default.php',
+                url: BASE_URL + 'api/join_event_default.php',
     
                 type: 'POST',
     
@@ -2327,9 +2501,9 @@ $(document).ready(function () {
 
         let url = isJoined
 
-            ? 'https://casainfotech.com/staging/api/cancel_event_default.php'
+            ? 'api/cancel_event_default.php'
 
-            : 'https://casainfotech.com/staging/api/join_event_default.php';
+            : 'api/join_event_default.php';
 
 
 
@@ -2413,7 +2587,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'https://casainfotech.com/staging/api/cancel_event.php',
+                url: BASE_URL + 'api/cancel_event.php',
 
                 type: 'POST',
 
@@ -2489,7 +2663,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: 'https://casainfotech.com/staging/api/update_inviteJoin.php',
+                url: BASE_URL + 'api/update_inviteJoin.php',
 
                 type: 'POST',
 
@@ -2575,7 +2749,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: "https://casainfotech.com/staging/api/new-game-host.php", // Ensure this file handles AJAX requests
+            url: BASE_URL + "api/new-game-host.php", // Ensure this file handles AJAX requests
 
             data: formData,
 
@@ -2683,7 +2857,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/view_joined_invited.php',
+            url: BASE_URL + 'api/view_joined_invited.php',
 
             data: parseData,
 
@@ -2725,7 +2899,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/view_joined_all.php',
+            url: BASE_URL + 'api/view_joined_all.php',
 
             data: parseData,
 
@@ -2765,7 +2939,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/view_joined_all_default.php',
+            url: BASE_URL + 'api/view_joined_all_default.php',
 
             data: parseData,
 
@@ -2784,15 +2958,14 @@ $(document).ready(function () {
 
 
     $(document).on('click', '.hostgameviewjoined_modal .customModal_close', function () {
-
-        // $('.discoverGames_card .view_btn').click(function () {
-
-
-
         $('.hostgameviewjoined_modal').removeClass('open');
+    });
 
-
-
+    // Close any custom modal when clicking outside the content (on the grey backdrop)
+    $(document).on('click', '.customModal_wrap', function (e) {
+        if ($(e.target).hasClass('customModal_wrap')) {
+            $(this).removeClass('open');
+        }
     });
 
 
@@ -2811,15 +2984,15 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/view_player.php',
+            url: BASE_URL + 'api/view_player.php',
 
             data: parseData,
 
             success: function (response) {
 
-                $("#playerList").html(response)
+                $("#playerList_upcoming").html(response)
 
-                $('.hostgameview_modal').addClass('open');
+                $('.hostgameview_modal_upcoming').addClass('open');
 
             }
 
@@ -2843,7 +3016,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/same_paymentByhost.php',
+            url: BASE_URL + 'api/same_paymentByhost.php',
 
             data: {
 
@@ -2869,38 +3042,14 @@ $(document).ready(function () {
 
     });
 
-    $('.hostgameview_modal .customModal_close').click(function () {
-
-        console.log('abc')
-
-        $('.hostgameview_modal').removeClass('open');
-
-        // setTimeout(function () {
-
-        //         window.location.href = baseUrl + '/host-dashboard.php';
-
-        //     }, 200);
-
-
-
+    // General handler to close any custom modal when close button is clicked
+    $(document).on('click', '.customModal_close', function () {
+        $(this).closest('.customModal_wrap').removeClass('open');
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-    $('.playergameview_modal .customModal_close').click(function () {
-
-        $('.playergameview_modal').removeClass('open');
-
+    // Close all open modals when switching tabs
+    $(document).on('click', '[data-bs-toggle="tab"]', function () {
+        $('.customModal_wrap').removeClass('open');
     });
 
 
@@ -2934,88 +3083,63 @@ $(document).ready(function () {
         if ($(this).is(':checked')) {
 
             // Send AJAX request to save data
-
             $.ajax({
-
-                url: 'https://casainfotech.com/staging/api/save_invitation.php', // PHP script to handle the request
-
+                url: BASE_URL + 'api/save_invitation.php', // PHP script to handle the request
                 type: 'POST',
-
                 data: {
-
                     type: 'checked',
-
                     user_id: userId,
-
                     game_id: gameId,
-
                     host_id: hostId,
-
                     currency: currency,
-
                     price: price,
-
                     dtype: dtype
-
                 },
-
                 success: function (response) {
-
-                    // alert('Invitation sent successfully!');
-
+                    // Refresh the host cards to update counts instantly in the background
+                    $("#month").trigger("change");
                 },
-
                 error: function () {
-
                     alert('Error sending invitation. Please try again.');
-
                 }
-
             });
 
         }
 
         else {
 
+            // Automatically uncheck the Confirm icon if Add is unchecked
+            let row = $(this).closest('tr');
+            let confirmCheckbox = row.find('.invite-checkboxx');
+            if (confirmCheckbox.is(':checked')) {
+                confirmCheckbox.prop('checked', false);
+                confirmCheckbox.next('i').removeClass('fa-check-double text-primary').addClass('fa-check text-secondary');
+            }
+
             $.ajax({
-
-                url: 'https://casainfotech.com/staging/api/save_invitation.php', // PHP script to handle the request
-
+                url: BASE_URL + 'api/save_invitation.php', // PHP script to handle the request
                 type: 'POST',
-
                 data: {
-
                     user_id: userId,
-
                     game_id: gameId,
-
                     host_id: hostId,
-
                     currency: currency,
-
                     price: price,
-
                     type: 'unchecked',
-
                 },
-
                 success: function (response) {
-
-                    // alert('Invitation sent successfully!');
-
+                    // Refresh the host cards to update counts instantly in the background
+                    $("#month").trigger("change");
                 },
-
                 error: function () {
-
                     alert('Error sending invitation. Please try again.');
-
                 }
-
             });
 
         }
 
     });
+
 
 
 
@@ -3051,44 +3175,34 @@ $(document).ready(function () {
 
         if ($(this).is(':checked')) {
 
+            // Automatically check the Add Player icon if Confirm is checked
+            let row = $(this).closest('tr');
+            let addCheckbox = row.find('.invite-checkbox');
+            if (!addCheckbox.is(':checked')) {
+                addCheckbox.prop('checked', true);
+                addCheckbox.next('i').removeClass('fa-user-plus text-secondary').addClass('fa-user-check text-success');
+            }
+
             // Send AJAX request to save data
-
             $.ajax({
-
-                url: 'https://casainfotech.com/staging/api/save_confirm.php', // PHP script to handle the request
-
+                url: BASE_URL + 'api/save_confirm.php', // PHP script to handle the request
                 type: 'POST',
-
                 data: {
-
                     type: 'checked',
-
                     user_id: userId,
-
                     game_id: gameId,
-
                     host_id: hostId,
-
                     currency: currency,
-
                     price: price,
-
                     dtype: dtype
-
                 },
-
                 success: function (response) {
-
-                    // alert('Invitation sent successfully!');
-
+                    // Refresh the host cards to update counts instantly in the background
+                    $("#month").trigger("change");
                 },
-
                 error: function () {
-
                     alert('Error sending invitation. Please try again.');
-
                 }
-
             });
 
         }
@@ -3096,39 +3210,23 @@ $(document).ready(function () {
         else {
 
             $.ajax({
-
-                url: 'https://casainfotech.com/staging/api/save_confirm.php', // PHP script to handle the request
-
+                url: BASE_URL + 'api/save_confirm.php', // PHP script to handle the request
                 type: 'POST',
-
                 data: {
-
                     user_id: userId,
-
                     game_id: gameId,
-
                     host_id: hostId,
-
                     currency: currency,
-
                     price: price,
-
                     type: 'unchecked',
-
                 },
-
                 success: function (response) {
-
-                    // alert('Invitation sent successfully!');
-
+                    // Refresh the host cards to update counts instantly in the background
+                    $("#month").trigger("change");
                 },
-
                 error: function () {
-
                     alert('Error sending invitation. Please try again.');
-
                 }
-
             });
 
         }
@@ -3149,7 +3247,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "https://casainfotech.com/staging/api/update_price.php", // Backend PHP script
+            url: BASE_URL + "api/update_price.php", // Backend PHP script
 
             type: "POST",
 
@@ -3227,7 +3325,7 @@ $(document).ready(function () {
 
     //                 type: "POST",
 
-    //                 url: "https://casainfotech.com/staging/api/search_result.php", // Replace with your actual API endpoint
+    //                 url: BASE_URL + "api/search_result.php", // Replace with your actual API endpoint
 
     //                 data: { query: searchText,ID:gameIdN,HOST_ID:hostIdN },
 
@@ -3245,7 +3343,7 @@ $(document).ready(function () {
 
     //                 type: "POST",
 
-    //                 url: "https://casainfotech.com/staging/api/search_result.php", // Replace with your actual API endpoint
+    //                 url: BASE_URL + "api/search_result.php", // Replace with your actual API endpoint
 
     //                 data: { query: "",ID:gameIdN,HOST_ID:hostIdN },
 
@@ -3295,7 +3393,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: "https://casainfotech.com/staging/api/search_result.php",
+            url: BASE_URL + "api/search_result.php",
 
             data: {
 
@@ -3323,6 +3421,68 @@ $(document).ready(function () {
 
 
 
+    function fetchPlayersSubscription() {
+
+        let searchText = $('#search_subscription').val().trim();
+
+        let gender = $('#sgenderCategoryy_subscription').val();
+
+        let skillLevel = $('#sgenderSkillLevell_subscription').val();
+
+        let firstCheckbox = $("#playerList_subscription .invite-checkbox").first();
+
+
+
+        let gameId = firstCheckbox.data("game-id");
+
+        let hostId = firstCheckbox.data("host-id");
+
+
+
+        $("#playdt_subscription").attr('data-game-id', gameId);
+
+        $("#playdt_subscription").attr('data-host-id', hostId);
+
+
+
+        let gameIdN = $("#playdt_subscription").attr('data-game-id');
+
+        let hostIdN = $("#playdt_subscription").attr('data-host-id');
+
+
+
+        $.ajax({
+
+            type: "POST",
+
+            url: BASE_URL + "api/search_result.php",
+
+            data: {
+
+                query: searchText,
+
+                ID: gameIdN,
+
+                HOST_ID: hostIdN,
+
+                gender: gender,
+
+                skill_level: skillLevel
+
+            },
+
+            success: function (response) {
+
+                $("#playerList_subscription").html(response);
+
+            }
+
+        });
+
+    }
+
+
+
     // Triggers
 
     $('#search').on('keyup', function () {
@@ -3337,9 +3497,29 @@ $(document).ready(function () {
 
 
 
+    $('#search_subscription').on('keyup', function () {
+
+        if ($(this).val().length >= 2 || $(this).val().length === 0) {
+
+            fetchPlayersSubscription();
+
+        }
+
+    });
+
+
+
     $('#sgenderCategoryy, #sgenderSkillLevell').on('change', function () {
 
         fetchPlayers();
+
+    });
+
+
+
+    $('#sgenderCategoryy_subscription, #sgenderSkillLevell_subscription').on('change', function () {
+
+        fetchPlayersSubscription();
 
     });
 
@@ -3399,7 +3579,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: "https://casainfotech.com/staging/api/save_payment.php",
+            url: BASE_URL + "api/save_payment.php",
 
             type: "POST",
 
@@ -3463,13 +3643,12 @@ $(document).ready(function () {
 
                 $('.PayAmountModal').removeClass('open');
 
-                $(".custom_card .patmentTb").html(response);
-
+                location.reload();
             },
 
-            error: function () {
+            error: function (xhr) {
 
-                alert("Error saving data.");
+                alert(xhr.responseText || "Error saving data.");
 
             }
 
@@ -3491,7 +3670,7 @@ $(document).ready(function () {
 
             $.ajax({
 
-                url: "https://casainfotech.com/staging/api/fetch_payment.php",
+                url: BASE_URL + "api/fetch_payment.php",
 
                 type: "POST",
 
@@ -3524,19 +3703,13 @@ $(document).ready(function () {
                 },
 
                 error: function () {
-
                     alert("Error fetching payment details.");
-
                 }
-
             });
 
         } else {
-
             $("#tot_amnt strong").text("$0");
-
             $("#due strong").text("$0");
-
         }
 
     });
@@ -3554,25 +3727,15 @@ $(document).ready(function () {
 
 
         $.ajax({
-
             type: "POST",
-
-            url: 'https://casainfotech.com/staging/api/view_player_paymentHis.php',
-
+            url: BASE_URL + 'api/view_player_paymentHis.php',
             data: {
-
                 user_id: userId,
-
                 game_id: gameJoinId
-
             },
-
             success: function (response) {
-
-                $(".hostgameview_modal #playerList").html(response)
-
-                $('.hostgameview_modal').addClass('open');
-
+                $(".hostgameview_modal_payment #playerList_payment").html(response)
+                $('.hostgameview_modal_payment').addClass('open');
             }
 
         })
@@ -3582,33 +3745,20 @@ $(document).ready(function () {
 
 
     $(document).on('click', '.matchviewmodal_open', function () {
-
         let id = $(this).attr('data-id');
-
         let user_id = $(this).attr('data-user-id');
 
-
-
         $.ajax({
-
             type: "POST",
-
-            url: 'https://casainfotech.com/staging/api/view_player_paylist.php',
-
+            url: BASE_URL + 'api/view_player_paylist.php',
             data: {
-
                 game_id: id,
-
                 user_id: user_id
-
             },
 
             success: function (response) {
-
                 $(".hostgamevieww_modal #playerList").html(response)
-
                 $('.hostgamevieww_modal').addClass('open');
-
             }
 
         })
@@ -3621,34 +3771,20 @@ $(document).ready(function () {
 
     $(document).on('click', '.hostgamevieww_modal .customModal_close', function () {
 
-
-
         var year = $("#com_year").val()
-
         var month = $("#com_month").val()
-
         $.ajax({
-
             type: "POST",
-
-            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
-
+            url: BASE_URL + 'api/com_filter_schedule.php',
             data: {
-
                 year: year,
-
                 month: month,
-
                 type: 'filter'
-
             },
 
             success: function (response) {
-
                 $("#comp_game").html(response)
-
                 $('.hostgamevieww_modal').removeClass('open');
-
             }
 
         })
@@ -3669,7 +3805,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/view_game_player.php',
+            url: BASE_URL + 'api/view_game_player.php',
 
             data: {
 
@@ -3696,48 +3832,29 @@ $(document).ready(function () {
     $(document).on('click', '.rollback_btn', function () {
 
         console.log('rollback');
-
-
-
-
-
         const eventId = $(this).attr('data-id');
-
         const userId = $(this).attr('data-user-id');
 
 
 
         if (!eventId || !userId) {
-
             alert('Missing event or user ID');
-
             return;
-
         }
 
         if (confirm('Do you want to proceed?')) {
-
-
-
             $.ajax({
-
                 type: 'POST',
-
-                url: 'https://casainfotech.com/staging/api/rollback_event.php',
-
+                url: BASE_URL + 'api/rollback_event.php',
                 data: {
-
                     event_id: eventId,
-
                     host_id: userId,
-
                     action: 'rollback'
-
                 },
 
                 success: function (response) {
 
-                    window.location.href = 'https://casainfotech.com/staging/host-dashboard.php';
+                    window.location.href = 'host-dashboard.php';
 
                 },
 
@@ -3781,7 +3898,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/update_paymentHis.php',
+            url: BASE_URL + 'api/update_paymentHis.php',
 
             data: {
 
@@ -3817,19 +3934,47 @@ $(document).ready(function () {
 
     });
 
+    function updatePaymentModalContent(html) {
+        var $container = $(".patmentTb");
+        if ($("#modalBody").length > 0 && $("#modalBody").is(":visible")) {
+            $container = $("#modalBody");
+        }
+        var $filter = $container.find('.pay-ledger-filter').detach();
+        $container.html(html);
+        if ($filter.length > 0) {
+            $container.prepend($filter);
+        }
+    }
 
 
     $(document).on('click', '.approveBtnnn', function () {
+
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+        if (!isOverrideVal) {
+            // Month locking: block actions on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
 
         const game_id = $(this).data('id');
 
         const user_id = $(this).data('user');
 
+        const payment_id = $(this).attr('data-payment-id') || $(this).data('payment-id') || 0;
 
 
-        let year = $("#hpyear").val()
 
-        let month = $("#hpmonth").val()
+        let year = $(this).attr('data-year') || $(this).closest('.patmentTb').find('.pay-ledger-year').val() || $("#hpyear").val();
+
+        let month = $(this).attr('data-month') || $(this).closest('.patmentTb').find('.pay-ledger-month').val() || $("#hpmonth").val();
 
 
 
@@ -3841,13 +3986,17 @@ $(document).ready(function () {
 
             user_id,
 
-            year: year, month: month
+            payment_id,
+
+            year: year, month: month,
+
+            override: isOverrideVal ? 1 : 0
 
         }, function (res) {
 
             alert(res.message);
 
-            $(".patmentTb").html(res.html);
+            updatePaymentModalContent(res.html);
 
         }, 'json');
 
@@ -3857,17 +4006,37 @@ $(document).ready(function () {
 
     $(document).on('click', '.rejectBtnnn', function () {
 
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+        if (!isOverrideVal) {
+            // Month locking: block actions on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
         const game_id = $(this).data('id');
 
         const user_id = $(this).data('user');
 
+        const payment_id = $(this).attr('data-payment-id') || $(this).data('payment-id') || 0;
 
 
-        let year = $("#hpyear").val()
 
-        let month = $("#hpmonth").val()
+        let year = $(this).attr('data-year') || $(this).closest('.patmentTb').find('.pay-ledger-year').val() || $("#hpyear").val();
+
+        let month = $(this).attr('data-month') || $(this).closest('.patmentTb').find('.pay-ledger-month').val() || $("#hpmonth").val();
 
 
+
+        var reason = prompt("Please enter a rejection reason (optional):");
+        if (reason === null) return; // User cancelled
 
         $.post('api/payment_action.php', {
 
@@ -3877,13 +4046,19 @@ $(document).ready(function () {
 
             user_id,
 
-            year: year, month: month
+            payment_id: payment_id,
+
+            reason: reason,
+
+            year: year, month: month,
+
+            override: isOverrideVal ? 1 : 0
 
         }, function (res) {
 
             alert(res.message);
 
-            $(".patmentTb").html(res.html);
+            updatePaymentModalContent(res.html);
 
         }, 'json');
 
@@ -3892,6 +4067,21 @@ $(document).ready(function () {
 
 
     $(document).on('click', '.payBtnnn', function () {
+
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+        if (!isOverrideVal) {
+            // Month locking: block actions on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
 
         const game_id = $(this).data('id');
 
@@ -3903,9 +4093,11 @@ $(document).ready(function () {
 
 
 
-        let year = $("#hpyear").val()
+        let year = $(this).attr('data-year') || $(this).closest('.patmentTb').find('.pay-ledger-year').val() || $("#hpyear").val();
 
-        let month = $("#hpmonth").val()
+        let month = $(this).attr('data-month') || $(this).closest('.patmentTb').find('.pay-ledger-month').val() || $("#hpmonth").val();
+
+        let host_id = $("#payhost").val() || $("#hhost").val();
 
 
 
@@ -3923,13 +4115,17 @@ $(document).ready(function () {
 
                 payment_type,
 
-                year: year, month: month
+                host_id: host_id,
+
+                year: year, month: month,
+
+                override: isOverrideVal ? 1 : 0
 
             }, function (res) {
 
                 alert(res.message);
 
-                $(".patmentTb").html(res.html);
+                updatePaymentModalContent(res.html);
 
             }, 'json');
 
@@ -3945,15 +4141,30 @@ $(document).ready(function () {
 
     $(document).on('click', '.rollbackBtnnn', function () {
 
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+        if (!isOverrideVal) {
+            // Month locking: block actions on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
         const gameId = $(this).data('id');
 
         const userId = $(this).data('user');
 
         const amount = $(this).data('amount');
 
-        let year = $("#hpyear").val()
+        let year = $(this).attr('data-year') || $(this).closest('.patmentTb').find('.pay-ledger-year').val() || $("#hpyear").val();
 
-        let month = $("#hpmonth").val()
+        let month = $(this).attr('data-month') || $(this).closest('.patmentTb').find('.pay-ledger-month').val() || $("#hpmonth").val();
 
 
 
@@ -3965,11 +4176,13 @@ $(document).ready(function () {
 
                 user_id: userId,
 
-                year: year, month: month
+                year: year, month: month,
+
+                override: isOverrideVal ? 1 : 0
 
             }, function (response) {
 
-                $(".patmentTb").html(response);
+                updatePaymentModalContent(response);
 
                 // Optionally refresh the table
 
@@ -3981,13 +4194,425 @@ $(document).ready(function () {
 
 
 
+    // Quick Actions — Carry: carry forward closing balance to next month
+    $(document).on('click', '.pay-action-carry', function () {
+        console.log("Carry button clicked");
+
+        var isOverride = $(this).siblings('.pay-action-override').data('override') === 'on';
+
+        if (!isOverride) {
+            // Month locking: the month has already been carried forward
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+            // Current month cannot be carried forward
+            if ($(this).prop('disabled')) {
+                alert("The current month cannot be carried forward until it ends.");
+                return;
+            }
+        }
+
+        const userId = $(this).attr('data-user') || $(this).data('user');
+        const year = $(this).attr('data-year') || $(this).data('year');
+        const month = $(this).attr('data-month') || $(this).data('month');
+        console.log("User:", userId, "Year:", year, "Month:", month);
+
+        if (!userId) {
+            alert("User ID not found on carry button.");
+            return;
+        }
+
+        const url = (typeof BASE_URL !== 'undefined' ? BASE_URL : '') + 'api/carry_forward.php';
+        console.log("Sending POST to:", url);
+
+        $.post(url, {
+            user_id: userId,
+            year: year,
+            month: month
+        }, function (res) {
+            console.log("Carry forward response:", res);
+            alert(res.message);
+            if (res.success) {
+                updatePaymentModalContent(res.html);
+            }
+        }, 'json').fail(function (xhr, status, error) {
+            console.error("AJAX error:", status, error);
+            alert("Failed to carry forward: Server or network error.");
+        });
+    });
+
+    // Quick Actions — Override: testing toggle to enable all action buttons
+    $(document).on('click', '.pay-action-override', function () {
+        var $btn = $(this);
+        if ($btn.prop('disabled') || $btn.attr('disabled')) {
+            return;
+        }
+
+        var $btns = $btn.closest('.pay-history-actionbar-btns');
+        var isOff = $btn.attr('data-override') === 'off' || $btn.data('override') === 'off';
+        var $chip = $btn.closest('.pay-history-actionbar').find('.pay-status-chip');
+
+        var userId = $btn.attr('data-user') || $btn.data('user');
+        var year = $btn.attr('data-year') || $btn.data('year');
+        var month = $btn.attr('data-month') || $btn.data('month');
+
+        $.post('api/toggle_override.php', {
+            user_id: userId,
+            year: year,
+            month: month,
+            state: isOff ? 'on' : 'off'
+        });
+
+        if (isOff) {
+            // ── Override ON (Unlocked): enable all three action buttons ──
+            $btn.attr('data-override', 'on').data('override', 'on')
+                .attr('title', 'Override is Unlocked — click to restore the original state')
+                .addClass('pay-override-on');
+            $btn.find('i').removeClass('fa-lock').addClass('fa-lock-open');
+
+            $btns.find('.pay-action-carry, .pay-action-expense, .pay-action-pay')
+                .prop('disabled', false)
+                .removeAttr('disabled');
+
+            if ($chip.hasClass('pay-status-locked')) {
+                $chip.html('🔓 UNLOCKED').removeClass('pay-status-locked').addClass('pay-status-active');
+            } else if ($chip.hasClass('pay-status-pending')) {
+                $chip.html('🔓 UNLOCKED').removeClass('pay-status-pending').addClass('pay-status-active');
+            }
+        } else {
+            // ── Override OFF (Locked): restore each button's original disabled state ──
+            $btn.attr('data-override', 'off').data('override', 'off')
+                .attr('title', 'Override is Locked — click to unlock all action buttons (testing only)')
+                .removeClass('pay-override-on');
+            $btn.find('i').removeClass('fa-lock-open').addClass('fa-lock');
+
+            $btns.find('.pay-action-carry, .pay-action-expense, .pay-action-pay').each(function () {
+                var orig = $(this).attr('data-orig-disabled');  // 'disabled' or ''
+                if (orig === 'disabled') {
+                    $(this).prop('disabled', true).attr('disabled', 'disabled');
+                } else {
+                    $(this).prop('disabled', false).removeAttr('disabled');
+                }
+            });
+
+            var isCarryDisabled = $btns.find('.pay-action-carry').attr('data-orig-disabled') === 'disabled';
+            if ($chip.hasClass('pay-status-active') && $chip.text().trim() === '🔓 UNLOCKED') {
+                if (isCarryDisabled) {
+                    $chip.html('🔒 LOCKED').removeClass('pay-status-active').addClass('pay-status-locked');
+                } else {
+                    $chip.html('<i class="fa-solid fa-hourglass-half"></i> Pending Carry').removeClass('pay-status-active').addClass('pay-status-pending');
+                }
+            }
+        }
+    });
+
+    // Opening Balance Rollback click handler
+    $(document).on('click', '.pay-action-rollback-carry', function () {
+        if (!confirm("Are you sure you want to roll back the carry forward opening balance for this month?")) {
+            return;
+        }
+
+        var $btn = $(this);
+        var user_id = $btn.attr('data-user') || $btn.data('user');
+        var year = $btn.attr('data-year') || $btn.data('year');
+        var month = $btn.attr('data-month') || $btn.data('month');
+
+        if (!user_id) {
+            alert("User ID not found for rollback action.");
+            return;
+        }
+
+        $.post('api/rollback_carry_forward.php', {
+            user_id: user_id,
+            year: year,
+            month: month
+        }, function (res) {
+            alert(res.message);
+            if (res.success) {
+                updatePaymentModalContent(res.html);
+            }
+        }, 'json').fail(function () {
+            alert("Failed to roll back carry forward: Server or network error.");
+        });
+    });
+
+    // Quick Actions — Expense: toggle the Add Expense form
+    $(document).on('click', '.pay-action-expense', function () {
+        var isOverride = $(this).siblings('.pay-action-override').attr('data-override') === 'on' || $(this).siblings('.pay-action-override').data('override') === 'on';
+
+        if (!isOverride) {
+            // Month locking: block actions on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
+        $('#payPaymentFormWrap').slideUp(180);
+        $('#payExpenseFormWrap').slideToggle(180);
+
+    });
+
+    // Quick Actions — Pay action click (if any exists/triggered)
+    $(document).on('click', '.pay-action-pay', function () {
+        var isOverrideVal = $(this).siblings('.pay-action-override').attr('data-override') === 'on' || $(this).siblings('.pay-action-override').data('override') === 'on';
+
+        if (!isOverrideVal) {
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+        $('#payExpenseFormWrap').slideUp(180);
+        $('#payPaymentFormWrap').slideToggle(180);
+    });
+
+    // Expense form — Cancel: hide the form
+    $(document).on('click', '.pay-expense-cancel', function () {
+
+        $('#payExpenseFormWrap').slideUp(180);
+
+    });
+
+    // Pay form — Cancel: hide the form
+    $(document).on('click', '.pay-payment-cancel', function () {
+
+        $('#payPaymentFormWrap').slideUp(180);
+
+    });
+
+    // Expense form — Save: insert new expense and re-render
+    $(document).on('submit', '#payExpenseForm', function (e) {
+
+        e.preventDefault();
+
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+
+        if (!isOverrideVal) {
+            // Month locking: block expense creation on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
+
+
+        const user_id = $('input[name="user_id"]', this).val();
+
+        const venue = $('select[name="venue"]', this).val();
+
+        const type = $('input[name="type"]', this).val();
+
+        const amount = $('input[name="amount"]', this).val();
+
+        const expense_datetime = $('input[name="expense_datetime"]', this).val();
+
+        const year = $('input[name="year"]', this).val() || $("#hpyear").val();
+
+        const month = $('input[name="month"]', this).val() || $("#hpmonth").val();
+
+
+
+        if (!venue || !amount || !expense_datetime) {
+
+            alert("Please fill Venue, Amount and Date & Time.");
+
+            return;
+
+        }
+
+
+
+        $.post('api/add_expense.php', {
+
+            user_id: user_id,
+
+            venue: venue,
+
+            type: type,
+
+            amount: amount,
+
+            expense_datetime: expense_datetime,
+
+            year: year,
+
+            month: month,
+
+            override: isOverrideVal ? 1 : 0
+
+        }, function (res) {
+
+            alert(res.message);
+
+            if (res.success) {
+
+                updatePaymentModalContent(res.html);
+
+            }
+
+        }, 'json');
+
+    });
+
+
+
+    // Pay form — Save: insert new payment and re-render
+
+    $(document).on('submit', '#payPaymentForm', function (e) {
+
+        e.preventDefault();
+
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-history-wrapper').find('.pay-action-override').data('override') === 'on';
+
+        if (!isOverrideVal) {
+            // Month locking: block payment creation on carried-forward (locked) months
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+
+            // Pending-carry months are read-only — only Carry Forward is allowed
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
+        const user_id = $('input[name="user_id"]', this).val();
+
+        const venue = $('select[name="venue"]', this).val();
+
+        const type = $('input[name="type"]', this).val();
+
+        const amount = $('input[name="amount"]', this).val();
+
+        const payment_datetime = $('input[name="payment_datetime"]', this).val();
+
+        const year = $('input[name="year"]', this).val() || $("#hpyear").val();
+
+        const month = $('input[name="month"]', this).val() || $("#hpmonth").val();
+
+        const host = $("#payhost").val() || $("#hhost").val() || '';
+
+        if (!amount || !payment_datetime) {
+
+            alert("Please fill Amount and Date & Time.");
+
+            return;
+
+        }
+
+        const $submitBtn = $(this).find('button[type="submit"]');
+        $submitBtn.prop('disabled', true).text('Saving...');
+
+        $.post('api/payment_action.php', {
+
+            action: 'pay',
+
+            user_id: user_id,
+
+            game_id: 0, // General manual payment
+
+            details: venue, // Store venue in details
+
+            payment_type: type, // Store type in payment_type
+
+            amount: amount,
+
+            payment_datetime: payment_datetime,
+
+            host_id: host,
+
+            year: year,
+
+            month: month,
+
+            override: isOverrideVal ? 1 : 0
+
+        }, function (res) {
+
+            $submitBtn.prop('disabled', false).text('Save');
+
+            alert(res.message);
+
+            if (res.success) {
+
+                updatePaymentModalContent(res.html);
+                $('#payPaymentFormWrap').slideUp(180);
+
+            }
+
+        }, 'json').fail(function() {
+            $submitBtn.prop('disabled', false).text('Save');
+            alert('Failed to save payment. Please try again.');
+        });
+
+    });
+
+    $(document).on('click', '.reinitiateBtnnn', function () {
+        var isOverrideVal = $(this).closest('.pay-history-wrapper').find('.pay-action-override').attr('data-override') === 'on' || $(this).closest('.pay-action-override').data('override') === 'on';
+        if (!isOverrideVal) {
+            if ($(this).closest('.pay-history-wrapper').attr('data-locked') === '1') {
+                alert("This month has already been carried forward and is locked.");
+                return;
+            }
+            if ($(this).closest('.pay-history-wrapper').attr('data-state') === 'pending') {
+                alert("This month is pending carry forward. Only the Carry Forward action is allowed.");
+                return;
+            }
+        }
+
+        const payment_id = $(this).attr('data-payment-id') || $(this).data('payment-id') || 0;
+        const user_id = $(this).data('user');
+        const year = $(this).attr('data-year') || $(this).closest('.patmentTb').find('.pay-ledger-year').val() || $("#hpyear").val();
+        const month = $(this).attr('data-month') || $(this).closest('.patmentTb').find('.pay-ledger-month').val() || $("#hpmonth").val();
+        const host = $("#payhost").val() || $("#hhost").val() || '';
+
+        $.post('api/payment_action.php', {
+            action: 'reinitiate',
+            payment_id: payment_id,
+            user_id: user_id,
+            host_id: host,
+            year: year,
+            month: month,
+            override: isOverrideVal ? 1 : 0
+        }, function (res) {
+            alert(res.message);
+            if (res.success) {
+                updatePaymentModalContent(res.html);
+            }
+        }, 'json');
+    });
 
 
 
 
 
 
-    $("#filter").click(function () {
+
+
+
+    // Host Dashboard: Auto-filter on year/month change (no submit/reset buttons needed)
+    $("#year, #month").on("change", function () {
 
         var year = $("#year").val()
 
@@ -3997,7 +4622,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/filter_schedule.php',
+            url: BASE_URL + 'api/filter_schedule.php',
 
             data: {
 
@@ -4025,89 +4650,131 @@ $(document).ready(function () {
 
 
 
-    $("#hpfilter").click(function () {
+    // Shared function to load host payment table
+    function loadHostPaymentTable(page) {
+        page = page || 1;
+        var year = $("#hpyear").val() || '';
+        var month = $("#hpmonth").val() || '';
+        var host = $("#hhost").val() || '';
+        var search = $("#hpsearch").val() || '';
+        var sortBy = $("#hpsortby").val() || 'name';
+        var sortDir = $("#hpsortdir").data("dir") || 'asc';
+        var pageSize = $("#hp-pagesize").val() || 10;
 
-        var year = $("#hpyear").val()
-
-        var month = $("#hpmonth").val()
-
-        var host = $("#hhost").val()
+        $(".host_payment").html(
+            '<div class="text-center py-4">'
+            + '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
+            + '<p class="text-muted mt-2 mb-0" style="font-size:0.85rem;">Loading players...</p>'
+            + '</div>'
+        );
 
         $.ajax({
-
             type: "POST",
-
-            url: 'https://casainfotech.com/staging/api/filter_host_payment.php',
-
+            url: BASE_URL + 'api/filter_host_payment.php',
             data: {
-
                 year: year,
-
                 month: month,
-
                 player: host,
-
+                search: search,
+                sort_by: sortBy,
+                sort_dir: sortDir,
+                page: page,
+                pageSize: pageSize,
                 type: 'filter'
-
             },
-
             success: function (response) {
-
-                $(".host_payment").html(response)
-
+                $(".host_payment").html(response);
             }
+        });
+    }
 
-        })
+    // Auto-load on page ready (Till-Date: empty year/month)
+    if ($(".host_payment").length) {
+        loadHostPaymentTable(1);
+    }
 
-    })
+    // Filter / Search button
+    $("#hpfilter").click(function () {
+        loadHostPaymentTable(1);
+    });
 
+    // Host Payment page size change → reload host payment table on page 1
+    $(document).on("change", "#hp-pagesize", function () {
+        loadHostPaymentTable(1);
+    });
 
+    // Live search — trigger on Enter key
+    $(document).on("keydown", "#hpsearch", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            loadHostPaymentTable(1);
+        }
+    });
 
-    $("#reset").click(function () {
+    // Sort direction toggle button
+    $(document).on("click", "#hpsortdir", function () {
+        var current = $(this).data("dir");
+        var next = current === "asc" ? "desc" : "asc";
+        $(this).data("dir", next);
+        $("#hpsortdir-icon").text(next === "asc" ? "▲" : "▼");
+        $("#hpsortdir-label").text(next === "asc" ? "ASC" : "DESC");
+    });
 
-        $.ajax({
+    // Sortable column header clicks (rendered inside .host_payment)
+    $(document).on("click", ".hp-sort-col", function () {
+        var col = $(this).data("sort-by");
+        var currentSortBy = $("#hpsortby").val();
+        var currentSortDir = $("#hpsortdir").data("dir") || "asc";
 
-            type: "POST",
+        if (col === currentSortBy) {
+            // Toggle direction
+            var next = currentSortDir === "asc" ? "desc" : "asc";
+            $("#hpsortdir").data("dir", next);
+            $("#hpsortdir-icon").text(next === "asc" ? "▲" : "▼");
+            $("#hpsortdir-label").text(next === "asc" ? "ASC" : "DESC");
+        } else {
+            // New column — default asc
+            $("#hpsortby").val(col);
+            $("#hpsortdir").data("dir", "asc");
+            $("#hpsortdir-icon").text("▲");
+            $("#hpsortdir-label").text("ASC");
+        }
+        loadHostPaymentTable(1);
+    });
 
-            url: 'https://casainfotech.com/staging/api/filter_schedule.php',
+    // Pagination link clicks (rendered inside .host_payment)
+    $(document).on("click", ".hp-pagination .page-link", function (e) {
+        e.preventDefault();
+        var pg = $(this).data("page");
+        var sortBy = $(this).data("sort-by");
+        var sortDir = $(this).data("sort-dir");
 
-            data: {
-
-                type: 'reset'
-
-            },
-
-            success: function (response) {
-
-                const now = new Date();
-
-                const currentYear = now.getFullYear();
-
-                const currentMonth = now.getMonth() + 1; // getMonth() returns 0–11
-
-
-
-                // Set current year and month in dropdowns
-
-                $("#year").val(currentYear);
-
-                $("#month").val(currentMonth);
-
-                // $("#year").val('');
-
-                // $("#month").val('');
-
-                $(".hostWrapper").html(response)
-
-                initPopovers();
-
-
-
+        if (pg && !$(this).closest(".page-item").hasClass("disabled")) {
+            // Sync sort controls to match what was rendered
+            if (sortBy) {
+                $("#hpsortby").val(sortBy);
             }
+            if (sortDir) {
+                $("#hpsortdir").data("dir", sortDir);
+                $("#hpsortdir-icon").text(sortDir === "asc" ? "▲" : "▼");
+                $("#hpsortdir-label").text(sortDir === "asc" ? "ASC" : "DESC");
+            }
+            loadHostPaymentTable(pg);
+        }
+    });
 
-        })
-
-    })
+    // Refresh button — resets all filters/search/sort and reloads Till-Date
+    $(document).on("click", "#refreshBtn", function () {
+        $("#hpyear").val('');
+        $("#hpmonth").val('');
+        $("#hhost").val('');
+        $("#hpsearch").val('');
+        $("#hpsortby").val('name');
+        $("#hpsortdir").data("dir", "asc");
+        $("#hpsortdir-icon").text("▲");
+        $("#hpsortdir-label").text("ASC");
+        loadHostPaymentTable(1);
+    });
 
 
 
@@ -4121,7 +4788,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
+            url: BASE_URL + 'api/com_filter_schedule.php',
 
             data: {
 
@@ -4151,7 +4818,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/com_filter_schedule.php',
+            url: BASE_URL + 'api/com_filter_schedule.php',
 
             data: {
 
@@ -4187,7 +4854,8 @@ $(document).ready(function () {
 
 
 
-    $("#play_filter").click(function () {
+    // Player Dashboard: Auto-filter on sport/year/month change
+    $("#event_category, #year, #month").on("change", function () {
 
         var year = $("#year").val()
 
@@ -4201,7 +4869,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/play_filter_schedule.php',
+            url: BASE_URL + 'api/play_filter_schedule.php',
 
             data: {
 
@@ -4233,60 +4901,6 @@ $(document).ready(function () {
 
 
 
-    $("#play_reset").click(function () {
-
-        $.ajax({
-
-            type: "POST",
-
-            url: 'https://casainfotech.com/staging/api/play_filter_schedule.php',
-
-            data: {
-
-                type: 'reset'
-
-            },
-
-            success: function (response) {
-
-                $(".plyerGame_wrapper").html(response)
-
-                // $("#year").val('');
-
-                // $("#month").val('');
-
-                // $("#host").val(21);
-
-                const now = new Date();
-
-                const currentYear = now.getFullYear();
-
-                const currentMonth = now.getMonth() + 1; // getMonth() returns 0–11
-
-
-
-                // Set current year and month in dropdowns
-
-                $("#year").val(currentYear);
-
-                $("#month").val(currentMonth);
-
-                $("#host").val("");
-
-                $("#event_category").val("Badminton Game");
-
-                initPopovers();
-
-
-
-            }
-
-        })
-
-    })
-
-
-
     $("#play_com_filter").click(function () {
 
         var year = $("#comyear").val()
@@ -4301,7 +4915,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/player_filter_complete.php',
+            url: BASE_URL + 'api/player_filter_complete.php',
 
             data: {
 
@@ -4333,7 +4947,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/player_filter_complete.php',
+            url: BASE_URL + 'api/player_filter_complete.php',
 
             data: {
 
@@ -4373,7 +4987,9 @@ $(document).ready(function () {
 
     })
 
-
+    $("#pay_comyear, #pay_commonth").change(function () {
+        $("#pay_com_filter").click();
+    });
 
     $("#pay_com_filter").click(function () {
 
@@ -4387,7 +5003,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/pay_filter_complete.php',
+            url: BASE_URL + 'api/pay_filter_complete.php',
 
             data: {
 
@@ -4419,7 +5035,7 @@ $(document).ready(function () {
 
             type: "POST",
 
-            url: 'https://casainfotech.com/staging/api/pay_filter_complete.php',
+            url: BASE_URL + 'api/pay_filter_complete.php',
 
             data: {
 
@@ -5153,22 +5769,17 @@ function setText(id, value) {
 
 
     if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
-
         el.value = value;
-
     } else {
-
         el.innerText = value;
-
     }
-
 }
 
-
-
-
-
-
-
-
-
+// Close custom modals on outside click
+$(document).ready(function () {
+    $(document).on('click', '.customModal_wrap', function (e) {
+        if ($(e.target).hasClass('customModal_wrap')) {
+            $(this).removeClass('open');
+        }
+    });
+});

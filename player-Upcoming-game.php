@@ -1,8 +1,8 @@
 <?php
 date_default_timezone_set('America/Toronto');
-const DATABASE_NAME = 'casa_test';
-const USERNAME = "casa_test";
-const PASSWORD = "casa_test123#";
+if (!defined('DATABASE_NAME')) define('DATABASE_NAME', 'casa_test');
+if (!defined('USERNAME'))      define('USERNAME', 'casa_test');
+if (!defined('PASSWORD'))      define('PASSWORD', 'casa_test123#');
 
 // Database configuration
 $host = "localhost"; // Database host (e.g., localhost)
@@ -393,7 +393,7 @@ $sql = "
 </div>
 
 <!-----View-modal------->
-<section class="customModal_wrap hostgameview_modal">
+<section class="customModal_wrap hostgameview_modal hostgameview_modal_upcoming">
     <div class="customModal_body">
         <h6 class="customModal_head">View Players</h6>
         <button class="customModal_close btn">
@@ -401,7 +401,7 @@ $sql = "
         </button>
         <hr />
         <div class="customModal_content">
-            <div class="" id="playerList">
+            <div class="playerList-container" id="playerList_upcoming">
                 <div class="Profiletable_wrap">
                     <div class="hostProfile_small">
                         <img src="assets/images/profile.jpg" class="img-fluid" alt="..">

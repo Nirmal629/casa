@@ -29,7 +29,7 @@
                         <td>$ 100</td>
                         <td>$ 90</td>
                         <td>$ 10</td>
-                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View More</button></td>
+                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View Ledger</button></td>
                     </tr>
                     <tr>
                         <th scope="row">2</th>
@@ -41,7 +41,7 @@
                         <td>$ 50</td>
                         <td>$ 50</td>
                         <td>$ 0</td>
-                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View More</button></td>
+                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View Ledger</button></td>
                     </tr>
                     <tr>
                         <th scope="row">3</th>
@@ -53,7 +53,7 @@
                         <td>$ 100</td>
                         <td>$ 100</td>
                         <td>$ 0</td>
-                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View More</button></td>
+                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View Ledger</button></td>
                     </tr>
                     <tr>
                         <th scope="row">4</th>
@@ -65,7 +65,7 @@
                         <td>$ 220</td>
                         <td>$ 150</td>
                         <td>$ 70</td>
-                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View More</button></td>
+                        <td><button type="button" class="playPaymentModal_open btn btn-primary btn-sm">View Ledger</button></td>
                     </tr>
                     <tr class="table-dark">
                         <th class="text-start" colspan="3">Total:</th>

@@ -62,9 +62,13 @@ $skill_level  = isset($_POST['skill_level']) ? mysqli_real_escape_string($conn, 
 // Build gender + skill filter
 $gender_condition = "";
 if ($gender === 'Mix') {
-    $gender_condition = "AND cu.GENDER IN ('Male', 'Female', 'Kid') AND cu.VERIFIED_LEVEL = '$skill_level'";
+    $gender_condition = "AND cu.GENDER IN ('Male', 'Female', 'Kid')";
 } else {
-    $gender_condition = "AND cu.GENDER = '$gender' AND cu.VERIFIED_LEVEL = '$skill_level'";
+    $gender_condition = "AND cu.GENDER = '$gender'";
+}
+
+if (!empty($skill_level) && $skill_level !== 'Mix') {
+    $gender_condition .= " AND cu.VERIFIED_LEVEL = '$skill_level'";
 }
 
 // Search condition

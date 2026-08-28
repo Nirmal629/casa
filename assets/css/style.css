@@ -588,157 +588,93 @@ Custom Modal
 */
 
 .customModal_wrap {
-
     position: fixed;
-
     top: 0;
-
     left: 0;
-
     background-color: #00000093;
-
     width: 100%;
-
     height: 100%;
-
     display: none;
-
     opacity: 0;
-
     transition: 0.6 all;
-
     z-index: 999;
-
+    align-items: center;
+    justify-content: center;
 }
 
-
-
 .customModal_wrap.open {
-
-    display: block;
-
+    display: flex;
     opacity: 1;
-
 }
 
 
 
 .customModal_body {
-
-    position: absolute;
-
-    top: 50%;
-
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
+    position: relative;
     width: 95%;
-
-    /*max-width: 750px;*/
-
     max-width: 1000px;
-
-    height: auto;
-
-    /*height: 100vh;*/
-
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     background-color: var(--bs-body);
-
     color: var(--bs-heading);
-
     border-radius: 6px;
-
     padding: 20px;
-
     z-index: 2;
-
 }
 
 
 
 #hostplaypay {
-
-    position: absolute;
-
-    top: 50%;
-
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
+    position: relative;
     width: 95%;
-
     max-width: 100%;
-
-    height: auto;
-
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     background-color: var(--bs-body);
-
     color: var(--bs-heading);
-
     border-radius: 6px;
-
     padding: 20px;
-
     z-index: 2;
-
     overflow-y: auto;
-
 }
 
 
 
 .customModal_close {
-
     position: absolute;
-
-    top: 0;
-
-    right: 0;
-
+    top: 15px;
+    right: 20px;
     z-index: 3;
-
-    font-size: 120%;
-
+    font-size: 150%;
     color: var(--bs-heading);
-
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }
-
-
 
 .customModal_close:hover {
-
     color: var(--bs-link-color);
-
 }
 
-
-
 .customModal_head {
-
     font-size: 120%;
-
     color: var(--bs-link-color);
-
-    margin-bottom: 25px;
-
+    margin-bottom: 15px;
+    flex-shrink: 0;
+    padding-right: 30px;
+    /* Space for close button */
 }
 
 
 
 .customModal_content {
-
     width: 100%;
-
-    /*max-height: 500px;*/
-
-    max-height: 700px;
-
+    flex-grow: 1;
     overflow-y: auto;
-
     overflow-x: hidden;
-
+    padding-right: 5px;
 }
 
 
@@ -787,7 +723,7 @@ label span {
 
 
 
-input {
+input:not([type="checkbox"]):not([type="radio"]) {
 
     width: 100%;
 
@@ -1498,7 +1434,7 @@ Main header
 
 .main_header {
 
-    padding: 5px 0;
+    padding: 3px 0;
 
     background-color: var(--white);
 
@@ -1560,7 +1496,7 @@ Main header
 
     width: 100%;
 
-    max-width: 85px;
+    max-width: 65px;
 
     height: auto;
 
@@ -1584,7 +1520,7 @@ Main header
 
 .main_header.sticky .Logo_area {
 
-    max-width: 60px;
+    max-width: 50px;
 
 }
 
@@ -1630,6 +1566,31 @@ inner page menu
 
 */
 
+.site-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.site-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--gray);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.site-back-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
 .innerpagemenu_wrap {
 
     list-style: none;
@@ -1644,7 +1605,7 @@ inner page menu
 
     justify-content: center;
 
-    gap: 30px;
+    gap: 20px;
 
 }
 
@@ -1660,7 +1621,7 @@ inner page menu
 
 .innerpagemenu_wrap li a {
 
-    font-size: 110%;
+    font-size: 95%;
 
     font-weight: 500;
 
@@ -1724,15 +1685,15 @@ Profile account
 
 .navigation {
 
-    position: absolute;
+    position: relative;
 
-    top: -35px;
+    top: 0;
 
     right: 0;
 
     width: 120px;
 
-    height: 60px;
+    height: 45px;
 
     display: flex;
 
@@ -1760,9 +1721,9 @@ Profile account
 
     position: relative;
 
-    width: 60px;
+    width: 45px;
 
-    height: 60px;
+    height: 45px;
 
     display: flex;
 
@@ -1780,7 +1741,7 @@ Profile account
 
 .navigation .user-box .username {
 
-    font-size: 1.2rem;
+    font-size: 1rem;
 
     white-space: nowrap;
 
@@ -1794,9 +1755,9 @@ Profile account
 
     position: relative;
 
-    min-width: 60px;
+    min-width: 45px;
 
-    height: 60px;
+    height: 45px;
 
     background: var(--white);
 
@@ -1804,7 +1765,7 @@ Profile account
 
     overflow: hidden;
 
-    border: 10px solid var(--white);
+    border: 5px solid var(--white);
 
 
 
@@ -1834,9 +1795,9 @@ Profile account
 
     position: relative;
 
-    width: 60px;
+    width: 45px;
 
-    height: 60px;
+    height: 45px;
 
     display: flex;
 
@@ -1898,9 +1859,9 @@ Profile account
 
     width: 100%;
 
-    height: calc(100% - 60px);
+    height: calc(100% - 45px);
 
-    margin-top: 60px;
+    margin-top: 45px;
 
     padding: 20px;
 
@@ -2490,7 +2451,7 @@ Footer
 
     cursor: pointer;
 
-    display: none;
+    display: none !important;
 
     align-items: center;
 
@@ -2498,7 +2459,7 @@ Footer
 
     overflow: hidden;
 
-    /* border-radius: 50%; */
+    border-radius: 50%;
 
     width: 36px;
 
@@ -2506,15 +2467,17 @@ Footer
 
     z-index: 9;
 
-    padding: 10px;
+    padding: 0 !important;
 
-    color: #fff;
+    color: #fff !important;
 
-    background-color: #0098db;
+    background-color: #000 !important;
+
+    border: none !important;
 
     transition: .6s;
 
-    box-shadow: 0px 0px 2px 0px #fbfbfb;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
 
 }
 
@@ -2522,7 +2485,7 @@ Footer
 
 .return-to-top.show {
 
-    display: flex;
+    display: flex !important;
 
 }
 
@@ -4257,7 +4220,8 @@ match page
 
 
 
-#playerList .Profiletable_wrap {
+#playerList .Profiletable_wrap,
+.playerList-container .Profiletable_wrap {
 
     border-bottom: 1px dashed #ccc;
 
@@ -4265,7 +4229,8 @@ match page
 
 
 
-#playerList .Profiletable_wrap:last-child {
+#playerList .Profiletable_wrap:last-child,
+.playerList-container .Profiletable_wrap:last-child {
 
     border-bottom: none;
 
@@ -7013,9 +6978,9 @@ Notification page
 
     .navigation {
 
-        position: absolute;
+        position: relative;
 
-        top: -30px;
+        top: 0;
 
     }
 
@@ -7150,7 +7115,7 @@ Notification page
     }
 
     .Logo_area {
-        max-width: 85px;
+        max-width: 65px;
     }
 
 
@@ -8730,7 +8695,8 @@ Notification page
 
 
 
-#playerList {
+#playerList,
+.playerList-container {
 
     width: 100%;
 
@@ -9691,4 +9657,1274 @@ integrated Section
     .storeproduct_card .image_wrap {
         height: 20vh;
     }
+}
+
+/* Custom Profile Dropdown Styles */
+.user-profile-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 1000;
+}
+
+.user-profile-dropdown .avatar-trigger {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid var(--white);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-profile-dropdown .avatar-trigger:hover {
+    transform: scale(1.05);
+    border-color: var(--bs-primary);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile-dropdown .avatar-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-profile-dropdown .dropdown-menu-container {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 220px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 15px 0;
+    display: none;
+    /* Controlled by active/show class */
+    flex-direction: column;
+    z-index: 1001;
+    transform-origin: top right;
+    animation: dropdownFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-profile-dropdown .dropdown-menu-container.show {
+    display: flex;
+}
+
+.user-profile-dropdown .dropdown-user-info {
+    padding: 0 20px 10px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 8px;
+}
+
+.user-profile-dropdown .dropdown-user-info .user-name {
+    font-family: 'Figtree', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #1a1a1a;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-profile-dropdown .dropdown-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-profile-dropdown .dropdown-menu-list li {
+    padding: 0;
+    margin: 0;
+}
+
+.user-profile-dropdown .dropdown-menu-list li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    color: #555555;
+    font-size: 0.95rem;
+    text-decoration: none;
+    font-family: 'Figtree', sans-serif;
+    transition: all 0.2s ease;
+}
+
+.user-profile-dropdown .dropdown-menu-list li a i {
+    font-size: 1.1rem;
+    width: 16px;
+    text-align: center;
+    color: #777;
+    transition: color 0.2s ease;
+}
+
+.user-profile-dropdown .dropdown-menu-list li a:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    color: var(--bs-primary);
+}
+
+.user-profile-dropdown .dropdown-menu-list li a:hover i {
+    color: var(--bs-primary);
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Modern Profile & Settings Layout */
+.modern-profile {
+    background-color: #f8fafc;
+    padding: 40px 0;
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+.modern-profile .card {
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.modern-profile .profile-card {
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.modern-profile .profile-card img {
+    width: 130px !important;
+    height: 130px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 4px solid #f1f5f9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.modern-profile .profile-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.modern-profile .profile-card h3 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+}
+
+.modern-profile .profile-image-edit-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modern-profile .image-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.modern-profile .btn-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.modern-profile .form-section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-top: 32px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.modern-profile .form-section-title:first-of-type {
+    margin-top: 0;
+}
+
+.modern-profile .form-section-title i {
+    color: #3b82f6;
+}
+
+.modern-profile .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .modern-profile .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.modern-profile .form-group {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modern-profile .form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    margin: 0;
+    text-transform: none;
+}
+
+.modern-profile .form-group label span {
+    color: #ef4444;
+    margin-left: 3px;
+}
+
+.modern-profile .form-control-modern {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    outline: none;
+    height: 48px;
+}
+
+.modern-profile .form-control-modern:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background-color: #ffffff;
+}
+
+/* Read-only fields */
+.modern-profile .readonly-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.modern-profile .form-control-readonly {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+    cursor: not-allowed;
+    padding-right: 40px !important;
+}
+
+.modern-profile .readonly-wrapper::after {
+    content: "\f023";
+    /* fontawesome lock icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+/* Modern Switch / Segmented Toggle Control */
+.modern-profile .modern-toggle-group {
+    display: inline-flex;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    width: fit-content;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.modern-profile .modern-toggle-group label {
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.modern-profile .modern-toggle-group input[type="radio"] {
+    display: none !important;
+}
+
+.modern-profile .modern-toggle-group span {
+    display: inline-block;
+    padding: 8px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    user-select: none;
+    position: relative;
+    transform: scale(1);
+}
+
+.modern-profile .modern-toggle-group label:hover span {
+    color: #334155;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.modern-profile .modern-toggle-group input[type="radio"]:checked+span {
+    background-color: #ffffff;
+    color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+    transform: scale(1.04);
+}
+
+.modern-profile .modern-toggle-group label:active span {
+    transform: scale(0.96);
+}
+
+/* Primary modern button */
+.modern-profile .btn-primary-modern {
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s ease;
+}
+
+.modern-profile .btn-primary-modern:hover {
+    background-color: #2563eb;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
+}
+
+.modern-profile .btn-primary-modern:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   Payment View History — Quick Actions (Carry / Expense / Pay)
+   ============================================ */
+.pay-history-actionbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+}
+
+.pay-history-actionbar-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #1e40af;
+}
+
+.pay-history-actionbar-title i {
+    font-size: 0.8rem;
+    color: #2563eb;
+    animation: payPulse 1.6s ease-in-out infinite;
+}
+
+.pay-history-actionbar-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pay-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.pay-action-btn i {
+    font-size: 0.8rem;
+    transition: transform 0.25s ease;
+}
+
+.pay-action-ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: inherit;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    flex-shrink: 0;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Quick Actions — Override (testing only): Locked (default) vs Unlocked */
+.pay-action-btn.pay-action-override {
+    background: transparent;
+    border: 1px dashed #f59e0b;
+    color: #f59e0b;
+    opacity: 0.75;
+    box-shadow: none;
+}
+
+.pay-action-btn.pay-action-override:hover {
+    opacity: 1;
+    background: rgba(245, 158, 11, 0.12);
+    box-shadow: none;
+}
+
+.pay-action-btn.pay-action-override.pay-override-on {
+    background: #f59e0b;
+    border: 1px solid #f59e0b;
+    color: #000;
+    opacity: 1;
+}
+
+.pay-action-btn.pay-action-override.pay-override-on:hover {
+    background: #f59e0b;
+}
+
+.pay-action-carry .pay-action-ic { color: #f97316; }
+.pay-action-expense .pay-action-ic { color: #dc2626; }
+.pay-action-pay .pay-action-ic { color: #059669; }
+
+.pay-action-btn:hover .pay-action-ic {
+    transform: scale(1.15) rotate(-8deg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.pay-action-btn:hover .pay-action-ic i {
+    transform: scale(1.1);
+}
+
+.pay-action-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transition: left 0.5s ease;
+}
+
+.pay-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.pay-action-btn:hover::after {
+    left: 100%;
+}
+
+.pay-action-btn:hover i {
+    transform: scale(1.15);
+}
+
+.pay-action-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.pay-action-carry {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+}
+
+.pay-action-expense {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.pay-action-pay {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+@keyframes payPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.15); }
+}
+
+@media (max-width: 576px) {
+    .pay-history-actionbar {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .pay-history-actionbar-btns {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .pay-action-btn {
+        flex: 1;
+        justify-content: center;
+        min-width: 90px;
+    }
+}
+
+/* ============================================================
+   Player Payment View — Grouped Layout (Event Cost / Payments / Balance)
+   ============================================================ */
+.pay-section {
+    margin-top: 18px;
+}
+
+.pay-section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1e40af;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pay-section-title i {
+    font-size: 0.95rem;
+}
+
+.pay-section .table {
+    margin-bottom: 0;
+}
+
+.pay-section .table th,
+.pay-section .table td {
+    vertical-align: middle;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.5rem;
+    white-space: nowrap;
+}
+
+/* Balance row */
+.pay-balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.pay-balance-label {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #334155;
+}
+
+.pay-balance-value {
+    font-size: 1.05rem;
+}
+
+.pay-balance-due .pay-balance-value {
+    color: #dc2626;
+}
+
+.pay-balance-credit .pay-balance-value {
+    color: #059669;
+}
+
+/* Modern Expense form */
+.pay-expense-form-wrap {
+    margin-top: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.pay-expense-form-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #4f46e5;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 8px;
+}
+
+.pay-expense-form-title i {
+    color: #6366f1;
+}
+
+.pay-form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.pay-expense-form .form-control-sm,
+.pay-expense-form .form-select-sm {
+    font-size: 0.85rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    padding: 6px 12px;
+    height: 38px !important;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+}
+
+.pay-expense-form .form-control-sm:focus,
+.pay-expense-form .form-select-sm:focus {
+    background-color: #ffffff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    outline: none;
+}
+
+.pay-expense-save {
+    background-color: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    height: 38px !important;
+    padding: 5px 18px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2) !important;
+}
+
+.pay-expense-save:hover {
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    transform: translateY(-1px);
+}
+
+.pay-expense-cancel {
+    background-color: #64748b !important;
+    border-color: #64748b !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    height: 38px !important;
+    padding: 5px 18px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(100, 116, 139, 0.2) !important;
+}
+
+.pay-expense-cancel:hover {
+    background-color: #475569 !important;
+    border-color: #475569 !important;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 576px) {
+    .pay-section .table th,
+    .pay-section .table td {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.4rem;
+    }
+}
+
+/* ============================================================
+   Creative Design Polish matching User Reference Image
+   ============================================================ */
+
+/* Center-aligned Title Bar inside the Table (Colspan Header Row) */
+.pay-table-section-title th {
+    background: #6f6af7 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    padding: 6px 12px !important;
+    border: 1px solid #6f6af7 !important;
+    text-transform: uppercase !important;
+}
+
+/* Table overrides */
+.pay-table {
+    border-top: none !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Header Columns */
+.pay-table-header th {
+    background-color: #cbeff4 !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    border: 1px solid #b2ebf2 !important;
+    font-size: 0.82rem !important;
+    padding: 3px 6px !important;
+    text-transform: capitalize;
+}
+
+/* Specific Row Backgrounds */
+.pay-row-cost-unpaid td {
+    background-color: #f3d1d1 !important;
+    color: #1e293b !important;
+    padding: 2px 6px !important;
+}
+
+.pay-row-cost-paid td {
+    background-color: #d1e7dd !important;
+    color: #1e293b !important;
+    padding: 2px 6px !important;
+}
+
+.pay-row-payment td {
+    background-color: #d5ebd5 !important;
+    color: #1e293b !important;
+    padding: 2px 6px !important;
+}
+
+/* Base table cell padding override */
+.pay-section .table th,
+.pay-section .table td {
+    vertical-align: middle !important;
+    font-size: 0.8rem !important;
+    padding: 2px 6px !important;
+    white-space: nowrap !important;
+}
+
+/* Table Footer - Dark & Centered Total Row */
+.pay-table-footer th,
+.pay-table-footer td {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    padding: 4px 8px !important;
+    border: 1px solid #334155 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Pay Button inside Event Cost */
+.payBtnnn {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    padding: 3px 12px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 1px 3px rgba(255, 193, 7, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.payBtnnn:hover {
+    background-color: #e0a800 !important;
+    border-color: #d39e00 !important;
+    transform: translateY(-1px);
+}
+
+/* Action alignment groups */
+.pay-action-group {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Paid Badge & Rollback Button styled side by side */
+.pay-badge-paid {
+    background-color: #4caf50 !important;
+    color: #ffffff !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    display: inline-block !important;
+    box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3);
+}
+
+.rollbackBtnnn {
+    background-color: #f44336 !important;
+    color: #ffffff !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    box-shadow: 0 1px 3px rgba(244, 67, 54, 0.3);
+    transition: all 0.2s ease;
+}
+
+.rollbackBtnnn:hover {
+    background-color: #d32f2f !important;
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   Carry Forward + Month Locking (opening balance / locked UI)
+   ============================================================ */
+
+/* Amber lock banner shown at the top of a locked month */
+.pay-lock-banner {
+    background: #fff7e6 !important;
+    border: 1px solid #f5c518 !important;
+    color: #7a5b00 !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.pay-lock-banner i {
+    color: #d4a017 !important;
+}
+
+/* Carry Forward (Opening Balance) rows — amber/cream tint, never in totals */
+.pay-row-carry td {
+    background-color: #fdf6e3 !important;
+    color: #6b5d1f !important;
+    font-style: italic !important;
+    padding: 2px 6px !important;
+}
+
+/* Sub-section title inside the unified table (Opening Balance) */
+.pay-table-section-sub th {
+    background: #fef9e7 !important;
+    color: #8a6d1d !important;
+    text-align: left !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.4px !important;
+    padding: 4px 10px !important;
+    border: 1px dashed #e6cf7a !important;
+    text-transform: uppercase !important;
+}
+
+/* Opening balance badge */
+.pay-badge-opening {
+    background-color: #d4a017 !important;
+    color: #ffffff !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 3px 9px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+}
+
+/* Locked badge replacing action buttons on locked months */
+.pay-badge-locked {
+    background-color: #94a3b8 !important;
+    color: #ffffff !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+/* Disabled quick-action buttons (Carry on current month, all when locked) */
+.pay-action-btn:disabled,
+.pay-action-btn[disabled] {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(40%) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.pay-action-btn:disabled:hover,
+.pay-action-btn[disabled]:hover {
+    transform: none !important;
+}
+
+/* Pending-carry info banner (blue) — read-only months, only Carry allowed */
+.pay-pending-banner {
+    background: #e8f3fd !important;
+    border: 1px solid #7db9e8 !important;
+    color: #1e5f8e !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.pay-pending-banner i {
+    color: #3b82f6 !important;
+}
+
+/* Pending Carry badge replacing action buttons on pending-carry months */
+.pay-badge-pending {
+    background-color: #f59e0b !important;
+    color: #ffffff !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+/* Month status chip (Active / Pending Carry / Locked) */
+.pay-status-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 2px 10px !important;
+    border-radius: 20px !important;
+    margin-left: 8px !important;
+    vertical-align: middle !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+
+.pay-status-active {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+    border: 1px solid #34d399 !important;
+}
+
+.pay-status-pending {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    border: 1px solid #f59e0b !important;
+}
+
+.pay-status-locked {
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+    border: 1px solid #94a3b8 !important;
+}
+
+/* Final Balance Section */
+.pay-section-balance {
+    margin-top: 16px;
+}
+
+.pay-balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.pay-balance-label {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.pay-balance-value {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    padding: 6px 18px !important;
+    border-radius: 6px !important;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pay-balance-credit .pay-balance-value {
+    background-color: #e6fcf5 !important;
+    color: #099268 !important;
+    border: 1px solid #c3fae8 !important;
+}
+
+.pay-balance-due .pay-balance-value {
+    background-color: #fff5f5 !important;
+    color: #fa5252 !important;
+    border: 1px solid #ffe3e3 !important;
+}
+/* ============================================================
+   Player Financial Ledger ("View Ledger") — read-only full history
+   ============================================================ */
+
+/* Filter bar (Year / Month selects + Full Ledger button) */
+.pay-ledger-filter {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    margin-bottom: 12px !important;
+}
+
+.pay-ledger-filter-title {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-right: 4px !important;
+    white-space: nowrap !important;
+}
+
+.pay-ledger-filter select.form-select {
+    width: auto !important;
+    min-width: 100px !important;
+    font-size: 0.78rem !important;
+    height: 31px !important;
+    padding: 2px 8px !important;
+}
+
+.pay-ledger-full {
+    background: #1e293b !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 6px !important;
+    margin-left: auto !important;
+}
+
+.pay-ledger-full:hover {
+    background: #0f172a !important;
+    color: #fff !important;
+}
+
+/* Header line: player name + scope */
+.pay-ledger-head {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 6px 2px 10px !important;
+}
+
+.pay-ledger-player {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+}
+
+.pay-ledger-player i {
+    color: #0d9488 !important;
+    margin-right: 4px !important;
+}
+
+.pay-ledger-scope {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+}
+
+.pay-ledger-scope i {
+    color: #64748b !important;
+    margin-right: 4px !important;
+}
+
+/* Ledger table — Excel/Tally style */
+.pay-ledger-table {
+    font-size: 0.78rem !important;
+    margin-bottom: 0 !important;
+    border-collapse: collapse !important;
+}
+
+.pay-ledger-table thead th.pay-ledger-header,
+.pay-ledger-table th.pay-ledger-header {
+    background: #cbeff4 !important;
+    color: #0f172a !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    padding: 6px 8px !important;
+    border: 1px solid #b8dde4 !important;
+}
+
+.pay-ledger-table td {
+    vertical-align: middle !important;
+    padding: 5px 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    white-space: nowrap !important;
+}
+
+.pay-ledger-table tbody tr:nth-child(even) {
+    background: #fafcfd !important;
+}
+
+.pay-ledger-row td:first-child {
+    color: #94a3b8 !important;
+    font-size: 0.72rem !important;
+    text-align: center !important;
+}
+
+/* Particulars + kind badge */
+.pay-ledger-particulars {
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    margin-right: 6px !important;
+}
+
+.pay-ledger-kind {
+    font-size: 0.62rem !important;
+    font-weight: 700 !important;
+    padding: 1px 6px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.pay-ledger-kind.k-event { background: #e0f2fe !important; color: #0369a1 !important; }
+.pay-ledger-kind.k-prevdue { background: #fef3c7 !important; color: #b45309 !important; }
+.pay-ledger-kind.k-advance { background: #ede9fe !important; color: #6d28d9 !important; }
+.pay-ledger-kind.k-settle { background: #cffafe !important; color: #0e7490 !important; }
+.pay-ledger-kind.k-pay { background: #d1fae5 !important; color: #047857 !important; }
+
+/* Debit / Credit / Running Balance cells */
+.pay-ledger-debit {
+    color: #dc2626 !important;
+    font-weight: 700 !important;
+    text-align: right !important;
+}
+
+.pay-ledger-credit {
+    color: #059669 !important;
+    font-weight: 700 !important;
+    text-align: right !important;
+}
+
+.pay-ledger-balance {
+    font-weight: 700 !important;
+    text-align: right !important;
+    background: #f1f5f9 !important;
+}
+
+.pay-ledger-balance-pos { color: #0f172a !important; }
+.pay-ledger-balance-neg { color: #059669 !important; }
+
+/* Summary block (from ALL ledger records) */
+.pay-ledger-summary {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+}
+
+.pay-ledger-summary-item {
+    flex: 1 1 180px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+}
+
+.pay-ledger-summary-item .lbl {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+}
+
+.pay-ledger-summary-item .val {
+    font-size: 1.05rem !important;
+    font-weight: 800 !important;
+    color: #1e293b !important;
+    margin-top: 2px !important;
+}
+
+.pay-ledger-summary-item .sub {
+    font-size: 0.68rem !important;
+    color: #94a3b8 !important;
+    margin-top: 2px !important;
+}
+
+.pay-ledger-summary-item.due .val { color: #dc2626 !important; }
+.pay-ledger-summary-item.adv .val { color: #059669 !important; }
+
+/* Pagination */
+.pay-ledger-pagination {
+    margin-top: 12px !important;
+}
+
+.pay-ledger-pagination .page-link {
+    font-size: 0.75rem !important;
+    color: #1e293b !important;
+    padding: 4px 10px !important;
+    cursor: pointer !important;
+}
+
+.pay-ledger-pagination .page-item.active .page-link {
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+    color: #fff !important;
 }

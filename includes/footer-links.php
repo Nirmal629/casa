@@ -24,7 +24,7 @@
 
 <!----main-js----->
 
-<script src="assets/js/script.js?v=11.27.10663934999522209223343162323244226664288212111277777277222222232623226132394498998"></script>
+<script src="assets/js/script.js?v=12.1.0"></script>
 
 
 
