@@ -86,47 +86,6 @@ function courtDashboardValue($value, string $fallback = 'N/A'): string
     return $text !== '' ? $text : $fallback;
 }
 
-function courtDashboardShortText($value, int $wordLimit = 8): string
-{
-    $plainText = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$value), ENT_QUOTES, 'UTF-8')));
-    if ($plainText === '') {
-        return 'N/A';
-    }
-
-    $words = preg_split('/\s+/', $plainText);
-    if ($words === false || count($words) <= $wordLimit) {
-        return $plainText;
-    }
-
-    return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
-}
-
-function courtDashboardDate($value): string
-{
-    if (empty($value) || $value === '0000-00-00') {
-        return 'TBD';
-    }
-
-    $timestamp = strtotime((string)$value);
-    return $timestamp ? date('d M Y', $timestamp) : (string)$value;
-}
-
-function courtDashboardTime($time): string
-{
-    if (empty($time)) {
-        return 'TBD';
-    }
-
-    $timestamp = strtotime((string)$time);
-    return $timestamp ? date('h:i A', $timestamp) : (string)$time;
-}
-
-function courtDashboardValue($value, string $fallback = 'N/A'): string
-{
-    $text = trim((string)($value ?? ''));
-    return $text !== '' ? $text : $fallback;
-}
-
 function courtDashboardTeamLabel(array $row, string $prefix): string
 {
     return htmlspecialchars($row[$prefix . '_NAME'] ?? '-');
