@@ -57,14 +57,19 @@ if (!function_exists('calculateLedgerSummary')) {
 
         if ($useDateFilter) {
             // Filtered month: get opening balance of this specific month
-            $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $month AND carry_year = $year LIMIT 1");
-            if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
-                $opAmt = (float)$opRow['opening_balance'];
-                if ($opRow['balance_type'] === 'DUE') {
-                    $openingDue = $opAmt;
-                } else {
-                    $openingAdvance = $opAmt;
+            try {
+                $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $month AND carry_year = $year LIMIT 1");
+                if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
+                    $opAmt = (float)$opRow['opening_balance'];
+                    if ($opRow['balance_type'] === 'DUE') {
+                        $openingDue = $opAmt;
+                    } else {
+                        $openingAdvance = $opAmt;
+                    }
                 }
+            } catch (mysqli_sql_exception $e) {
+                $openingDue = 0.0;
+                $openingAdvance = 0.0;
             }
         } else {
             // All-time: find earliest transaction's month/year, and get the opening balance of that earliest month.
@@ -133,14 +138,19 @@ if (!function_exists('calculateLedgerSummary')) {
             }
 
             if ($earliestYear !== 9999) {
-                $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $earliestMonth AND carry_year = $earliestYear LIMIT 1");
-                if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
-                    $opAmt = (float)$opRow['opening_balance'];
-                    if ($opRow['balance_type'] === 'DUE') {
-                        $openingDue = $opAmt;
-                    } else {
-                        $openingAdvance = $opAmt;
+                try {
+                    $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $earliestMonth AND carry_year = $earliestYear LIMIT 1");
+                    if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
+                        $opAmt = (float)$opRow['opening_balance'];
+                        if ($opRow['balance_type'] === 'DUE') {
+                            $openingDue = $opAmt;
+                        } else {
+                            $openingAdvance = $opAmt;
+                        }
                     }
+                } catch (mysqli_sql_exception $e) {
+                    $openingDue = 0.0;
+                    $openingAdvance = 0.0;
                 }
             }
         }

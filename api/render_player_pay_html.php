@@ -39,11 +39,16 @@ if (!function_exists('renderPlayerPayHtml')) {
         $nextYear = ($month == 12) ? ($year + 1) : $year;
 
         // Month M is locked ⟺ a Carry Forward record created FROM M exists in M+1
-        $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
-                WHERE host_id = $host_id AND player_id = $user_id
-                  AND carry_month = $nextMonth AND carry_year = $nextYear
-                LIMIT 1");
-        $isLocked = ($lockRes && mysqli_num_rows($lockRes) > 0);
+        $isLocked = false;
+        try {
+            $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
+                    WHERE host_id = $host_id AND player_id = $user_id
+                      AND carry_month = $nextMonth AND carry_year = $nextYear
+                    LIMIT 1");
+            $isLocked = ($lockRes && mysqli_num_rows($lockRes) > 0);
+        } catch (mysqli_sql_exception $e) {
+            $isLocked = false;
+        }
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -326,8 +331,13 @@ if (!function_exists('renderPlayerPayHtml')) {
         // (old-style PreviousDue events + ca_expense carry records) — displayed
         // separately, never included in totals.
         // Carry Forward opening-balance record for the SELECTED month from host_player_carry_forward
-        $carryRecordQuery = mysqli_query($conn, "SELECT opening_balance, balance_type, source_month, source_year FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $month AND carry_year = $year LIMIT 1");
-        $carryRecord = ($carryRecordQuery) ? mysqli_fetch_assoc($carryRecordQuery) : null;
+        $carryRecord = null;
+        try {
+            $carryRecordQuery = mysqli_query($conn, "SELECT opening_balance, balance_type, source_month, source_year FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $month AND carry_year = $year LIMIT 1");
+            $carryRecord = ($carryRecordQuery) ? mysqli_fetch_assoc($carryRecordQuery) : null;
+        } catch (mysqli_sql_exception $e) {
+            $carryRecord = null;
+        }
 
         $carryCostRows = [];
         $carryPayRows = [];

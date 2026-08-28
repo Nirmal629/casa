@@ -40,11 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$isOverrideActive) {
         $nMonth = ($expMonth % 12) + 1;
         $nYear = ($expMonth == 12) ? ($expYear + 1) : $expYear;
-        $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
-                WHERE host_id = $host_id AND player_id = $user_id
-                  AND carry_month = $nMonth AND carry_year = $nYear
-                LIMIT 1");
-        if ($lockRes && mysqli_num_rows($lockRes) > 0) {
+        $isLocked = false;
+        try {
+            $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
+                    WHERE host_id = $host_id AND player_id = $user_id
+                      AND carry_month = $nMonth AND carry_year = $nYear
+                    LIMIT 1");
+            $isLocked = ($lockRes && mysqli_num_rows($lockRes) > 0);
+        } catch (mysqli_sql_exception $e) {
+            $isLocked = false;
+        }
+        if ($isLocked) {
             $response['message'] = 'This month has already been carried forward and is locked.';
             echo json_encode($response);
             exit;
