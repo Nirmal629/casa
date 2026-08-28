@@ -254,10 +254,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $startBal = 0.0;
     if ($earliestYear !== 9999) {
-        $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $earliestMonth AND carry_year = $earliestYear LIMIT 1");
-        if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
-            $opAmt = (float)$opRow['opening_balance'];
-            $startBal = ($opRow['balance_type'] === 'DUE') ? $opAmt : -$opAmt;
+        try {
+            $opQuery = mysqli_query($conn, "SELECT opening_balance, balance_type FROM host_player_carry_forward WHERE host_id = $host_id AND player_id = $user_id AND carry_month = $earliestMonth AND carry_year = $earliestYear LIMIT 1");
+            if ($opQuery && $opRow = mysqli_fetch_assoc($opQuery)) {
+                $opAmt = (float)$opRow['opening_balance'];
+                $startBal = ($opRow['balance_type'] === 'DUE') ? $opAmt : -$opAmt;
+            }
+        } catch (mysqli_sql_exception $e) {
+            $startBal = 0.0;
         }
     }
 

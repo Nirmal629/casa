@@ -41,16 +41,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $isPlayerSide = (isset($_SESSION['usertype']) && $_SESSION['usertype'] === 'Player');
 
-    // Month locking: approve/reject/pay are blocked for a month that has
-    // already been carried forward (a Carry Forward record exists for the next month).
     $uid = (int) $user_id;
     $nMonth = ($month % 12) + 1;
     $nYear = ($month == 12) ? ($year + 1) : $year;
-    $lockRes = $conn->query("SELECT 1 FROM host_player_carry_forward
-            WHERE host_id = $host_id AND player_id = $uid
-              AND carry_month = $nMonth AND carry_year = $nYear
-            LIMIT 1");
-    if ($lockRes && $lockRes->num_rows > 0) {
+
+    $isLocked = false;
+    try {
+        $lockRes = $conn->query("SELECT 1 FROM host_player_carry_forward
+                WHERE host_id = $host_id AND player_id = $uid
+                  AND carry_month = $nMonth AND carry_year = $nYear
+                LIMIT 1");
+        $isLocked = ($lockRes && $lockRes->num_rows > 0);
+    } catch (mysqli_sql_exception $e) {
+        $isLocked = false;
+    }
+    if ($isLocked) {
         $response['success'] = false;
         $response['message'] = 'This month has already been carried forward and is locked.';
         require_once __DIR__ . '/render_player_pay_html.php';

@@ -24,12 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $isOverrideActive = isset($_SESSION['ledger_override'][$user_id][$year][$month]) && $_SESSION['ledger_override'][$user_id][$year][$month] === true;
     
+    $isLocked = false;
     if (!$isOverrideActive) {
-        $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
-                WHERE host_id = $host_id AND player_id = $user_id
-                  AND carry_month = $nextMonth AND carry_year = $nextYear
-                LIMIT 1");
-        if ($lockRes && mysqli_num_rows($lockRes) > 0) {
+        try {
+            $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
+                    WHERE host_id = $host_id AND player_id = $user_id
+                      AND carry_month = $nextMonth AND carry_year = $nextYear
+                    LIMIT 1");
+            $isLocked = ($lockRes && mysqli_num_rows($lockRes) > 0);
+        } catch (mysqli_sql_exception $e) {
+            $isLocked = false;
+        }
+        if ($isLocked) {
             $response['message'] = 'This month is locked and cannot be rolled back.';
             echo json_encode($response);
             exit;
@@ -37,11 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Fetch the carry record for this month
-    $carryQuery = mysqli_query($conn, "SELECT id, opening_balance, balance_type, source_month, source_year 
-            FROM host_player_carry_forward 
-            WHERE host_id = $host_id AND player_id = $user_id 
-              AND carry_month = $month AND carry_year = $year 
-            LIMIT 1");
+    $carryQuery = null;
+    try {
+        $carryQuery = mysqli_query($conn, "SELECT id, opening_balance, balance_type, source_month, source_year 
+                FROM host_player_carry_forward 
+                WHERE host_id = $host_id AND player_id = $user_id 
+                  AND carry_month = $month AND carry_year = $year 
+                LIMIT 1");
+    } catch (mysqli_sql_exception $e) {
+        $carryQuery = null;
+    }
             
     if ($carryQuery && mysqli_num_rows($carryQuery) > 0) {
         $carryRow = mysqli_fetch_assoc($carryQuery);

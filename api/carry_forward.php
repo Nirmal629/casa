@@ -43,16 +43,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nextDate  = sprintf('%04d-%02d-01', $nextYear, $nextMonth);
 
     // Search for existing carry record for the next month
-    $existingCarryQuery = "
-        SELECT id, opening_balance, balance_type FROM host_player_carry_forward
-        WHERE host_id = $host_id
-          AND player_id = $user_id
-          AND carry_month = $nextMonth
-          AND carry_year = $nextYear
-        LIMIT 1
-    ";
-    $existingCarryRes = mysqli_query($conn, $existingCarryQuery);
-    $existingCarry = mysqli_fetch_assoc($existingCarryRes);
+    $existingCarryRes = null;
+    try {
+        $existingCarryQuery = "
+            SELECT id, opening_balance, balance_type FROM host_player_carry_forward
+            WHERE host_id = $host_id
+              AND player_id = $user_id
+              AND carry_month = $nextMonth
+              AND carry_year = $nextYear
+            LIMIT 1
+        ";
+        $existingCarryRes = mysqli_query($conn, $existingCarryQuery);
+    } catch (mysqli_sql_exception $e) {
+        $existingCarryRes = null;
+    }
+    $existingCarry = ($existingCarryRes) ? mysqli_fetch_assoc($existingCarryRes) : null;
 
     $isDuplicate = false;
     $targetAmount = abs($carryAmount);

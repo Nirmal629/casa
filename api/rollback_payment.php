@@ -31,11 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $isOverrideActive = (isset($_SESSION['ledger_override'][$user_id][$year][$month]) && $_SESSION['ledger_override'][$user_id][$year][$month] === true) || (isset($_POST['override']) && (int)$_POST['override'] === 1);
 
     if (!$isOverrideActive) {
-        $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
-                WHERE host_id = $host_id AND player_id = $uid
-                  AND carry_month = $nMonth AND carry_year = $nYear
-                LIMIT 1");
-        if ($lockRes && mysqli_num_rows($lockRes) > 0) {
+        $isLocked = false;
+        try {
+            $lockRes = mysqli_query($conn, "SELECT 1 FROM host_player_carry_forward
+                    WHERE host_id = $host_id AND player_id = $uid
+                      AND carry_month = $nMonth AND carry_year = $nYear
+                    LIMIT 1");
+            $isLocked = ($lockRes && mysqli_num_rows($lockRes) > 0);
+        } catch (mysqli_sql_exception $e) {
+            $isLocked = false;
+        }
+        if ($isLocked) {
             // Month is locked — re-render the locked UI, do NOT rollback
             require_once __DIR__ . '/render_player_pay_html.php';
             echo renderPlayerPayHtml($conn, $user_id, $year, $month);
