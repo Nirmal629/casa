@@ -110,14 +110,17 @@ try {
 
     $user_premium = $premium_check->fetchColumn() ?: 'N';
 
-    // Fetch player's preferred game type and location
-    $player_pref_stmt = $pdo->prepare("SELECT GAMES, COUNTRY, PROVINCE, CITY FROM ca_users WHERE ID = ?");
+    // Fetch player's preferred game type, location and profile info
+    $player_pref_stmt = $pdo->prepare("SELECT GAMES, COUNTRY, PROVINCE, CITY, PROFILE_IMAGE, GENDER, VERIFIED_LEVEL, LEVEL, NAME FROM ca_users WHERE ID = ?");
     $player_pref_stmt->execute([$current_user_id]);
     $player_prefs = $player_pref_stmt->fetch();
     $player_game = $player_prefs['GAMES'] ?? 'Badminton';
     $player_country = $player_prefs['COUNTRY'] ?? '';
     $player_province = $player_prefs['PROVINCE'] ?? '';
     $player_city = $player_prefs['CITY'] ?? '';
+    if (!empty($player_prefs['PROFILE_IMAGE'])) {
+        $_SESSION['profileImage'] = $player_prefs['PROFILE_IMAGE'];
+    }
 
     // Fetch active clubs matching player's game preference AND location
     $clubs_sql = "SELECT c.*, u.NAME as host_name, u.PROFILE_IMAGE as host_img
@@ -715,11 +718,19 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                     <div class="dossierCard">
 
                         <?php
-                        $profileImage = $_SESSION['profileImage'] ?? '';
+                        $userProfileImg = !empty($player_prefs['PROFILE_IMAGE']) ? $player_prefs['PROFILE_IMAGE'] : ($_SESSION['profileImage'] ?? '');
 
-                        $imagePath = !empty($profileImage)
-                            ? 'profile_img/' . htmlspecialchars($profileImage)
-                            : 'assets/images/profile.jpg';
+                        $imagePath = 'assets/images/profile.jpg';
+                        if (!empty($userProfileImg)) {
+                            $clean_img = ltrim($userProfileImg, '/\\');
+                            if (file_exists('profile_img/' . $clean_img)) {
+                                $imagePath = 'profile_img/' . $clean_img;
+                            } elseif (file_exists($clean_img)) {
+                                $imagePath = $clean_img;
+                            } else {
+                                $imagePath = 'profile_img/' . $clean_img;
+                            }
+                        }
                         ?>
 
                         <div class="profileDetails">
@@ -728,7 +739,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                             <div class="profile">
 
-                                <img src="<?= $imagePath ?>" alt="Profile Image" onerror="this.onerror=null; this.src='assets/images/profile.jpg';">
+                                <img src="<?= htmlspecialchars($imagePath) ?>" alt="Profile Image" onerror="this.onerror=null; this.src='assets/images/profile.jpg';">
 
                             </div>
 
@@ -736,11 +747,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                             <div class="info">
 
-                                <p><b>Name:</b> <?= htmlspecialchars($_SESSION['name'] ?? 'N/A') ?></p>
+                                <p><b>Name:</b> <?= htmlspecialchars($player_prefs['NAME'] ?? $_SESSION['name'] ?? 'N/A') ?></p>
 
-                                <p><b>Gender:</b> <?= htmlspecialchars($_SESSION['gender'] ?? 'N/A') ?></p>
+                                <p><b>Gender:</b> <?= htmlspecialchars($player_prefs['GENDER'] ?? $_SESSION['gender'] ?? 'N/A') ?></p>
 
-                                <p><b>Level:</b> <?= htmlspecialchars($_SESSION['vlevel'] ?? 'N/A') ?></p>
+                                <p><b>Level:</b> <?= htmlspecialchars($player_prefs['VERIFIED_LEVEL'] ?? $_SESSION['vlevel'] ?? $player_prefs['LEVEL'] ?? 'N/A') ?></p>
 
                                 <p><b>Area:</b> <?= htmlspecialchars($player_city ?: 'N/A') ?></p>
 

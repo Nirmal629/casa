@@ -59,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['province'] = $user['PROVINCE'];
                 $_SESSION['city'] = $user['CITY'];
                 $_SESSION['games'] = $user['GAMES'];
+                $_SESSION['profileImage'] = $user['PROFILE_IMAGE'] ?? '';
 
                 unset($_SESSION['csrf_token']); // refresh CSRF
 
