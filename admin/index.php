@@ -110,10 +110,10 @@ $conn->close();
 									<a href="pages-recover-password.html" class="pull-right">Lost Password?</a>
 								</div> -->
 								<div class="input-group input-group-icon">
-									<input name="pwd" type="password" class="form-control input-lg" required/>
-									<span class="input-group-addon">
+									<input name="pwd" id="admin_pwd" type="password" class="form-control input-lg" required/>
+									<span class="input-group-addon" onclick="toggleAdminPwd(this); return false;" style="cursor: pointer;" title="Show/Hide Password">
 										<span class="icon icon-lg">
-											<i class="fa fa-lock"></i>
+											<i class="fa fa-eye admin-pwd-icon"></i>
 										</span>
 									</span>
 								</div>
@@ -159,6 +159,27 @@ $conn->close();
 		
 		<!-- Theme Initialization Files -->
 		<script src="assets/javascripts/theme.init.js"></script>
+
+		<script>
+		function toggleAdminPwd(addon) {
+			if (!addon) return;
+			var container = addon.closest('.input-group') || addon.parentElement;
+			if (!container) return;
+			var pwdInput = container.querySelector('input');
+			var pwdIcon = addon.querySelector('.admin-pwd-icon') || addon.querySelector('i');
+			if (pwdInput && pwdIcon) {
+				var isPassword = pwdInput.getAttribute('type') === 'password';
+				pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+				if (isPassword) {
+					pwdIcon.classList.remove('fa-eye');
+					pwdIcon.classList.add('fa-eye-slash');
+				} else {
+					pwdIcon.classList.remove('fa-eye-slash');
+					pwdIcon.classList.add('fa-eye');
+				}
+			}
+		}
+		</script>
 
 	</body>
 </html>

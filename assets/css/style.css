@@ -826,14 +826,25 @@ All Heading
 
 
 .sub_heading::after {
+
     content: " ";
-    display: inline-block;
-    margin-left: 10px;
-    width: 50px;
-    height: 2px;
-    border-radius: 4px;
+
+    position: absolute;
+
+    left: 105%;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
     background-color: #42a7f5;
-    vertical-align: middle;
+
+    width: 80px;
+
+    height: 2px;
+
+    border-radius: 4px;
+
 }
 
 

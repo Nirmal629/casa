@@ -137,6 +137,26 @@ try {
         throw new Exception("Failed to create ca_host_player_carry_forward_history: " . $conn->error);
     }
 
+    // 7. Add missing columns to ca_payment if they don't exist
+    $payment_cols = [
+        'MESSAGE' => "ALTER TABLE `ca_payment` ADD COLUMN `MESSAGE` TEXT NOT NULL DEFAULT ''",
+        'REVIEWED_BY' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_BY` INT(11) NULL DEFAULT NULL",
+        'REVIEWED_AT' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_AT` TIMESTAMP NULL DEFAULT NULL",
+        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL"
+    ];
+    foreach ($payment_cols as $col => $alter_sql) {
+        $check = $conn->query("SHOW COLUMNS FROM `ca_payment` LIKE '$col'");
+        if ($check && $check->num_rows == 0) {
+            if ($conn->query($alter_sql)) {
+                $log .= "✓ Column '$col' added to ca_payment\n";
+            } else {
+                throw new Exception("Failed to add column $col to ca_payment: " . $conn->error);
+            }
+        } else {
+            $log .= "• Column '$col' already exists in ca_payment\n";
+        }
+    }
+
     $log .= "=== Migration SUCCESS! ===\n";
 
 } catch (Exception $e) {

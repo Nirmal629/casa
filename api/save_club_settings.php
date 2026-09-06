@@ -20,14 +20,28 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Helper to clean standalone HTML snippet and prevent global body/* style pollution
+function cleanHtmlSnippet($html) {
+    if (empty($html)) return '';
+    $clean = preg_replace('/<!DOCTYPE[^>]*>/i', '', $html);
+    $clean = preg_replace('/<\/?(?:html|head|meta|title|body)\b[^>]*>/i', '', $clean);
+    $clean = preg_replace_callback('/<style\b[^>]*>(.*?)<\/style>/is', function($matches) {
+        $css = $matches[1];
+        $css = preg_replace('/\b(body|html)\s*\{[^}]*\}/i', '', $css);
+        $css = preg_replace('/^\s*\*\s*\{[^}]*\}/mi', '', $css);
+        return '<style>' . $css . '</style>';
+    }, $clean);
+    return trim($clean);
+}
+
 // ── Sanitize Inputs ──
 $host_id    = intval($_SESSION['user_id']);
 $club_name  = mysqli_real_escape_string($conn, trim($_POST['club_name'] ?? ''));
 $game_type  = mysqli_real_escape_string($conn, trim($_POST['game_type'] ?? 'Badminton'));
 $category   = mysqli_real_escape_string($conn, trim($_POST['category'] ?? ''));
-$club_info  = mysqli_real_escape_string($conn, trim($_POST['club_info'] ?? ''));
-$schedule   = mysqli_real_escape_string($conn, trim($_POST['schedule'] ?? ''));
-$cost_info  = mysqli_real_escape_string($conn, trim($_POST['cost_info'] ?? ''));
+$club_info  = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['club_info'] ?? ''));
+$schedule   = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['schedule'] ?? ''));
+$cost_info  = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['cost_info'] ?? ''));
 $status     = mysqli_real_escape_string($conn, trim($_POST['status'] ?? 'Active'));
 
 // ── Validate Required Fields ──

@@ -1,15 +1,10 @@
 <?php
 
 ob_start();
-
 session_start();
-
 error_reporting(1);
 
-// print_r($_SESSION);
-
-// exit;
-
+// Logged-in users never see the marketing home page – send them to their hub.
 if (isset($_SESSION['user_id'])) {
     if (isset($_SESSION['usertype']) && ($_SESSION['usertype'] === 'Host' || $_SESSION['usertype'] === 'Trainer')) {
         header("Location: host-dashboard.php");
@@ -19,28 +14,31 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-
-
+// Shared PDO handle used by the tournament, stats and testimonial sections.
+// (The mysqli $conn is provided by includes/header.php below.)
+$pdo = null;
+try {
+    include 'dbConnection_PDO.php';
+} catch (PDOException $e) {
+    $pdo = null;
+}
 ?>
 
+<!-- Header -->
+<?php include "includes/header.php"; ?>
 
 
-<!-----Header------>
-<?php include "includes/header.php";
-
-?>
-
-
-<!-----new banner-------->
+<!-- Hero banner -->
 <section class="homebanner_sec bottomSide_gap">
     <div class="banner_image herobanner_slider">
-        <?php include 'dbConnection.php'; ?>
-
         <?php
-        $query = "SELECT * FROM ca_herobanners WHERE status = 1";
-        $result = $conn->query($query);
+        try {
+            $bannerResult = $conn->query("SELECT * FROM ca_herobanners WHERE status = 1");
+        } catch (mysqli_sql_exception $e) {
+            $bannerResult = false;
+        }
 
-        while ($row = $result->fetch_assoc()) {
+        while ($bannerResult && ($row = $bannerResult->fetch_assoc())) {
         ?>
             <div class="item">
                 <div class="item_img">
@@ -82,8 +80,7 @@ if (isset($_SESSION['user_id'])) {
 </section>
 
 
-
-<!----tournament----->
+<!-- Upcoming tournaments -->
 <section class="tournament_sec bottomSide_gap" id="casaTournament_sec">
     <div class="cust_container">
         <div class="text-center d-flex flex-column align-items-center">
@@ -93,35 +90,29 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="tournamentcard_slider">
             <?php
-            include('dbConnection_PDO.php');
-
             try {
-                $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-                $pdo = new PDO($dsn, $user, $pass);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                if (!$pdo) {
+                    throw new PDOException('Database connection unavailable.');
+                }
 
                 $sql = "SELECT e.*, b.IMGAE,
                         (SELECT COUNT(ID) FROM to_teams WHERE TOURNAMENT_ID = e.ID) AS joined_count
-                        FROM  to_tournaments e 
-                        LEFT JOIN to_tournamet_banners b ON e.ID = b.EVENTS_ID 
-                        WHERE e.STATUS = 'Active' 
+                        FROM  to_tournaments e
+                        LEFT JOIN to_tournamet_banners b ON e.ID = b.EVENTS_ID
+                        WHERE e.STATUS = 'Active'
                         ORDER BY e.ID DESC";
-                $stmt = $pdo->query($sql);
-                $tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $tournaments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-                if (count($tournaments) > 0) {
+                if ($tournaments) {
                     foreach ($tournaments as $row) {
-                        // Formatting
                         $date = date("M d, Y", strtotime($row['EVENT_DATE']));
                         $time = date("h:i A", strtotime($row['EVENT_TIME']));
-                        $cost = number_format($row['EVENT_COST'], 2);
 
-                        // Image Path Logic
                         $imgPath = !empty($row['IMGAE'])
                             ? "admin/assets/images/tournaments_banner/" . $row['IMGAE']
                             : "assets/images/default-tournament.jpg";
 
-                        // --- LOGIC MOVED TO TOP ---
+                        // Registration closes at CANCEL_DATE/CANCEL_TIME (America/New_York).
                         $isRegistrationOpen = true;
                         if (!empty($row['CANCEL_DATE'])) {
                             try {
@@ -137,23 +128,20 @@ if (isset($_SESSION['user_id'])) {
                             }
                         }
             ?>
-                        <!-- Conditional Wrapper: <a> if open, <div> if closed -->
+                        <!-- Conditional wrapper: <a> if open, <div> if closed -->
                         <?php if ($isRegistrationOpen): ?>
                             <a href="tournament-details.php?id=<?php echo $row['ID']; ?>" class="tournament_card">
                             <?php else: ?>
                                 <div class="tournament_card" style="cursor: default;">
                                 <?php endif; ?>
 
-                                <!-- Image at the top -->
                                 <div class="image">
                                     <img src="<?php echo $imgPath; ?>" class="img" alt="Banner" />
                                 </div>
 
                                 <div class="content">
-                                    <!-- Cup Name -->
                                     <h4 class="name"><?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?></h4>
 
-                                    <!-- Tagline -->
                                     <span class="tagline">
                                         <?php
                                         $plainDescription = strip_tags($row['EVENT_DESCRIPTION']);
@@ -163,7 +151,6 @@ if (isset($_SESSION['user_id'])) {
                                         ?>
                                     </span>
 
-                                    <!-- Categories Line -->
                                     <div class="meta-row category-line">
                                         <div class="tournamentCardCol">
                                             <div class="tournamentCardIcon"><i class="fa-solid fa-user-group"></i></div>
@@ -174,7 +161,6 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
 
-                                    <!-- Date & Time -->
                                     <div class="tournamentCardFlex" style="display: flex; align-items: center; gap: 8px; column-gap: 20px; margin-bottom: 6px;">
                                         <div class="tournamentCardCol">
                                             <div class="tournamentCardIcon"><i class="fa fa-calendar-alt" style="color: #0056b3; width: 16px;"></i></div>
@@ -186,7 +172,6 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
 
-                                    <!-- Venue Line -->
                                     <div class="meta-row venue-line">
                                         <div class="tournamentCardCol">
                                             <div class="tournamentCardIcon"><i class="fa fa-map-marker-alt"></i></div>
@@ -194,7 +179,6 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
 
-                                    <!-- Price -->
                                     <div class="price-tag tournamentCardFlex" style="display: flex; align-items: center; gap: 8px; column-gap: 20px; margin-bottom: 6px;">
                                         <div class="tournamentCardCol">
                                             <div class="tournamentCardIcon"><i class="fa-solid fa-comment-dollar"></i></div>
@@ -209,7 +193,6 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
 
-                                    <!-- Joined Status Badge -->
                                     <div class="joined-status">
                                         <div class="tournamentCardCol">
                                             <div class="tournamentCardIcon"><i class="fa fa-check-circle"></i></div>
@@ -217,7 +200,6 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
 
-                                    <!-- registration status -->
                                     <?php if ($isRegistrationOpen): ?>
                                         <div class="openBtn btn-info rounded text-white">
                                             <span>Registration open</span>
@@ -229,7 +211,6 @@ if (isset($_SESSION['user_id'])) {
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Conditional Closing Tag -->
                                 <?php if ($isRegistrationOpen): ?>
                             </a><?php else: ?>
         </div><?php endif; ?>
@@ -240,15 +221,15 @@ if (isset($_SESSION['user_id'])) {
                     echo "<p class='text-center w-100'>No active tournaments found at the moment.</p>";
                 }
             } catch (PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
+                echo "<p class='text-center w-100'>Unable to load tournaments right now.</p>";
             }
-?>
-    </div>
+            ?>
+        </div>
     </div>
 </section>
 
 
-<!----Store-------->
+<!-- Casa store -->
 <section class="homeStore_sec bothSide_gap" id="homesotreid" style="background: #0f172a;">
     <div class="cust_container">
         <div class="text-center d-flex flex-column align-items-center">
@@ -258,8 +239,11 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="sttoreproduct_slider">
             <?php
-            $productQuery = "SELECT ID, PRODUCT_NAME, PRICE, IMAGE, TNAME FROM ca_products ORDER BY ID DESC LIMIT 12";
-            $productResult = $conn->query($productQuery);
+            try {
+                $productResult = $conn->query("SELECT ID, PRODUCT_NAME, PRICE, IMAGE, TNAME FROM ca_products ORDER BY ID DESC LIMIT 12");
+            } catch (mysqli_sql_exception $e) {
+                $productResult = false;
+            }
 
             if ($productResult && $productResult->num_rows > 0) {
                 while ($product = $productResult->fetch_assoc()) {
@@ -286,11 +270,12 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </section>
 
-<!-----Gallery-sec start----->
+
+<!-- Gallery -->
 <?php include "./gallery.php"; ?>
 
 
-<!-----About Us start------->
+<!-- About us -->
 <section class="playground_sec bothSide_gap" id="aboutusId" style="background: #000;">
     <div class="cust_container">
         <div class="text-center d-flex flex-column align-items-center">
@@ -299,15 +284,22 @@ if (isset($_SESSION['user_id'])) {
         </div>
         <div class="d-flex flex-wrap justify-content-center gap-3">
             <?php
-            $players = $pdo->query("SELECT COUNT(*) FROM ca_users WHERE USERTYPE = 'Player' AND LOG_STATUS = 'Y'")->fetchColumn();
-            $clubs = $pdo->query("SELECT COUNT(*) FROM ca_users WHERE USERTYPE = 'Host' AND LOG_STATUS = 'Y'")->fetchColumn();
-            $sessions = $pdo->query("SELECT COUNT(*) FROM ca_events WHERE STATUS = 'Completed'")->fetchColumn();
+            try {
+                if (!$pdo) {
+                    throw new PDOException('Database connection unavailable.');
+                }
+                $players  = $pdo->query("SELECT COUNT(*) FROM ca_users WHERE USERTYPE = 'Player' AND LOG_STATUS = 'Y'")->fetchColumn();
+                $clubs    = $pdo->query("SELECT COUNT(*) FROM ca_users WHERE USERTYPE = 'Host' AND LOG_STATUS = 'Y'")->fetchColumn();
+                $sessions = $pdo->query("SELECT COUNT(*) FROM ca_events WHERE STATUS = 'Completed'")->fetchColumn();
+            } catch (PDOException $e) {
+                $players = $clubs = $sessions = 0;
+            }
 
             $stats = [
                 ['icon' => 'fa-users', 'count' => $players, 'label' => 'Total Players'],
                 ['icon' => 'fa-building', 'count' => $clubs, 'label' => 'Total Clubs'],
                 ['icon' => 'fa-play', 'count' => $sessions, 'label' => 'Total Sessions'],
-                ['icon' => 'fa-fire', 'count' => $sessions * 12, 'label' => 'Total Matches']
+                ['icon' => 'fa-fire', 'count' => $sessions * 12, 'label' => 'Total Matches'],
             ];
 
             foreach ($stats as $stat): ?>
@@ -321,7 +313,8 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </section>
 
-<!-------category_sec-------->
+
+<!-- Read me -->
 <section class="category_sec bothSide_gap">
     <div class="cust_container">
         <div class="text-center d-flex flex-column align-items-center">
@@ -334,7 +327,7 @@ if (isset($_SESSION['user_id'])) {
                 ['url' => 'organiser.php', 'icon' => 'fa-briefcase', 'title' => 'Casa for Organiser'],
                 ['url' => 'players.php', 'icon' => 'fa-users', 'title' => 'Casa for Players'],
                 ['url' => 'casa-trainers.php', 'icon' => 'fa-user-tie', 'title' => 'Casa for Trainers'],
-                ['url' => 'casa-clubs.php', 'icon' => 'fa-hotel', 'title' => 'Casa for Clubs']
+                ['url' => 'casa-clubs.php', 'icon' => 'fa-hotel', 'title' => 'Casa for Clubs'],
             ];
             foreach ($navs as $nav): ?>
                 <a href="<?= $nav['url'] ?>" class="category_card">
@@ -351,23 +344,21 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </section>
 
-<!-----Casa-post-banner(Event)------->
+
+<!-- Event posters / cards -->
 <div id="eventCard_post">
     <?php include "./poster.php"; ?>
 </div>
 
 
-<!-----Popular Sports------->
+<!-- Popular sports -->
 <section class="popularSports_sec bothSide_gap">
-
     <div class="cust_container">
 
         <div class="text-center d-flex flex-column align-items-center">
-            <!-- <h6 class="sub_heading">Sports</h6> -->
             <h2 class="heading">Select The Sports</h2>
         </div>
 
-        <!----Sports-Tab-start----->
         <ul class="popularSports_wrap">
             <li class="clickme">
                 <a href="javascript:void();" data-tag="BadmintonTab" class="activelink">
@@ -466,28 +457,29 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
         </div>
-        <!----Sports-Tab-End----->
     </div>
 </section>
 
-<!-----Community Voices (testimonials)---->
+
+<!-- Community voices -->
 <section class="testimonials_sec bothSide_gap" style="background: #0f172a;">
     <div class="cust_container">
         <div class="text-center d-flex flex-column align-items-center">
-            <!-- <h6 class="sub_heading">Community Voices</h6> -->
             <h2 class="heading white fw-bold">What Our Players Say</h2>
-            <!-- <div style="width: 60px; height: 3px; background: #22d3ee; border-radius: 2px;"></div> -->
         </div>
 
         <div class="netflix-slider-wrapper" id="netflixSlider">
             <div class="netflix-track d-flex gap-4">
                 <?php
                 try {
-                    // Updated Query per your request
-                    $query = "SELECT r.MESSAGE, r.PLAYER_ROLE, r.RATING, u.NAME, u.PROFILE_IMAGE 
+                    if (!$pdo) {
+                        throw new PDOException('Database connection unavailable.');
+                    }
+
+                    $query = "SELECT r.MESSAGE, r.PLAYER_ROLE, r.RATING, u.NAME, u.PROFILE_IMAGE
                               FROM ca_reviews r
-                              JOIN ca_users u ON r.USER_ID = u.ID 
-                              WHERE r.STATUS = 'Active' 
+                              JOIN ca_users u ON r.USER_ID = u.ID
+                              WHERE r.STATUS = 'Active'
                               ORDER BY r.DATE_CREATED DESC LIMIT 20";
 
                     $stmt = $pdo->prepare($query);
@@ -496,13 +488,13 @@ if (isset($_SESSION['user_id'])) {
 
                     if ($reviews):
                         foreach ($reviews as $row):
-                            // Handling the profile image path
-                            $userImg = !empty($row['PROFILE_IMAGE']) ? "uploads/users/" . $row['PROFILE_IMAGE'] : "assets/images/default-avatar.png";
+                            $userImg = !empty($row['PROFILE_IMAGE'])
+                                ? "profile_img/" . $row['PROFILE_IMAGE']
+                                : "assets/images/profile.jpg";
                 ?>
                             <div class="testimonial-card">
                                 <div class="text-warning mb-2 small">
                                     <?php
-                                    // Dynamic Star Rating
                                     for ($i = 1; $i <= 5; $i++) {
                                         echo ($i <= $row['RATING']) ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
                                     }
@@ -513,7 +505,7 @@ if (isset($_SESSION['user_id'])) {
                                 </p>
                                 <div class="d-flex align-items-center mt-auto">
                                     <div class="rounded-circle me-3 avatar-placeholder"
-                                        style="background: url('<?= $userImg ?>') center/cover; width: 45px; height: 45px; border: 1px solid rgba(34, 211, 238, 0.5); flex-shrink: 0;">
+                                        style="background: url('<?= htmlspecialchars($userImg) ?>') center/cover; width: 45px; height: 45px; border: 1px solid rgba(34, 211, 238, 0.5); flex-shrink: 0;">
                                     </div>
                                     <div style="overflow: hidden;">
                                         <h6 class="text-white fw-bold mb-0 small text-truncate"><?= htmlspecialchars($row['NAME']) ?></h6>
@@ -527,7 +519,7 @@ if (isset($_SESSION['user_id'])) {
                         echo "<p class='text-white opacity-50 px-5'>No reviews found.</p>";
                     endif;
                 } catch (PDOException $e) {
-                    echo "<p class='text-danger'>Error: " . $e->getMessage() . "</p>";
+                    echo "<p class='text-white opacity-50 px-5'>No reviews found.</p>";
                 }
                 ?>
             </div>
@@ -535,891 +527,15 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </section>
 
-<!----contact-us------->
+
+<!-- Contact us -->
 <?php include "./contact-us.php"; ?>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-----new banner-------->
-<!-- <section class="homebanner_sec bottomSide_gap">
-    <div class="banner_image herobanner_slider">
-        <div class="item">
-            <div class="item_img">
-                <img src="assets/images/herobanner2.jpg" class="img-fluid" alt="banner-image" />
-            </div>
-            <div class="cust_container">
-                <div class="row bothSide_gap">
-                    <div class="col-lg-6 col-12">
-                        <div class="banner_content">
-                            <div class="wrapper" data-aos="fade-left" data-aos-duration="2000">
-                                <h6 class="Homebanner sub_heading">CasaInfoTech:</h6>
-                                <h1 class="Homebanner heading">Uniting Passion <span>for Sports</span></h1>
-                                <p class="bannerdesc desc mb-1">We are your all-in-one platform, connecting sports enthusiasts with playmates, helping you find venues, enhance your skills, manage activities effortlessly</p>
-                                <p class="bannerdesc desc">From friendly matches to competitive tournaments, Casa is the perfect platform to enjoy a strong, supportive community that shares your passion.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-center right-side">
-                        <//?php include "includes/Auth/login.php"; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="item_img">
-                <img src="assets/images/herobanner3.jpg" class="img-fluid" alt="banner-image" />
-            </div>
-            <div class="cust_container">
-                <div class="row bothSide_gap">
-                    <div class="col-lg-6 col-12">
-                        <div class="banner_content">
-                            <div class="wrapper" data-aos="fade-left" data-aos-duration="2000">
-                                <h6 class="Homebanner sub_heading">Uniting Passion for Sports:</h6>
-                                <h1 class="Homebanner heading">Casa Badminton Training <span>Toronto</span></h1>
-                                <p class="bannerdesc desc">Elevate your game with professional badminton training for men, women, and kids &minus; flexible sessions to match your schedule!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-center right-side">
-                        <//?php include "includes/Auth/login.php"; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="item_img">
-                <img src="assets/images/woman-outdoors2.jpg" class="img-fluid" alt="banner-image" />
-            </div>
-            <div class="cust_container">
-                <div class="row bothSide_gap">
-                    <div class="col-lg-6 col-12">
-                        <div class="banner_content">
-                            <div class="wrapper" data-aos="fade-left" data-aos-duration="2000">
-                                <h6 class="Homebanner sub_heading">Uniting Passion for Sports:</h6>
-                                <h1 class="Homebanner heading">Casa Badminton <span>Store</span></h1>
-                                <p class="bannerdesc desc">Discover premium shuttlecocks and accessories from the sports most trusted brands &minus; high-quality products at the most competitive prices.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-center right-side">
-                        <//?php include "includes/Auth/login.php"; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
-
-
-
-<!-----About-Us------->
-<!-- <section class="playground_sec bothSide_gap" id="aboutusId">
-    <div class="cust_container">
-        <div class="text-center d-flex flex-column align-items-center">
-            <h4 class="sub_heading">About Us</h4>
-            <h2 class="heading">The playground</h2>
-        </div>
-        <ul class="playground_list">
-            <//?php
-
-            try {
-
-                $sqlDTL = "SELECT COUNT(*) AS total_players
-
-               FROM ca_users
-
-               WHERE USERTYPE = 'Player' AND LOG_STATUS = 'Y'";
-
-                $result = $pdo->query($sqlDTL)->fetch(PDO::FETCH_ASSOC);
-
-
-
-                $sqlclub = "SELECT COUNT(*) AS total_clubs
-
-                FROM ca_users
-
-                WHERE USERTYPE = 'Host' AND LOG_STATUS = 'Y'";
-
-                $resultclub = $pdo->query($sqlclub)->fetch(PDO::FETCH_ASSOC);
-
-                $sqlsession = "SELECT COUNT(*) AS total_session
-
-                   FROM ca_events
-
-                   WHERE STATUS = 'Completed'";
-
-                $resultsession = $pdo->query($sqlsession)->fetch(PDO::FETCH_ASSOC);
-
-            ?>
-
-                <li class="playground_box">
-                    <div class="icon"><i class="fa-solid fa-users"></i></div>
-                    <h4 class="count" data-target="<//?= (int)$result['total_players']; ?>">0</h4>
-                    <p class="name">Total Players</p>
-                </li>
-
-                <li class="playground_box">
-                    <div class="icon"><i class="fa-solid fa-building"></i></div>
-                    <h4 class="count" data-target="<//?= (int)$resultclub['total_clubs']; ?>">0</h4>
-                    <p class="name">Total Clubs</p>
-                </li>
-
-                <li class="playground_box">
-                    <div class="icon"><i class="fa-solid fa-play"></i></div>
-                    <h4 class="count" data-target="<//?= (int)$resultsession['total_session']; ?>">0</h4>
-                    <p class="name">Total Sessions</p>
-                </li>
-
-                <li class="playground_box">
-                    <div class="icon"><i class="fa-solid fa-fire"></i></div>
-                    <h4 class="count" data-target="<//?= (int)$resultsession['total_session'] * 12; ?>">0</h4>
-                    <p class="name">Total Matches</p>
-                </li>
-
-            <//?php
-
-            } catch (PDOException $e) {
-
-                echo "Connection failed: " . $e->getMessage();
-            }
-
-            ?>
-        </ul>
-    </div>
-</section> -->
-
-<!--<section class="aboutus_sec bothSide_gap">-->
-
-<!--    <div class="cust_container">-->
-
-<!--        <div class="row">-->
-
-<!--            <div class="col-lg-7 col-md-12 col-12 m-auto">-->
-
-<!--                <h4 class="sub_heading">About Us</h4>-->
-
-<!--                <h2 class="heading">Welcome to the Casa Club</h2>-->
-
-<!--                <p class="desc">At The Batminton Club, we don�t just play badminton � we elevate it.</p>-->
-
-<!--                <p class="desc">From our world-class courts to our elite training programs, we provide everything-->
-
-<!--                    serious players need to reach their highest potential. Our mission is to blend performance,-->
-
-<!--                    professionalism, and passion into an unmatched badminton experience.</p>-->
-
-<!--                <h6 class="miniheading">Our Vision</h6>-->
-
-<!--                <p class="desc">To be the premier destination for badminton in City, setting the standard for excellence in facilities, coaching, and member experience.</p>-->
-
-
-
-<!--                <h6 class="miniheading">What We Offer</h6>-->
-
-
-
-<!--                <ul>-->
-
-<!--                    <li>Cutting-edge facilities maintained to international standards</li>-->
-
-<!--                    <li>Expert coaches with proven track records and personalized coaching</li>-->
-
-<!--                    <li>Structured lessons, fitness training, strategy workshops, mental coaching</li>-->
-
-<!--                    <li>Competitive tournaments and matches across all levels</li>-->
-
-<!--                    <li>Member amenities that go beyond the court: relaxing lounges, gear shop, community events</li>-->
-
-<!--                </ul>-->
-
-
-
-
-
-<!--            </div>-->
-
-<!--            <div class="col-lg-5 col-md-12 col-12">-->
-
-<!--                <div class="aboutimg_wrap">-->
-
-<!--                    <img src="assets/images/trainer-pic.jpg" class="img-fluid" loading="lazy" alt="image...">-->
-
-<!--                </div>-->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--</section>-->
-
-
-
-<!-----WhyChooseUs------->
-
-<!--<section class="homeAbout_sec bothSide_gap" id="WhyChooseUs">-->
-
-<!--    <div class="cust_container">-->
-
-<!--        <h6 class="sub_heading">Why choose us </h6>-->
-
-<!--        <div class="row mb-5">-->
-
-<!--            <div class="col-xl-8 col-lg-7 col-md-12 col-12">-->
-
-<!--                <h2 class="heading">As a Host/Trainer:</h2>-->
-
-<!-- <p class="desc">Schedule games and mark events as active or cancelled </p> -->
-
-<!--                <ul class="list_wrap">-->
-
-<!--                    <li>Schedule games and mark events as active or cancelled</li>-->
-
-<!--                    <li>Define event details: venue, date, and time</li>-->
-
-<!--                    <li>Define event category(Badminton, Tennis, Cricket)</li>-->
-
-<!--                    <li>Define event sub-category (Men, Women, Mixed, Singles, Kids)</li>-->
-
-<!--                    <li>Define event skill level (Beginner, Amateur, Intermediate, Advanced, Professional)</li>-->
-
-<!--                    <li>Define event type (Public, Invite Only)</li>-->
-
-<!--                    <li>Define event cost (court fees, birdie costs, player fees)</li>-->
-
-<!--                    <li>Define freeze time (default: six hours before event; cancellations not allowed after freeze time)</li>-->
-
-<!--                    <li>Track daily/monthly payments and mark them as verified</li>-->
-
-<!--                    <li>Send payment reminders to players regularly (daily/monthly)</li>-->
-
-<!--                    <li>Generate monthly settlement statements for accounting</li>-->
-
-<!--                </ul>-->
-
-<!-- <a href="#" class="getQuote_btn btn">Learn More</a> -->
-
-<!--            </div>-->
-
-
-
-<!--            <div class="col-xl-4 col-lg-5 col-md-12 col-12">-->
-
-<!--                <div class="image_wrap" data-aos="fade-left" data-aos-duration="2000">-->
-
-<!--                    <img src="assets/images/trainer-pic.jpg" class="img-fluid" alt="image" />-->
-
-<!--                </div>-->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--        <div class="row columnReverse">-->
-
-<!--            <div class="col-xl-4 col-lg-5 col-md-12 col-12">-->
-
-<!--                <div class="image_wrap" data-aos="fade-right" data-aos-duration="2000">-->
-
-<!--                    <img src="assets/images/young-sporty.jpg" class="img-fluid" alt="image" />-->
-
-<!--                </div>-->
-
-<!--            </div>-->
-
-<!--            <div class="col-xl-8 col-lg-7 col-md-12 col-12">-->
-
-<!--                <h2 class="heading">As a Player: </h2>-->
-
-<!-- <p class="desc">Request login by filling out the registration form on the website </p> -->
-
-<!--                <ul class="list_wrap">-->
-
-<!--                    <li>Request login by filling out the registration form on the website</li>-->
-
-<!--                    <li>Admin will send login credentials via email or WhatsApp</li>-->
-
-<!--                    <li>Default skill level is set to Beginner</li>-->
-
-<!--                    <li>Note: Skill levels can be challenged based on peer and host reviews</li>-->
-
-<!--                    <li>Log into your account</li>-->
-
-<!--                    <li>Choose dates and times that fit your schedule, level, and join events</li>-->
-
-<!--                    <li>Cancel games before freeze time if you're unable to attend</li>-->
-
-<!--                    <li>Pay event costs directly to the host (daily/monthly, as per your agreement) and mark payment details</li>-->
-
-<!--                    <li>Download monthly statements (paid/dues)</li>-->
-
-<!--                </ul>-->
-
-<!-- <a href="#" class="getQuote_btn btn">Learn More</a> -->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--</section>-->
-
-
-
-
-<!------bookVenues_sec------->
-
-<!-- <section class="bookVenues_sec bothSide_gap">
-
-    <div class="cust_container">
-
-        <div class="section_top">
-
-            <h6 class="sub_heading">Lorem ipsum</h6>
-
-            <div class="d-flex align-items-center justify-content-between flex-wrap">
-
-                <h2 class="heading">Book Venues</h2>
-
-                <a href="#" class="seeAll_btn btn">See all Venues</a>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="bookVenues_slider">
-
-            <div class="bookVenues_card">
-
-                <a href="#">
-
-                    <div class="image_wrap">
-
-                        <img src="assets/images/card-img.webp" class="img-fluid" alt="image" />
-
-                        <span class="ratting">4.7 (6)</span>
-
-                    </div>
-
-                    <h6 class="head">Game Theory - Joseph's...</h6>
-
-                    <p class="desc">Gate 3, No.2, Vittal M... (~0.13 Kms)</p>
-
-                </a>
-
-            </div>
-
-            <div class="bookVenues_card">
-
-                <a href="#">
-
-                    <div class="image_wrap">
-
-                        <img src="assets/images/card-img.webp" class="img-fluid" alt="image" />
-
-                        <span class="ratting">4.7 (6)</span>
-
-                    </div>
-
-                    <h6 class="head">Game Theory - Joseph's...</h6>
-
-                    <p class="desc">Gate 3, No.2, Vittal M... (~0.13 Kms)</p>
-
-                </a>
-
-            </div>
-
-            <div class="bookVenues_card">
-
-                <a href="#">
-
-                    <div class="image_wrap">
-
-                        <img src="assets/images/card-img.webp" class="img-fluid" alt="image" />
-
-                        <span class="ratting">4.7 (6)</span>
-
-                    </div>
-
-                    <h6 class="head">Game Theory - Joseph's...</h6>
-
-                    <p class="desc">Gate 3, No.2, Vittal M... (~0.13 Kms)</p>
-
-                </a>
-
-            </div>
-
-            <div class="bookVenues_card">
-
-                <a href="#">
-
-                    <div class="image_wrap">
-
-                        <img src="assets/images/card-img.webp" class="img-fluid" alt="image" />
-
-                        <span class="ratting">4.7 (6)</span>
-
-                    </div>
-
-                    <h6 class="head">Game Theory - Joseph's...</h6>
-
-                    <p class="desc">Gate 3, No.2, Vittal M... (~0.13 Kms)</p>
-
-                </a>
-
-            </div>
-
-            <div class="bookVenues_card">
-
-                <a href="#">
-
-                    <div class="image_wrap">
-
-                        <img src="assets/images/card-img.webp" class="img-fluid" alt="image" />
-
-                        <span class="ratting">4.7 (6)</span>
-
-                    </div>
-
-                    <h6 class="head">Game Theory - Joseph's...</h6>
-
-                    <p class="desc">Gate 3, No.2, Vittal M... (~0.13 Kms)</p>
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section> -->
-
-
-
-<!-----casa for Tournament------->
-
-<!--<section id="casaTournament_sec" class="Storebanner_sec bothSide_gap mt-4" style="background-image: url(./assets/images/Tournament-bg.jpeg)">-->
-
-<!--    <div class="cust_container">-->
-
-<!--        <div class="wraper py-4">-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100">-->
-
-<!--                <h6 class="sub_heading white">Casa for Tournament</h6>-->
-
-<!--            </div>-->
-
-<!--            <h2 class="heading white">Badminton Tournament Management Software</h2>-->
-
-<!--            <p class="desc white">Simplify your tournament operations with our all-in-one badminton event management platform, designed for both organizers and players.</p>-->
-
-
-
-<!--            <h6 class="miniheading text-center mt-2 mb-1">Key Features:</h6>-->
-
-<!--            <p class="desc white mb-2">-->
-
-<!--                <span class="pe-1">1).Online Game-Day Dashboard: Get a real-time overview of all ongoing matches and schedules.</span>-->
-
-<!--                <span class="pe-1">2).Player Registration: Players can easily join games or tournaments online.</span>-->
-
-<!--                <span class="pe-1">3).Team Grouping: Automatically create and manage player or team groups.</span>-->
-
-<!--                <span class="pe-1">4).Double Elimination Format: Organize fair and competitive matches using the double-elimination system.</span>-->
-
-<!--                <span class="pe-1">5).Live Score Tracking: Display real-time scores for each court with complete match history.</span>-->
-
-<!--                <span class="pe-1">6).Leaderboard: Showcase player rankings and tournament progress dynamically.</span>-->
-
-<!--            </p>-->
-
-
-
-<!--            <p class="desc white">Run your tournaments smoothly and deliver an engaging experience for players and spectators alike.</p>-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100 pt-4">-->
-
-<!--                <a href="#" class="btn btn-info rounded text-white">Read More</a>-->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--</section>-->
-
-
-
-<!-----casa for Stadium------->
-
-<!--<section id="casaStadium_sec" class="Storebanner_sec bothSide_gap mt-3" style="background-image: url(./assets/images/Casa_Stadium.jpg)">-->
-
-<!--    <div class="cust_container">-->
-
-<!--        <div class="wraper py-4">-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100">-->
-
-<!--                <h6 class="sub_heading white">Casa for Stadium</h6>-->
-
-<!--            </div>-->
-
-<!--            <h2 class="heading white">Court Booking Management Software</h2>-->
-
-<!--            <p class="desc white">Experience seamless and efficient court management with our all-in-one software solution, designed to simplify operations and enhance member satisfaction.</p>-->
-
-<!--            <h6 class="miniheading text-center mt-2 mb-1">Key Features:</h6>-->
-
-<!--            <p class="desc white mb-2">-->
-
-<!--                <span class="pe-1">1).<b>Membership Management:</b> Easily handle player registrations, renewals, and profiles</span>-->
-
-<!--                <span class="pe-1">2).<b>Daily & Advance Bookings:</b> Manage both same-day and future court reservations with ease.</span>-->
-
-<!--                <span class="pe-1">3).<b>Inventory Management:</b> Track and control sports equipment and facility resources.</span>-->
-
-<!--                <span class="pe-1">4).<b>Stringing Services:</b> Organize and monitor stringing requests efficiently.</span>-->
-
-<!--                <span class="pe-1">5).<b>Online Player Booking:</b> Allow players to book courts anytime, anywhere.</span>-->
-
-<!--                <span class="pe-1">6).<b>Billing & Payment History:</b> Simplify transactions and maintain detailed payment records.</span>-->
-
-<!--            </p>-->
-
-<!--            <p class="desc white">Streamline your club operations and elevate the player experience all through one powerful platform.</p>-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100 pt-4">-->
-
-<!--                <a href="#" class="btn btn-info rounded text-white">Read More</a>-->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--</section>-->
-
-
-
-<!----Store-------->
-
-<!--<section class="Storebanner_sec bothSide_gap mt-3" style="background-image: url(./assets/images/bags-rack-store.jpeg)">-->
-
-<!--    <div class="cust_container">-->
-
-<!--        <div class="wraper">-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100">-->
-
-<!--                <h6 class="sub_heading white">Store</h6>-->
-
-<!--            </div>-->
-
-<!--            <h2 class="heading white">Visit Our Store</h2>-->
-
-<!--            <p class="desc white">We offer a thoughtfully selected range of shuttlecocks and accessories from the most trusted and renowned brands in the sport.</p>-->
-
-<!--            <p class="desc white">Whether you're just starting out or a seasoned professional, our collection caters to badminton players of all levels.</p>-->
-
-<!--            <p class="desc white">Our mission is to provide authentic, high-quality products at the most competitive prices</p>-->
-
-<!--            <p class="desc white">Visit our store to explore our full range and learn more about our offerings.</p>-->
-
-<!--            <div class="d-flex align-items-center justify-content-center w-100 pt-4">-->
-
-<!--                <a href="product-listing.php" class="btn btn-info rounded text-white">Visit Store</a>-->
-
-<!--            </div>-->
-
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--</section>-->
-
-
-
-<!-----testimonials--------->
-
-<!-- <section class="testimonials_sec bothSide_gap">
-
-    <div class="cust_container">
-
-        <div class="section_top">
-
-            <div class="d-flex align-items-center justify-content-between flex-wrap">
-
-                <h2 class="heading">What our players say</h2>
-
-                <a href="#" class="seeAll_btn btn">See all</a>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="testimonials_all testimonials_slider">
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos omnis sequi temporibus obcaecati dolorem saepe odio neque quasi velit magni officiis beatae libero unde, a fugiat consequuntur, numquam ut iste?</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe recusandae est magni, earum tempore, animi molestias ullam veniam praesentium culpa ipsum eius asperiores. Esse eos quaerat temporibus, obcaecati debitis reiciendis.</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet ratione quidem veritatis ullam repellat alias molestias, similique voluptates, sit ipsum ea repudiandae blanditiis incidunt aliquam error molestiae corporis et nemo?</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta ullam error dolor non cupiditate totam officiis nam, molestiae aperiam expedita natus voluptatibus labore nulla tenetur temporibus illum quis odit. Sit.</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat nisi recusandae eveniet, perspiciatis culpa exercitationem expedita, soluta deserunt qui non officia ipsum. Esse pariatur impedit tempora dolorum tenetur quam non.</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod eligendi laborum maiores, in nulla tenetur tempore ducimus accusamus dicta id dignissimos neque quisquam aliquid cum ut voluptatibus incidunt nam deserunt?</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad laudantium, consectetur cum accusantium maiores delectus sequi magni reiciendis suscipit aperiam molestiae fugit recusandae similique labore eligendi ut culpa iure officia.</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-            <div class="testimonials_card">
-
-                <h4 class="name">Nirmal Thakur</h4>
-
-                <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus necessitatibus nostrum quod, possimus aliquid dolores voluptas incidunt nesciunt provident, quis aperiam nulla perferendis sint unde quidem obcaecati? Facere, magnam iste.</p>
-
-                <div class="rating_wrap">
-
-                    <div class="ratings">
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class="active"></span>
-
-                        <span class=""></span>
-
-                    </div>
-
-                    <p class="google">Google</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section> -->
-
-
-
-
-<!------footer------>
-<?php include "includes/footer.php";
-
+<!-- Footer -->
+<?php
+include "includes/footer.php";
 ob_end_flush();
-
 ?>
 
 <script>

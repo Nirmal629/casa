@@ -44,7 +44,11 @@ $query = "
     ORDER BY sort_order ASC, id DESC
 ";
 
-$result = $conn->query($query);
+try {
+    $result = $conn->query($query);
+} catch (mysqli_sql_exception $e) {
+    $result = false;
+}
 
 if ($result) {
     while ($row = $result->fetch_assoc()) {

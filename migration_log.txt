@@ -1,4 +1,4 @@
-=== Starting DB Migration at 2026-07-03 09:06:20 ===
+=== Starting DB Migration at 2026-08-28 14:06:36 ===
 • Index 'uq_host_id' does not exist or already dropped in ca_clubs
 • Column 'join_type' already exists in ca_clubs
 ✓ Column 'address' added to ca_clubs
@@ -8,4 +8,10 @@
 ✓ Column 'area' dropped from ca_clubs
 ✓ Table 'ca_player_club_status' is ready
 ✓ Table 'player_Host_mapping' dropped (redundant)
+✓ Table 'host_player_carry_forward' is ready
+✓ Table 'ca_host_player_carry_forward_history' is ready
+• Column 'MESSAGE' already exists in ca_payment
+• Column 'REVIEWED_BY' already exists in ca_payment
+• Column 'REVIEWED_AT' already exists in ca_payment
+• Column 'REJECTION_REASON' already exists in ca_payment
 === Migration SUCCESS! ===

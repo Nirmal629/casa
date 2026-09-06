@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, $query);
 
     if ($result) {
-        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined subscription game ID ' . $gameId);
+        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined subscription game ID ' . $gameId, $hostId ?: auditResolveGameHost($conn, $gameId), $gameId);
 
         $eventsByDay = [
             'SUNDAY'    => [],

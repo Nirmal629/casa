@@ -111,6 +111,90 @@ try {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
     runQuery($conn, $create_ca_host_player_carry_forward_history, $output);
 
+    // 8. Add missing columns to ca_payment if they don't exist
+    $payment_cols = [
+        'MESSAGE' => "ALTER TABLE `ca_payment` ADD COLUMN `MESSAGE` TEXT NOT NULL DEFAULT ''",
+        'REVIEWED_BY' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_BY` INT(11) NULL DEFAULT NULL",
+        'REVIEWED_AT' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_AT` TIMESTAMP NULL DEFAULT NULL",
+        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL"
+    ];
+    foreach ($payment_cols as $col => $alter_sql) {
+        $check = $conn->query("SHOW COLUMNS FROM `ca_payment` LIKE '$col'");
+        if ($check && $check->num_rows == 0) {
+            if ($conn->query($alter_sql)) {
+                $output .= "✓ Column '$col' added to ca_payment\n\n";
+            } else {
+                throw new Exception("Failed to add column $col to ca_payment: " . $conn->error);
+            }
+        } else {
+            $output .= "• Column '$col' already exists in ca_payment\n\n";
+        }
+    }
+
+    // 9. Host Audit Log — extend ca_player_logs with host/game/context + indexes
+    $apl_cols = [
+        'HOST_ID'    => "ALTER TABLE `ca_player_logs` ADD COLUMN `HOST_ID` INT(11) NULL DEFAULT NULL AFTER `USER_ID`",
+        'GAME_ID'    => "ALTER TABLE `ca_player_logs` ADD COLUMN `GAME_ID` INT(11) NULL DEFAULT NULL AFTER `HOST_ID`",
+        'META'       => "ALTER TABLE `ca_player_logs` ADD COLUMN `META` TEXT NULL DEFAULT NULL AFTER `DESCRIPTION`",
+        'IP_ADDRESS' => "ALTER TABLE `ca_player_logs` ADD COLUMN `IP_ADDRESS` VARCHAR(45) NULL DEFAULT NULL AFTER `META`",
+    ];
+    foreach ($apl_cols as $col => $alter_sql) {
+        $check = $conn->query("SHOW COLUMNS FROM `ca_player_logs` LIKE '$col'");
+        if ($check && $check->num_rows == 0) {
+            if ($conn->query($alter_sql)) {
+                $output .= "✓ Column '$col' added to ca_player_logs\n\n";
+            } else {
+                throw new Exception("Failed to add column $col to ca_player_logs: " . $conn->error);
+            }
+        } else {
+            $output .= "• Column '$col' already exists in ca_player_logs\n\n";
+        }
+    }
+
+    $apl_indexes = [
+        'idx_apl_user_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_user_created` (`USER_ID`, `CREATED_AT`)",
+        'idx_apl_host_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_host_created` (`HOST_ID`, `CREATED_AT`)",
+        'idx_apl_type_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_type_created` (`ACTIVITY_TYPE`, `CREATED_AT`)",
+        'idx_apl_game'         => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_game` (`GAME_ID`)",
+    ];
+    foreach ($apl_indexes as $idx => $alter_sql) {
+        $check = $conn->query("SHOW INDEX FROM `ca_player_logs` WHERE Key_name = '$idx'");
+        if ($check && $check->num_rows == 0) {
+            if ($conn->query($alter_sql)) {
+                $output .= "✓ Index '$idx' added to ca_player_logs\n\n";
+            } else {
+                throw new Exception("Failed to add index $idx to ca_player_logs: " . $conn->error);
+            }
+        } else {
+            $output .= "• Index '$idx' already exists on ca_player_logs\n\n";
+        }
+    }
+
+    // 10. Host monthly subscription — records a per-player monthly subscription
+    //     charge that is written into ca_expense (so the existing ledger picks it
+    //     up automatically). Apply locks the row; unlock + rollback reverses it.
+    $create_ca_host_subscription = "CREATE TABLE IF NOT EXISTS `ca_host_subscription` (
+        `id`         INT(11)       NOT NULL AUTO_INCREMENT,
+        `host_id`    INT(11)       NOT NULL,
+        `player_id`  INT(11)       NOT NULL,
+        `sub_year`   SMALLINT(4)   NOT NULL,
+        `sub_month`  TINYINT(2)    NOT NULL,
+        `amount`     DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+        `currency`   VARCHAR(10)   NOT NULL DEFAULT 'CAD',
+        `games_count` INT(11)      NOT NULL DEFAULT 0 COMMENT 'completed games that month at apply time',
+        `expense_id` INT(11)       DEFAULT NULL COMMENT 'FK to ca_expense row created on apply',
+        `status`     ENUM('APPLIED','ROLLED_BACK') NOT NULL DEFAULT 'APPLIED',
+        `is_locked`  TINYINT(1)    NOT NULL DEFAULT 1,
+        `applied_by` INT(11)       DEFAULT NULL,
+        `applied_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uq_hs_period` (`host_id`, `player_id`, `sub_year`, `sub_month`),
+        KEY `idx_hs_host_period` (`host_id`, `sub_year`, `sub_month`),
+        KEY `idx_hs_expense` (`expense_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+    runQuery($conn, $create_ca_host_subscription, $output);
+
     $output .= "=== Migration Finished ===\n";
 
 } catch (Exception $e) {

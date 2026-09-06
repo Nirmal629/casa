@@ -268,6 +268,10 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                         <li><a href="host-dashboard.php" class="nav_link btn <?php echo $currentInnerPage === 'host-dashboard.php' ? 'active' : ''; ?>">
                             <span>Dashboard</span></a></li>
                     <?php endif; ?>
+                    <?php if (strcasecmp($_SESSION['usertype'], 'Host') === 0): ?>
+                        <li><a href="host-audit-log.php" class="nav_link btn <?php echo $currentInnerPage === 'host-audit-log.php' ? 'active' : ''; ?>">
+                            <span>Audit Log</span></a></li>
+                    <?php endif; ?>
                     <li><a href="product-listing.php" class="nav_link btn <?php echo $currentInnerPage === 'product-listing.php' ? 'active' : ''; ?>">
                         <span>Casa Store</span></a></li>
                 </ul>
@@ -311,6 +315,11 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                             <?php elseif (strcasecmp($userType, 'Host') === 0 || strcasecmp($userType, 'Trainer') === 0): ?>
                             <a href="host-dashboard.php">
                                 <i class="fa-solid fa-gauge"></i> Host Dashboard
+                            </a>
+                            <?php endif; ?>
+                            <?php if (strcasecmp($userType, 'Host') === 0): ?>
+                            <a href="host-audit-log.php">
+                                <i class="fa-solid fa-chart-line"></i> Audit Log
                             </a>
                             <?php endif; ?>
                             <div class="ncd-divider"></div>

@@ -14,8 +14,6 @@
 
     }
 
-
-
     #PaymentModal label {
 
         color: #94a3b8;
@@ -23,40 +21,6 @@
         margin-bottom: 5px;
 
         font-size: 0.9rem;
-
-    }
-
-
-
-    /* Success Overlay Style */
-
-    #successOverlay {
-
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-
-        background: rgba(15, 23, 42, 0.98);
-
-        z-index: 9999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-
-    }
-
-    .success-card {
-
-        background: #1f2937;
-        padding: 50px;
-        border-radius: 24px;
-        text-align: center;
-
-        border: 1px solid #334155;
-        max-width: 500px;
-        width: 90%;
 
     }
 
@@ -93,16 +57,12 @@
     }
 </style>
 
-
-
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
 
     session_start();
 }
-
-
 
 // This line MUST be here to create the security key for the form
 
@@ -111,13 +71,9 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-
-
 error_reporting(E_ALL & ~E_NOTICE);
 
 ini_set('display_errors', 0);
-
-
 
 include "dbConnection_PDO.php";
 
@@ -133,17 +89,11 @@ $options = [
 
 ];
 
-
-
 try {
 
     $pdo = new PDO($dsn, $user, $pass, $options);
 
-
-
     $current_user_id = $_SESSION['user_id'] ?? null;
-
-
 
     if (!$current_user_id) {
 
@@ -151,8 +101,6 @@ try {
 
         exit();
     }
-
-
 
     // Fetch user premium status
 
@@ -208,8 +156,6 @@ try {
     }
     unset($club_row); // break reference
 
-
-
     // SQL QUERY - Corrected with unique placeholders
 
     $sql = "SELECT e.*, b.IMGAE, 
@@ -246,8 +192,6 @@ try {
 
             ORDER BY e.ID DESC";
 
-
-
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
@@ -260,19 +204,13 @@ try {
 
     ]);
 
-
-
     $upcomingTournaments = $stmt->fetchAll();
 } catch (Exception $e) {
 
     $upcomingTournaments = [];
 }
 
-
-
 include "includes/inner-header.php";
-
-
 
 // Access control
 
@@ -285,116 +223,95 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
 ?>
 
-
-
-
-
-
-
 <!-----player-dashboard------->
-
-
-
-
-
-
 
 <style>
     .tournamentCard {
 
-
-
         display: flex;
-
-
 
         background: #1f2937;
 
-
-
         border-radius: 12px;
-
-
 
         overflow: hidden;
 
-
-
         margin-bottom: 15px;
-
-
 
         border: 1px solid #334155;
 
+        padding: 0;
 
+        box-shadow: none;
 
     }
-
-
-
-
-
-
 
     .tournamentCard .banner {
 
-
-
-        width: 140px;
-
-
+        width: 132px;
 
         flex-shrink: 0;
 
-
+        align-self: stretch;
 
     }
-
-
-
-
-
-
 
     .tournamentCard .banner img {
 
-
-
         width: 100%;
-
-
 
         height: 100%;
 
-
-
         object-fit: cover;
 
-
-
     }
-
-
-
-
-
-
 
     .tournamentCard .card-body {
 
-
-
         flex: 1;
-
-
 
         padding: 14px;
 
-
+        min-width: 0;
 
     }
 
+    /* Tournament card: tidy info rows + full-size stacked buttons (match production) */
+    .tournamentCard .content {
+        align-items: flex-start;
+        gap: 14px;
+    }
 
+    .tournamentCard .info-grid {
+        flex: 1 1 auto;
+        min-width: 0;
+        row-gap: 7px;
+        column-gap: 16px;
+    }
+
+    .tournamentCard .info {
+        font-size: 12px;
+        white-space: normal;
+    }
+
+    .tournamentCard .info-grid .info:nth-child(3) {
+        flex-basis: 100%;
+    }
+
+    .tournamentCard .actions.deskView {
+        flex-direction: column;
+        align-items: stretch;
+        flex-shrink: 0;
+        width: 92px;
+        gap: 6px;
+    }
+
+    .tournamentCard .actions.deskView .joinbtn {
+        font-size: 11px;
+        padding: 5px 6px;
+        text-align: center;
+        border-radius: 8px;
+    }
 
     .playerhub_sec .panel .scrollbox .card {
 
@@ -408,15 +325,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
     }
 
-
-
     .playerhub_sec .panel h3 {
 
         font-weight: 700;
 
     }
-
-
 
     .dossierCard .win .winParaDiv p {
 
@@ -430,23 +343,121 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
     }
 
-
-
     .dossierCard .win .winParaDiv .small {
 
         padding-left: 4px;
 
     }
 
+    /* ---- Dossier card polish (spacing / alignment only, colours unchanged) ---- */
+    .dossierCard {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
 
+    .dossierCard .stats,
+    .dossierCard .win,
+    .dossierCard .block {
+        margin: 0;
+    }
 
+    /* Equal, centred stat tiles */
+    .dossierCard .stats .statInnDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 58px;
+        line-height: 1.25;
+    }
 
+    .dossierCard .stats .statInnDiv span {
+        margin-bottom: 2px;
+    }
+
+    /* Win-ratio block: keep text clear of the corner marker, tidy the rows */
+    .dossierCard .win {
+        padding-right: 26px;
+    }
+
+    .dossierCard .win .winParaDiv p {
+        align-items: baseline;
+        row-gap: 2px;
+    }
+
+    .dossierCard .win .winParaDiv small {
+        flex-basis: 100%;
+        padding-left: 0;
+    }
+
+    .dossierCard .win > p {
+        margin: 4px 0 0;
+    }
+
+    /* "Upcoming" markers read as a subtle tag rather than a floating glyph */
+    .dossierCard .upcmngBtn {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .dossierCard .block {
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dossierCard .block h4 {
+        flex-shrink: 0;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .dossierCard .block h4 img {
+        opacity: 0.5;
+        vertical-align: middle;
+    }
+
+    /* Tournaments / Skill Badges mini-sliders: readable rounded pill, not a blob */
+    .dossierCard .tournamentBtm,
+    .dossierCard .badges {
+        width: calc(100% - 92px);
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .dossierCard .tourSlider,
+    .dossierCard .badgeSlider {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .dossierCard .tourCard,
+    .dossierCard .badgeCard {
+        padding: 6px 10px;
+        border-radius: 10px;
+    }
+
+    .dossierCard .tourCard {
+        background: rgba(56, 189, 248, 0.12);
+    }
+
+    .dossierCard .tourSpan {
+        font-size: 10px;
+        line-height: 1.35;
+    }
+
+    .dossierCard .tourSlider .slick-arrow,
+    .dossierCard .badgeSlider .slick-arrow {
+        width: 18px;
+        height: 18px;
+    }
 
     @media(max-width: 768px) {
         .tournamentCard {
             flex-direction: column;
         }
-
 
         .tournamentCard .banner {
             width: 100%;
@@ -454,7 +465,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         }
     }
 </style>
-
 
 <!-----Anurag Added for icon and text------->
 <style>
@@ -590,21 +600,34 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
         color: white;
         stroke: white;
     }
+
+    /* Keep the club-card action bar the same size / right edge on every card */
+    .playerhub_sec .panel .scrollbox .card > .d-flex {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .playerhub_sec .panel .scrollbox .card > .content {
+        flex: 0 1 280px;
+    }
+
+    .playerhub_sec .panel .scrollbox .card > .d-flex > div {
+        min-width: 0;
+    }
+
+    .playerhub_sec .panel .scrollbox .card > .d-flex h4,
+    .playerhub_sec .panel .scrollbox .card > .d-flex > div > div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
-
-
 
 <section class="playerhub_sec bothSide_gap">
 
-
-
     <div class="cust_container">
 
-
-
         <div class="wraper">
-
-
 
             <div class="header_box">
                 <div class="header_Box_left">
@@ -646,57 +669,15 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 </div>
             </div>
 
-
-
-
-
-
-
             <div class="main-grid">
-
-
-
-
-
-
 
                 <!-- LEFT -->
 
-
-
                 <div class="panel left-panel">
-
-
 
                     <h3 style="text-align: center;">The Casa Dossier</h3>
 
-
-
                     <div class="dossierCard">
-
-
-
-                        <!-- Actions -->
-
-
-
-                        <!--<div class="actions">-->
-
-
-
-                        <!--    <button>Show Review</button>-->
-
-
-
-                        <!--    <button class="outline">Request Review</button>-->
-
-
-
-                        <!--</div>-->
-
-
-
-
 
                         <?php
                         $profileImage = $_SESSION['profileImage'] ?? '';
@@ -708,132 +689,52 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         <div class="profileDetails">
 
-
-
                             <!-- Profile -->
-
-
 
                             <div class="profile">
 
-
-
                                 <img src="<?= $imagePath ?>" alt="Profile Image">
-
-
 
                             </div>
 
-
-
-
-
-
-
                             <!-- Info -->
-
-
 
                             <div class="info">
 
-
-
                                 <p><b>Name:</b> <?= htmlspecialchars($_SESSION['name'] ?? 'N/A') ?></p>
 
-
-
                                 <p><b>Gender:</b> <?= htmlspecialchars($_SESSION['gender'] ?? 'N/A') ?></p>
-
-
 
                                 <p><b>Level:</b> <?= htmlspecialchars($_SESSION['vlevel'] ?? 'N/A') ?></p>
 
                                 <p><b>Area:</b> <?= htmlspecialchars($player_city ?: 'N/A') ?></p>
 
-
-
                             </div>
-
-
 
                         </div>
 
-
-
-
-
-
-
                         <!-- Stats -->
-
-
-
-                        <!--<div class="stats">-->
-
-
-
-                        <!--    <div><span>120</span>Total Sessions</div>-->
-
-
-
-                        <!--    <div><span>340</span>Total Games</div>-->
-
-
-
-                        <!--    <div><span>5</span>No-Show</div>-->
-
-
-
-                        <!--    <div><span>210</span>Recorded</div>-->
-
-
-
-                        <!--</div>-->
-
-
 
                         <div class="stats">
 
-
-
                             <?php
 
-
-
                             try {
-
-
 
                                 $sqlsession = "SELECT COUNT(*) AS total_session FROM ca_gamejoin WHERE USER_ID = :user_id";
 
                                 $stmt = $pdo->prepare($sqlsession);
                                 $stmt->execute(['user_id' => $current_user_id]);
 
-
-
                                 $resultsession = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-
-
-
-
 
                                 $totalSessions = (int) $resultsession['total_session'];
 
-
-
                                 ?>
-
-
 
                                 <div class="statInnDiv"><span><?= $totalSessions ?></span>Total Sessions</div>
 
-
-
                                 <div class="statInnDiv"><span><?= $totalSessions * 12 ?></span>Total Games</div>
-
-
 
                                 <div class="statInnDiv">
                                     <div class="upcmngBtn">
@@ -842,8 +743,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                     <span>5</span>No-Show
                                 </div>
 
-
-
                                 <div class="statInnDiv">
                                     <div class="upcmngBtn">
                                         <img src="assets/images/upcoming.png" alt="img">
@@ -851,27 +750,16 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                     <span>210</span>Recorded
                                 </div>
 
-
-
                                 <?php
 
-
-
                             } catch (PDOException $e) {
-
-
 
                                 echo "Connection failed: " . $e->getMessage();
                             }
 
-
-
                             ?>
 
-
-
                         </div>
-
 
                         <!-- Win Ratio -->
                         <div class="win">
@@ -898,8 +786,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                         </div>
 
-
-
                         <!-- Tournaments -->
                         <div class="block">
                             <h4>Tournaments <img src="assets/images/upcoming.png" alt="img"></h4>
@@ -925,27 +811,13 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                 </div>
                             </div>
 
-
-
                         </div>
-
-
-
-
-
-
 
                         <!-- Badges -->
 
-
-
                         <div class="block">
 
-
-
                             <h4>Skill Badges <img src="assets/images/upcoming.png" alt="img"></h4>
-
-
 
                             <div class="badges">
                                 <div class="badgeSlider badgeSlick">
@@ -967,19 +839,9 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                 </div>
                             </div>
 
-
-
                         </div>
 
-
-
-
-
-
-
                         <!-- Refer -->
-
-
 
                         <button class="refer" type="button" data-bs-toggle="modal" data-bs-target="#ReferModal">Refer
                             Good Player</button>
@@ -1098,75 +960,27 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     <h3 style="text-align: center;">Tournaments</h3>
 
-
-
-
-
-
-
                     <div class="scrollbox">
-
-
-
-
-
-
 
                         <?php
 
-
-
                         if (!empty($upcomingTournaments)) {
-
-
 
                             foreach ($upcomingTournaments as $row) {
 
-
-
-
-
-
-
                                 $date = date("d M Y", strtotime($row['EVENT_DATE']));
-
-
 
                                 $time = date("h:i A", strtotime($row['EVENT_TIME']));
 
-
-
-
-
-
-
                                 $imgPath = !empty($row['IMGAE'])
-
-
 
                                     ? "admin/assets/images/tournaments_banner/" . $row['IMGAE']
 
-
-
                                     : "assets/images/default.jpg";
-
-
-
-
-
-
 
                                 $statusClass = ($row['EVENT_CATEGORY'] == 'Open') ? 'tag open' : 'tag close';
 
-
-
-
-
-
-
                                 $words = explode(' ', strip_tags($row['EVENT_DESCRIPTION']));
-
-
 
                                 $quote = implode(' ', array_slice($words, 0, 8)) . (count($words) > 8 ? '...' : '');
 
@@ -1186,13 +1000,23 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                     }
                                 }
 
+                                // Draw-live logic based on DRAW_ANNOUNCEMENT (10:00 AM EST)
+                                $isDrawLive = true;
+                                $drawDisplayDate = '';
+                                if (!empty($row['DRAW_ANNOUNCEMENT'])) {
+                                    try {
+                                        $nowEst = new DateTime('now', new DateTimeZone('America/New_York'));
+                                        $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
+                                        $drawDisplayDate = $drawEst->format('d M Y');
+                                        if ($nowEst < $drawEst) {
+                                            $isDrawLive = false;
+                                        }
+                                    } catch (Exception $e) {
+                                        $isDrawLive = true;
+                                    }
+                                }
+
                                 ?>
-
-
-
-
-
-
 
                                 <div class="tournamentCard">
                                     <div class="banner">
@@ -1244,7 +1068,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         <strong> Feather</strong></span></div>
                                                 <div class="info">
                                                     <i class="fa fa-check-circle"></i>
-                                                    <span><?php echo $row['joined_count']; ?>         <?php echo $row['MAX_TEAMS']; ?>
+                                                    <span><?php echo $row['joined_count']; ?> <?php echo $row['MAX_TEAMS'] ?? ''; ?>
                                                         <strong>teams joined</strong>
                                                     </span>
                                                 </div>
@@ -1257,20 +1081,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 1: Joined but not paid (STATUS = N) -->
 
-                                                        <!-- Updated Pay Now Button -->
-
-                                                        <!-- Change the 'Pay Now' link to this button -->
-
-                                                        <!-- Updated Pay Now Button -->
-
-                                                        <!-- Updated Pay Now Button -->
-
                                                         <button type="button" class="joinbtn pay-now-trigger"
                                                             style="background: #fb172e; border: none;" data-bs-toggle="modal"
                                                             data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
                                                             data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
-                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1283,8 +1098,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         <a href="javascript:void(0);" class="joinbtn"
                                                             style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
-
-
                                                     <?php elseif ($row['pay_status'] == 'Y' && !empty($row['pay_approved'])): ?>
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
@@ -1292,11 +1105,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         <a href="javascript:void(0);" class="joinbtn"
                                                             style="background: #28a745; cursor: default;">Payment Success</a>
 
-
-
                                                     <?php endif; ?>
-
-
 
                                                 <?php else: ?>
 
@@ -1313,30 +1122,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 <?php endif; ?>
 
 
-
-                                                <!-- <a href="https://casainfotech.com/staging/tournament/" class="joinbtn">View Live</a> -->
-
-                                                <?php
-                                                $isDrawLive = true;
-                                                $drawDisplayDate = '';
-                                                if (!empty($row['DRAW_ANNOUNCEMENT'])) {
-                                                    try {
-                                                        // Set timezone to EST
-                                                        $nowEst = new DateTime('now', new DateTimeZone('America/New_York'));
-                                                        // Combine DB Date with 10:00 AM EST
-                                                        $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
-                                                        $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-                                        
-                                                        // Check if current time is before the draw time
-                                                        if ($nowEst < $drawEst) {
-                                                            $isDrawLive = false;
-                                                        }
-                                                    } catch (Exception $e) {
-                                                        $isDrawLive = true;
-                                                    }
-                                                }
-                                                ?>
-
                                                 <?php if ($isDrawLive): ?>
                                                     <a href="tournament/?id=<?php echo (int)$row['ID']; ?>" class="joinbtn">View Live</a>
                                                 <?php else: ?>
@@ -1345,8 +1130,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         class="joinbtn">View Live</a>
                                                 <?php endif; ?>
                                             </div>
-
-
 
                                         </div>
 
@@ -1371,20 +1154,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                                         <!-- Scenario 1: Joined but not paid (STATUS = N) -->
 
-                                                        <!-- Updated Pay Now Button -->
-
-                                                        <!-- Change the 'Pay Now' link to this button -->
-
-                                                        <!-- Updated Pay Now Button -->
-
-                                                        <!-- Updated Pay Now Button -->
-
                                                         <button type="button" class="joinbtn pay-now-trigger"
                                                             style="background: #fb172e; border: none;" data-bs-toggle="modal"
                                                             data-bs-target="#PaymentModal" data-id="<?php echo $row['ID']; ?>"
                                                             data-name="<?php echo htmlspecialchars($row['CUP_NAME'] ?: $row['HOST_NAME']); ?>"
                                                             data-amount="<?php echo htmlspecialchars($row['AMOUNT']); ?>">
-                                                            <!-- Added this line -->
 
                                                             Mark Paid
 
@@ -1397,8 +1171,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         <a href="javascript:void(0);" class="joinbtn"
                                                             style="background: #ffc107; color: #000; cursor: default;">Pending</a>
 
-
-
                                                     <?php elseif ($row['pay_status'] == 'Y' && !empty($row['pay_approved'])): ?>
 
                                                         <!-- Scenario 3: Payment approved by admin (STATUS = Y and APPROVED_BY is NOT NULL) -->
@@ -1406,11 +1178,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                         <a href="javascript:void(0);" class="joinbtn"
                                                             style="background: #28a745; cursor: default;">Payment Success</a>
 
-
-
                                                     <?php endif; ?>
-
-
 
                                                 <?php else: ?>
 
@@ -1427,30 +1195,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                                 <?php endif; ?>
 
 
-
-                                                <!-- <a href="https://casainfotech.com/staging/tournament/" class="joinbtn">View Live</a> -->
-
-                                                <?php
-                                                $isDrawLive = true;
-                                                $drawDisplayDate = '';
-                                                if (!empty($row['DRAW_ANNOUNCEMENT'])) {
-                                                    try {
-                                                        // Set timezone to EST
-                                                        $nowEst = new DateTime('now', new DateTimeZone('America/New_York'));
-                                                        // Combine DB Date with 10:00 AM EST
-                                                        $drawEst = new DateTime($row['DRAW_ANNOUNCEMENT'] . ' 10:00:00', new DateTimeZone('America/New_York'));
-                                                        $drawDisplayDate = $drawEst->format('d M Y'); // Format for popup message
-                                        
-                                                        // Check if current time is before the draw time
-                                                        if ($nowEst < $drawEst) {
-                                                            $isDrawLive = false;
-                                                        }
-                                                    } catch (Exception $e) {
-                                                        $isDrawLive = true;
-                                                    }
-                                                }
-                                                ?>
-
                                                 <?php if ($isDrawLive): ?>
                                                     <a href="tournament/?id=<?php echo (int)$row['ID']; ?>" class="joinbtn">View Live</a>
                                                 <?php else: ?>
@@ -1462,61 +1206,23 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                         </div>
                                     </div>
 
-
-
                                 </div>
 
-
-
-
-
-
-
                                 <?php
-
-
 
                             }
                         } else {
 
-
-
                             echo "<p class='label'>No upcoming tournaments found.</p>";
                         }
 
-
-
                         ?>
-
-
-
-
-
-
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
                 </div>
 
-
-
-
-
-
-
                 <!-- RIGHT -->
-
-
 
                 <div class="panel right-panel">
 
@@ -1528,9 +1234,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <?php
                             try {
 
-                                if (session_status() === PHP_SESSION_NONE) {
-                                    session_start();
-                                }
                                 $userEmail = $_SESSION['email'] ?? null;
 
                                 // 1️⃣ Get all products
@@ -1649,19 +1352,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                 </div>
 
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
 
             <div class="review">
                 <h2>✨ WE VALUE YOUR VOICE ✨</h2>
@@ -1690,18 +1381,11 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <button data-bs-toggle="modal" data-bs-target="#reviewmodal">Please Write a Review</button>
             </div>
 
-
-
         </div>
-
-
 
     </div>
 
-
-
 </section>
-
 
 <!-- Info modal (Dynamic - populated via JS) -->
 <div class="modal fade" id="Infomodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="InfomodalLabel" aria-hidden="true">
@@ -1725,27 +1409,15 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 <div class="modal fade" id="ReferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="ReferModalLabel" aria-hidden="true">
 
-
-
     <div class="modal-dialog modal-dialog-scrollable">
-
-
 
         <div class="modal-content">
 
-
-
             <div class="modal-header">
-
-
 
                 <h5 class="modal-title" id="ReferModalLabel">Refer Good Player</h5>
 
-
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
 
             </div>
 
@@ -1770,42 +1442,24 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <p><i class="fa-solid fa-dumbbell"></i><span>Stay fit and active!</span></p>
             </div>
 
-
-
             <div class="modal-footer">
-
-
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-
-
             </div>
-
-
 
         </div>
 
-
-
     </div>
-
-
 
 </div>
 
 <!------ Costingmodal (Dynamic - populated via JS) ------>
 <div class="modal fade" id="Costingmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="CostingmodalLabel" aria-hidden="true">
 
-
-
     <div class="modal-dialog modal-dialog-scrollable">
 
-
-
         <div class="modal-content">
-
-
 
             <div class="modal-header">
                 <h5 class="modal-title" id="CostingmodalLabel">Game Costing</h5>
@@ -1815,31 +1469,17 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                 <p>Loading...</p>
             </div>
 
-
-
             <div class="modal-footer">
-
-
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-
-
             </div>
-
-
 
         </div>
 
-
-
     </div>
 
-
-
 </div>
-
-
 
 <!------ GameSchedulemodal (Dynamic - populated via JS) ------>
 <div class="modal fade" id="GameSchedulemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="GameSchedulemodalLabel" aria-hidden="true">
@@ -1884,8 +1524,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                 <input type="hidden" name="tournament_id" id="modalTournamentId">
 
-
-
                 <div class="modal-body">
 
                     <div class="mb-3">
@@ -1896,23 +1534,16 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     </div>
 
-
-
                     <div id="paymentError" class="alert alert-danger d-none" style="font-size: 0.8rem;"></div>
-
-
 
                     <div class="mb-3">
 
                         <label>Enter Payment Amount</label>
 
-                        <!-- <input type="number" step="0.01" name="payment_amount" class="form-control" required placeholder="0.00"> -->
                         <input type="number" step="0.01" name="payment_amount" class="form-control" value="40.00"
                             required readonly>
 
                     </div>
-
-
 
                     <div class="row">
 
@@ -1920,10 +1551,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                             <label>Enter Payment Date</label>
 
-                            <!-- <input type="date" name="payment_date" class="form-control" required> -->
                             <input type="date" id="payment_date" name="payment_date" class="form-control" required
                                 readonly>
-
 
                         </div>
 
@@ -1931,16 +1560,12 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                             <label>Enter Payment Time</label>
 
-                            <!-- <input type="time" name="payment_time" class="form-control" required> -->
                             <input type="time" id="payment_time" name="payment_time" class="form-control" required
                                 readonly>
-
 
                         </div>
 
                     </div>
-
-
 
                     <div class="mb-3">
 
@@ -1958,8 +1583,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                     </div>
 
-
-
                     <div class="mb-3">
 
                         <label>Any Payment Details (Optional)</label>
@@ -1968,8 +1591,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             placeholder="e.g. Reference number">
 
                     </div>
-
-
 
                     <div class="mb-3">
 
@@ -1997,8 +1618,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
     </div>
 
 </div>
-
-
 
 <!-- Big Congratulations Overlay -->
 
@@ -2101,10 +1720,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
     </div>
 </div>
 
-< <?php include "includes/footer.php"; ?>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js">
-    </script>
+<?php include "includes/footer.php"; ?>
 
     <script>
         $(document).ready(function () {
@@ -2112,8 +1728,6 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
             var paymentModalEl = document.getElementById('PaymentModal');
 
             var paymentModal = new bootstrap.Modal(paymentModalEl);
-
-
 
             // Populate data when modal opens
 
@@ -2131,21 +1745,15 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
             });
 
-
-
             // AJAX Form Submission
 
             $('#paymentForm').on('submit', function (e) {
 
                 e.preventDefault();
 
-
-
                 const btn = $('#submitBtn');
 
                 btn.prop('disabled', true).text('Processing...');
-
-
 
                 $.ajax({
 
@@ -2250,27 +1858,53 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
     <!-- Dynamic Modal Population for Club Cards (Info / Costing / Schedule) -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        function setSafeModalContent(container, html) {
+            if (!container) return;
+            if (!html || html.trim() === '') {
+                container.innerHTML = '<p class="text-muted text-center my-3">There is no data available.</p>';
+                return;
+            }
+
+            // Strip DOCTYPE, html, head, title, meta, body tags if present (with strict \b so <header> is preserved)
+            var cleaned = html
+                .replace(/<!DOCTYPE[^>]*>/gi, '')
+                .replace(/<\/?(?:html|head|meta|title|body)\b[^>]*>/gi, '');
+
+            // Strip global body / html / universal (*) css rules from any inline <style> tags
+            cleaned = cleaned.replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
+                var safeCss = css
+                    .replace(/\b(body|html)\s*\{[^}]*\}/gi, '')
+                    .replace(/^\s*\*\s*\{[^}]*\}/gmi, '');
+                return '<style>' + safeCss + '</style>';
+            });
+
+            container.innerHTML = cleaned;
+        }
+
         // Info modal: populate title + body from data attributes
         document.querySelectorAll('.club-info-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                document.getElementById('InfomodalLabel').textContent = this.dataset.clubName;
-                document.getElementById('InfomodalBody').innerHTML = this.dataset.clubInfo;
+                var name = this.dataset.clubName || 'Club';
+                document.getElementById('InfomodalLabel').textContent = name;
+                setSafeModalContent(document.getElementById('InfomodalBody'), this.dataset.clubInfo);
             });
         });
 
         // Costing modal: populate title + body from data attributes
         document.querySelectorAll('.club-cost-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                document.getElementById('CostingmodalLabel').textContent = this.dataset.clubName + ' — Costing';
-                document.getElementById('CostingmodalBody').innerHTML = this.dataset.clubCost;
+                var name = this.dataset.clubName || 'Club';
+                document.getElementById('CostingmodalLabel').textContent = name;
+                setSafeModalContent(document.getElementById('CostingmodalBody'), this.dataset.clubCost);
             });
         });
 
         // Schedule modal: populate title + body from data attributes
         document.querySelectorAll('.club-schedule-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                document.getElementById('GameSchedulemodalLabel').textContent = this.dataset.clubName + ' — Schedule';
-                document.getElementById('GameSchedulemodalBody').innerHTML = this.dataset.clubSchedule;
+                var name = this.dataset.clubName || 'Club';
+                document.getElementById('GameSchedulemodalLabel').textContent = name;
+                setSafeModalContent(document.getElementById('GameSchedulemodalBody'), this.dataset.clubSchedule);
             });
         });
     });

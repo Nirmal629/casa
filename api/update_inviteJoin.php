@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, $query);
 
     if ($result) {
+        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Accepted invite for game ID ' . $gameId, $hostId ?: auditResolveGameHost($conn, $gameId), $gameId);
+
         $sql = "SELECT * FROM ca_events WHERE STATUS='Active'"; // Adjust the query based on your conditions
         $result = mysqli_query($conn, $sql);
         

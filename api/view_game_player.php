@@ -5,6 +5,12 @@ include('dbConnection.php');
     $user_id = $_POST['user_id'];
     $game_id = $_POST['game_id'];
 
+    // Audit: a player opening a game's detail / player list = a game view
+    if (is_numeric($user_id) && is_numeric($game_id)) {
+        logPlayerActivity($conn, $user_id, 'GAME_VIEWED', 'Viewed game ID ' . (int) $game_id,
+            auditResolveGameHost($conn, $game_id), (int) $game_id);
+    }
+
     // Fetch total amount paid by the user for this game
     $query = "SELECT * FROM `ca_gamejoin` WHERE GAME_ID = '$game_id'";
     $result = mysqli_query($conn, $query);

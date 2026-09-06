@@ -1,12 +1,11 @@
-=== Starting DB Migration: 2026-07-03 09:06:01 ===
+=== Starting DB Migration: 2026-09-01 15:20:50 ===
 • Index 'uq_host_id' does not exist or was already dropped.
 
 • Column 'join_type' already exists on ca_clubs.
 
 • Column 'created_by' does not exist on ca_clubs.
 
-Running: ALTER TABLE `ca_clubs` DROP COLUMN `address`...
-✓ SUCCESS
+• Column 'address' does not exist on ca_clubs.
 
 • Column 'area' does not exist on ca_clubs.
 
@@ -14,6 +13,39 @@ Running: CREATE TABLE IF NOT EXISTS `ca_player_club_status` ( `id` INT(11) NOT N
 ✓ SUCCESS
 
 Running: DROP TABLE IF EXISTS `player_Host_mapping`...
+✓ SUCCESS
+
+Running: CREATE TABLE IF NOT EXISTS `host_player_carry_forward` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `host...
+✓ SUCCESS
+
+Running: CREATE TABLE IF NOT EXISTS `ca_host_player_carry_forward_history` ( `id` INT(11) NOT NULL AUTO_INCRE...
+✓ SUCCESS
+
+• Column 'MESSAGE' already exists in ca_payment
+
+• Column 'REVIEWED_BY' already exists in ca_payment
+
+• Column 'REVIEWED_AT' already exists in ca_payment
+
+• Column 'REJECTION_REASON' already exists in ca_payment
+
+• Column 'HOST_ID' already exists in ca_player_logs
+
+• Column 'GAME_ID' already exists in ca_player_logs
+
+• Column 'META' already exists in ca_player_logs
+
+• Column 'IP_ADDRESS' already exists in ca_player_logs
+
+• Index 'idx_apl_user_created' already exists on ca_player_logs
+
+• Index 'idx_apl_host_created' already exists on ca_player_logs
+
+• Index 'idx_apl_type_created' already exists on ca_player_logs
+
+• Index 'idx_apl_game' already exists on ca_player_logs
+
+Running: CREATE TABLE IF NOT EXISTS `ca_host_subscription` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `host_id` ...
 ✓ SUCCESS
 
 === Migration Finished ===

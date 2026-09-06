@@ -80,8 +80,13 @@ $this->config = new \Config\App();
 
                     <div class="col-12">
                       <label for="password" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="password" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
+                      <div class="position-relative">
+                        <input type="password" name="password" class="form-control pe-5" id="pos_password" required>
+                        <button type="button" class="btn p-0 border-0" onclick="togglePosPwd(this); return false;" aria-label="Toggle password visibility" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; color: #6c757d; z-index: 20; cursor: pointer; outline: none; box-shadow: none;">
+                          <i class="bi bi-eye password-eye-icon" style="font-size: 1.1rem; pointer-events: none;"></i>
+                        </button>
+                        <div class="invalid-feedback">Please enter your password!</div>
+                      </div>
                     </div>
 
                     <div class="col-12">
@@ -123,6 +128,27 @@ $this->config = new \Config\App();
 
   <!-- Template Main JS File -->
   <script src="<?=base_url()?>/public/assets/js/main.js"></script>
+
+  <script>
+  function togglePosPwd(btn) {
+    if (!btn) return;
+    var container = btn.closest('.position-relative') || btn.parentElement;
+    if (!container) return;
+    var pwdInput = container.querySelector('input');
+    var pwdIcon = btn.querySelector('.password-eye-icon') || btn.querySelector('i');
+    if (pwdInput && pwdIcon) {
+      var isPassword = pwdInput.getAttribute('type') === 'password';
+      pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+      if (isPassword) {
+        pwdIcon.classList.remove('bi-eye');
+        pwdIcon.classList.add('bi-eye-slash');
+      } else {
+        pwdIcon.classList.remove('bi-eye-slash');
+        pwdIcon.classList.add('bi-eye');
+      }
+    }
+  }
+  </script>
 
 </body>
 

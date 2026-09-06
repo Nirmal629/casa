@@ -7,6 +7,15 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
 
 $select_event_cat = mysqli_query($conn, "select * from ca_event_category where 1");
 $host_id = isset($host_id) ? $host_id : (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
+
+// Audit: record that this player browsed this host's game list (throttled to once / 10 min)
+if (function_exists('logPlayerActivity') && !empty($_SESSION['user_id']) && (int) $host_id > 0) {
+    $auditKey = 'audit_glv_' . (int) $host_id;
+    if (!isset($_SESSION[$auditKey]) || (time() - (int) $_SESSION[$auditKey]) > 600) {
+        $_SESSION[$auditKey] = time();
+        logPlayerActivity($conn, $_SESSION['user_id'], 'GAME_LIST_VIEWED', 'Browsed game list', (int) $host_id, null);
+    }
+}
 ?>
 <?php
 // Get player's sport from session (e.g., "Badminton")
@@ -355,7 +364,19 @@ $sql = "
        </div></div>";
         }
     } else {
-        echo "<p>No events found.</p>";
+        echo "<div class='empty-schedule-card text-center w-100 py-4 px-3 my-2' style='max-width: 440px; margin: 15px auto !important; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%); border: 1.5px dashed #cbd5e1; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);'>
+            <div class='empty-icon-wrap mx-auto mb-2 d-flex align-items-center justify-content-center' style='width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); color: #0284c7; box-shadow: 0 2px 8px rgba(2,132,199,0.15);'>
+                <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='currentColor' viewBox='0 0 16 16'>
+                    <path d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/>
+                    <path d='M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z'/>
+                </svg>
+            </div>
+            <h6 class='fw-bold mb-1' style='color: #1e293b; font-size: 0.95rem; letter-spacing: -0.2px;'>No Events Found</h6>
+            <p class='text-muted mb-2' style='font-size: 0.82rem; line-height: 1.45; max-width: 320px; margin: 0 auto;'>No games scheduled for this selection. Try changing the category or month.</p>
+            <div class='d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill' style='background: #f1f5f9; color: #64748b; font-size: 0.72rem; font-weight: 500; border: 1px solid #e2e8f0;'>
+                <span>📅 Check back soon for new games</span>
+            </div>
+        </div>";
     }
     ?>
 

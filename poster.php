@@ -56,9 +56,13 @@
             $query = "SELECT media_url FROM ca_landing_page_media 
           WHERE media_type='poster' AND is_active=1";
 
-            $result = mysqli_query($conn, $query);
+            try {
+                $result = mysqli_query($conn, $query);
+            } catch (mysqli_sql_exception $e) {
+                $result = false;
+            }
 
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($result && ($row = mysqli_fetch_assoc($result))) {
 
                 $image = $row['media_url'];
             ?>

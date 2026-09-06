@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if ($result) {
-        
+        logPlayerActivity($conn, $userId, 'LEAVE_GAME', 'Left subscription game ID ' . $gameId, $hostId ?: auditResolveGameHost($conn, $gameId), $gameId);
+
         $eventsByDay = [
             'SUNDAY'    => [],
             'MONDAY'    => [],

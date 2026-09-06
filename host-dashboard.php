@@ -165,7 +165,16 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                             <span>Payment</span>
                         </button>
                     </li>
-            
+
+                    <li class="nav-item">
+                        <button class="nav-link" id="MonthlySub-tab" data-bs-toggle="tab" data-bs-target="#MonthlySub" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.156v4.31c-1.153-.147-1.94-.75-2.12-1.997H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
+                            </svg>
+                            <span>Subscription</span>
+                        </button>
+                    </li>
+
                     <?php if($_SESSION['username'] == 'casaclubtoronto@gmail.com'): ?>
                         <li class="nav-item">
                             <button class="nav-link" id="Subscription-tab" data-bs-toggle="tab" data-bs-target="#Subscription" type="button">
@@ -219,6 +228,9 @@ if(trim($_SESSION['usertype'])!='Host' && trim($_SESSION['usertype'])!='Trainer'
                 </div>
                 <div class="tab-pane fade" id="Payment" role="tabpanel" aria-labelledby="Payment-tab">
                     <?php include "host-payment-list.php"; ?>
+                </div>
+                <div class="tab-pane fade" id="MonthlySub" role="tabpanel" aria-labelledby="MonthlySub-tab">
+                    <?php include "host-monthly-subscription.php"; ?>
                 </div>
                 <div class="tab-pane fade" id="Subscription" role="tabpanel" aria-labelledby="Subscription-tab">
                     <?php include "subscription-list.php"; ?>

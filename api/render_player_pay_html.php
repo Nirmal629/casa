@@ -60,6 +60,29 @@ if (!function_exists('renderPlayerPayHtml')) {
         }
         $isEffectivelyLocked = $isLocked && !$isOverrideActive;
 
+        // ── Host-subscription unlock ─────────────────────────────────────
+        // A locked month that has an APPLIED host subscription for THIS player
+        // is unlocked so the host can re-carry it with the subscription expense
+        // included. Rolling the subscription back (status → ROLLED_BACK) removes
+        // this and the month re-locks. Scoped strictly to this
+        // (host, player, year, month); other players are untouched.
+        $subUnlock = false;
+        try {
+            $suRes = mysqli_query($conn, "SELECT 1 FROM ca_host_subscription
+                    WHERE host_id = $host_id AND player_id = $user_id
+                      AND sub_year = $year AND sub_month = $month
+                      AND status = 'APPLIED' LIMIT 1");
+            $subUnlock = ($suRes && mysqli_num_rows($suRes) > 0);
+        } catch (mysqli_sql_exception $e) {
+            $subUnlock = false;
+        }
+        // Only re-enables Carry (so the month can be re-carried with the new
+        // subscription expense). Expense / Pay stay locked, matching the existing
+        // "a carried-forward month's payments & expenses cannot be changed" rule.
+        if ($subUnlock && $isLocked) {
+            $isEffectivelyLocked = false;
+        }
+
         $html = '';
 
         // Wrapper — used by JS to detect the month state (active / pending / locked)
@@ -95,7 +118,7 @@ if (!function_exists('renderPlayerPayHtml')) {
 
         // Status chip for the month (Active / Pending Carry / Locked)
         if ($isLocked) {
-            if ($isOverrideActive) {
+            if ($isOverrideActive || $subUnlock) {
                 $statusChip = '<span class="pay-status-chip pay-status-active">🔓 UNLOCKED</span>';
             } else {
                 $statusChip = '<span class="pay-status-chip pay-status-locked">🔒 LOCKED</span>';

@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result) {
         applyAutoConfirmAndMessage($conn, $gameId);
-        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined public game ID ' . $gameId);
+        logPlayerActivity($conn, $userId, 'JOIN_GAME', 'Joined public game ID ' . $gameId, $hostId ?: auditResolveGameHost($conn, $gameId), $gameId);
 
         echo json_encode(['status' => 'success', 'message' => 'Event Joined successfully.','outputHTML'=>""]);
     } else {

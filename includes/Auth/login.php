@@ -103,11 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 value="<?php echo isset($_COOKIE['remember_username']) ? htmlspecialchars($_COOKIE['remember_username']) : ''; ?>"
                 required>
         </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" id="password" name="password"
+        <div class="mb-3 position-relative password-field">
+            <input type="password" class="form-control" name="password"
                 placeholder="Enter Password"
                 value="<?php echo isset($_COOKIE['remember_password']) ? htmlspecialchars($_COOKIE['remember_password']) : ''; ?>"
                 required>
+            <button type="button" class="btn p-0 border-0 toggle-password-btn" onclick="toggleCasaPassword(this); return false;" aria-label="Toggle password visibility">
+                <i class="fa-solid fa-eye password-eye-icon"></i>
+            </button>
         </div>
         <div class="mb-3">
             <div class="form-check">
@@ -126,4 +129,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Don't have an account? <a href="javascript:void(0)" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerRequestModal">Register here</a>
     </p>
 </div>
+
+<style>
+.form-2-wrapper .password-field .form-control {
+    padding-right: 46px;
+}
+.form-2-wrapper .toggle-password-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #94a3b8;
+    z-index: 30;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: none;
+    transition: background-color .25s ease, color .25s ease, transform .15s ease;
+}
+.form-2-wrapper .toggle-password-btn:hover {
+    background: rgba(4, 58, 99, 0.08);
+    color: #043a63;
+}
+.form-2-wrapper .toggle-password-btn:active {
+    transform: translateY(-50%) scale(0.88);
+}
+.form-2-wrapper .toggle-password-btn:focus-visible {
+    outline: 2px solid #043a63;
+    outline-offset: 2px;
+}
+.form-2-wrapper .toggle-password-btn .password-eye-icon {
+    font-size: 15px;
+    pointer-events: none;
+    transition: color .25s ease;
+}
+.form-2-wrapper .toggle-password-btn .fa-eye-slash {
+    color: #043a63;
+}
+.form-2-wrapper .toggle-password-btn.is-toggling .password-eye-icon {
+    animation: casaEyePop .3s ease;
+}
+@keyframes casaEyePop {
+    0% { transform: scale(0.6) rotate(-15deg); opacity: 0.4; }
+    60% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); }
+}
+</style>
+
+<script>
+window.toggleCasaPassword = window.toggleCasaPassword || function(btn) {
+    if (!btn) return;
+    var container = btn.closest('.position-relative') || btn.parentElement;
+    if (!container) return;
+    var input = container.querySelector('input[name="password"], input[type="password"], input[type="text"]');
+    var icon = btn.querySelector('.password-eye-icon') || btn.querySelector('i');
+    if (!input) return;
+
+    if (input.getAttribute('type') === 'password') {
+        input.setAttribute('type', 'text');
+        if (icon) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    } else {
+        input.setAttribute('type', 'password');
+        if (icon) {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    btn.classList.remove('is-toggling');
+    void btn.offsetWidth; // restart animation
+    btn.classList.add('is-toggling');
+};
+</script>
 

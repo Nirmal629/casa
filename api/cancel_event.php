@@ -48,6 +48,7 @@ session_start();
 
         if ($deleteResult) {
                 applyAutoConfirmAndMessageReverse($conn, $gameId);
+                logPlayerActivity($conn, $userId, 'LEAVE_GAME', 'Left game ID ' . $gameId, $hostId ?: auditResolveGameHost($conn, $gameId), $gameId);
 
             echo json_encode(['status' => 'error', 'message' => 'Event canceled within allowed time, removed from game join list.']);
             exit;
