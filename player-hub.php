@@ -1691,81 +1691,461 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 </div>
 
 <!-- review modal -->
+<?php
+$reviewUserName = !empty($player_prefs['NAME']) ? $player_prefs['NAME'] : ($_SESSION['name'] ?? 'Mr. Lorem Ipsum');
+$reviewWords = preg_split('/\s+/', trim($reviewUserName));
+$reviewInitials = '';
+if (count($reviewWords) >= 2) {
+    $reviewInitials = strtoupper(substr($reviewWords[0], 0, 1) . substr($reviewWords[count($reviewWords)-1], 0, 1));
+} elseif (!empty($reviewWords[0])) {
+    $reviewInitials = strtoupper(substr($reviewWords[0], 0, 2));
+} else {
+    $reviewInitials = 'ML';
+}
+$reviewCurrentDate = date('d.m.y');
+?>
 <div class="modal fade" id="reviewmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="reviewmodalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reviewModalLabel"><strong>Please share a review</strong></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered review-custom-dialog">
+        <div class="modal-content review-custom-content">
+            <!-- Top Header Row -->
+            <div class="review-top-header">
+                <div class="review-user-profile">
+                    <div class="review-avatar-circle">
+                        <?= htmlspecialchars($reviewInitials) ?>
+                    </div>
+                    <div class="review-user-details">
+                        <h4 class="review-user-fullname"><?= htmlspecialchars($reviewUserName) ?></h4>
+                        <span class="review-post-date"><i class="fa-regular fa-calendar"></i> <?= $reviewCurrentDate ?></span>
+                    </div>
+                </div>
+                <button type="button" class="review-close-x" data-bs-dismiss="modal" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
 
-            <div class="modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="name"><strong>Mr. Lorem Ipsum</strong></h5>
-                    <p><strong>Date:</strong> 05.03.26</p>
+            <!-- Rating Row -->
+            <div class="review-rating-section">
+                <span class="review-rating-heading">Your Rating</span>
+                <div class="review-star-group" id="reviewStars" role="radiogroup" aria-label="Star rating">
+                    <button type="button" class="review-star-btn is-active" data-value="1" aria-label="1 star">★</button>
+                    <button type="button" class="review-star-btn is-active" data-value="2" aria-label="2 stars">★</button>
+                    <button type="button" class="review-star-btn is-active" data-value="3" aria-label="3 stars">★</button>
+                    <button type="button" class="review-star-btn is-active" data-value="4" aria-label="4 stars">★</button>
+                    <button type="button" class="review-star-btn is-active" data-value="5" aria-label="5 stars">★</button>
                 </div>
-                <div class="formatter">
-                    <button class="btn btn-default" data-command="bold">
-                        <i class="fa fa-bold"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="italic">
-                        <i class="fa fa-italic"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="underline">
-                        <i class="fa fa-underline"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="strikeThrough">
-                        <i class="fa fa-strikethrough"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="justifyLeft">
-                        <i class="fa fa-align-left"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="justifyCenter">
-                        <i class="fa fa-align-center"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="justifyRight">
-                        <i class="fa fa-align-right"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="justifyFull">
-                        <i class="fa fa-align-justify"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="indent">
-                        <i class="fa fa-indent"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="outdent">
-                        <i class="fa fa-outdent"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="insertUnorderedList">
-                        <i class="fa fa-list-ul"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="insertOrderedList">
-                        <i class="fa fa-list-ol"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="h1">H1</button>
-                    <button class="btn btn-default" data-command="h2">H2</button>
-                    <button class="btn btn-default" data-command="p">P</button>
-                    <button class="btn btn-default" data-command="createlink">
-                        <i class="fa fa-link"></i>
-                    </button>
-                    <button class="btn btn-default" data-command="unlink">
-                        <i class="fa fa-unlink"></i>
-                    </button>
-                </div>
+                <span class="review-rating-status" id="reviewRatingText">Excellent</span>
+                <input type="hidden" name="rating" id="reviewRatingInput" value="5">
+            </div>
 
-                <p class="edit-text" contenteditable="true" rows="15"></p>
+            <!-- Toolbar Grid -->
+            <div class="review-toolbar-grid">
+                <!-- Row 1: B, I, U, S, Align Left, Align Center, Align Right, Justify, HR, Ordered List, H1 -->
+                <button type="button" class="review-tb-btn btn-bold" data-command="bold" title="Bold">B</button>
+                <button type="button" class="review-tb-btn btn-italic" data-command="italic" title="Italic">I</button>
+                <button type="button" class="review-tb-btn btn-underline" data-command="underline" title="Underline"><u>U</u></button>
+                <button type="button" class="review-tb-btn btn-strike" data-command="strikeThrough" title="Strikethrough"><s>S</s></button>
+                <button type="button" class="review-tb-btn" data-command="justifyLeft" title="Align left">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                </button>
+                <button type="button" class="review-tb-btn" data-command="justifyCenter" title="Align center">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                </button>
+                <button type="button" class="review-tb-btn" data-command="justifyRight" title="Align right">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                </button>
+                <button type="button" class="review-tb-btn" data-command="justifyFull" title="Justify">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                </button>
+                <button type="button" class="review-tb-btn" data-command="insertHorizontalRule" title="Horizontal line">=</button>
+                <button type="button" class="review-tb-btn btn-num" data-command="insertOrderedList" title="Numbered list">1.</button>
+                <button type="button" class="review-tb-btn btn-h" data-command="formatBlock" data-value="h1" title="Heading 1">H1</button>
 
-                <div class="d-flex justify-content-center" style="gap: 12px;">
+                <!-- Row 2: H2, P, Link, Clear Format -->
+                <div class="review-tb-break"></div>
+                <button type="button" class="review-tb-btn btn-h" data-command="formatBlock" data-value="h2" title="Heading 2">H2</button>
+                <button type="button" class="review-tb-btn btn-h" data-command="formatBlock" data-value="p" title="Paragraph">P</button>
+                <button type="button" class="review-tb-btn" data-command="createLink" title="Insert link">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 0 0-4.243-4.243L6.586 4.672z"/></svg>
+                </button>
+                <button type="button" class="review-tb-btn btn-eraser" data-command="removeFormat" title="Clear formatting">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 10.793H14a.5.5 0 0 0 0-1H8.746l-.66 1z"/>
+                        <line x1="2" y1="14" x2="14" y2="2" stroke="#ec4899" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
 
-                    <form action="">
-                        <input class="reviewBtn" type="submit" value="Submit">
-                    </form>
-                    <button type="button" class="btn reviewCancelBtn" data-bs-dismiss="modal">Cancel</button>
-                </div>
+            <!-- Textarea Box -->
+            <div class="review-editor-container">
+                <div class="review-editor-area" id="reviewMessageEditor" contenteditable="true" data-placeholder="Write your review here..."></div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="review-action-row">
+                <button type="button" class="review-action-btn btn-review-cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="review-action-btn btn-review-submit" id="reviewSubmitBtn">Submit Review</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.review-custom-dialog {
+    max-width: 490px;
+    margin: 1.75rem auto;
+}
+.review-custom-content {
+    background-color: #ebedf0 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22) !important;
+    padding: 24px 28px 24px 28px !important;
+    color: #111827;
+}
+
+/* Top Header */
+.review-top-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.review-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.review-avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #ddf2fb;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.15rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    flex-shrink: 0;
+}
+.review-user-details {
+    display: flex;
+    flex-direction: column;
+}
+.review-user-fullname {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+.review-post-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.review-close-x {
+    background: transparent;
+    border: none;
+    color: #0284c7;
+    cursor: pointer;
+    padding: 2px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+.review-close-x:hover {
+    color: #0369a1;
+    opacity: 0.8;
+}
+
+/* Rating */
+.review-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.review-rating-heading {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+.review-star-group {
+    display: inline-flex;
+    gap: 6px;
+}
+.review-star-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.45rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s ease, transform 0.1s ease;
+}
+.review-star-btn:hover {
+    transform: scale(1.1);
+}
+.review-star-btn.is-active,
+.review-star-btn.is-hover {
+    color: #f59e0b;
+}
+.review-rating-status {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.98rem;
+    color: #64748b;
+    margin-left: auto;
+}
+
+/* Toolbar Grid */
+.review-toolbar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    margin-bottom: 12px;
+}
+.review-tb-break {
+    flex-basis: 100%;
+    height: 0;
+    margin: 0;
+}
+.review-tb-btn {
+    width: 29px;
+    height: 29px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    font-size: 0.82rem;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.review-tb-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+.review-tb-btn.btn-bold {
+    font-weight: 900;
+    font-family: sans-serif;
+}
+.review-tb-btn.btn-italic {
+    font-style: italic;
+    font-family: "Times New Roman", Georgia, serif;
+    font-weight: bold;
+}
+.review-tb-btn.btn-underline {
+    text-decoration: underline;
+    font-weight: bold;
+}
+.review-tb-btn.btn-strike {
+    text-decoration: line-through;
+    font-weight: bold;
+}
+.review-tb-btn.btn-num,
+.review-tb-btn.btn-h {
+    font-weight: 700;
+    font-size: 0.76rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Editor */
+.review-editor-container {
+    width: 100%;
+    margin-bottom: 22px;
+}
+.review-editor-area {
+    width: 100%;
+    min-height: 140px;
+    max-height: 240px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.95rem;
+    color: #1e293b;
+    line-height: 1.5;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.review-editor-area:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+.review-editor-area:empty:before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* Footer Buttons */
+.review-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+.review-action-btn {
+    border-radius: 4px;
+    padding: 8px 24px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: 0.98rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.btn-review-cancel {
+    background: #f1f3f5;
+    border: 1px solid #cbd5e1;
+    color: #111827;
+}
+.btn-review-cancel:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+.btn-review-submit {
+    background: #0284c7;
+    border: none;
+    color: #ffffff;
+    padding: 8px 26px;
+}
+.btn-review-submit:hover {
+    background: #0369a1;
+}
+</style>
+
+<script>
+(function () {
+    // Star Rating logic
+    var stars = document.querySelectorAll('#reviewStars .review-star-btn');
+    var ratingInput = document.getElementById('reviewRatingInput');
+    var ratingText = document.getElementById('reviewRatingText');
+    var labels = ['', 'Terrible', 'Poor', 'Good', 'Very good', 'Excellent'];
+    var currentRating = 5;
+
+    function paintStars(val) {
+        stars.forEach(function (star) {
+            var starVal = parseInt(star.getAttribute('data-value'), 10);
+            star.classList.toggle('is-hover', starVal <= val);
+        });
+    }
+
+    stars.forEach(function (star) {
+        var val = parseInt(star.getAttribute('data-value'), 10);
+
+        star.addEventListener('mouseenter', function () { paintStars(val); });
+        star.addEventListener('click', function () {
+            currentRating = val;
+            if (ratingInput) ratingInput.value = currentRating;
+            if (ratingText) ratingText.textContent = labels[currentRating] || 'Excellent';
+            stars.forEach(function (s) {
+                var sVal = parseInt(s.getAttribute('data-value'), 10);
+                s.classList.toggle('is-active', sVal <= currentRating);
+            });
+        });
+    });
+
+    var starsWrap = document.getElementById('reviewStars');
+    if (starsWrap) {
+        starsWrap.addEventListener('mouseleave', function () { paintStars(currentRating); });
+    }
+
+    // Rich Text Toolbar logic
+    var editor = document.getElementById('reviewMessageEditor');
+    var toolbarButtons = document.querySelectorAll('.review-tb-btn');
+
+    toolbarButtons.forEach(function (btn) {
+        btn.addEventListener('mousedown', function (e) {
+            e.preventDefault(); // Prevent losing focus in editor
+            var command = btn.getAttribute('data-command');
+            var value = btn.getAttribute('data-value') || null;
+
+            if (command === 'createLink') {
+                var url = prompt('Enter the link URL:', 'https://');
+                if (url) {
+                    document.execCommand(command, false, url);
+                }
+            } else if (command === 'formatBlock') {
+                document.execCommand(command, false, '<' + value + '>');
+            } else if (command) {
+                document.execCommand(command, false, value);
+            }
+            if (editor) editor.focus();
+        });
+    });
+
+    // Submit Review AJAX
+    var submitBtn = document.getElementById('reviewSubmitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var rating = ratingInput ? ratingInput.value : 5;
+            var message = editor ? editor.innerHTML.trim() : '';
+
+            // Check if empty
+            var textContent = editor ? editor.innerText.trim() : '';
+            if (!textContent && (!message || message === '<br>' || message === '<div><br></div>')) {
+                alert('Please write your review before submitting.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            var formData = new FormData();
+            formData.append('rating', rating);
+            formData.append('message', message);
+
+            fetch('api/save_review.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+                if (data.status === 'success') {
+                    alert(data.message || 'Thank you! Your review has been submitted.');
+                    if (editor) editor.innerHTML = '';
+                    var reviewModalEl = document.getElementById('reviewmodal');
+                    var modal = bootstrap.Modal.getInstance(reviewModalEl);
+                    if (modal) { modal.hide(); }
+                } else {
+                    alert(data.message || 'Failed to submit review.');
+                }
+            })
+            .catch(function () {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+                alert('Something went wrong. Please try again.');
+            });
+        });
+    }
+})();
+</script>
 
 <?php include "includes/footer.php"; ?>
 
