@@ -152,8 +152,26 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-12 mb-3">
                         <label for="club_logo" class="form-label">Club Logo Image</label>
                         <div class="mb-2 text-center" id="logo-preview-container" style="background: #1e293b; border: 2px dashed #334155; border-radius: 12px; padding: 12px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
-                            <?php if (!empty($club['logo'])): ?>
-                                <img id="logo-preview" src="uploads/clubs/<?= htmlspecialchars($club['logo']) ?>" alt="Club Logo"
+                            <?php
+                            $club_logo_preview = '';
+                            if (!empty($club['logo'])) {
+                                $clean_logo = ltrim($club['logo'], '/\\');
+                                if (file_exists($clean_logo)) {
+                                    $club_logo_preview = $clean_logo;
+                                } elseif (file_exists('uploads/clubs/' . $clean_logo)) {
+                                    $club_logo_preview = 'uploads/clubs/' . $clean_logo;
+                                } elseif (file_exists('assets/images/logo/' . $clean_logo)) {
+                                    $club_logo_preview = 'assets/images/logo/' . $clean_logo;
+                                } elseif (strpos($clean_logo, 'assets/') === 0 || strpos($clean_logo, 'uploads/') === 0) {
+                                    $club_logo_preview = $clean_logo;
+                                } else {
+                                    $club_logo_preview = 'uploads/clubs/' . $clean_logo;
+                                }
+                            }
+                            ?>
+                            <?php if (!empty($club_logo_preview)): ?>
+                                <img id="logo-preview" src="<?= htmlspecialchars($club_logo_preview) ?>" alt="Club Logo"
+                                     onerror="this.onerror=null; this.src='assets/images/logo/Final-Logo.png';"
                                      style="max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 8px;" />
                             <?php else: ?>
                                 <span id="logo-placeholder" style="color: #64748b; font-size: 0.85rem;">No logo uploaded</span>

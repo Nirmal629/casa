@@ -18,19 +18,21 @@ function normalize_media_path($path)
         return $path;
     }
 
-    if (strpos($path, '/admin/') === 0 || strpos($path, '/frontend/') === 0) {
-        return $path;
+    $clean = ltrim($path, '/');
+    if (file_exists($clean)) {
+        return $clean;
+    }
+    if (file_exists('assets/images/' . $clean)) {
+        return 'assets/images/' . $clean;
+    }
+    if (file_exists('assets/images/gallery/' . $clean)) {
+        return 'assets/images/gallery/' . $clean;
+    }
+    if (file_exists('admin/' . $clean)) {
+        return 'admin/' . $clean;
     }
 
-    if ($path[0] === '/') {
-        return $path;
-    }
-
-    if (strpos($path, 'admin/') === 0 || strpos($path, 'assets/') === 0) {
-        return '/' . $path;
-    }
-
-    return '/admin/' . ltrim($path, '/');
+    return $clean;
 }
 
 $galleryImages = [];
@@ -48,6 +50,8 @@ try {
     $result = $conn->query($query);
 } catch (mysqli_sql_exception $e) {
     $result = false;
+} catch (Exception $e) {
+    $result = false;
 }
 
 if ($result) {
@@ -60,6 +64,31 @@ if ($result) {
         } else {
             $galleryImages[] = $row;
         }
+    }
+}
+
+// Fallback to ca_gallery if no landing page media found
+if (empty($galleryImages) && empty($galleryVideos)) {
+    try {
+        $gal_res = $conn->query("SELECT * FROM ca_gallery ORDER BY MAIN DESC, ID ASC");
+        if ($gal_res) {
+            while ($g_row = $gal_res->fetch_assoc()) {
+                $g_path = normalize_media_path($g_row['IMAGE'] ?? '');
+                if (!empty($g_path)) {
+                    $galleryImages[] = [
+                        'id' => $g_row['ID'],
+                        'media_type' => 'image',
+                        'title' => 'Casa Gallery',
+                        'media_url' => $g_path,
+                        'thumbnail_url' => $g_path,
+                        'description' => '',
+                        'sort_order' => $g_row['MAIN'] ? 0 : 10,
+                        'is_active' => 1
+                    ];
+                }
+            }
+        }
+    } catch (Exception $e) {
     }
 }
 
@@ -93,7 +122,7 @@ $defaultTab = $hasImages ? 'images' : 'videos';
                         <?php foreach ($galleryImages as $image) { ?>
                             <div class="img-box">
                                 <a href="<?php echo h($image['media_url']); ?>" class="glightbox-image" data-gallery="gallery-images" data-glightbox="type: image">
-                                    <img src="<?php echo h($image['media_url']); ?>" alt="<?php echo h($image['title'] ?: 'Gallery image'); ?>">
+                                    <img src="<?php echo h($image['media_url']); ?>" alt="<?php echo h($image['title'] ?: 'Gallery image'); ?>" onerror="this.onerror=null; this.src='assets/images/gallery/sampletournament1.jpeg';">
                                 </a>
                             </div>
                         <?php } ?>
@@ -108,7 +137,7 @@ $defaultTab = $hasImages ? 'images' : 'videos';
                             <div class="casavideo-box">
                                 <a href="<?php echo h($video['media_url']); ?>" class="glightbox-video" data-gallery="gallery-videos" data-glightbox="type: video">
                                     <?php if ($video['thumbnail_url'] !== '') { ?>
-                                        <img src="<?php echo h($video['thumbnail_url']); ?>" alt="<?php echo h($video['title'] ?: 'Gallery video'); ?>">
+                                        <img src="<?php echo h($video['thumbnail_url']); ?>" alt="<?php echo h($video['title'] ?: 'Gallery video'); ?>" onerror="this.onerror=null; this.src='assets/images/gallery/sampletournament1.jpeg';">
                                     <?php } else { ?>
                                         <div style="height: 220px; display:flex; align-items:center; justify-content:center; background:#111; color:#fff; border-radius:12px;">
                                             <?php echo h($video['title'] ?: 'Play Video'); ?>

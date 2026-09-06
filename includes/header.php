@@ -81,11 +81,17 @@ $user = mysqli_fetch_assoc($select_user);
                     $mainImage = !empty($fetch_ads['main_image']) ? $fetch_ads['main_image'] : 'assets/images/advertise-image2.png';
 
                     if ($mainImage !== 'assets/images/advertise-image2.png' && strpos($mainImage, 'http://') !== 0 && strpos($mainImage, 'https://') !== 0 && strpos($mainImage, '/') !== 0) {
-                        $mainImage = '../admin/' . ltrim($mainImage, '/');
+                        if (file_exists($mainImage)) {
+                            // keep path
+                        } elseif (file_exists('admin/' . ltrim($mainImage, '/'))) {
+                            $mainImage = 'admin/' . ltrim($mainImage, '/');
+                        } elseif (file_exists('../admin/' . ltrim($mainImage, '/'))) {
+                            $mainImage = '../admin/' . ltrim($mainImage, '/');
+                        }
                     }
                 ?>
                     <div class="ad-item">
-                        <img src="<?= htmlspecialchars($mainImage) ?>" class="marquee_img" />
+                        <img src="<?= htmlspecialchars($mainImage) ?>" class="marquee_img" onerror="this.onerror=null; this.src='assets/images/advertise-image2.png';" />
                         <span class="marquee_text"><?= htmlspecialchars($fetch_ads['short_text']) ?>
                             <?php if (!empty($fetch_ads['redirect_url'])) { ?>
                                 <a href="<?= htmlspecialchars($redirectUrl) ?>" target="_blank" class="btn advertiselink_btn">Visit Now</a>

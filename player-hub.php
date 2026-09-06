@@ -156,6 +156,41 @@ try {
     }
     unset($club_row); // break reference
 
+    if (!function_exists('get_club_logo_url')) {
+        function get_club_logo_url($logo) {
+            $logo = trim((string)$logo);
+            if ($logo === '') {
+                return 'assets/images/logo/Final-Logo.png';
+            }
+            $clean_logo = ltrim($logo, '/\\');
+            if (strpos($clean_logo, 'assets/') === 0 || strpos($clean_logo, 'uploads/') === 0) {
+                if (file_exists($clean_logo)) {
+                    return $clean_logo;
+                }
+                if (file_exists($clean_logo . '.png')) {
+                    return $clean_logo . '.png';
+                }
+                if (file_exists($clean_logo . '.jpg')) {
+                    return $clean_logo . '.jpg';
+                }
+                return $clean_logo;
+            }
+            if (file_exists('uploads/clubs/' . $clean_logo)) {
+                return 'uploads/clubs/' . $clean_logo;
+            }
+            if (file_exists('assets/images/logo/' . $clean_logo)) {
+                return 'assets/images/logo/' . $clean_logo;
+            }
+            if (file_exists('assets/images/logo/' . $clean_logo . '.png')) {
+                return 'assets/images/logo/' . $clean_logo . '.png';
+            }
+            if (file_exists('assets/images/' . $clean_logo)) {
+                return 'assets/images/' . $clean_logo;
+            }
+            return 'uploads/clubs/' . $clean_logo;
+        }
+    }
+
     // SQL QUERY - Corrected with unique placeholders
 
     $sql = "SELECT e.*, b.IMGAE, 
@@ -693,7 +728,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                             <div class="profile">
 
-                                <img src="<?= $imagePath ?>" alt="Profile Image">
+                                <img src="<?= $imagePath ?>" alt="Profile Image" onerror="this.onerror=null; this.src='assets/images/profile.jpg';">
 
                             </div>
 
@@ -870,7 +905,8 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                             <div class="card">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #334155; flex-shrink: 0; background: #e2e8f0;">
-                                        <img src="<?= !empty($club_data['logo']) ? 'uploads/clubs/' . htmlspecialchars($club_data['logo']) : 'assets/images/profile.jpg' ?>" alt="Logo" style="width:100%; height:100%; object-fit:cover;" />
+                                        <?php $club_logo_src = get_club_logo_url($club_data['logo'] ?? ''); ?>
+                                        <img src="<?= htmlspecialchars($club_logo_src) ?>" alt="Logo" onerror="this.onerror=null; this.src='assets/images/logo/Final-Logo.png';" style="width:100%; height:100%; object-fit:cover;" />
                                     </div>
                                     <div>
                                         <h4 style="margin: 0;"><?= $club_name_safe ?></h4>
@@ -1020,7 +1056,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
 
                                 <div class="tournamentCard">
                                     <div class="banner">
-                                        <img src="<?php echo $imgPath; ?>" alt="Tournament Banner">
+                                        <img src="<?php echo $imgPath; ?>" alt="Tournament Banner" onerror="this.onerror=null; this.src='assets/images/default.jpg';">
                                     </div>
 
                                     <div class="card-body">
@@ -1289,7 +1325,7 @@ if (!isset($_SESSION['usertype']) || $_SESSION['usertype'] !== 'Player') {
                                         ?>
 
                                         <div class="store-item">
-                                            <img src="<?= $imagePath ?>" alt="Product Image">
+                                            <img src="<?= $imagePath ?>" alt="Product Image" onerror="this.onerror=null; this.src='assets/images/t-shirt.jpg';">
                                             <div class="item-info">
 
                                                 <div class="storeItemTop">
