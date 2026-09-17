@@ -7,21 +7,22 @@ include('dbConnection.php');
 require_once __DIR__ . '/helpers/ledger_helper.php';
 
 // ─── Input sanitization ───────────────────────────────────────────────
-$filterYear     = isset($_POST['year'])     && $_POST['year']     !== '' ? (int)$_POST['year']     : 0;
-$filterMonth    = isset($_POST['month'])    && $_POST['month']    !== '' ? (int)$_POST['month']    : 0;
-$filterPlayerId = isset($_POST['player'])   && $_POST['player']   !== '' ? (int)$_POST['player']   : null;
-$searchQuery    = isset($_POST['search'])   ? trim($_POST['search'])                               : '';
-$sortBy         = isset($_POST['sort_by'])  ? $_POST['sort_by']                                    : 'name';
-$sortDir        = isset($_POST['sort_dir']) && strtolower($_POST['sort_dir']) === 'desc' ? 'desc'  : 'asc';
-$page           = isset($_POST['page'])     && (int)$_POST['page'] > 0 ? (int)$_POST['page']      : 1;
+$filterYear = isset($_POST['year']) && $_POST['year'] !== '' ? (int) $_POST['year'] : 0;
+$filterMonth = isset($_POST['month']) && $_POST['month'] !== '' ? (int) $_POST['month'] : 0;
+$filterPlayerId = isset($_POST['player']) && $_POST['player'] !== '' ? (int) $_POST['player'] : null;
+$searchQuery = isset($_POST['search']) ? trim($_POST['search']) : '';
+$sortBy = isset($_POST['sort_by']) ? $_POST['sort_by'] : 'name';
+$sortDir = isset($_POST['sort_dir']) && strtolower($_POST['sort_dir']) === 'desc' ? 'desc' : 'asc';
+$page = isset($_POST['page']) && (int) $_POST['page'] > 0 ? (int) $_POST['page'] : 1;
 $allowedPageSizes = [5, 10, 20, 50, 100];
-$perPage        = isset($_POST['pageSize']) && in_array((int)$_POST['pageSize'], $allowedPageSizes) ? (int)$_POST['pageSize'] : 10;
+$perPage = isset($_POST['pageSize']) && in_array((int) $_POST['pageSize'], $allowedPageSizes) ? (int) $_POST['pageSize'] : 10;
 
 // Whitelist sort columns
 $allowedSortBy = ['name', 'games', 'amount', 'paid', 'due'];
-if (!in_array($sortBy, $allowedSortBy)) $sortBy = 'name';
+if (!in_array($sortBy, $allowedSortBy))
+    $sortBy = 'name';
 
-$host_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+$host_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
 $useDateFilter = ($filterYear > 0 && $filterMonth > 0);
 
 // ─── 1. Fetch players scoped to this host ─────────────────────────────
@@ -68,38 +69,50 @@ while ($data = $result->fetch_assoc()) {
     $summary = calculateLedgerSummary($conn, $user_id, $host_id, $filterYear, $filterMonth);
 
     $players[] = [
-        'data'        => $data,
-        'gameCount'   => $summary['games'],
+        'data' => $data,
+        'gameCount' => $summary['games'],
         'totalAmount' => $summary['totalExpense'],
-        'totalPaid'   => $summary['totalPaid'],
-        'totalDue'    => $summary['totalDue'],
+        'totalPaid' => $summary['totalPaid'],
+        'totalDue' => $summary['totalDue'],
     ];
 }
 
 // ─── 3. Sort in PHP ───────────────────────────────────────────────────
-usort($players, function($a, $b) use ($sortBy, $sortDir) {
+usort($players, function ($a, $b) use ($sortBy, $sortDir) {
     switch ($sortBy) {
-        case 'games':  $cmp = $a['gameCount']   <=> $b['gameCount'];   break;
-        case 'amount': $cmp = $a['totalAmount'] <=> $b['totalAmount']; break;
-        case 'paid':   $cmp = $a['totalPaid']   <=> $b['totalPaid'];   break;
-        case 'due':    $cmp = $a['totalDue']    <=> $b['totalDue'];    break;
-        default:       $cmp = strcasecmp($a['data']['NAME'], $b['data']['NAME']); break;
+        case 'games':
+            $cmp = $a['gameCount'] <=> $b['gameCount'];
+            break;
+        case 'amount':
+            $cmp = $a['totalAmount'] <=> $b['totalAmount'];
+            break;
+        case 'paid':
+            $cmp = $a['totalPaid'] <=> $b['totalPaid'];
+            break;
+        case 'due':
+            $cmp = $a['totalDue'] <=> $b['totalDue'];
+            break;
+        default:
+            $cmp = strcasecmp($a['data']['NAME'], $b['data']['NAME']);
+            break;
     }
     return $sortDir === 'desc' ? -$cmp : $cmp;
 });
 
 // ─── 4. Paginate ──────────────────────────────────────────────────────
 $totalPlayers = count($players);
-$totalPages   = (int)ceil($totalPlayers / $perPage);
-$page         = max(1, min($page, $totalPages));
-$offset       = ($page - 1) * $perPage;
-$pagePlayers  = array_slice($players, $offset, $perPage);
+$totalPages = (int) ceil($totalPlayers / $perPage);
+$page = max(1, min($page, $totalPages));
+$offset = ($page - 1) * $perPage;
+$pagePlayers = array_slice($players, $offset, $perPage);
 
 // ─── 5. Render table ──────────────────────────────────────────────────
 // Sort indicator helper
 if (!function_exists('sortIcon')) {
-    function sortIcon($col, $currentSortBy, $currentSortDir) {
-        if ($col !== $currentSortBy) return '<span class="text-muted ms-1" style="font-size:0.7rem;">⇅</span>';
+    function sortIcon($col, $currentSortBy, $currentSortDir)
+    {
+        if ($col !== $currentSortBy)
+            return '<span class="text-muted ms-1" style="font-size:0.7rem;">⇅</span>';
         return $currentSortDir === 'asc'
             ? '<span class="text-warning ms-1" style="font-size:0.7rem;">▲</span>'
             : '<span class="text-warning ms-1" style="font-size:0.7rem;">▼</span>';
@@ -116,35 +129,35 @@ echo '<th>Profile</th>';
 
 // Sortable column headers (data-sort-by used by JS)
 $cols = [
-    'name'   => 'Player Name',
-    'email'  => 'Email/Phone',
-    'games'  => 'Total Game',
+    'name' => 'Player Name',
+    'email' => 'Email/Phone',
+    'games' => 'Total Game',
     'amount' => 'Total Amount',
-    'paid'   => 'Total Payment',
-    'due'    => 'Total Due',
+    'paid' => 'Total Payment',
+    'due' => 'Total Due',
 ];
 // Email/Phone is not sortable — we list it separately
 echo "<th class='hp-sort-col' data-sort-by='name' style='cursor:pointer;'>Player Name " . sortIcon('name', $sortBy, $sortDir) . "</th>";
 echo "<th>Email/Phone</th>";
 echo "<th>IS PREMIUM</th>";
-echo "<th class='hp-sort-col' data-sort-by='games'  style='cursor:pointer;'>Total Game "    . sortIcon('games',  $sortBy, $sortDir) . "</th>";
-echo "<th class='hp-sort-col' data-sort-by='amount' style='cursor:pointer;'>Total Amount "  . sortIcon('amount', $sortBy, $sortDir) . "</th>";
-echo "<th class='hp-sort-col' data-sort-by='paid'   style='cursor:pointer;'>Total Payment " . sortIcon('paid',   $sortBy, $sortDir) . "</th>";
-echo "<th class='hp-sort-col' data-sort-by='due'    style='cursor:pointer;'>Total Due "     . sortIcon('due',    $sortBy, $sortDir) . "</th>";
+echo "<th class='hp-sort-col' data-sort-by='games'  style='cursor:pointer;'>Total Game " . sortIcon('games', $sortBy, $sortDir) . "</th>";
+echo "<th class='hp-sort-col' data-sort-by='amount' style='cursor:pointer;'>Total Amount " . sortIcon('amount', $sortBy, $sortDir) . "</th>";
+echo "<th class='hp-sort-col' data-sort-by='paid'   style='cursor:pointer;'>Total Payment " . sortIcon('paid', $sortBy, $sortDir) . "</th>";
+echo "<th class='hp-sort-col' data-sort-by='due'    style='cursor:pointer;'>Total Due " . sortIcon('due', $sortBy, $sortDir) . "</th>";
 echo "<th>Action</th>";
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 
 foreach ($pagePlayers as $idx => $p) {
-    $data        = $p['data'];
-    $user_id     = $data['ID'];
+    $data = $p['data'];
+    $user_id = $data['ID'];
     $profile_pic = !empty($data['PROFILE_IMAGE']) ? 'profile_img/' . $data['PROFILE_IMAGE'] : '../assets/images/profile.jpg';
-    $isPremium   = (isset($data['PREMIUM']) && $data['PREMIUM'] === 'Y');
+    $isPremium = (isset($data['PREMIUM']) && $data['PREMIUM'] === 'Y');
     $premiumChecked = $isPremium ? 'checked' : '';
-    $switchId    = 'premium-switch-' . $user_id;
-    $sl          = $offset + $idx + 1;
-    $currency    = '$';
+    $switchId = 'premium-switch-' . $user_id;
+    $sl = $offset + $idx + 1;
+    $currency = '$';
 
     echo "<tr>
         <th scope='row'>{$sl}</th>
@@ -168,10 +181,10 @@ foreach ($pagePlayers as $idx => $p) {
         </td>
         <td class='text-center'>{$p['gameCount']}</td>
         <td>{$currency} " . number_format($p['totalAmount'], 2) . "</td>
-        <td>{$currency} " . number_format($p['totalPaid'],   2) . "</td>
+        <td>{$currency} " . number_format($p['totalPaid'], 2) . "</td>
         <td>" . ($p['totalDue'] > 0
-            ? "<span class='text-danger fw-semibold'>{$currency} " . number_format($p['totalDue'], 2) . "</span>"
-            : "<span class='text-success fw-semibold'>{$currency} " . number_format($p['totalDue'], 2) . "</span>")
+        ? "<span class='text-danger fw-semibold'>{$currency} " . number_format($p['totalDue'], 2) . "</span>"
+        : "<span class='text-success fw-semibold'>{$currency} " . number_format($p['totalDue'], 2) . "</span>")
         . "</td>
         <td><button type='button' class='playPaymentModal_open btn btn-primary btn-sm' data-id='{$user_id}'>View Ledger</button></td>
     </tr>";
@@ -181,7 +194,7 @@ echo '</tbody></table></div>';
 
 // ─── 6. Footer: count info + pagination ──────────────────────────────
 $from = $totalPlayers > 0 ? $offset + 1 : 0;
-$to   = min($offset + $perPage, $totalPlayers);
+$to = min($offset + $perPage, $totalPlayers);
 
 echo "<div class='d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2 px-1'>";
 echo "<div class='d-flex align-items-center gap-2'>";
@@ -204,17 +217,19 @@ if ($totalPages > 1) {
 
     // Page numbers (show up to 5 around current)
     $start = max(1, $page - 2);
-    $end   = min($totalPages, $page + 2);
+    $end = min($totalPages, $page + 2);
     if ($start > 1) {
         echo "<li class='page-item'><a class='page-link' href='#' data-page='1' data-sort-by='{$sortBy}' data-sort-dir='{$sortDir}'>1</a></li>";
-        if ($start > 2) echo "<li class='page-item disabled'><span class='page-link'>…</span></li>";
+        if ($start > 2)
+            echo "<li class='page-item disabled'><span class='page-link'>…</span></li>";
     }
     for ($i = $start; $i <= $end; $i++) {
         $active = $i === $page ? 'active' : '';
         echo "<li class='page-item {$active}'><a class='page-link' href='#' data-page='{$i}' data-sort-by='{$sortBy}' data-sort-dir='{$sortDir}'>{$i}</a></li>";
     }
     if ($end < $totalPages) {
-        if ($end < $totalPages - 1) echo "<li class='page-item disabled'><span class='page-link'>…</span></li>";
+        if ($end < $totalPages - 1)
+            echo "<li class='page-item disabled'><span class='page-link'>…</span></li>";
         echo "<li class='page-item'><a class='page-link' href='#' data-page='{$totalPages}' data-sort-by='{$sortBy}' data-sort-dir='{$sortDir}'>{$totalPages}</a></li>";
     }
 

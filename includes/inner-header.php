@@ -272,8 +272,10 @@ $hideSiteBackButton = ($currentInnerPage === 'player-hub.php' || $currentInnerPa
                         <li><a href="host-audit-log.php" class="nav_link btn <?php echo $currentInnerPage === 'host-audit-log.php' ? 'active' : ''; ?>">
                             <span>Audit Log</span></a></li>
                     <?php endif; ?>
+                    <?php if (canViewProductListing()): ?>
                     <li><a href="product-listing.php" class="nav_link btn <?php echo $currentInnerPage === 'product-listing.php' ? 'active' : ''; ?>">
                         <span>Casa Store</span></a></li>
+                    <?php endif; ?>
                 </ul>
 
                 <!-- RIGHT: Profile Chip -->

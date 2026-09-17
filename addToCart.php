@@ -1,5 +1,8 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include_once __DIR__ . '/dbConnection.php';
 include "includes/store-header.php"; 
 
 if (!isset($_SESSION['cart'])) {
@@ -8,8 +11,22 @@ if (!isset($_SESSION['cart'])) {
 
 /* ---------- REMOVE ITEM ---------- */
 if (isset($_GET['remove'])) {
-    unset($_SESSION['cart'][(int)$_GET['remove']]);
+    $remId = (int)$_GET['remove'];
+    $itemRemName = $_SESSION['cart'][$remId]['name'] ?? 'Product #' . $remId;
+    if (isset($_SESSION['user_id'])) {
+        logPlayerActivity(
+            $conn,
+            $_SESSION['user_id'],
+            'REMOVE_FROM_CART',
+            'Removed product "' . $itemRemName . '" from cart',
+            null,
+            null,
+            ['product_id' => $remId, 'product_name' => $itemRemName]
+        );
+    }
+    unset($_SESSION['cart'][$remId]);
     header("Location: addToCart.php");
+    exit;
 }
 
 /* ---------- UPDATE QTY ---------- */
@@ -20,18 +37,50 @@ if (isset($_GET['update'], $_GET['qty'])) {
 
     if(isset($_SESSION['cart'][$id])){
         $_SESSION['cart'][$id]['quantity']=$qty;
+        if (isset($_SESSION['user_id'])) {
+            logPlayerActivity(
+                $conn,
+                $_SESSION['user_id'],
+                'CART_QTY_UPDATED',
+                'Updated quantity to ' . $qty . ' for product "' . ($_SESSION['cart'][$id]['name'] ?? '') . '"',
+                null,
+                null,
+                ['product_id' => $id, 'quantity' => $qty]
+            );
+        }
     }
 
     header("Location: addToCart.php");
+    exit;
 }
 
 /* ---------- TOTALS ---------- */
 $total=0;
 $itemsCount=0;
+$cartSummaryItems = [];
 
-foreach($_SESSION['cart'] as $item){
+foreach($_SESSION['cart'] as $cId => $item){
     $total += $item['price'] * $item['quantity'];
     $itemsCount += $item['quantity'];
+    $cartSummaryItems[] = [
+        'id' => $cId,
+        'name' => $item['name'] ?? '',
+        'price' => $item['price'] ?? 0,
+        'quantity' => $item['quantity'] ?? 1
+    ];
+}
+
+// Log cart view
+if (!isset($_GET['remove']) && !isset($_GET['update']) && isset($_SESSION['user_id'])) {
+    logPlayerActivity(
+        $conn,
+        $_SESSION['user_id'],
+        'CART_VIEWED',
+        'Viewed cart (' . $itemsCount . ' item' . ($itemsCount === 1 ? '' : 's') . ', Total: $' . number_format($total, 2) . ')',
+        null,
+        null,
+        ['items_count' => $itemsCount, 'total_price' => $total, 'items' => $cartSummaryItems]
+    );
 }
 ?>
 

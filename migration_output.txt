@@ -1,4 +1,4 @@
-=== Starting DB Migration: 2026-09-01 15:20:50 ===
+=== Starting DB Migration: 2026-09-12 16:16:11 ===
 • Index 'uq_host_id' does not exist or was already dropped.
 
 • Column 'join_type' already exists on ca_clubs.
@@ -47,5 +47,7 @@ Running: CREATE TABLE IF NOT EXISTS `ca_host_player_carry_forward_history` ( `id
 
 Running: CREATE TABLE IF NOT EXISTS `ca_host_subscription` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `host_id` ...
 ✓ SUCCESS
+
+• Column 'is_carried' already exists on ca_host_subscription.
 
 === Migration Finished ===

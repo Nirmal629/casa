@@ -29,6 +29,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Check for an active Subscription for this previous month
+    $subRes = null;
+    try {
+        $subRes = mysqli_query($conn, "SELECT id, amount, is_carried FROM ca_host_subscription
+                WHERE host_id = $host_id AND player_id = $user_id
+                  AND sub_year = $year AND sub_month = $month
+                  AND status = 'APPLIED' LIMIT 1");
+    } catch (mysqli_sql_exception $e) {
+        $subRes = null;
+    }
+    $subRow = ($subRes) ? mysqli_fetch_assoc($subRes) : null;
+
+    if ($subRow) {
+        $isSubCarried = ((int)($subRow['is_carried'] ?? 0) === 1);
+        if ($isSubCarried) {
+            $response['success'] = false;
+            $response['message'] = 'Carry already applied for this month.';
+            echo json_encode($response);
+            exit;
+        }
+
+        // Mark source subscription as carried
+        mysqli_query($conn, "UPDATE ca_host_subscription SET is_carried = 1 WHERE id = " . (int)$subRow['id']);
+
+        // Calculate next month and year
+        $nextMonth = ($month % 12) + 1;
+        $nextYear  = ($month == 12) ? ($year + 1) : $year;
+
+        // Synchronize general ledger carry forward audit
+        $monthName = date("F", mktime(0, 0, 0, $month, 10));
+        $summary = calculateLedgerSummary($conn, $user_id, $host_id, $year, $month);
+        $carryAmount = $summary['balance'];
+
+        require_once __DIR__ . '/helpers/carry_forward_audit.php';
+        recordCarryForwardAudit(
+            $conn,
+            $host_id,
+            $user_id,
+            $month, $year,
+            $nextMonth, $nextYear,
+            $carryAmount,
+            $monthName
+        );
+
+        require_once __DIR__ . '/render_player_pay_html.php';
+        $response['success'] = true;
+        $response['message'] = 'Subscription carried forward successfully';
+        $response['html'] = renderPlayerPayHtml($conn, $user_id, $year, $month);
+
+        echo json_encode($response);
+        exit;
+    }
+
     // 1. Calculate the balance using the helper
     $summary = calculateLedgerSummary($conn, $user_id, $host_id, $year, $month);
     $carryAmount = $summary['balance'];

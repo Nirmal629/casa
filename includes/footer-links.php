@@ -26,6 +26,11 @@
 
 <script src="assets/js/script.js?v=<?php echo time(); ?>"></script>
 
+<!----activity-tracker-js----->
+
+<script src="assets/js/activity-tracker.js?v=<?php echo time(); ?>"></script>
+
+
 
 
 <script>

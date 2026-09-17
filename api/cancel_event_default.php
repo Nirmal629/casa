@@ -92,33 +92,36 @@ echo '<h6 class="card_heading">Scheduled Games (Grouped by Weekday)</h6>';
                     
                     $dayColorClass = isset($dayColors[$event_day]) ? $dayColors[$event_day] : '';
 
+                    $safe_desc = htmlspecialchars($event_description, ENT_QUOTES, 'UTF-8');
+
                     echo "
                     <div class='discoverGames_card_sub'>
-                        <div class='d-flex align-items-center justify-content-between'>
-                            <p class='desc'>$event_category - $gender_category</p>
-                            <div class='d-flex align-items-center justify-content-end gap-2'>
-                                <span class='badge bg-info text-dark rounded-circle fw-bold' title='$event_description'>i</span>
-<button 
-    class='btn " . ($countRows > 0 ? "btn-danger" : "btn-primary") . " btn-sm join_btn' 
-    data-id='$event_id' 
-    data-joined='" . ($countRows > 0 ? "1" : "0") . "'>
-    " . ($countRows > 0 ? "Cancel" : "Join") . "
-</button>                               <input type='hidden' id='data_$event_id' value='$jsonStringy'/>
+                        <div class='d-flex align-items-center justify-content-between mb-2'>
+                            <p class='desc m-0 fw-semibold text-truncate' style='max-width: 65%;'>$event_category - $gender_category</p>
+                            <div class='d-flex align-items-center justify-content-end gap-2 flex-shrink-0'>
+                                <span class='badge bg-info text-dark rounded-circle fw-bold' title=\"$safe_desc\" style='width:20px;height:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer;flex-shrink:0;'>i</span>
+                                <button 
+                                    class='btn " . ($countRows > 0 ? "btn-danger" : "btn-primary") . " btn-sm join_btn' 
+                                    data-id='$event_id' 
+                                    data-joined='" . ($countRows > 0 ? "1" : "0") . "'>
+                                    " . ($countRows > 0 ? "Cancel" : "Join") . "
+                                </button>
+                                <input type='hidden' id='data_$event_id' value='$jsonStringy'/>
                                 <input type='hidden' id='user_$event_id' value='{$_SESSION['user_id']}'/>
                             </div>
                         </div>
-                        <h4 style='padding: 5px;' class='date_time $dayColorClass'>$event_day - " . date('h:i A', strtotime($event['EVENT_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
-                        <p class='location'><i class='fa-solid fa-location-dot'></i> $event_venue</p>
-                        <div class='d-flex align-items-center gap-3 mb-2'>
-                            <p style='font-size: 12px;'>$event_message</p>
+                        <h4 style='padding: 5px; font-size: 13px; border-radius: 4px;' class='date_time $dayColorClass'>$event_day - " . date('h:i A', strtotime($event['EVENT_TIME'])) . " - " . date('h:i A', strtotime($event['TO_TIME'])) . "</h4>
+                        <p class='location mb-1 text-truncate'><i class='fa-solid fa-location-dot'></i> $event_venue</p>
+                        <div class='mb-2'>
+                            <p style='font-size: 12px; margin: 0; word-break: break-word; color: #64748b;'>$event_message</p>
                         </div>
-                        <div class='d-flex align-items-center justify-content-between'>
+                        <div class='d-flex align-items-center justify-content-between mt-auto'>
                             <div class='play_status'>
-                                <span>Level: $gender_skill_level</span>
+                                <span style='font-size: 12px;'>Level: $gender_skill_level</span>
                             </div>
                             <div class='d-flex align-items-center gap-2'>
                                 <span class='badge " . ($event_type == 'Public' ? 'bg-primary' : 'bg-success') . "'>$event_type</span>
-                                <span class='amount'>$event_currency $event_cost</span>
+                                <span class='amount fw-bold'>$event_currency $event_cost</span>
                             </div>
                         </div>
                     </div>";

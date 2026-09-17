@@ -2290,63 +2290,85 @@ Home banner
 
 .battleTournament_sec .input-box {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px 24px;
     background-color: var(--bs-bg-transparent);
     border: 1px solid var(--bs-border-dark);
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     margin-top: 15px;
 }
 
 .battleTournament_sec .input-box .detail {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
     font-weight: 500;
-    color: #aaa;
+    color: #94a3b8;
+    font-size: 13.5px;
 }
 
 .battleTournament_sec .input-box .detail span {
-    color: #4aa3ff;
-    font-size: 85%;
-}
-
-.battleTournament_sec .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    color: #38bdf8;
+    font-size: 13.5px;
+    font-weight: 600;
 }
 
 .battleTournament_sec .grid-3 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 15px;
+    grid-template-columns: 460px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .battleTournament_sec .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.battleTournament_sec .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
 }
 
 .battleTournament_sec .grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
 }
 
 .battleTournament_sec .card {
     background: var(--bs-bg-transparent);
     border: 1px solid var(--bs-border-dark);
     border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
 .battleTournament_sec .card h6 {
     margin-bottom: 10px;
     color: #38bdf8;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .battleTournament_sec .winner {
-    border: 2px solid gold;
+    border: 1px solid rgba(234, 179, 8, 0.6);
+    box-shadow: 0 0 15px rgba(234, 179, 8, 0.1);
+}
+
+.battleTournament_sec .winner h4 {
+    color: #eab308;
+    border-left-color: #eab308;
+}
+
+.battleTournament_sec .table-responsive {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .battleTournament_sec table {
@@ -2357,48 +2379,76 @@ Home banner
 
 .battleTournament_sec th,
 .battleTournament_sec td {
-    border-bottom: 1px solid rgba(148, 163, 184, .2);
-    padding: 6px;
+    border-bottom: 1px solid rgba(148, 163, 184, .15);
+    padding: 8px 6px;
     text-align: left;
-    font-size: 14px;
+    font-size: 13px;
+    vertical-align: middle;
 }
 
 .battleTournament_sec th {
     color: #94a3b8;
-    background: rgba(255, 255, 255, .02);
+    background: rgba(255, 255, 255, .03);
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .battleTournament_sec td {
     color: var(--bs-text-white);
-    opacity: 0.8;
+    opacity: 0.9;
+}
+
+.battleTournament_sec th:first-child,
+.battleTournament_sec td:first-child {
+    width: 38px;
+    text-align: center;
+}
+
+.battleTournament_sec th:nth-last-child(2),
+.battleTournament_sec td:nth-last-child(2),
+.battleTournament_sec th:last-child,
+.battleTournament_sec td:last-child {
+    width: 46px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .battleTournament_sec td select,
 .battleTournament_sec select {
-    background-color: var(--bs-bg-transparent) !important;
+    background-color: #081827 !important;
     color: var(--bs-text-white) !important;
+    border: 1px solid #31506a !important;
     min-width: 100px !important;
     width: auto !important;
-    padding: 2px 4px !important;
-    border-radius: 4px;
+    padding: 4px 8px !important;
+    border-radius: 6px;
+    font-size: 12px;
 }
 
-.battleTournament_sec a {
-    font-size: 13px;
+.battleTournament_sec a.btn,
+.battleTournament_sec .card .btn {
+    font-size: 12px;
+    font-weight: 600;
     color: #38bdf8;
-    text-decoration: underline;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 2px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-.battleTournament_sec a:hover {
-    text-decoration: underline;
-    color: #38bdf8;
+.battleTournament_sec a.btn:hover,
+.battleTournament_sec .card .btn:hover {
+    background: #38bdf8;
+    color: #0f172a;
+    border-color: #38bdf8;
 }
 
 .battleTournament_sec .grouptable {
     width: 100%;
     height: auto;
-    /* max-height: 67vh; */
-    /* overflow-y: auto; */
+    min-width: 0;
 }
 
 

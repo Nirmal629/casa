@@ -302,7 +302,7 @@ if ($action === 'rollback') {
             $pdo->prepare("UPDATE ca_expense SET STATUS = 'N' WHERE ID = :e AND HOST_ID = :h")
                 ->execute([':e' => (int) $row['expense_id'], ':h' => $H]);
         }
-        $pdo->prepare("UPDATE ca_host_subscription SET status = 'ROLLED_BACK', is_locked = 0 WHERE id = :id AND host_id = :h")
+        $pdo->prepare("UPDATE ca_host_subscription SET status = 'ROLLED_BACK', is_locked = 0, is_carried = 0 WHERE id = :id AND host_id = :h")
             ->execute([':id' => (int) $row['id'], ':h' => $H]);
         $pdo->commit();
     } catch (Throwable $e) {

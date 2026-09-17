@@ -62,23 +62,27 @@ if (!function_exists('renderPlayerPayHtml')) {
 
         // ── Host-subscription unlock ─────────────────────────────────────
         // A locked month that has an APPLIED host subscription for THIS player
-        // is unlocked so the host can re-carry it with the subscription expense
-        // included. Rolling the subscription back (status → ROLLED_BACK) removes
-        // this and the month re-locks. Scoped strictly to this
-        // (host, player, year, month); other players are untouched.
+        // is unlocked if its subscription carry has NOT been completed yet, so the
+        // host can carry the subscription to the next month.
         $subUnlock = false;
+        $subIsCarried = false;
+        $hasSubscription = false;
         try {
-            $suRes = mysqli_query($conn, "SELECT 1 FROM ca_host_subscription
+            $suRes = mysqli_query($conn, "SELECT id, is_carried FROM ca_host_subscription
                     WHERE host_id = $host_id AND player_id = $user_id
                       AND sub_year = $year AND sub_month = $month
                       AND status = 'APPLIED' LIMIT 1");
-            $subUnlock = ($suRes && mysqli_num_rows($suRes) > 0);
+            if ($suRes && ($suRow = mysqli_fetch_assoc($suRes))) {
+                $hasSubscription = true;
+                $subIsCarried = ((int)($suRow['is_carried'] ?? 0) === 1);
+                if ($isPastMonth && !$subIsCarried) {
+                    $subUnlock = true;
+                }
+            }
         } catch (mysqli_sql_exception $e) {
             $subUnlock = false;
         }
-        // Only re-enables Carry (so the month can be re-carried with the new
-        // subscription expense). Expense / Pay stay locked, matching the existing
-        // "a carried-forward month's payments & expenses cannot be changed" rule.
+
         if ($subUnlock && $isLocked) {
             $isEffectivelyLocked = false;
         }
@@ -111,6 +115,16 @@ if (!function_exists('renderPlayerPayHtml')) {
         $carryTitle = $isCurrentMonth
             ? 'The current month cannot be carried forward until it ends.'
             : ($isEffectivelyLocked ? 'This month is locked (already carried forward).' : 'Carry the closing balance to the next month.');
+
+        if ($isPastMonth && $hasSubscription) {
+            if ($subIsCarried) {
+                $carryDisabled = 'disabled';
+                $carryTitle = 'Subscription carry already applied for this month.';
+            } else {
+                $carryDisabled = '';
+                $carryTitle = 'Carry subscription to next month.';
+            }
+        }
         $lockDisabled = ($isEffectivelyLocked || (!$isCurrentMonth && !$isOverrideActive)) ? 'disabled' : '';
         $lockTitle = $isEffectivelyLocked
             ? 'This month is locked (already carried forward).'

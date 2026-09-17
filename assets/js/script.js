@@ -1522,11 +1522,12 @@ imgBtns.forEach((imgItem) => {
 });
 
 function slideImage() {
-
-    const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
-
-    document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
-
+    const showcaseImg = document.querySelector('.img-showcase img:first-child');
+    const showcase = document.querySelector('.img-showcase');
+    if (!showcaseImg || !showcase) return;
+    const displayWidth = showcaseImg.clientWidth;
+    const currentImgId = (typeof imgId !== 'undefined') ? imgId : 1;
+    showcase.style.transform = `translateX(${- (currentImgId - 1) * displayWidth}px)`;
 }
 
 window.addEventListener('resize', slideImage);
@@ -2790,6 +2791,7 @@ $(document).ready(function () {
     function populateTimeDropdown(selectId) {
 
         let select = document.getElementById(selectId);
+        if (!select) return;
 
         for (let h = 0; h < 24; h++) {
 
@@ -4561,7 +4563,7 @@ $(document).ready(function () {
 
             }
 
-        }, 'json').fail(function() {
+        }, 'json').fail(function () {
             $submitBtn.prop('disabled', false).text('Save');
             alert('Failed to save payment. Please try again.');
         });
@@ -4763,8 +4765,8 @@ $(document).ready(function () {
         }
     });
 
-    // Refresh button — resets all filters/search/sort and reloads Till-Date
-    $(document).on("click", "#refreshBtn", function () {
+    // Refresh button on Payment list tab — resets all filters/search/sort and reloads Till-Date
+    $(document).on("click", ".hostpaymentlist_sec #refreshBtn", function () {
         $("#hpyear").val('');
         $("#hpmonth").val('');
         $("#hhost").val('');
@@ -4776,79 +4778,79 @@ $(document).ready(function () {
         loadHostPaymentTable(1);
     });
 
+    // Completed Games: Auto-filter on year / month change
+    $(document).on("change", "#com_year, #com_month", function () {
+        var year = $("#com_year").val();
+        var month = $("#com_month").val();
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + 'api/com_filter_schedule.php',
+            data: {
+                year: year,
+                month: month,
+                type: 'filter'
+            },
+            success: function (response) {
+                $("#comp_game").html(response);
+            }
+        });
+    });
 
+    // Completed Games: Refresh button
+    $(document).on("click", ".hostcomplete_game #refreshBtn", function (e) {
+        e.preventDefault();
+        var year = $("#com_year").val();
+        var month = $("#com_month").val();
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + 'api/com_filter_schedule.php',
+            data: {
+                year: year,
+                month: month,
+                type: 'filter'
+            },
+            success: function (response) {
+                $("#comp_game").html(response);
+            }
+        });
+    });
 
     $("#com_filter").click(function () {
-
-        var year = $("#com_year").val()
-
-        var month = $("#com_month").val()
-
+        var year = $("#com_year").val();
+        var month = $("#com_month").val();
         $.ajax({
-
             type: "POST",
-
             url: BASE_URL + 'api/com_filter_schedule.php',
-
             data: {
-
                 year: year,
-
                 month: month,
-
                 type: 'filter'
-
             },
-
             success: function (response) {
-
-                $("#comp_game").html(response)
-
+                $("#comp_game").html(response);
             }
-
-        })
-
-    })
-
-
+        });
+    });
 
     $("#com_reset").click(function () {
-
         $.ajax({
-
             type: "POST",
-
             url: BASE_URL + 'api/com_filter_schedule.php',
-
             data: {
-
                 type: 'reset'
-
             },
-
             success: function (response) {
-
                 const now = new Date();
-
                 const currentYear = now.getFullYear();
-
                 const currentMonth = now.getMonth() + 1; // getMonth() returns 0–11
 
-
-
                 // Set current year and month in dropdowns
-
                 $("#com_year").val(currentYear);
-
                 $("#com_month").val(currentMonth);
-
-                $("#comp_game").html(response)
-
+                $("#comp_game").html(response);
             }
-
-        })
-
-    })
+        });
+    });
 
 
 
@@ -5083,11 +5085,11 @@ let menuToggle = document.querySelector('.menu-toggle');
 
 let navigation = document.querySelector('.navigation');
 
-menuToggle.onclick = function () {
-
-    navigation.classList.toggle('active');
-
-};
+if (menuToggle && navigation) {
+    menuToggle.onclick = function () {
+        navigation.classList.toggle('active');
+    };
+}
 
 
 

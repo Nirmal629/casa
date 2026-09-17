@@ -1,8 +1,28 @@
 <!-------host-complete-game----->
 <div class="hostcomplete_game">
-     <?php
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include_once __DIR__ . '/dbConnection.php';
+
+$host_id = intval($_SESSION['user_id'] ?? 0);
 $currentYear = date('Y');
 $currentMonth = date('n'); // 1-12 (no leading zero)
+
+// Check if current month has completed events for this host; if not, default to the latest month with completed events
+$defaultYear = $currentYear;
+$defaultMonth = $currentMonth;
+
+$checkCurrent = mysqli_query($conn, "SELECT ID FROM ca_events WHERE STATUS!='Active' AND HOST_ID='$host_id' AND YEAR(EVENT_DATE)='$currentYear' AND MONTH(EVENT_DATE)='$currentMonth' LIMIT 1");
+if (!$checkCurrent || mysqli_num_rows($checkCurrent) == 0) {
+    $latestEventCheck = mysqli_query($conn, "SELECT YEAR(EVENT_DATE) as yr, MONTH(EVENT_DATE) as mo FROM ca_events WHERE STATUS!='Active' AND HOST_ID='$host_id' ORDER BY EVENT_DATE DESC LIMIT 1");
+    if ($latestEventCheck && mysqli_num_rows($latestEventCheck) > 0) {
+        $latestRow = mysqli_fetch_assoc($latestEventCheck);
+        $defaultYear = intval($latestRow['yr']);
+        $defaultMonth = intval($latestRow['mo']);
+    }
+}
 ?>
     <div class="custom_card">
         <!--<h6 class="card_heading">The Completed Games</h6>-->
@@ -16,42 +36,14 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         <div class="mb-3">
                 <form>
                     <div class="row g-1 align-items-center">
-                        <!--<div class="col-auto">-->
-                        <!--    <select class="form-select" id="com_year" aria-label="Default select example">-->
-                        <!--        <option value="">Select Year</option>-->
-                        <!--        <option value="2024">2024</option>-->
-                        <!--        <option value="2025">2025</option>-->
-                        <!--        <option value="2026">2026</option>-->
-                        <!--        <option value="2027">2027</option>-->
-                        <!--        <option value="2028">2028</option>-->
-                        <!--        <option value="2029">2029</option>-->
-                        <!--        <option value="2030">2030</option>-->
-                        <!--    </select>-->
-                        <!--</div>-->
-                        <!--<div class="col-auto">-->
-                        <!--    <select class="form-select" id="com_month" aria-label="Default select example">-->
-                        <!--        <option value="">Select the Month</option>-->
-                        <!--        <option value="1">January</option>-->
-                        <!--        <option value="2">February</option>-->
-                        <!--        <option value="3">March</option>-->
-                        <!--        <option value="4">April</option>-->
-                        <!--        <option value="5">May</option>-->
-                        <!--        <option value="6">June</option>-->
-                        <!--        <option value="7">July</option>-->
-                        <!--        <option value="8">August</option>-->
-                        <!--        <option value="9">September</option>-->
-                        <!--        <option value="10">October</option>-->
-                        <!--        <option value="11">November</option>-->
-                        <!--        <option value="12">December</option>-->
-                        <!--    </select>-->
-                        <!--</div>-->
                         <div class="col-auto">
-
                             <select class="form-select py-0 px-2" id="com_year" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
                                 <option value="">Year</option>
                                 <?php
-                                for ($year = 2025; $year <= $currentYear; $year++) {
-                                    $selected = ($year == $currentYear) ? 'selected' : '';
+                                $startYear = 2024;
+                                $maxYear = max(intval(date('Y')) + 2, 2030);
+                                for ($year = $startYear; $year <= $maxYear; $year++) {
+                                    $selected = ($year == $defaultYear) ? 'selected' : '';
                                     echo "<option value=\"$year\" $selected>$year</option>";
                                 }
                                 ?>
@@ -67,7 +59,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                                     9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
                                 ];
                                 foreach ($months as $num => $name) {
-                                    $selected = ($num == $currentMonth) ? 'selected' : '';
+                                    $selected = ($num == $defaultMonth) ? 'selected' : '';
                                     echo "<option value=\"$num\" $selected>$name</option>";
                                 }
                                 ?>
@@ -117,15 +109,17 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                 </thead>
                 <tbody>
                     <?php
-                    if (session_status() === PHP_SESSION_NONE) {
-                        session_start();
-                    }
-                    include_once __DIR__ . '/dbConnection.php';
-        
-        $sql = "SELECT * FROM ca_events WHERE STATUS!='Active' AND HOST_ID='" . intval($_SESSION['user_id']) . "' AND YEAR(EVENT_DATE) = '$currentYear' AND MONTH(EVENT_DATE) = '$currentMonth' ORDER BY EVENT_DATE DESC, EVENT_TIME DESC"; // Adjust the query based on your conditions
+        $whereConditions = ["STATUS!='Active'", "HOST_ID='$host_id'"];
+        if (!empty($defaultYear)) {
+            $whereConditions[] = "YEAR(EVENT_DATE) = '$defaultYear'";
+        }
+        if (!empty($defaultMonth)) {
+            $whereConditions[] = "MONTH(EVENT_DATE) = '$defaultMonth'";
+        }
+        $sql = "SELECT * FROM ca_events WHERE " . implode(" AND ", $whereConditions) . " ORDER BY EVENT_DATE DESC, EVENT_TIME DESC";
         $result = mysqli_query($conn, $sql);
         
-        if (mysqli_num_rows($result) > 0) {
+        if ($result && mysqli_num_rows($result) > 0) {
             $i = 1;
             $totalFacilityCost = 0;
             $totalAccessoriesCost = 0;
@@ -137,7 +131,6 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         $event_id = $event['ID'];
         $host_id = $event['HOST_ID'];
         $host_name = $event['HOST_NAME'];
-        // $event_date = date('D, d M Y, h:i A', strtotime($event['EVENT_DATE'] . ' ' . $event['EVENT_TIME'])); -- Anurag
         $event_date = date('D, d M Y', strtotime($event['EVENT_DATE']));
         $event_venue = $event['EVENT_VENUE'];
         $event_cost = $event['EVENT_COST'];
@@ -158,15 +151,14 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         
         $jsonStringy = json_encode($event);
         
-        // You can also fetch the image and other dynamic content here.
-        $profile_pic = "assets/images/profile.jpg"; // Example for profile image, use dynamic based on host data
+        $profile_pic = "assets/images/profile.jpg";
         $status_class = ($event_status == 'Completed') ? 'green' : 'red';
         
-        $totalJoin = mysqli_query($conn,"select * from ca_gamejoin where GAME_ID='".$event['ID']."'");
-        $countTotalJoin = mysqli_num_rows($totalJoin);
+        $totalJoin = mysqli_query($conn,"select ID from ca_gamejoin where GAME_ID='".$event['ID']."'");
+        $countTotalJoin = $totalJoin ? mysqli_num_rows($totalJoin) : 0;
         
-        $totalConfirmed = mysqli_query($conn,"select * from ca_gamejoin where GAME_ID='".$event['ID']."' and CONFIRMED='Y'");
-        $countTotalConfirmed = mysqli_num_rows($totalConfirmed);
+        $totalConfirmed = mysqli_query($conn,"select ID from ca_gamejoin where GAME_ID='".$event['ID']."' and CONFIRMED='Y'");
+        $countTotalConfirmed = $totalConfirmed ? mysqli_num_rows($totalConfirmed) : 0;
         
         $totalFacilityCost += floatval($facility_cost);
         $totalAccessoriesCost += floatval($accessories_cost);
@@ -177,16 +169,16 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
 
         echo '<tr>
                 <th scope="row">'.$i.'</th>
-                <td>' . $event_date . '</td>
-                <td>' . $event_venue . '</td>
-                <td>' . $event_category . '</td>
+                <td>' . htmlspecialchars($event_date) . '</td>
+                <td>' . htmlspecialchars($event_venue) . '</td>
+                <td>' . htmlspecialchars($event_category) . '</td>
                 
-                <td>' . $facility_cost . '</td>
-                <td>' . $accessories_cost . '</td>
-                <td>' . $snacks_cost . '</td>
-                <td>' . $total_event_cost . '</td>
-                <td>' . $total_player_cost . '</td>
-                <td>' . $profit_loss . '</td>
+                <td>' . htmlspecialchars($facility_cost) . '</td>
+                <td>' . htmlspecialchars($accessories_cost) . '</td>
+                <td>' . htmlspecialchars($snacks_cost) . '</td>
+                <td>' . htmlspecialchars($total_event_cost) . '</td>
+                <td>' . htmlspecialchars($total_player_cost) . '</td>
+                <td>' . htmlspecialchars($profit_loss) . '</td>
                 <td><span class="slots-count badge bg-warning text-dark rounded-pill">
                         '.$countTotalJoin.' 
                     </span></td>
@@ -196,7 +188,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
                 <td><button type="button" class="btn played_btn playerviewmodal_open" data-id='.$event_id.' data-user-id='.$host_id.'><i class="fa-solid fa-eye"></i></button></td>
                 <td><button type="button" class="btn btn-primary rollback_btn" data-id='.$event_id.' data-user-id='.$host_id.'>Rollback</button></td>
                 <td><button type="button" class="btn eye_btn matchviewmodal_open" data-id='.$event_id.' data-user-id='.$host_id.'><i class="fa-solid fa-eye"></i></button></td>
-                <td><span class="' . $status_class . '">' . $event_status . '</span></td>
+                <td><span class="' . $status_class . '">' . htmlspecialchars($event_status) . '</span></td>
             </tr>';
         
             $i++;
@@ -212,7 +204,7 @@ $currentMonth = date('n'); // 1-12 (no leading zero)
         <td colspan="6"></td>
       </tr>';
         } else {
-            echo "<p>No events found.</p>";
+            echo '<tr><td colspan="16" class="text-center text-muted py-3">No events found.</td></tr>';
         }
         ?>
                     

@@ -185,6 +185,7 @@ try {
         `expense_id` INT(11)       DEFAULT NULL COMMENT 'FK to ca_expense row created on apply',
         `status`     ENUM('APPLIED','ROLLED_BACK') NOT NULL DEFAULT 'APPLIED',
         `is_locked`  TINYINT(1)    NOT NULL DEFAULT 1,
+        `is_carried` TINYINT(1)    NOT NULL DEFAULT 0 COMMENT '1 if carried forward to next month',
         `applied_by` INT(11)       DEFAULT NULL,
         `applied_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `updated_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -194,6 +195,13 @@ try {
         KEY `idx_hs_expense` (`expense_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
     runQuery($conn, $create_ca_host_subscription, $output);
+
+    $sub_carried_check = $conn->query("SHOW COLUMNS FROM `ca_host_subscription` LIKE 'is_carried'");
+    if ($sub_carried_check && $sub_carried_check->num_rows === 0) {
+        runQuery($conn, "ALTER TABLE `ca_host_subscription` ADD COLUMN `is_carried` TINYINT(1) NOT NULL DEFAULT 0 AFTER `is_locked`", $output);
+    } else {
+        $output .= "• Column 'is_carried' already exists on ca_host_subscription.\n\n";
+    }
 
     $output .= "=== Migration Finished ===\n";
 

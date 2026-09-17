@@ -30,14 +30,41 @@ $clean_message = strip_tags($message, $allowed_tags);
 
 $userType = $_SESSION['usertype'] ?? 'Player';
 
-try {
-    $stmt = $pdo->prepare("INSERT INTO ca_reviews (USER_ID, PLAYER_ROLE, RATING, MESSAGE, STATUS, DATE_CREATED) VALUES (?, ?, ?, ?, 'Active', NOW())");
-    $stmt->execute([$userId, $userType, $rating, $clean_message]);
+$reviewId = !empty($_POST['review_id']) ? intval($_POST['review_id']) : null;
 
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Thank you! Your review has been submitted successfully.'
-    ]);
+try {
+    if ($reviewId) {
+        // Verify that review belongs to current user
+        $checkStmt = $pdo->prepare("SELECT ID FROM ca_reviews WHERE ID = ? AND USER_ID = ?");
+        $checkStmt->execute([$reviewId, $userId]);
+        $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$existing) {
+            echo json_encode(['status' => 'error', 'message' => 'Review not found or unauthorized.']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("UPDATE ca_reviews SET RATING = ?, MESSAGE = ? WHERE ID = ? AND USER_ID = ?");
+        $stmt->execute([$rating, $clean_message, $reviewId, $userId]);
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Your review has been updated successfully.',
+            'action' => 'update',
+            'review_id' => $reviewId
+        ]);
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO ca_reviews (USER_ID, PLAYER_ROLE, RATING, MESSAGE, STATUS, DATE_CREATED) VALUES (?, ?, ?, ?, 'Active', NOW())");
+        $stmt->execute([$userId, $userType, $rating, $clean_message]);
+        $newId = $pdo->lastInsertId();
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Thank you! Your review has been submitted successfully.',
+            'action' => 'insert',
+            'review_id' => $newId
+        ]);
+    }
 } catch (PDOException $e) {
     echo json_encode([
         'status' => 'error',

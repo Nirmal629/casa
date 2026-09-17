@@ -100,3 +100,35 @@ function logoutUser(): void
     }
     session_destroy();
 }
+
+/**
+ * Check if current user is authorized to view product listing (Store).
+ * Allowed: Player, Host with 'H' tab/level (excluding 'A' - Agent and 'R' - Rakeback).
+ * @return bool
+ */
+function canViewProductListing(): bool
+{
+    startSession();
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['usertype'])) {
+        return true;
+    }
+
+    $userType = trim((string)($_SESSION['usertype'] ?? ''));
+    $userLevel = strtoupper(trim((string)($_SESSION['level'] ?? $_SESSION['vlevel'] ?? '')));
+    $userRole = strtoupper(trim((string)($_SESSION['role'] ?? '')));
+
+    // Player users can always view product listing
+    if (strcasecmp($userType, 'Player') === 0) {
+        return true;
+    }
+
+    // Host users: only allow Host 'H', exclude 'A' (Agent) and 'R' (Rakeback)
+    if (strcasecmp($userType, 'Host') === 0 || strcasecmp($userType, 'H') === 0) {
+        if ($userLevel === 'A' || $userLevel === 'R' || $userRole === 'A' || $userRole === 'R') {
+            return false;
+        }
+        return true;
+    }
+
+    return false;
+}

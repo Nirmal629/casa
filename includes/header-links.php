@@ -65,7 +65,7 @@
 
 <!-----css file link----->
 
-<link rel="stylesheet" href="assets/css/tournament.css?v=1.9.45" type="text/css">
+<link rel="stylesheet" href="assets/css/tournament.css?v=<?php echo time(); ?>" type="text/css">
 
 <link rel="stylesheet" href="assets/css/style.css?v=1.2.53" type="text/css">
 

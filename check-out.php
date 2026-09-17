@@ -61,6 +61,18 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $order_id = $stmt->insert_id;
     $stmt->close();
 
+    if (isset($_SESSION['user_id'])) {
+        logPlayerActivity(
+            $conn,
+            $_SESSION['user_id'],
+            'ORDER_PLACED',
+            'Placed order #' . $booking_no . ' (Total: $' . number_format($grand_total, 2) . ')',
+            null,
+            null,
+            ['booking_no' => $booking_no, 'order_id' => $order_id, 'total' => $grand_total, 'email' => $email]
+        );
+    }
+
     /* ========= INSERT ITEMS ========= */
 
     $stmt_item = $conn->prepare("
@@ -222,6 +234,25 @@ Thank you for shopping with us!`;
 
     exit;
 }
+
+if (isset($_SESSION['user_id']) && !empty($_SESSION['cart'])) {
+    $coTotal = 0;
+    $coCount = 0;
+    foreach ($_SESSION['cart'] as $cItem) {
+        $coTotal += ($cItem['price'] ?? 0) * ($cItem['quantity'] ?? 1);
+        $coCount += ($cItem['quantity'] ?? 1);
+    }
+    logPlayerActivity(
+        $conn,
+        $_SESSION['user_id'],
+        'CHECKOUT_INITIATED',
+        'Initiated checkout (' . $coCount . ' items, $' . number_format($coTotal, 2) . ')',
+        null,
+        null,
+        ['cart_count' => $coCount, 'cart_total' => $coTotal]
+    );
+}
+
 $selectUser = mysqli_query($conn,"select * from ca_users where ID='".$_SESSION['user_id']."'");
 $fetchUser = mysqli_fetch_assoc($selectUser);
 ?>

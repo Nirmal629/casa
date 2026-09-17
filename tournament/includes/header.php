@@ -98,7 +98,7 @@ $isPlayoffDashboard = ($tournamentCurrentPage === 'court-dashboard.php');
     <!-----css file link----->
     <link rel="stylesheet" href="assets/css/bracket.css" type="text/css">
 
-    <link rel="stylesheet" href="assets/css/style.css?v=1.24" type="text/css">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.26" type="text/css">
 </head>
 
 <body>

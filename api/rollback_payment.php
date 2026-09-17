@@ -67,6 +67,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $query = "DELETE FROM ca_payment WHERE GAME_ID = '$game_id' AND USER_ID = '$user_id' AND STATUS = 'Y'";
 
     if (mysqli_query($conn, $query)) {
+        logPlayerActivity(
+            $conn,
+            $user_id,
+            'ROLLBACK_PAYMENT',
+            "Rolled back payment for game ID $game_id (Player ID: $user_id)",
+            $host_id,
+            (int)$game_id,
+            ['year' => $year, 'month' => $month]
+        );
         // Shared renderer — grouped Event Cost / Payments / Balance layout
         require_once __DIR__ . '/render_player_pay_html.php';
         echo renderPlayerPayHtml($conn, $user_id, $year, $month);

@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include_once __DIR__ . '/../dbConnection.php';
+require_once __DIR__ . '/../helpers/session.php';
 
 $cartCount = isset($_SESSION['cart'])
     ? array_sum(array_column($_SESSION['cart'], 'quantity'))
@@ -41,7 +42,9 @@ if (isset($_SESSION['user_id'])) {
                         </a>
                     </li>
 
+                    <?php if (canViewProductListing()): ?>
                     <li><a href="product-listing.php" class="nav_link btn"><span class="">Store</span></a></li>
+                    <?php endif; ?>
                     <li><a href="<?= isset($_SESSION['usertype']) && $_SESSION['usertype'] == 'Host' ? 'host-dashboard.php' : 'player-dashboard.php' ?>"
                             class="nav_link btn"><span class="">Play</span></a></li>
                 </ul>

@@ -1,8 +1,16 @@
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-include('dbConnection.php');
+include_once('dbConnection.php');
+require_once __DIR__ . '/helpers/session.php';
+
+if (!canViewProductListing()) {
+    header("Location: " . (isset($_SESSION['usertype']) && strcasecmp($_SESSION['usertype'], 'Player') !== 0 ? 'host-dashboard.php' : 'index.php'));
+    exit;
+}
 
 $loggedIn = isset($_SESSION['user_id']);
 
@@ -16,11 +24,23 @@ if (!isset($_SESSION['cart'])) {
 
 
 
+
+// Log page view if no action is specified
+if (!isset($_GET['action']) && isset($_SESSION['user_id'])) {
+    logPlayerActivity(
+        $conn,
+        $_SESSION['user_id'],
+        'PRODUCT_LISTING_VIEW',
+        'Viewed Casa Store product listing',
+        null,
+        null,
+        ['cart_count' => count($_SESSION['cart'])]
+    );
+}
+
 /* ---------------- CART ACTIONS ---------------- */
 
 if (isset($_GET['action'], $_GET['id'])) {
-
-
 
     $productId = (int)$_GET['id'];
 
@@ -29,8 +49,6 @@ if (isset($_GET['action'], $_GET['id'])) {
     $selectedSize = $_GET['size'] ?? '';
 
     $tname = $_GET['tname'] ?? '';
-
-
 
     $stmt = $conn->prepare("SELECT PRODUCT_NAME, PRICE, IMAGE, QUANTITY, SIZE FROM ca_products WHERE ID=?");
 
@@ -42,19 +60,11 @@ if (isset($_GET['action'], $_GET['id'])) {
 
     $stmt->close();
 
-
-
     if ($product) {
-
-
 
         $stock = (int)$product['QUANTITY'];
 
-
-
         if ($action === 'add') {
-
-
 
             if (!empty($product['SIZE']) && empty($selectedSize)) {
 
@@ -64,11 +74,7 @@ if (isset($_GET['action'], $_GET['id'])) {
 
             }
 
-
-
             if ($stock > 0) {
-
-
 
                 if (isset($_SESSION['cart'][$productId])) {
 
@@ -98,11 +104,27 @@ if (isset($_GET['action'], $_GET['id'])) {
 
                 }
 
+                if (isset($_SESSION['user_id'])) {
+                    logPlayerActivity(
+                        $conn,
+                        $_SESSION['user_id'],
+                        'ADD_TO_CART',
+                        'Added product "' . $product['PRODUCT_NAME'] . '" to cart',
+                        null,
+                        null,
+                        [
+                            'product_id' => $productId,
+                            'product_name' => $product['PRODUCT_NAME'],
+                            'price' => $product['PRICE'],
+                            'size' => $selectedSize,
+                            'tname' => $tname
+                        ]
+                    );
+                }
+
             }
 
         }
-
-
 
         if ($action === 'increase' && isset($_SESSION['cart'][$productId])) {
 
@@ -112,9 +134,19 @@ if (isset($_GET['action'], $_GET['id'])) {
 
             }
 
+            if (isset($_SESSION['user_id'])) {
+                logPlayerActivity(
+                    $conn,
+                    $_SESSION['user_id'],
+                    'CART_QTY_CHANGED',
+                    'Increased cart quantity for product "' . $product['PRODUCT_NAME'] . '"',
+                    null,
+                    null,
+                    ['product_id' => $productId, 'product_name' => $product['PRODUCT_NAME'], 'action' => 'increase']
+                );
+            }
+
         }
-
-
 
         if ($action === 'decrease' && isset($_SESSION['cart'][$productId])) {
 
@@ -124,6 +156,18 @@ if (isset($_GET['action'], $_GET['id'])) {
 
                 unset($_SESSION['cart'][$productId]);
 
+            }
+
+            if (isset($_SESSION['user_id'])) {
+                logPlayerActivity(
+                    $conn,
+                    $_SESSION['user_id'],
+                    'CART_QTY_CHANGED',
+                    'Decreased cart quantity for product "' . $product['PRODUCT_NAME'] . '"',
+                    null,
+                    null,
+                    ['product_id' => $productId, 'product_name' => $product['PRODUCT_NAME'], 'action' => 'decrease']
+                );
             }
 
         }

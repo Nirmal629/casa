@@ -1,35 +1,4 @@
 <?php
-/**
- * Player Financial Ledger (host-side).
- *
- * NEW read-only feature ("View Ledger" button).
- *
- * POST: user_id (required), year, month, page
- *
- * Two modes:
- *   1. FILTERED (year + month both > 0):
- *        Renders the EXISTING month history UI (Quick Actions, Carry/Lock
- *        status, monthly calculations) by delegating 100% to
- *        renderPlayerPayHtml() — no changes to existing logic.
- *   2. FULL LEDGER (default, no filters):
- *        One continuous financial statement from the player's joining date
- *        under this host until today:
- *          Date & Time | Venue | Particulars | Debit | Credit | Running Balance
- *        - Chronological ASC; running balance updates after EVERY row.
- *        - Carry records (PreviousDue events, "Carry Forward from %" expenses,
- *          GAME_ID=0 carry payments) are shown INLINE as
- *          "Previous Due" / "Previous Advance" / "Carry Settlement" rows —
- *          NO separate "Opening Balance (Carry Forward)" section.
- *        - Server-side pagination: only displayed rows change; final totals
- *          are always computed from the COMPLETE ledger.
- *        - Summary at bottom: Total Amount, Total Payment,
- *          Total Due (if player owes host) or Total Advance (if host owes player).
- *        - Read-only: no Quick Actions, no lock/pending banners, no action column.
- *
- * CRITICAL: must NOT change any existing DB logic, queries, workflows, or
- * the $(".patmentTb").html() reload contract.
- */
-
 session_start();
 include('dbConnection.php');
 require_once __DIR__ . '/helpers/ledger_helper.php';
@@ -46,6 +15,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $host_id = (int)$_POST['host_id'];
     } elseif (isset($_GET['host_id']) && (int)$_GET['host_id'] > 0) {
         $host_id = (int)$_GET['host_id'];
+    }
+
+    // Activity Tracking: Log ledger viewing event into ca_player_logs
+    if ($user_id > 0) {
+        $logUser = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : $user_id;
+        $actType = ($year > 0 || $month > 0) ? 'MONTHLY_LEDGER_VIEW' : 'FULL_LEDGER_VIEW';
+        $desc = ($year > 0 || $month > 0) 
+            ? "Viewed monthly ledger for player ID $user_id (Year: $year, Month: $month)"
+            : "Viewed full ledger for player ID $user_id";
+        $meta = json_encode([
+            'main_tab' => 'Payment',
+            'nested_tab' => ($year > 0 || $month > 0) ? 'Monthly View Ledger' : 'Full Ledger',
+            'target_player_id' => $user_id,
+            'year' => $year ?: null,
+            'month' => $month ?: null,
+            'page' => 'view_player_ledger.php'
+        ], JSON_UNESCAPED_SLASHES);
+        logPlayerActivity($conn, $logUser, $actType, $desc, $host_id, null, $meta);
     }
 
     // Shared renderer — gives us formatPayAmount() and (for filtered mode)
@@ -78,20 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // ══════════════════════════════════════════════════════════════════
-    // MODE 1 — FILTERED: Year + Month → reuse the existing Month History UI
-    // ══════════════════════════════════════════════════════════════════
     if ($year > 0 && $month > 0) {
         echo $filterBar . renderPlayerPayHtml($conn, $user_id, $year, $month);
         mysqli_close($conn);
         exit;
     }
 
-    // ══════════════════════════════════════════════════════════════════
-    // MODE 2 — FULL LEDGER (default): joining date → today, read-only
-    // ══════════════════════════════════════════════════════════════════
-
-    // Player name (header context)
     $playerName = '';
     $nameRes = mysqli_query($conn, "SELECT NAME FROM ca_users WHERE ID = $user_id LIMIT 1");
     if ($nameRes && $nameRow = mysqli_fetch_assoc($nameRes)) {
@@ -319,18 +298,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <tbody>';
 
     $kindBadge = [
-        'game'         => ['Event Cost',   'k-event'],
-        'expense'      => ['Event Cost',   'k-event'],
+        'game'         => ['', ''],
+        'expense'      => ['', ''],
         'prev_due'     => ['Previous Due', 'k-prevdue'],
         'prev_adv'     => ['Previous Advance', 'k-advance'],
         'carry_settle' => ['Carry Settlement', 'k-settle'],
-        'payment'      => ['Payment',      'k-pay'],
+        'payment'      => ['', ''],
     ];
 
     $i = $offset + 1;
     foreach ($pageRows as $r) {
         $dt = $r['date'] . ' ' . (strlen((string) $r['time']) >= 5 ? substr($r['time'], 0, 5) : $r['time']);
         $badge = $kindBadge[$r['kind']] ?? ['', ''];
+        $badgeHtml = !empty($badge[0]) ? " <span class='pay-ledger-kind {$badge[1]}'>{$badge[0]}</span>" : "";
         $balClass = ($r['running'] < 0) ? ' pay-ledger-balance-neg' : ' pay-ledger-balance-pos';
         $venue = ($r['venue'] !== null && $r['venue'] !== '') ? htmlspecialchars($r['venue']) : '—';
 
@@ -342,8 +322,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <td>{$i}</td>
                 <td>{$dt}</td>
                 <td>{$venue}</td>
-                <td><span class='pay-ledger-particulars'>" . htmlspecialchars($r['particulars']) . "</span>
-                    <span class='pay-ledger-kind {$badge[1]}'>{$badge[0]}</span></td>
+                <td><span class='pay-ledger-particulars'>" . htmlspecialchars($r['particulars']) . "</span>{$badgeHtml}</td>
                 <td class='text-end pay-ledger-debit'>{$debitCell}</td>
                 <td class='text-end pay-ledger-credit'>{$creditCell}</td>
                 <td class='text-end pay-ledger-balance{$balClass}'>{$balCell}</td>

@@ -101,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE USER_ID = $user_id AND GAME_ID = $game_id AND STATUS = 'N'";
         }
         $conn->query($sql);
+        logPlayerActivity($conn, $user_id, 'APPROVE_PAYMENT', "Approved payment ID $payment_id for player ID $user_id", $host_id, $game_id, ['payment_id' => $payment_id, 'year' => $year, 'month' => $month]);
         $response['success'] = true;
         $response['message'] = 'Approved successfully';
     } elseif ($action === 'reject') {
@@ -114,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE USER_ID = $user_id AND GAME_ID = $game_id AND STATUS = 'N'";
         }
         $conn->query($sql);
+        logPlayerActivity($conn, $user_id, 'REJECT_PAYMENT', "Rejected payment ID $payment_id for player ID $user_id (Reason: $reason)", $host_id, $game_id, ['payment_id' => $payment_id, 'reason' => $reason, 'year' => $year, 'month' => $month]);
         $response['success'] = true;
         $response['message'] = 'Rejected successfully';
     } elseif ($action === 'reinitiate') {
@@ -121,6 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "UPDATE ca_payment SET STATUS = 'N', REJECTION_REASON = NULL, REVIEWED_BY = NULL, REVIEWED_AT = NULL
                     WHERE ID = $payment_id AND STATUS = 'R'";
             $conn->query($sql);
+            logPlayerActivity($conn, $user_id, 'REINITIATE_PAYMENT', "Re-initiated payment ID $payment_id for player ID $user_id", $host_id, $game_id, ['payment_id' => $payment_id, 'year' => $year, 'month' => $month]);
             $response['success'] = true;
             $response['message'] = 'Payment re-initiated successfully';
         } else {
@@ -173,9 +176,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 (USER_ID, GAME_ID, AMOUNT, PAYMENT_DATE, PAYMENT_TIME, PAYMENT_TYPE, DETAILS, STATUS, REVIEWED_BY, REVIEWED_AT, CREATED_AT)
                 VALUES 
                 ($user_id, $game_id, $amount, '$date', '$time', '$type', '$details', '$status', $reviewed_by, $reviewed_at, NOW())";
-        $conn->query($sql);
-        $response['success'] = true;
-        $response['message'] = $isPlayerSide ? 'Payment request submitted for approval.' : 'Payment added';
+        if ($conn->query($sql)) {
+            logPlayerActivity($conn, $user_id, 'SUBMIT_PAYMENT', "Submitted payment of $" . number_format($amount, 2) . " via $type for player ID $user_id", $host_id, $game_id, ['amount' => $amount, 'payment_type' => $type, 'details' => $details, 'year' => $year, 'month' => $month]);
+            $response['success'] = true;
+            $response['message'] = $isPlayerSide ? 'Payment request submitted for approval.' : 'Payment added';
+        } else {
+            $response['success'] = false;
+            $response['message'] = 'Failed to submit payment: ' . $conn->error;
+        }
     }
 
     // ✅ Step 2: Fetch the updated HTML (shared renderer — grouped layout)
