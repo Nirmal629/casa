@@ -4,18 +4,19 @@ error_reporting(0);
 header('Content-Type: application/json');
 
 /* --- 1. DATABASE CONNECTION (PDO) --- */
-$host    = 'localhost';
-$db      = 'casa_test';
-$user    = 'casa_test';
-$pass    = 'casa_test123#';
-$charset = 'utf8mb4';
+require_once __DIR__ . '/../../config/env.php';
+$host    = env('DB_HOST', 'localhost');
+$db      = env('DB_NAME', 'casa_test');
+$user    = env('DB_USER', 'root');
+$pass    = env('DB_PASS', '');
+$charset = env('DB_CHARSET', 'utf8mb4');
 
-if (empty($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+if (empty($_SESSION['csrf_token']) || ($_POST['csrf_token'] ?? '') !== $_SESSION['csrf_token']) {
     echo json_encode(['success' => false, 'message' => 'Invalid Security Token']); exit;
 }
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     $action = $_POST['action'] ?? '';
 
     switch ($action) {
@@ -118,6 +119,63 @@ try {
             echo json_encode(['success' => true]);
             break;
 
+        case 'update_team':
+            $teamId = (int) ($_POST['team_id'] ?? 0);
+            $teamName = trim($_POST['team_name'] ?? '');
+            $players = $_POST['players'] ?? [];
+
+            if ($teamId <= 0 || $teamName === '' || !is_array($players) || !$players) {
+                throw new Exception('Team name and player details are required.');
+            }
+
+            $teamCheck = $pdo->prepare('SELECT ID FROM to_teams WHERE ID = ?');
+            $teamCheck->execute([$teamId]);
+            if (!$teamCheck->fetchColumn()) {
+                throw new Exception('Team not found.');
+            }
+
+            $playerCheck = $pdo->prepare('SELECT ID FROM to_users WHERE ID = ? AND TEAM_ID = ?');
+            $updatePlayer = $pdo->prepare('UPDATE to_users SET NAME = ?, WHATSAPP_NUMBER = ?, EMAIL = ?, DOB = ?, GENDER = ?, CITY = ?, EXISTING = ? WHERE ID = ? AND TEAM_ID = ?');
+
+            $pdo->beginTransaction();
+            $pdo->prepare('UPDATE to_teams SET NAME = ? WHERE ID = ?')->execute([$teamName, $teamId]);
+
+            foreach ($players as $playerId => $player) {
+                $playerId = (int) $playerId;
+                $playerCheck->execute([$playerId, $teamId]);
+                if (!$playerCheck->fetchColumn()) {
+                    throw new Exception('A player does not belong to this team.');
+                }
+
+                $name = trim($player['name'] ?? '');
+                $email = trim($player['email'] ?? '');
+                if ($name === '' || $email === '') {
+                    throw new Exception('Player name and email are required.');
+                }
+
+                $gender = ($player['gender'] ?? '') === 'Female' ? 'Female' : 'Male';
+                $updatePlayer->execute([
+                    $name,
+                    trim($player['whatsapp'] ?? ''),
+                    $email,
+                    $player['dob'] ?: null,
+                    $gender,
+                    trim($player['city'] ?? ''),
+                    isset($player['exist']) ? 'Y' : 'N',
+                    $playerId,
+                    $teamId,
+                ]);
+            }
+
+            $pdo->commit();
+            echo json_encode(['success' => true]);
+            break;
+
         default: throw new Exception("Invalid Action");
     }
-} catch (Exception $e) { echo json_encode(['success' => false, 'message' => $e->getMessage()]); }
+} catch (Exception $e) {
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
