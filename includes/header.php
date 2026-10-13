@@ -28,12 +28,8 @@ if ($advertisementStmt) {
 }
 
 $count_ads = count($advertisements);
-$user = [];
-if (!empty($_SESSION['user_id'])) {
-    $userId = (int) $_SESSION['user_id'];
-    $select_user = mysqli_query($conn, "SELECT * FROM ca_users WHERE ID = $userId");
-    $user = mysqli_fetch_assoc($select_user) ?: [];
-}
+$select_user = mysqli_query($conn, "select * from ca_users where ID='" . $_SESSION['user_id'] . "'");
+$user = mysqli_fetch_assoc($select_user);
 ?>
 
 <!DOCTYPE html>

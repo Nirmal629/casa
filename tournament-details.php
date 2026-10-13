@@ -1,12 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
 <style>
     .popup-message-content h3 {
 
@@ -150,6 +141,15 @@ if (empty($_SESSION['csrf_token'])) {
 </style>
 
 <?php
+
+session_start();
+
+if (empty($_SESSION['csrf_token'])) {
+
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+
 
 // 1. Include Database Connection
 

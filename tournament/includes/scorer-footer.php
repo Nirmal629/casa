@@ -89,14 +89,14 @@
     $('#t1_p2').val(teamAPlayers[1].name);
     $('#t2_p1').val(teamBPlayers[0].name);
     $('#t2_p2').val(teamBPlayers[1].name);
-    $('#team-a-names').text(window.initialMatchData.team1Name || 'Team 1');
-    $('#team-b-names').text(window.initialMatchData.team2Name || 'Team 2');
+    $('#team-a-names').html(teamAPlayers[0].name + '<br>' + teamAPlayers[1].name);
+    $('#team-b-names').html(teamBPlayers[0].name + '<br>' + teamBPlayers[1].name);
 
     if (typeof player !== 'undefined') {
-      playerA = new player(teamAPlayers[0].name, teamAPlayers[0].src, false);
-      playerB = new player(teamAPlayers[1].name, teamAPlayers[1].src, true);
-      playerC = new player(teamBPlayers[0].name, teamBPlayers[0].src, false);
-      playerD = new player(teamBPlayers[1].name, teamBPlayers[1].src, true);
+      playerA = new player(teamAPlayers[0].name, 'assets/images/blue-player.png', false);
+      playerB = new player(teamAPlayers[1].name, 'assets/images/yellow-player.png', true);
+      playerC = new player(teamBPlayers[0].name, 'assets/images/green-player.png', false);
+      playerD = new player(teamBPlayers[1].name, 'assets/images/red-player.png', true);
     }
 
     window.liveMatchState = {
@@ -159,7 +159,13 @@
     $('#setScoreBoard').on('shown.bs.modal', function () {
       renderSetScoreBoard(true);
     });
-    $('#set-board-save-all').on('click', saveSetBoardManualScore);
+    $('#set-board-edit-a').on('click', function () {
+      enableSetBoardEdit('A');
+    });
+    $('#set-board-edit-b').on('click', function () {
+      enableSetBoardEdit('B');
+    });
+    $('#set-board-save-a, #set-board-save-b, #set-board-save-all').on('click', saveSetBoardManualScore);
     $('#set-board-plus-a').on('click', function () {
       addSetBoardPoint('A');
     });
@@ -167,7 +173,7 @@
       addSetBoardPoint('B');
     });
     $('#set-board-score-a, #set-board-score-b').on('input', updateSetBoardLiveScore);
-    $('#undo-point').on('click', undoLastPoint);
+    $('#undo-point, #set-board-undo-point').on('click', undoLastPoint);
     $('#matchResult').on('shown.bs.modal', renderMatchResult);
     $('#match-result-set-breakdown').on('click', '[data-setup-action]', handleMatchSetupAction);
   });
@@ -180,21 +186,16 @@
       const fallbackName = String(names[index] || '').trim();
       return {
         id: parseInt(row.id || 0, 10),
-        name: rowName || fallbackName || 'PLAYER NAME',
-        image: String(row.image || '').trim()
+        name: rowName || fallbackName || 'PLAYER NAME'
       };
     });
   }
 
   function assignPlayerImages(teamAPlayers, teamBPlayers) {
-    const profileImageUrl = function (player, fallback) {
-      const fileName = String(player.image || '').split(/[\\/]/).pop();
-      return fileName ? '../profile_img/' + encodeURIComponent(fileName) : fallback;
-    };
-    teamAPlayers[0].src = profileImageUrl(teamAPlayers[0], 'assets/images/Player/man1.png');
-    teamAPlayers[1].src = profileImageUrl(teamAPlayers[1], 'assets/images/Player/man2.png');
-    teamBPlayers[0].src = profileImageUrl(teamBPlayers[0], 'assets/images/Player/man4.png');
-    teamBPlayers[1].src = profileImageUrl(teamBPlayers[1], 'assets/images/Player/man3.png');
+    teamAPlayers[0].src = 'assets/images/Player/man1.png';
+    teamAPlayers[1].src = 'assets/images/Player/man2.png';
+    teamBPlayers[0].src = 'assets/images/Player/man4.png';
+    teamBPlayers[1].src = 'assets/images/Player/man3.png';
   }
 
   function updateVoiceButton() {
@@ -239,10 +240,8 @@
     $('#t2_name').val(getTeamName(rightTeam));
     $('#t1_p1').val(state.players[leftTeam][state.positions[leftTeam].odd].name);
     $('#t1_p2').val(state.players[leftTeam][state.positions[leftTeam].even].name);
-    // The right court's top card is its even service area, so its modal fields
-    // must use the same top-to-bottom order the user sees on the court.
-    $('#t2_p1').val(state.players[rightTeam][state.positions[rightTeam].even].name);
-    $('#t2_p2').val(state.players[rightTeam][state.positions[rightTeam].odd].name);
+    $('#t2_p1').val(state.players[rightTeam][state.positions[rightTeam].odd].name);
+    $('#t2_p2').val(state.players[rightTeam][state.positions[rightTeam].even].name);
   }
 
   function swapPlayersOnDisplayedCourtSide(side) {
@@ -261,33 +260,36 @@
     const rightTeam = teamOnCourtSide('right');
     const leftName = String($('#t1_name').val() || '').trim() || 'Team 1';
     const rightName = String($('#t2_name').val() || '').trim() || 'Team 2';
-    const leftTopPlayer = String($('#t1_p1').val() || '').trim() || 'PLAYER NAME';
-    const leftBottomPlayer = String($('#t1_p2').val() || '').trim() || 'PLAYER NAME';
-    const rightTopPlayer = String($('#t2_p1').val() || '').trim() || 'PLAYER NAME';
-    const rightBottomPlayer = String($('#t2_p2').val() || '').trim() || 'PLAYER NAME';
+    const leftPlayer1 = String($('#t1_p1').val() || '').trim() || 'PLAYER NAME';
+    const leftPlayer2 = String($('#t1_p2').val() || '').trim() || 'PLAYER NAME';
+    const rightPlayer1 = String($('#t2_p1').val() || '').trim() || 'PLAYER NAME';
+    const rightPlayer2 = String($('#t2_p2').val() || '').trim() || 'PLAYER NAME';
     const team1Name = leftTeam === 'A' ? leftName : rightName;
     const team2Name = leftTeam === 'B' ? leftName : rightName;
-
-    // Save names into the players currently occupying each physical court spot.
-    // This prevents a right-side swap from looking correct on the court but
-    // reverting in the Match Configuration modal.
-    state.players[leftTeam][state.positions[leftTeam].odd].name = leftTopPlayer;
-    state.players[leftTeam][state.positions[leftTeam].even].name = leftBottomPlayer;
-    state.players[rightTeam][state.positions[rightTeam].even].name = rightTopPlayer;
-    state.players[rightTeam][state.positions[rightTeam].odd].name = rightBottomPlayer;
-
-    const teamAPlayer1 = state.players.A[0].name;
-    const teamAPlayer2 = state.players.A[1].name;
-    const teamBPlayer1 = state.players.B[0].name;
-    const teamBPlayer2 = state.players.B[1].name;
+    const teamAPlayer1 = leftTeam === 'A' ? leftPlayer1 : rightPlayer1;
+    const teamAPlayer2 = leftTeam === 'A' ? leftPlayer2 : rightPlayer2;
+    const teamBPlayer1 = leftTeam === 'B' ? leftPlayer1 : rightPlayer1;
+    const teamBPlayer2 = leftTeam === 'B' ? leftPlayer2 : rightPlayer2;
 
     window.initialMatchData.team1Name = team1Name;
     window.initialMatchData.team2Name = team2Name;
     window.initialMatchData.teamA = [teamAPlayer1, teamAPlayer2];
     window.initialMatchData.teamB = [teamBPlayer1, teamBPlayer2];
+    state.players.A[0].name = teamAPlayer1;
+    state.players.A[1].name = teamAPlayer2;
+    state.players.B[0].name = teamBPlayer1;
+    state.players.B[1].name = teamBPlayer2;
+
+    $('#team-a-player-1, #mini-team-a-player-1').val(teamAPlayer1);
+    $('#team-a-player-2, #mini-team-a-player-2').val(teamAPlayer2);
+    $('#team-b-player-1, #mini-team-b-player-1').val(teamBPlayer1);
+    $('#team-b-player-2, #mini-team-b-player-2').val(teamBPlayer2);
+    $('#team-a-names').html(teamAPlayer1 + '<br>' + teamAPlayer2);
+    $('#team-b-names').html(teamBPlayer1 + '<br>' + teamBPlayer2);
+    $('#left-court-team-name').text(team1Name);
+    $('#right-court-team-name').text(team2Name);
     renderPlayableScore();
     renderDoublesCourt();
-    syncMatchConfigFromState();
     renderMatchResult();
   }
 
@@ -472,15 +474,26 @@
     }
 
     if (resetEditMode) {
-      setSetBoardReadOnly(!scorerCanManage());
+      setSetBoardReadOnly(true);
     }
 
-    const selectedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: state.scoreA, b: state.scoreB};
-    $('#set-board-score-a').val(selectedScore.a);
-    $('#set-board-score-b').val(selectedScore.b);
+    if (!setBoardIsEditing('A')) {
+      const selectedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: state.scoreA, b: state.scoreB};
+      $('#set-board-score-a').val(selectedScore.a);
+    }
+    if (!setBoardIsEditing('B')) {
+      const selectedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: state.scoreA, b: state.scoreB};
+      $('#set-board-score-b').val(selectedScore.b);
+    }
     updateSetBoardLiveScore();
+    $('#set-board-team-a-name').text(getTeamName('A'));
+    $('#set-board-team-b-name').text(getTeamName('B'));
     $('#set-board-score-a-label').text(getTeamName('A'));
     $('#set-board-score-b-label').text(getTeamName('B'));
+    $('#set-board-team-a-players').html(state.players.A[0].name + '<br>' + state.players.A[1].name);
+    $('#set-board-team-b-players').html(state.players.B[0].name + '<br>' + state.players.B[1].name);
+    const displayedScore = state.setScores[(state.editingSetNo || state.setNo) - 1] || {a: 0, b: 0};
+    $('#set-board-winner').val(displayedScore.a > displayedScore.b ? 'A' : (displayedScore.b > displayedScore.a ? 'B' : ''));
     updateSetBoardEditingUi();
   }
 
@@ -510,7 +523,14 @@
   }
 
   function updateSetBoardEditingUi() {
-    $('#set-board-plus-a, #set-board-plus-b, #set-board-save-all').prop('disabled', false).removeClass('is-disabled');
+    ['A', 'B'].forEach(function (teamKey) {
+      const suffix = teamKey.toLowerCase();
+      const editing = setBoardIsEditing(teamKey);
+      $('#set-board-plus-' + suffix).prop('disabled', !editing).toggleClass('is-disabled', !editing);
+      $('#set-board-save-' + suffix).prop('disabled', !editing).toggleClass('is-disabled', !editing);
+      $('#set-board-edit-' + suffix).toggleClass('is-active', editing);
+    });
+    $('#set-board-save-all').prop('disabled', !setBoardIsEditing()).toggleClass('is-disabled', !setBoardIsEditing());
   }
 
   function readSetBoardScore(selector) {
@@ -522,9 +542,12 @@
   }
 
   function addSetBoardPoint(teamKey) {
-    const selector = teamKey === 'A' ? '#set-board-score-a' : '#set-board-score-b';
-    $(selector).val(Math.min(readSetBoardScore(selector) + 1, 99));
-    updateSetBoardLiveScore();
+    if (setBoardIsEditing(teamKey)) {
+      const selector = teamKey === 'A' ? '#set-board-score-a' : '#set-board-score-b';
+      $(selector).val(Math.min(readSetBoardScore(selector) + 1, 99));
+      updateSetBoardLiveScore();
+      return;
+    }
   }
 
   function saveSetBoardManualScore() {
@@ -537,9 +560,10 @@
     const scoreA = readSetBoardScore('#set-board-score-a');
     const scoreB = readSetBoardScore('#set-board-score-b');
     const setIndex = (state.editingSetNo || state.setNo) - 1;
-    const winner = scoreA > scoreB ? 'A' : (scoreB > scoreA ? 'B' : '');
+    const naturalWinner = isBadmintonSetWon(scoreA, scoreB) ? (scoreA > scoreB ? 'A' : 'B') : '';
+    const winner = naturalWinner || String($('#set-board-winner').val() || '');
     if (!winner) {
-      alert('Enter different scores so the set winner can be determined.');
+      alert('Choose the winner of this set before saving the manual score.');
       return;
     }
     state.completedSets[setIndex] = {a: scoreA, b: scoreB};
@@ -558,7 +582,7 @@
       state.isStarted = true;
       state.isCompleted = matchCompleted;
       startGame = true;
-      setSetBoardReadOnly(false);
+      setSetBoardReadOnly(true);
       renderPlayableScore();
       renderDoublesCourt();
       renderMatchResult();
@@ -611,10 +635,10 @@
     const rightTeam = teamOnCourtSide('right');
     renderPhysicalCourtSide('left', leftTeam);
     renderPhysicalCourtSide('right', rightTeam);
-    // The header represents the two physical court sides, so it follows a
-    // left/right court swap as well.
-    $('#team-a-names').text(getTeamName(leftTeam));
-    $('#team-b-names').text(getTeamName(rightTeam));
+    $('#left-court-team-name').text(getTeamName(leftTeam));
+    $('#right-court-team-name').text(getTeamName(rightTeam));
+    $('#team-a-names').html(state.players.A[0].name + '<br>' + state.players.A[1].name);
+    $('#team-b-names').html(state.players.B[0].name + '<br>' + state.players.B[1].name);
     $('#team-a-player-1, #team-a-player-2, #team-b-player-1, #team-b-player-2').show();
     $('.team-a-player-1-img, .team-a-player-2-img, .team-b-player-1-img, .team-b-player-2-img').show();
 

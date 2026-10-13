@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Username and Password are required.";
     } else {
         // Prepare the SQL statement
-        $stmt = mysqli_query($conn,"SELECT ID, TYPE, USER_NAME, PASSWORD, NAME FROM ca_admin WHERE USER_NAME = '".$username."'");
+        $stmt = mysqli_query($conn,"SELECT ID,TYPE, USER_NAME, PASSWORD FROM ca_admin WHERE USER_NAME = '".$username."'");
         
         if($stmt)
         {

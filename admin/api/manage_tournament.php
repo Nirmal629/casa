@@ -2,14 +2,13 @@
 // Start buffering to prevent accidental whitespace from breaking JSON
 ob_start();
 header('Content-Type: application/json');
-require_once __DIR__ . '/../../config/env.php';
 
 /* --- 1. DATABASE CONNECTION --- */
-$host    = env('DB_HOST', 'localhost');
-$db      = env('DB_NAME', 'casa_test');
-$user    = env('DB_USER', 'root');
-$pass    = env('DB_PASS', '');
-$charset = env('DB_CHARSET', 'utf8mb4');
+$host    = 'localhost';
+$db      = 'casa_test';
+$user    = 'casa_test';
+$pass    = 'casa_test123#';
+$charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
@@ -54,30 +53,18 @@ try {
         $id = $_POST['event_id'];
         $conn->beginTransaction();
 
-        $hostId = (int) ($_POST['host_id'] ?? 0);
-        if ($hostId <= 0) {
-            throw new Exception('Please select a host.');
-        }
-        $hostStmt = $conn->prepare("SELECT NAME FROM ca_users WHERE ID = ? AND USERTYPE = 'Host' AND DEL_STATUS = 'N'");
-        $hostStmt->execute([$hostId]);
-        $hostName = $hostStmt->fetchColumn();
-        if ($hostName === false) {
-            throw new Exception('The selected host is not available.');
-        }
-
         // Skill Mapping (Sync with Add Page logic)
         $raw_skill = $_POST['skill_level'] ?? 'Int';
         $skill_map = ["Adv" => "Advance", "Int+" => "Intermediate", "Int" => "Intermediate", "All" => "All"];
         $gender_skill_level = $skill_map[$raw_skill] ?? 'Intermediate';
 
         $sql = "UPDATE to_tournaments SET 
-                HOST_ID = ?, HOST_NAME = ?, CUP_NAME = ?, EVENT_COUNTRY = ?, EVENT_PROVINCE = ?,
+                HOST_NAME = ?, CUP_NAME = ?, EVENT_COUNTRY = ?, EVENT_PROVINCE = ?, 
                 EVENT_CITY = ?, EVENT_CURRENCY = ?, EVENT_VENUE = ?, EVENT_CATEGORY = ?, 
                 GENDER_CATEGORY = ?, EVENT_TYPE = ?, GENDER_SKILL_LEVEL = ?, 
                 EVENT_DATE = ?, EVENT_TIME = ?, TO_TIME = ?, 
                 CANCEL_DATE = ?, CANCEL_TIME = ?, EVENT_COST = ?, 
-                EVENT_DESCRIPTION = ?, EVENT_MESSAGE = ?, FACILITY_COST = ?, ACCESSORIES_COST = ?, SNACKS_COST = ?,
-                TOTAL_EVENT_COST = ?, TOTAL_PLAYER_COST = ?, PROFIT_LOSS = ?, CLUB_COST = ?, BIRDIE_USED = ?, BIRDIE_COST = ?, BIRDIE_PRICE = ?,
+                EVENT_DESCRIPTION = ?, EVENT_MESSAGE = ?,
                 AMOUNT = ?, PAYMENT_ID = ?, PAYMENT_DEADLINE = ?, 
                 REPORTING_TIME = ?, MATCH_START_TIME = ?, DRAW_ANNOUNCEMENT = ?, 
                 SHUTTLE_TYPE = ?, MATCH_FORMAT = ?, POPUP_MESSAGE = ?, PAYMENT_MAIL = ?
@@ -85,8 +72,7 @@ try {
         
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            $hostId,
-            $hostName,
+            clean($_POST['host_name']), 
             clean($_POST['cup_name']), 
             clean($_POST['event_country']), 
             clean($_POST['event_province']),
@@ -105,16 +91,6 @@ try {
             clean($_POST['event_cost']),
             $_POST['event_description'], 
             $_POST['event_message'],
-            clean($_POST['facility_cost'] ?? ''),
-            clean($_POST['accessories_cost'] ?? ''),
-            clean($_POST['snacks_cost'] ?? ''),
-            clean($_POST['total_event_cost'] ?? ''),
-            clean($_POST['total_player_cost'] ?? ''),
-            clean($_POST['profit_loss'] ?? ''),
-            clean($_POST['club_cost'] ?? ''),
-            clean($_POST['birdie_used'] ?? ''),
-            clean($_POST['birdie_cost'] ?? ''),
-            clean($_POST['birdie_price'] ?? ''),
             clean($_POST['amount']),
             clean($_POST['payment_id']),
             clean($_POST['payment_deadline']),
