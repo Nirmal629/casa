@@ -1,13 +1,15 @@
 <?php
+require_once __DIR__ . '/../config/env.php';
+
 // 1. Get ID and Fetch Data
 $id = $_GET['id'] ?? 0;
 // Database Connection for the list view
-$host    = 'localhost';
-$db      = 'casa_test';
-$user    = 'casa_test';
-$pass    = 'casa_test123#';
-$charset = 'utf8mb4';
-$dsn     = "mysql:host=$host;dbname=$db;charset=utf8";
+$host    = env('DB_HOST', 'localhost');
+$db      = env('DB_NAME', 'casa_test');
+$user    = env('DB_USER', 'root');
+$pass    = env('DB_PASS', '');
+$charset = env('DB_CHARSET', 'utf8mb4');
+$dsn     = "mysql:host=$host;dbname=$db;charset=$charset";
 $conn = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);include "header.php"; // Using your header
 include "sidebar.php"; // Using your sidebar
 
@@ -140,7 +142,7 @@ try {
 
                         <footer class="panel-footer mt-4 text-right">
                             <button type="submit" id="btnUpdateTeam" class="btn btn-primary">Update Entire Team</button>
-                            <a href="manage_registrations.php" class="btn btn-default">Cancel</a>
+                            <a href="enrolled_tournaments.php?tournament_id=<?php echo (int) ($team['TOURNAMENT_ID'] ?? 0); ?>" class="btn btn-default">Cancel</a>
                         </footer>
                     </form>
                 </div>
@@ -165,7 +167,7 @@ try {
             success: function(data) {
                 if (data.success) {
                     alert("Team registration updated successfully!");
-                    window.location.href = 'enrolled_tournaments.php';
+                    window.location.href = 'enrolled_tournaments.php?tournament_id=<?php echo (int) ($team['TOURNAMENT_ID'] ?? 0); ?>';
                 } else {
                     alert("Error: " + data.message);
                     submitBtn.prop('disabled', false).text("Update Entire Team");

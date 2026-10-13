@@ -27,8 +27,8 @@ try {
                 m.*,
                 t1.NAME AS TEAM_1_NAME,
                 t2.NAME AS TEAM_2_NAME,
-                (SELECT GROUP_CONCAT(CONCAT(u.ID, ':', TRIM(u.NAME)) ORDER BY u.ID SEPARATOR '||') FROM to_users u WHERE u.TEAM_ID = t1.ID AND TRIM(COALESCE(u.NAME, '')) <> '') AS TEAM_1_PLAYERS,
-                (SELECT GROUP_CONCAT(CONCAT(u.ID, ':', TRIM(u.NAME)) ORDER BY u.ID SEPARATOR '||') FROM to_users u WHERE u.TEAM_ID = t2.ID AND TRIM(COALESCE(u.NAME, '')) <> '') AS TEAM_2_PLAYERS
+                (SELECT GROUP_CONCAT(CONCAT(u.ID, ':', TRIM(u.NAME), ':', COALESCE(u.PROFILE_IMAGE, '')) ORDER BY u.ID SEPARATOR '||') FROM to_users u WHERE u.TEAM_ID = t1.ID AND TRIM(COALESCE(u.NAME, '')) <> '') AS TEAM_1_PLAYERS,
+                (SELECT GROUP_CONCAT(CONCAT(u.ID, ':', TRIM(u.NAME), ':', COALESCE(u.PROFILE_IMAGE, '')) ORDER BY u.ID SEPARATOR '||') FROM to_users u WHERE u.TEAM_ID = t2.ID AND TRIM(COALESCE(u.NAME, '')) <> '') AS TEAM_2_PLAYERS
             FROM to_matches m
             INNER JOIN to_teams t1 ON t1.ID = m.TEAM_1_ID
             INNER JOIN to_teams t2 ON t2.ID = m.TEAM_2_ID
@@ -55,23 +55,25 @@ try {
             }
 
             foreach (array_values(array_filter(explode('||', $matchData['TEAM_1_PLAYERS'] ?? ''))) as $playerRow) {
-                $playerParts = array_pad(explode(':', $playerRow, 2), 2, '');
+                $playerParts = array_pad(explode(':', $playerRow, 3), 3, '');
                 $playerId = $playerParts[0];
                 $playerName = trim($playerParts[1]);
+                $playerImage = trim($playerParts[2]);
                 if ($playerName === '') {
                     continue;
                 }
-                $team1PlayerRows[] = ['id' => (int)$playerId, 'name' => $playerName];
+                $team1PlayerRows[] = ['id' => (int)$playerId, 'name' => $playerName, 'image' => $playerImage];
                 $team1Players[] = $playerName;
             }
             foreach (array_values(array_filter(explode('||', $matchData['TEAM_2_PLAYERS'] ?? ''))) as $playerRow) {
-                $playerParts = array_pad(explode(':', $playerRow, 2), 2, '');
+                $playerParts = array_pad(explode(':', $playerRow, 3), 3, '');
                 $playerId = $playerParts[0];
                 $playerName = trim($playerParts[1]);
+                $playerImage = trim($playerParts[2]);
                 if ($playerName === '') {
                     continue;
                 }
-                $team2PlayerRows[] = ['id' => (int)$playerId, 'name' => $playerName];
+                $team2PlayerRows[] = ['id' => (int)$playerId, 'name' => $playerName, 'image' => $playerImage];
                 $team2Players[] = $playerName;
             }
 
@@ -168,7 +170,7 @@ if (!empty($completedSetScores)) {
 
 
 <!-----body-top---->
-<section class="container-fluid" style="position: relative; display: flex; align-items: center; justify-content: space-around; padding: 0 15px; gap: 20px;">
+<section class="container-fluid scorer-top-controls">
     <!----left-action---->
     <div class="left-action-container">
         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&group=<?php echo urlencode($matchData['GROUP_NAME'] ?? ''); ?>" class="scorerback_btn btn btn-outline-info"><i class="fa-solid fa-arrow-left mr-1"></i></a>
@@ -181,7 +183,7 @@ if (!empty($completedSetScores)) {
             <div class="scoreboard-side-score" id="team-a-match-score">0</div>
             <div class="team-a-players">
                 <i id="team-a-winner-crown" class="fa-solid fa-crown scorer-winner-crown" title="Match winner" aria-label="Match winner"></i>
-                <p id="team-a-names" class="m-0"><?php echo htmlspecialchars($team1Player1); ?><br><?php echo htmlspecialchars($team1Player2); ?></p>
+                <p id="team-a-names" class="m-0 scoreboard-team-name"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></p>
             </div>
 
             <div class="scoreboard-sets">
@@ -210,7 +212,7 @@ if (!empty($completedSetScores)) {
 
             <div class="team-b-players">
                 <i id="team-b-winner-crown" class="fa-solid fa-crown scorer-winner-crown" title="Match winner" aria-label="Match winner"></i>
-                <p id="team-b-names" class="m-0"><?php echo htmlspecialchars($team2Player1); ?><br><?php echo htmlspecialchars($team2Player2); ?></p>
+                <p id="team-b-names" class="m-0 scoreboard-team-name"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></p>
             </div>
             <div class="scoreboard-side-score" id="team-b-match-score">0</div>
         </div>
@@ -220,21 +222,14 @@ if (!empty($completedSetScores)) {
     <div class="setup-menu-container">
         <nav class="navbar navbar-expand-sm header-navbar">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link btn btn-outline-info" href="#" id="navSetupMenuDropdownMenuLink" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item">
+                    <button type="button" class="nav-link btn btn-outline-info" id="navSetupMenuDropdownMenuLink"
+                        data-toggle="modal" data-target="#matchResult" title="Match Setup" aria-label="Open Match Setup">
                         <i class="fa-solid fa-gear"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" id="menu-dropdown-list" aria-labelledby="navSetupMenuDropdownMenuLink">
-                        <a class="dropdown-item" data-toggle="modal" data-target="#matchResult"><i class="fa-solid fa-sliders mr-2"></i>Match Setup</a>
-                    </div>
+                    </button>
                 </li>
             </ul>
         </nav>
-
-        <button type="button" class="btn btn-sm btn-outline-info scorer-log-toggle" data-toggle="modal" data-target="#matchLog" title="Match log">
-            <i class="fa-solid fa-list-ul"></i>
-        </button>
 
         <button type="button" id="voice-toggle" class="btn btn-sm btn-outline-info scorer-voice-toggle" title="Voice announcements">
             <i class="fa-solid fa-volume-high"></i>
@@ -257,11 +252,9 @@ if (!empty($completedSetScores)) {
 
             <div class="row court-row">
                 <div class="col top-sideline">
-                    <span id="left-court-team-name"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1 name'); ?></span>
                     <?php if ($canManage): ?>
                     <button type="button" id="undo-point" class="btn-link fw-bold">Undo</button>
                     <?php endif; ?>
-                    <span id="right-court-team-name"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2 name'); ?></span>
                 </div>
                 <div class="col left-court-area">
                     <div class="col left-court-long-service-line"></div>
@@ -507,9 +500,16 @@ if (!empty($completedSetScores)) {
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h6 class="modal-title text-info fw-bold text-uppercase small" id="setScoreBoardLabel"><i class="fa-regular fa-clipboard mr-2"></i>Set Score Board</h6>
-                <button type="button" class="close match-config-icon-btn" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="set-board-header-actions">
+                    <?php if ($canManage): ?>
+                    <button type="button" id="set-board-save-all" class="set-board-save-all" title="Save score" aria-label="Save score">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                    <?php endif; ?>
+                    <button type="button" class="close match-config-icon-btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="set-board-panel mx-auto">
@@ -521,63 +521,15 @@ if (!empty($completedSetScores)) {
                     <div class="set-board-score-strip">
                         <div class="set-board-score-box">
                             <span id="set-board-score-a-label"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></span>
-                            <input type="number" id="set-board-score-a" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam1Score; ?>" readonly>
-                        </div>
-                        <div class="set-board-score-center">
-                            <span>Current Score</span>
-                            <strong id="set-board-live-score" class="set-board-live-score"><?php echo (int)$initialTeam1Score; ?> - <?php echo (int)$initialTeam2Score; ?></strong>
+                            <input type="number" id="set-board-score-a" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam1Score; ?>">
+                            <?php if ($canManage): ?><button type="button" class="set-board-plus" id="set-board-plus-a">+1</button><?php endif; ?>
                         </div>
                         <div class="set-board-score-box">
                             <span id="set-board-score-b-label"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></span>
-                            <input type="number" id="set-board-score-b" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam2Score; ?>" readonly>
+                            <input type="number" id="set-board-score-b" class="set-board-score-input" min="0" max="99" value="<?php echo (int)$initialTeam2Score; ?>">
+                            <?php if ($canManage): ?><button type="button" class="set-board-plus" id="set-board-plus-b">+1</button><?php endif; ?>
                         </div>
                     </div>
-                    <?php if ($canManage): ?>
-                    <div class="mt-2 text-center">
-                        <label for="set-board-winner" class="small text-muted mb-1">Set winner (for manual score)</label>
-                        <select id="set-board-winner" class="form-control form-control-sm mx-auto" style="max-width: 220px;">
-                            <option value="">Choose winner</option>
-                            <option value="A"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></option>
-                            <option value="B"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></option>
-                        </select>
-                    </div>
-                    <?php endif; ?>
-
-                    <div class="set-board-court">
-                        <div class="set-board-net"></div>
-                        <div class="set-board-team set-board-team-left">
-                            <div class="set-board-team-card">
-                                <strong id="set-board-team-a-name"><?php echo htmlspecialchars($matchData['TEAM_1_NAME'] ?? 'Team 1'); ?></strong>
-                                <span id="set-board-team-a-players"><?php echo htmlspecialchars($team1Player1); ?><br><?php echo htmlspecialchars($team1Player2); ?></span>
-                            </div>
-                            <?php if ($canManage): ?>
-                            <div class="set-board-actions">
-                                <button type="button" class="set-board-action-btn" id="set-board-edit-a"><i class="fa-solid fa-pen"></i>Edit</button>
-                                <button type="button" class="set-board-plus" id="set-board-plus-a">+1</button>
-                                <button type="button" class="set-board-action-btn" id="set-board-save-a"><i class="fa-solid fa-check"></i>Save</button>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="set-board-team set-board-team-right">
-                            <div class="set-board-team-card">
-                                <strong id="set-board-team-b-name"><?php echo htmlspecialchars($matchData['TEAM_2_NAME'] ?? 'Team 2'); ?></strong>
-                                <span id="set-board-team-b-players"><?php echo htmlspecialchars($team2Player1); ?><br><?php echo htmlspecialchars($team2Player2); ?></span>
-                            </div>
-                            <?php if ($canManage): ?>
-                            <div class="set-board-actions">
-                                <button type="button" class="set-board-action-btn" id="set-board-edit-b"><i class="fa-solid fa-pen"></i>Edit</button>
-                                <button type="button" class="set-board-plus" id="set-board-plus-b">+1</button>
-                                <button type="button" class="set-board-action-btn" id="set-board-save-b"><i class="fa-solid fa-check"></i>Save</button>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php if ($canManage): ?>
-                    <div class="set-board-footer-actions">
-                        <button type="button" id="set-board-undo-point">Undo Last Point</button>
-                        <button type="button" id="set-board-save-all" class="set-board-save-all">Save Score</button>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

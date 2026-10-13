@@ -1,12 +1,14 @@
 <?php
+require_once __DIR__ . '/../config/env.php';
+
 include('header.php');
 include('sidebar.php');
 
-$host = 'localhost';
-$db = 'casa_test';
-$user = 'casa_test';
-$pass = 'casa_test123#';
-$dsn = "mysql:host=$host;dbname=$db;charset=utf8";
+$host = env('DB_HOST', 'localhost');
+$db = env('DB_NAME', 'casa_test');
+$user = env('DB_USER', 'root');
+$pass = env('DB_PASS', '');
+$dsn = "mysql:host=$host;dbname=$db;charset=" . env('DB_CHARSET', 'utf8mb4');
 $conn = new PDO($dsn, $user, $pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 
 function h($value)
@@ -18,7 +20,7 @@ $hosts = $conn->query("SELECT ID, NAME FROM ca_users WHERE USERTYPE = 'Host' AND
 $countries = $conn->query("SELECT DISTINCT EVENT_COUNTRY FROM to_tournaments WHERE EVENT_COUNTRY != '' ORDER BY EVENT_COUNTRY ASC")->fetchAll(PDO::FETCH_COLUMN);
 $provinces = $conn->query("SELECT DISTINCT EVENT_PROVINCE FROM to_tournaments WHERE EVENT_PROVINCE != '' ORDER BY EVENT_PROVINCE ASC")->fetchAll(PDO::FETCH_COLUMN);
 $cities = $conn->query("SELECT DISTINCT EVENT_CITY FROM to_tournaments WHERE EVENT_CITY != '' ORDER BY EVENT_CITY ASC")->fetchAll(PDO::FETCH_COLUMN);
-$categories = $conn->query("SELECT DISTINCT EVENT_CATEGORY FROM to_tournaments ORDER BY EVENT_CATEGORY ASC")->fetchAll(PDO::FETCH_COLUMN);
+$categories = $conn->query("SELECT DISTINCT GENDER_CATEGORY, EVENT_TYPE, EVENT_CATEGORY, CONCAT_WS(' - ', GENDER_CATEGORY, EVENT_TYPE, EVENT_CATEGORY) AS DISPLAY_NAME FROM to_tournaments ORDER BY DISPLAY_NAME ASC")->fetchAll();
 $statuses = $conn->query("SELECT DISTINCT STATUS FROM to_tournaments ORDER BY STATUS ASC")->fetchAll(PDO::FETCH_COLUMN);
 
 $where = [];
@@ -31,7 +33,6 @@ foreach (
         'f_province' => 't.EVENT_PROVINCE',
         'f_city' => 't.EVENT_CITY',
         'f_date' => 't.EVENT_DATE',
-        'f_cat' => 't.EVENT_CATEGORY',
         'f_status' => 't.STATUS',
     ] as $key => $column
 ) {
@@ -39,6 +40,11 @@ foreach (
         $where[] = "$column = ?";
         $params[] = $_GET[$key];
     }
+}
+
+if (!empty($_GET['f_cat'])) {
+    $where[] = "CONCAT_WS(' - ', t.GENDER_CATEGORY, t.EVENT_TYPE, t.EVENT_CATEGORY) = ?";
+    $params[] = $_GET['f_cat'];
 }
 
 $whereSql = $where ? " WHERE " . implode(" AND ", $where) : "";
@@ -140,6 +146,26 @@ $templateMail = '<p>Dear Participant,</p>
         max-height: calc(100vh - 190px);
         overflow-y: auto;
         padding-right: 18px;
+    }
+
+    .tournament-section {
+        border: 1px solid #d9e2ec;
+        border-radius: 6px;
+        margin-bottom: 18px;
+        padding: 14px 14px 2px;
+        background: #fcfdff;
+    }
+
+    .tournament-section-title {
+        color: #d9534f;
+        font-size: 14px;
+        font-weight: 700;
+        margin: -4px 0 14px;
+    }
+
+    .tournament-section .form-group {
+        margin-left: 0;
+        margin-right: 0;
     }
 
     .ck-editor__editable_inline {
@@ -344,7 +370,7 @@ $templateMail = '<p>Dear Participant,</p>
                 <select name="f_cat" class="form-control" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     <?php foreach ($categories as $cat): ?>
-                        <option value="<?php echo h($cat); ?>" <?php echo (@$_GET['f_cat'] == $cat) ? 'selected' : ''; ?>><?php echo h($cat); ?></option>
+                        <option value="<?php echo h($cat['DISPLAY_NAME']); ?>" <?php echo (@$_GET['f_cat'] == $cat['DISPLAY_NAME']) ? 'selected' : ''; ?>><?php echo h($cat['DISPLAY_NAME']); ?></option>
                     <?php endforeach; ?>
                 </select>
 
@@ -412,7 +438,11 @@ $templateMail = '<p>Dear Participant,</p>
                                 </td>
                                 <td><strong><?php echo h($row['CUP_NAME']); ?></strong></td>
                                 <td><?php echo !empty($row['EVENT_DATE']) ? h(date('d-M-Y', strtotime($row['EVENT_DATE']))) : ''; ?></td>
-                                <td><?php echo h($row['EVENT_CATEGORY']); ?></td>
+                                <td><?php echo h(implode(' - ', array_filter([
+                                    $row['GENDER_CATEGORY'] ?? '',
+                                    $row['EVENT_TYPE'] ?? '',
+                                    $row['EVENT_CATEGORY'] ?? '',
+                                ]))); ?></td>
                                 <td><?php echo h($row['EVENT_CURRENCY'] ?: '$'); ?> <?php echo number_format((float) $row['EVENT_COST'], 2); ?></td>
                                 <td>
                                     <button onclick="toggleStatus(<?php echo h($row['ID']); ?>, '<?php echo h($row['STATUS']); ?>')"
@@ -422,6 +452,7 @@ $templateMail = '<p>Dear Participant,</p>
                                     </button>
                                 </td>
                                 <td class="actions">
+                                    <a href="enrolled_tournaments.php?tournament_id=<?php echo h($row['ID']); ?>" class="btn btn-xs btn-info" title="Enrolled Users"><i class="fa fa-users"></i></a>
                                     <button type="button" class="btn btn-xs btn-info" title="View" onclick="openViewModal(<?php echo h($row['ID']); ?>)"><i class="fa fa-eye"></i></button>
                                     <button type="button" class="btn btn-xs btn-primary" title="Edit" onclick="openTournamentModal('edit', <?php echo h($row['ID']); ?>)"><i class="fa fa-pencil"></i></button>
                                     <button type="button" onclick="deleteTournament(<?php echo h($row['ID']); ?>)" class="btn btn-xs btn-danger" title="Delete"><i class="fa fa-trash-o"></i></button>
@@ -451,9 +482,18 @@ $templateMail = '<p>Dear Participant,</p>
                     <input type="hidden" name="action" id="form_action" value="">
                     <input type="hidden" name="event_id" id="event_id" value="">
 
+                    <section class="tournament-section">
+                        <h5 class="tournament-section-title">Tournament Details</h5>
                     <div class="form-group">
                         <label class="col-md-3 control-label">Host Name <span>*</span></label>
-                        <div class="col-md-6"><input type="text" name="host_name" id="host_name" class="form-control" value="Casa Badminton Club Toronto"></div>
+                        <div class="col-md-6">
+                            <select name="host_id" id="host_id" class="form-control" required>
+                                <option value="">Select a host</option>
+                                <?php foreach ($hosts as $hostItem): ?>
+                                    <option value="<?php echo h($hostItem['ID']); ?>" data-host-name="<?php echo h($hostItem['NAME']); ?>"><?php echo h($hostItem['NAME']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -523,10 +563,30 @@ $templateMail = '<p>Dear Participant,</p>
                     </div>
 
                     <div class="form-group">
+                        <label class="col-md-3 control-label">Match Details</label>
+                        <div class="col-md-3">
+                            <select name="shuttle_type" id="shuttle_type" class="form-control">
+                                <option value="Feather">Feather</option>
+                                <option value="Nylon">Nylon</option>
+                            </select>
+                            <span class="help-block">Shuttle Type</span>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="match_format" id="match_format" class="form-control">
+                                <option value="Hybrid Format">Hybrid Format</option>
+                            </select>
+                            <span class="help-block">Match Format</span>
+                        </div>
+                    </div>
+                    </section>
+
+                    <section class="tournament-section">
+                        <h5 class="tournament-section-title">Schedule</h5>
+                    <div class="form-group">
                         <label class="col-md-3 control-label">Event Schedule</label>
                         <div class="col-md-2"><input type="date" name="event_date" id="event_date" class="form-control" value="2026-03-14"><span class="help-block">Event Date</span></div>
-                        <div class="col-md-2"><input type="time" name="from_time" id="from_time" class="form-control" value="10:00"><span class="help-block">From Time</span></div>
-                        <div class="col-md-2"><input type="time" name="to_time" id="to_time" class="form-control" value="14:00"><span class="help-block">To Time</span></div>
+                        <div class="col-md-2"><input type="time" name="from_time" id="from_time" class="form-control" value="10:00"><span class="help-block">Event Start Time</span></div>
+                        <div class="col-md-2"><input type="time" name="to_time" id="to_time" class="form-control" value="14:00"><span class="help-block">Event End Time</span></div>
                     </div>
 
                     <div class="form-group">
@@ -536,62 +596,76 @@ $templateMail = '<p>Dear Participant,</p>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-md-3 control-label">Costs & Payment</label>
-                        <div class="col-md-2"><input type="text" name="event_cost" id="event_cost" class="form-control" value="80"><span class="help-block">System Cost</span></div>
-                        <div class="col-md-2"><input type="number" name="amount" id="amount" class="form-control" value="80"><span class="help-block">Display Amount</span></div>
-                        <div class="col-md-3"><input type="text" name="payment_id" id="payment_id" class="form-control" value="casaclubpayment1@gmail.com"><span class="help-block">Payment ID</span></div>
-                        <div class="col-md-2"><input type="date" name="payment_deadline" id="payment_deadline" class="form-control" value="2026-03-13"><span class="help-block">Deadline</span></div>
-                    </div>
-
-                    <div class="form-group">
                         <label class="col-md-3 control-label">Reporting & Draw</label>
                         <div class="col-md-3"><input type="time" name="reporting_time" id="reporting_time" class="form-control" value="09:00"><span class="help-block">Reporting Time</span></div>
-                        <div class="col-md-3"><input type="time" name="match_start_time" id="match_start_time" class="form-control" value="10:00"><span class="help-block">Match Start</span></div>
+                        <div class="col-md-3"><input type="time" name="match_start_time" id="match_start_time" class="form-control" value="10:00"><span class="help-block">Match Start Time</span></div>
                         <div class="col-md-3"><input type="date" name="draw_announcement" id="draw_announcement" class="form-control" value="2026-03-12"><span class="help-block">Draw Date</span></div>
                     </div>
+                    </section>
 
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Match Details</label>
-                        <div class="col-md-3">
-                            <select name="shuttle_type" id="shuttle_type" class="form-control">
-                                <option value="Feather">Feather</option>
-                                <option value="Nylon">Nylon</option>
-                            </select>
-                            <span class="help-block">Shuttle Type</span>
+                    <section class="tournament-section">
+                        <h5 class="tournament-section-title">Account</h5>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Cost Tracking</label>
+                            <div class="col-md-3"><input type="number" min="0" step="0.01" name="facility_cost" id="facility_cost" class="form-control"><span class="help-block">Facility Cost</span></div>
+                            <div class="col-md-3"><input type="number" min="0" step="0.01" name="accessories_cost" id="accessories_cost" class="form-control"><span class="help-block">Accessories Cost</span></div>
+                            <div class="col-md-3"><input type="number" min="0" step="0.01" name="snacks_cost" id="snacks_cost" class="form-control"><span class="help-block">Snacks Cost</span></div>
                         </div>
-                        <div class="col-md-6"><input type="text" name="match_format" id="match_format" class="form-control" value="Best of 3 games"><span class="help-block">Match Format</span></div>
-                    </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Birdie & Club</label>
+                            <div class="col-md-2"><input type="number" min="0" step="0.01" name="club_cost" id="club_cost" class="form-control"><span class="help-block">Club Cost</span></div>
+                            <div class="col-md-2"><input type="number" min="0" step="0.01" name="birdie_used" id="birdie_used" class="form-control"><span class="help-block">Birdies Used</span></div>
+                            <div class="col-md-2"><input type="number" min="0" step="0.01" name="birdie_cost" id="birdie_cost" class="form-control"><span class="help-block">Birdie Cost</span></div>
+                            <div class="col-md-2"><input type="number" min="0" step="0.01" name="birdie_price" id="birdie_price" class="form-control"><span class="help-block">Birdie Price</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Totals</label>
+                            <div class="col-md-3"><input type="number" step="0.01" name="total_event_cost" id="total_event_cost" class="form-control"><span class="help-block">Total Event Cost</span></div>
+                            <div class="col-md-3"><input type="number" step="0.01" name="total_player_cost" id="total_player_cost" class="form-control"><span class="help-block">Total Player Cost</span></div>
+                            <div class="col-md-3"><input type="number" step="0.01" name="profit_loss" id="profit_loss" class="form-control"><span class="help-block">Profit / Loss</span></div>
+                        </div>
+                    </section>
 
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Event Description</label>
-                        <div class="col-md-9"><textarea name="event_description" id="event_description" class="form-control">I Play Every Day But Don't Have a Trophy</textarea></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Event Message</label>
-                        <div class="col-md-9"><textarea name="event_message" id="event_message" class="form-control">Men's Badminton Tournament in the GTA featuring competitive players from across the region.</textarea></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Registration Popup Message</label>
-                        <div class="col-md-9"><textarea name="popup_message" id="popup_message" class="form-control"><?php echo h($templatePopup); ?></textarea></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Payment/Login Email Template</label>
-                        <div class="col-md-9"><textarea name="payment_mail" id="payment_mail" class="form-control"><?php echo h($templateMail); ?></textarea></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Banner Image <span id="bannerRequired">*</span></label>
-                        <div class="col-md-6">
-                            <input type="file" name="banner" id="banner" class="form-control" accept="image/*" onchange="previewImage(this)">
-                            <div class="preview-wrapper" id="previewWrapper">
-                                <img id="imagePreview" src="" alt="Banner Preview">
-                                <div class="remove-btn" onclick="removeImage()">&#10005;</div>
+                    <section class="tournament-section">
+                        <h5 class="tournament-section-title">Message</h5>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Event Description</label>
+                            <div class="col-md-9"><textarea name="event_description" id="event_description" class="form-control">I Play Every Day But Don't Have a Trophy</textarea></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Event Message</label>
+                            <div class="col-md-9"><textarea name="event_message" id="event_message" class="form-control">Men's Badminton Tournament in the GTA featuring competitive players from across the region.</textarea></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Registration Popup Message</label>
+                            <div class="col-md-9"><textarea name="popup_message" id="popup_message" class="form-control"><?php echo h($templatePopup); ?></textarea></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Payment/Login Email Template</label>
+                            <div class="col-md-9"><textarea name="payment_mail" id="payment_mail" class="form-control"><?php echo h($templateMail); ?></textarea></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Banner Image <span id="bannerRequired">*</span></label>
+                            <div class="col-md-6">
+                                <input type="file" name="banner" id="banner" class="form-control" accept="image/*" onchange="previewImage(this)">
+                                <div class="preview-wrapper" id="previewWrapper">
+                                    <img id="imagePreview" src="" alt="Banner Preview">
+                                    <div class="remove-btn" onclick="removeImage()">&#10005;</div>
+                                </div>
                             </div>
                         </div>
+                    </section>
+
+                    <section class="tournament-section">
+                        <h5 class="tournament-section-title">Payment</h5>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Costs & Payment</label>
+                        <div class="col-md-2"><input type="number" min="0" step="0.01" name="event_cost" id="event_cost" class="form-control" value="80"><span class="help-block">Team Amount</span></div>
+                        <div class="col-md-2"><input type="number" min="0" step="0.01" name="amount" id="amount" class="form-control" value="80"><span class="help-block">Per Player Amount</span></div>
+                        <div class="col-md-3"><input type="text" name="payment_id" id="payment_id" class="form-control" value="casaclubpayment1@gmail.com"><span class="help-block">Payment ID</span></div>
+                        <div class="col-md-2"><input type="date" name="payment_deadline" id="payment_deadline" class="form-control" value="2026-03-13"><span class="help-block">Payment Deadline</span></div>
                     </div>
+                    </section>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -648,7 +722,7 @@ $templateMail = '<p>Dear Participant,</p>
         MATCH_START_TIME: '10:00',
         DRAW_ANNOUNCEMENT: '2026-03-12',
         SHUTTLE_TYPE: 'Feather',
-        MATCH_FORMAT: 'Best of 3 games',
+        MATCH_FORMAT: 'Hybrid Format',
         EVENT_DESCRIPTION: "I Play Every Day But Don't Have a Trophy",
         EVENT_MESSAGE: "Men's Badminton Tournament in the GTA featuring competitive players from across the region.",
         POPUP_MESSAGE: <?php echo json_encode($templatePopup); ?>,
@@ -719,7 +793,11 @@ $templateMail = '<p>Dear Participant,</p>
     }
 
     function fillForm(data) {
-        $('#host_name').val(data.HOST_NAME || '');
+        var hostId = data.HOST_ID || '';
+        if (hostId && $('#host_id option[value="' + hostId + '"]').length === 0) {
+            $('#host_id').append($('<option>').val(hostId).text(data.HOST_NAME || 'Unknown host').attr('data-host-name', data.HOST_NAME || ''));
+        }
+        $('#host_id').val(hostId);
         $('#cup_name').val(data.CUP_NAME || '');
         $('#event_country').val(data.EVENT_COUNTRY || 'Canada');
         $('#event_province').val(data.EVENT_PROVINCE || 'Ontario');
@@ -743,7 +821,21 @@ $templateMail = '<p>Dear Participant,</p>
         $('#match_start_time').val(data.MATCH_START_TIME || '');
         $('#draw_announcement').val(data.DRAW_ANNOUNCEMENT || '');
         $('#shuttle_type').val(data.SHUTTLE_TYPE || 'Feather');
-        $('#match_format').val(data.MATCH_FORMAT || '');
+        var matchFormat = data.MATCH_FORMAT || 'Hybrid Format';
+        if ($('#match_format option[value="' + matchFormat + '"]').length === 0) {
+            $('#match_format').append($('<option>').val(matchFormat).text(matchFormat));
+        }
+        $('#match_format').val(matchFormat);
+        $('#facility_cost').val(data.FACILITY_COST || '');
+        $('#accessories_cost').val(data.ACCESSORIES_COST || '');
+        $('#snacks_cost').val(data.SNACKS_COST || '');
+        $('#club_cost').val(data.CLUB_COST || '');
+        $('#birdie_used').val(data.BIRDIE_USED || '');
+        $('#birdie_cost').val(data.BIRDIE_COST || '');
+        $('#birdie_price').val(data.BIRDIE_PRICE || '');
+        $('#total_event_cost').val(data.TOTAL_EVENT_COST || '');
+        $('#total_player_cost').val(data.TOTAL_PLAYER_COST || '');
+        $('#profit_loss').val(data.PROFIT_LOSS || '');
         setEditor('event_description', data.EVENT_DESCRIPTION || '');
         setEditor('event_message', data.EVENT_MESSAGE || '');
         setEditor('popup_message', data.POPUP_MESSAGE || defaults.POPUP_MESSAGE);
@@ -1033,6 +1125,11 @@ $templateMail = '<p>Dear Participant,</p>
 
             if ($.trim($('#cup_name').val()) === '') {
                 showFlash('error', 'Cup Name is required.');
+                return;
+            }
+
+            if ($.trim($('#host_id').val()) === '') {
+                showFlash('error', 'Please select a host.');
                 return;
             }
 

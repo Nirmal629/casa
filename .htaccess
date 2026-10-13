@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# The production database contains some absolute /staging/ asset URLs.
+# Serve them from the local project root during Docker development.
+RewriteRule ^staging/(.*)$ $1 [L]

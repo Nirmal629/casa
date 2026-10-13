@@ -107,10 +107,7 @@ function courtDashboardWinner(array $row): string
 
 function courtDashboardStageRow(array $match): void
 {
-    echo '<td>' . (int)($match['ROUND_NO'] ?? 1) . '</td>';
-    echo '<td>' . htmlspecialchars($match['GROUP_NAME'] ?? '-') . '</td>';
     echo '<td>' . (!empty($match['COURT_ID']) ? (int)$match['COURT_ID'] : '-') . '</td>';
-    echo '<td>' . (int)($match['ID'] ?? 0) . '</td>';
     echo '<td>' . courtDashboardTeamLabel($match, 'TEAM_1') . '</td>';
     echo '<td>' . courtDashboardTeamLabel($match, 'TEAM_2') . '</td>';
     echo '<td>' . (int)($match['TEAM_1_SCORE'] ?? 0) . '</td>';
@@ -329,6 +326,7 @@ $summaryDate = 'TBD';
 $summaryGender = 'N/A';
 $summaryTime = 'TBD';
 $summaryCategory = 'N/A';
+$summaryCategoryLine = 'N/A';
 $summaryVenue = 'N/A';
 
 if (is_array($tournamentSummary)) {
@@ -346,6 +344,13 @@ if (is_array($tournamentSummary)) {
     $summaryGender = courtDashboardValue(str_replace("'s", '', (string)($tournamentSummary['GENDER_CATEGORY'] ?? '')));
     $summaryTime = courtDashboardTime($tournamentSummary['EVENT_TIME'] ?? '');
     $summaryCategory = courtDashboardValue($tournamentSummary['EVENT_CATEGORY'] ?? '');
+
+    $categoryParts = array_values(array_filter([
+        $summaryGender !== 'N/A' ? $summaryGender : '',
+        $summaryEventType !== 'N/A' ? $summaryEventType : '',
+        $summaryCategory !== 'N/A' ? $summaryCategory : ''
+    ]));
+    $summaryCategoryLine = !empty($categoryParts) ? implode(' - ', $categoryParts) : 'N/A';
 
     $summaryVenue = trim((string)($tournamentSummary['EVENT_VENUE'] ?? ''));
     if ($summaryVenue === '') {
@@ -376,14 +381,12 @@ if (is_array($tournamentSummary)) {
 
             <!-- EVENT DETAILS -->
             <div class="card input-box">
-                <div class="grid-4">
+                <div class="court-event-details-grid">
                     <div class="detail">Club Name: <span><?php echo htmlspecialchars($summaryClubName); ?></span></div>
-                    <div class="detail">Event Type: <span><?php echo htmlspecialchars($summaryEventType); ?></span></div>
-                    <div class="detail">Tag Line: <span><?php echo htmlspecialchars($summaryTagline); ?></span></div>
                     <div class="detail">Date: <span><?php echo htmlspecialchars($summaryDate); ?></span></div>
-                    <div class="detail">Gender Category: <span><?php echo htmlspecialchars($summaryGender); ?></span></div>
+                    <div class="detail">Tag Line: <span><?php echo htmlspecialchars($summaryTagline); ?></span></div>
                     <div class="detail">Time: <span><?php echo htmlspecialchars($summaryTime); ?></span></div>
-                    <div class="detail">Event Category: <span><?php echo htmlspecialchars($summaryCategory); ?></span></div>
+                    <div class="detail">Category: <span><?php echo htmlspecialchars($summaryCategoryLine); ?></span></div>
                     <div class="detail">Venue: <span><?php echo htmlspecialchars($summaryVenue); ?></span></div>
                 </div>
             </div>
@@ -415,10 +418,7 @@ if (is_array($tournamentSummary)) {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Round</th>
-                                <th>Block</th>
                                 <th>Court</th>
-                                <th>Match ID</th>
                                 <th>Team A</th>
                                 <th>Player 1</th>
                                 <th>Player 2</th>
@@ -436,17 +436,14 @@ if (is_array($tournamentSummary)) {
                         </thead>
                         <tbody>
                             <?php if ($dbError): ?>
-                                <tr><td colspan="17"><?php echo htmlspecialchars($dbError); ?></td></tr>
+                                <tr><td colspan="14"><?php echo htmlspecialchars($dbError); ?></td></tr>
                             <?php elseif (empty($groupMatches)): ?>
-                                <tr><td colspan="17"><?php echo htmlspecialchars(courtDashboardStageEmptyNote($selectedStage)); ?></td></tr>
+                                <tr><td colspan="14"><?php echo htmlspecialchars(courtDashboardStageEmptyNote($selectedStage)); ?></td></tr>
                             <?php else: ?>
                                 <?php foreach ($groupMatches as $matchIndex => $match): ?>
                                     <tr>
                                         <td><?php echo $matchIndex + 1; ?></td>
-                                        <td><?php echo (int)($match['ROUND_NO'] ?? 1); ?></td>
-                                        <td><?php echo htmlspecialchars($match['GROUP_NAME'] ?? '-'); ?></td>
                                         <td><?php echo !empty($match['COURT_ID']) ? (int)$match['COURT_ID'] : '-'; ?></td>
-                                        <td><?php echo (int)$match['ID']; ?></td>
                                         <td><?php echo courtDashboardTeamLabel($match, 'TEAM_1'); ?></td>
                                         <td><?php echo courtDashboardPlayer($match, 'TEAM_1', 0); ?></td>
                                         <td><?php echo courtDashboardPlayer($match, 'TEAM_1', 1); ?></td>
