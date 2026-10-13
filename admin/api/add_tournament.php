@@ -2,14 +2,13 @@
 // Clear any previous output buffers to ensure clean JSON
 ob_start();
 header('Content-Type: application/json');
-require_once __DIR__ . '/../../config/env.php';
 
 /* --- 1. DATABASE CONNECTION --- */
-$host    = env('DB_HOST', 'localhost');
-$db      = env('DB_NAME', 'casa_test');
-$user    = env('DB_USER', 'root');
-$pass    = env('DB_PASS', '');
-$charset = env('DB_CHARSET', 'utf8mb4');
+$host    = 'localhost';
+$db      = 'casa_test';
+$user    = 'casa_test';
+$pass    = 'casa_test123#';
+$charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
@@ -38,16 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->beginTransaction();
 
         // Map and Clean Form Data
-        $host_id           = (int) ($_POST['host_id'] ?? 0);
-        if ($host_id <= 0) {
-            throw new Exception('Please select a host.');
-        }
-        $hostStmt = $conn->prepare("SELECT NAME FROM ca_users WHERE ID = ? AND USERTYPE = 'Host' AND DEL_STATUS = 'N'");
-        $hostStmt->execute([$host_id]);
-        $host_name = $hostStmt->fetchColumn();
-        if ($host_name === false) {
-            throw new Exception('The selected host is not available.');
-        }
+        $host_id           = 1;
+        $host_name         = clean($_POST['host_name'] ?? '');
         $cup_name          = clean($_POST['cup_name'] ?? '');
         $event_country     = clean($_POST['event_country'] ?? '');
         $event_province    = clean($_POST['event_province'] ?? '');
@@ -87,16 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $match_format      = clean($_POST['match_format']);
         $payment_id        = clean($_POST['payment_id']);
         $payment_deadline  = clean($_POST['payment_deadline']);
-        $facility_cost     = clean($_POST['facility_cost'] ?? '');
-        $accessories_cost  = clean($_POST['accessories_cost'] ?? '');
-        $snacks_cost       = clean($_POST['snacks_cost'] ?? '');
-        $total_event_cost  = clean($_POST['total_event_cost'] ?? '');
-        $total_player_cost = clean($_POST['total_player_cost'] ?? '');
-        $profit_loss       = clean($_POST['profit_loss'] ?? '');
-        $club_cost         = clean($_POST['club_cost'] ?? '');
-        $birdie_used       = clean($_POST['birdie_used'] ?? '');
-        $birdie_cost       = clean($_POST['birdie_cost'] ?? '');
-        $birdie_price      = clean($_POST['birdie_price'] ?? '');
 
         // Rich Text (CKEditor)
         $event_description = $_POST['event_description'] ?? '';
@@ -110,9 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         `EVENT_CITY`, `EVENT_CURRENCY`, `EVENT_VENUE`, `EVENT_CATEGORY`, 
                         `GENDER_CATEGORY`, `GENDER_SKILL_LEVEL`, `EVENT_TYPE`, `EVENT_DATE`, 
                         `EVENT_TIME`, `TO_TIME`, `CANCEL_DATE`, `CANCEL_TIME`, `EVENT_COST`, 
-                        `EVENT_DESCRIPTION`, `EVENT_MESSAGE`, `FACILITY_COST`, `ACCESSORIES_COST`, `SNACKS_COST`,
-                        `TOTAL_EVENT_COST`, `TOTAL_PLAYER_COST`, `PROFIT_LOSS`, `CLUB_COST`, `BIRDIE_USED`, `BIRDIE_COST`, `BIRDIE_PRICE`,
-                        `STATUS`, `AMOUNT`,
+                        `EVENT_DESCRIPTION`, `EVENT_MESSAGE`, `STATUS`, `AMOUNT`, 
                         `PAYMENT_ID`, `PAYMENT_DEADLINE`, `REPORTING_TIME`, `MATCH_START_TIME`, 
                         `DRAW_ANNOUNCEMENT`, `SHUTTLE_TYPE`, `MATCH_FORMAT`, `POPUP_MESSAGE`, 
                         `PAYMENT_MAIL`, `AUTOMATION`
@@ -121,9 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         :city, :currency, :venue, :cat, 
                         :gender, :skill, :type, :e_date, 
                         :e_time, :to_time, :c_date, :c_time, :cost, 
-                        :descr, :msg, :facility_cost, :accessories_cost, :snacks_cost,
-                        :total_event_cost, :total_player_cost, :profit_loss, :club_cost, :birdie_used, :birdie_cost, :birdie_price,
-                        'Active', :amt,
+                        :descr, :msg, 'Active', :amt, 
                         :pay_id, :pay_dl, :rep_time, :m_start, 
                         :draw_ann, :shuttle, :format, :popup, 
                         :mail, 'Y'
@@ -151,16 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':cost'      => $event_cost,
             ':descr'     => $event_description,
             ':msg'       => $event_message,
-            ':facility_cost' => $facility_cost,
-            ':accessories_cost' => $accessories_cost,
-            ':snacks_cost' => $snacks_cost,
-            ':total_event_cost' => $total_event_cost,
-            ':total_player_cost' => $total_player_cost,
-            ':profit_loss' => $profit_loss,
-            ':club_cost' => $club_cost,
-            ':birdie_used' => $birdie_used,
-            ':birdie_cost' => $birdie_cost,
-            ':birdie_price' => $birdie_price,
             ':amt'       => $amount_display,
             ':pay_id'    => $payment_id,
             ':pay_dl'    => $payment_deadline,

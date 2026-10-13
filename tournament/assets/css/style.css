@@ -2320,20 +2320,6 @@ Home banner
     gap: 15px;
 }
 
-/* Court Dashboard event summary: two columns, matching the tournament ledger layout. */
-.battleTournament_sec .court-event-details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 48px;
-}
-
-@media (max-width: 767px) {
-    .battleTournament_sec .court-event-details-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-}
-
 .battleTournament_sec .grid-3 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
