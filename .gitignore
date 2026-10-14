@@ -2,3 +2,16 @@
 /.env.local
 /.env.prod
 /casa_test.sql
+
+# Runtime logs
+error_log
+**/error_log
+migration_log.txt
+migration_output.txt
+
+# Runtime-generated files
+*.log
+
+# User-uploaded tournament banners
+/admin/assets/images/tournaments_banner/
+/assets/images/tournaments_banner/
