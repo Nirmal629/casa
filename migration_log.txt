@@ -1,0 +1,11 @@
+=== Starting DB Migration at 2026-07-03 09:06:20 ===
+• Index 'uq_host_id' does not exist or already dropped in ca_clubs
+• Column 'join_type' already exists in ca_clubs
+✓ Column 'address' added to ca_clubs
+✓ Column 'area' added to ca_clubs
+• Column 'created_by' does not exist on ca_clubs
+✓ Column 'address' dropped from ca_clubs
+✓ Column 'area' dropped from ca_clubs
+✓ Table 'ca_player_club_status' is ready
+✓ Table 'player_Host_mapping' dropped (redundant)
+=== Migration SUCCESS! ===
