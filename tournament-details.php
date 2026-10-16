@@ -136,6 +136,13 @@ if (empty($_SESSION['csrf_token'])) {
 
     }
 
+    /* Keep native registration selects above modal layout layers. */
+    .tournamentdet_modal select.form-select {
+        pointer-events: auto;
+        position: relative;
+        z-index: 1;
+    }
+
 
 
     .form-label-custom {
@@ -997,44 +1004,17 @@ if (!empty($event['CANCEL_DATE'])) {
 
                                     <div class="col-sm-8">
 
-                                        <select name="p2_area" class="form-select form-select-sm p2-req" required>
+                                        <select name="p2_area" id="p2_area" class="form-select form-select-sm p2-req" required>
 
                                             <option value="">-- Select Area --</option>
 
-                                            <optgroup label="Toronto Districts">
-
-                                                <option>Downtown Toronto</option>
-                                                <option>North York</option>
-                                                <option>Scarborough</option>
-
-                                                <option>Etobicoke</option>
-                                                <option>East York</option>
-                                                <option>York</option>
-
-                                                <option>Midtown Toronto</option>
-                                                <option>Beaches</option>
-                                                <option>Liberty Village</option>
-                                                <option>Leslieville</option>
-
-                                            </optgroup>
-
-                                            <!-- ... (Rest of optgroups copied same as P1) ... -->
-
-                                            <optgroup label="Peel Region">
-
-                                                <option>Mississauga</option>
-                                                <option>Brampton</option>
-                                                <option>Caledon</option>
-
-                                            </optgroup>
-
-                                            <optgroup label="York Region">
-
-                                                <option>Markham</option>
-                                                <option>Vaughan</option>
-                                                <option>Richmond Hill</option>
-
-                                            </optgroup>
+                                            <?php foreach ($areas as $region => $options): ?>
+                                                <optgroup label="<?php echo htmlspecialchars($region, ENT_QUOTES, 'UTF-8'); ?>">
+                                                    <?php foreach ($options as $opt): ?>
+                                                        <option value="<?php echo htmlspecialchars($opt, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($opt, ENT_QUOTES, 'UTF-8'); ?></option>
+                                                    <?php endforeach; ?>
+                                                </optgroup>
+                                            <?php endforeach; ?>
 
                                         </select>
 
