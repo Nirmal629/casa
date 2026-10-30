@@ -7,7 +7,7 @@ include('../dbConnection_PDO.php');
 include('header.php');
 include('sidebar.php');
 
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
+if (session_status() === PHP_SESSION_NONE) { require_once __DIR__ . '/_session.php'; }
 if (empty($_SESSION['csrf_token'])) { $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); }
 
 try {

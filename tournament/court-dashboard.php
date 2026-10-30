@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/../init.php';
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    require_once __DIR__ . '/../api/_security.php';
 }
 $tournamentId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $selectedGroup = trim($_GET['group'] ?? '');
@@ -358,7 +359,10 @@ if (is_array($tournamentSummary)) {
 }
 ?>
 <!-----Header------>
-<?php include "includes/header.php"; ?>
+<?php include __DIR__ . "/../app/Views/layouts/header/header.php"; ?>
+
+<!-- Tournament Bracket & Page Specific Styles -->
+<link rel="stylesheet" href="/tournament/assets/css/bracket.css" type="text/css">
 
 <!-- Offset the dashboard tables below the fixed header when reached via a dashboard link -->
 <style>
@@ -558,4 +562,4 @@ if (is_array($tournamentSummary)) {
 <?php endif; ?>
 
 <!------footer------>
-<?php include "includes/footer.php"; ?>
+<?php include __DIR__ . "/../app/Views/layouts/footer/footer.php"; ?>

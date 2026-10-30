@@ -1,6 +1,13 @@
 <?php
-date_default_timezone_set('America/Toronto');
-require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/_session.php';
+if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') !== realpath(__DIR__ . '/index.php')) requireAdminSession();
+if (file_exists(__DIR__ . '/../app/Config/env.php')) {
+    require_once __DIR__ . '/../app/Config/env.php';
+} elseif (file_exists(__DIR__ . '/../app/config/env.php')) {
+    require_once __DIR__ . '/../app/config/env.php';
+}
+$appTimezone = function_exists('env') ? env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata')) : (getenv('APP_TIMEZONE') ?: 'Asia/Kolkata');
+date_default_timezone_set($appTimezone);
 
 $host = env('DB_HOST', 'localhost');
 $dbName = env('DB_NAME', 'casa_test');

@@ -29,15 +29,16 @@ class Auth extends BaseController
                     'user_email'    => $data['email'],
                     'logged_in'     => TRUE
                 ];
+                $session->regenerate(true);
                 $session->set($ses_data);
                 // return redirect()->to('/club-owner/dashboard');
                 return redirect()->to('/club-owner/list-membership');
             }else{
-                $session->setFlashdata('msg', 'Wrong Password');
+                $session->setFlashdata('msg', 'Invalid email or password');
                 return redirect()->to('/login');
             }
         }else{
-            $session->setFlashdata('msg', 'Email not Found');
+            $session->setFlashdata('msg', 'Invalid email or password');
             return redirect()->to('/login');
         }
     }

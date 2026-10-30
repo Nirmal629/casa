@@ -1,0 +1,673 @@
+/* Modern & Creative Player Dashboard Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b;
+    background-color: #f8fafc;
+    padding-right: 0px !important;
+}
+
+/* Fix Bootstrap Modal Page Shift & Squeeze */
+html {
+    overflow-y: scroll !important;
+}
+
+body.modal-open {
+    overflow-y: auto !important;
+    padding-right: 0px !important;
+}
+
+/* Dashboard Main Section & Heading */
+section.bothSide_gap.player-dash-section {
+    padding-top: 24px;
+    padding-bottom: 28px;
+}
+
+.player-dash-section .heading {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: 1.65rem;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-dash-section .heading::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 24px;
+    background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
+    border-radius: 4px;
+}
+
+/* Custom Outer Card */
+.custom_card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 2px 8px -2px rgba(15, 23, 42, 0.02);
+    border: 1px solid #f1f5f9;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Glassmorphic Navigation Tabs */
+.tab-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px;
+    background: #f1f5f9;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 22px;
+}
+
+.tab-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-stacked-pills {
+    gap: 6px;
+}
+
+.nav-stacked-pills .nav-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.01em;
+    min-width: 105px;
+    color: #64748b;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-stacked-pills .nav-link svg {
+    margin-bottom: 0;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.nav-stacked-pills .nav-link:hover {
+    color: #1e293b;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.nav-stacked-pills .nav-link.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px 0 rgba(37, 99, 235, 0.3);
+}
+
+.nav-stacked-pills .nav-link.active svg {
+    transform: scale(1.1);
+}
+
+/* Filter Bar Dropdowns */
+.form-select-sm {
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    padding: 6px 12px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.2s ease !important;
+}
+
+.form-select-sm:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    background-color: #ffffff !important;
+}
+
+/* Discover & Schedule Game Cards */
+.discoverGames_wraper.plyerGame_wrapper {
+    min-height: auto;
+}
+
+.discoverGames_card.player_cards {
+    background: #ffffff;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    overflow: hidden !important;
+    margin-bottom: 16px !important;
+}
+
+.discoverGames_card.player_cards:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08) !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Time & Location Tags */
+.discoverGames_card .upcoming.date_time {
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.discoverGames_card .location {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Interactive Action Buttons inside Cards */
+.actionJC, .actionC, .actionAC {
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.actionJC:hover, .actionC:hover, .actionAC:hover {
+    transform: translateY(-1px) scale(1.02);
+    opacity: 0.95;
+}
+
+.actionJC {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.actionC {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+.actionAC {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+/* Empty Schedule State Card */
+.empty-schedule-card {
+    max-width: 440px;
+    margin: 24px auto !important;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    padding: 28px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.empty-schedule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.empty-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #2563eb;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+/* Player Ledger & Monthly Subscription Cards */
+.monthly-ledger-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    padding: 10px 14px 8px 14px;
+    margin: 0 auto 12px auto;
+    max-width: 980px;
+}
+
+.monthly-ledger-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.monthly-ledger-title {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.monthly-ledger-select {
+    height: 30px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0 8px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.monthly-ledger-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* Table Design Enhancements */
+.patmentTb table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.patmentTb th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.65rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 6px !important;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.patmentTb td {
+    padding: 2.5px 6px !important;
+    color: #1e293b;
+    font-weight: 500;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.74rem !important;
+    line-height: 1.15 !important;
+}
+
+.patmentTb tr:hover td {
+    background: #f8fafc;
+}
+
+.patmentTb th:last-child,
+.patmentTb td:last-child {
+    width: 55px !important;
+    min-width: 55px !important;
+    max-width: 65px !important;
+    text-align: center !important;
+    padding-left: 4px !important;
+    padding-right: 6px !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+/* Modals */
+.payment-history-modal-body {
+    max-width: 1150px;
+    width: 95%;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    border: 1px solid #e2e8f0;
+}
+
+.payment-history-modal-head {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #0f172a;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Ledger Banners & Summary Cards */
+.pay-lock-banner {
+    background: linear-gradient(135deg, #fef2f2 0%, #ffe4e6 100%);
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.pay-pending-banner {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 1px solid #fde68a;
+    color: #92400e;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+/* Pay / Repay Action Buttons */
+.btn-pay-now {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    padding: 8px 18px !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-pay-now:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* Sleek Creative Game Card Modernization */
+.discoverGames_card, .discoverGames_card_sub, .player_cards {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 2px 6px -2px rgba(15, 23, 42, 0.02) !important;
+    padding: 18px 20px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    margin-bottom: 20px !important;
+    position: relative;
+}
+
+.discoverGames_card:hover, .player_cards:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 20px 35px -10px rgba(37, 99, 235, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04) !important;
+    border-color: #93c5fd !important;
+}
+
+/* Time Badge Pill */
+.game-time-strip,
+.discoverGames_card .upcoming.date_time, 
+.discoverGames_card div[style*="border: 1px dashed red"] {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.28) !important;
+}
+
+.game-time-strip .date_time,
+.game-time-strip .date_time span,
+.discoverGames_card .upcoming.date_time, 
+.discoverGames_card .upcoming.date_time span, 
+.discoverGames_card div[style*="border: 1px dashed red"] i {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    letter-spacing: 0.02em !important;
+}
+
+/* Location Pin & Host Info */
+.discoverGames_card .location {
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-top: 6px !important;
+}
+
+.discoverGames_card .location i {
+    color: #ef4444 !important;
+    margin-right: 4px;
+}
+
+/* Bottom Pill Badges */
+.discoverGames_card .play_status span,
+.discoverGames_card .badge {
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    padding: 5px 14px !important;
+}
+
+/* Scheduled Games Cards (Subscription Weekday Cards) */
+.discoverGames_wraper.hostWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+    margin-bottom: 24px;
+}
+
+.discoverGames_card_sub.scheduled-game-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+    padding: 22px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+    width: calc(33.333% - 14px) !important;
+    min-width: 320px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    margin-bottom: 0 !important;
+}
+
+@media (max-width: 1199px) {
+    .discoverGames_card_sub.scheduled-game-card {
+        width: calc(50% - 10px) !important;
+    }
+}
+@media (max-width: 680px) {
+    .discoverGames_card_sub.scheduled-game-card {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+}
+
+.scheduled-game-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-2px) !important;
+    border-color: #cbd5e1 !important;
+}
+
+.scheduled-game-card .card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.scheduled-game-card .game-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #475569;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65%;
+}
+
+.scheduled-game-card .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.scheduled-game-card .info-badge {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: 50%;
+    background-color: #00cfe8;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.15s ease;
+}
+
+.scheduled-game-card .info-badge:hover {
+    transform: scale(1.1);
+}
+
+.scheduled-game-card .join-action-btn {
+    border-radius: 8px !important;
+    padding: 6px 18px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    border: none !important;
+    color: #ffffff !important;
+    transition: background-color 0.2s ease, transform 0.15s ease !important;
+}
+
+.scheduled-game-card .join-action-btn.btn-primary,
+.scheduled-game-card .join-action-btn.btn-join {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+.scheduled-game-card .join-action-btn.btn-primary:hover,
+.scheduled-game-card .join-action-btn.btn-join:hover {
+    background-color: #0b5ed7 !important;
+    transform: translateY(-1px);
+}
+
+.scheduled-game-card .join-action-btn.btn-danger,
+.scheduled-game-card .join-action-btn.btn-cancel {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+.scheduled-game-card .join-action-btn.btn-danger:hover,
+.scheduled-game-card .join-action-btn.btn-cancel:hover {
+    background-color: #bb2d3b !important;
+    transform: translateY(-1px);
+}
+
+/* Time Strip across the card */
+.scheduled-game-card .game-time-bar {
+    background: #cb2d3e;
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    padding: 7px 14px;
+    margin: 0 0 12px 0;
+    line-height: 1.35;
+}
+
+.scheduled-game-card .game-time-bar.day-SUNDAY { background: #cb2d3e; }
+.scheduled-game-card .game-time-bar.day-MONDAY { background: #2563eb; }
+.scheduled-game-card .game-time-bar.day-TUESDAY { background: #16a34a; }
+.scheduled-game-card .game-time-bar.day-WEDNESDAY { background: #ea580c; }
+.scheduled-game-card .game-time-bar.day-THURSDAY { background: #7c3aed; }
+.scheduled-game-card .game-time-bar.day-FRIDAY { background: #0d9488; }
+.scheduled-game-card .game-time-bar.day-SATURDAY { background: #334155; }
+
+.scheduled-game-card .location-row {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #475569;
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scheduled-game-card .location-row i {
+    color: #475569;
+    font-size: 15px;
+}
+
+.scheduled-game-card .message-row {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.scheduled-game-card .card-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.scheduled-game-card .level-pill {
+    background-color: #cbd5e1;
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 16px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.scheduled-game-card .footer-right-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scheduled-game-card .badge-type {
+    background-color: #0d6efd;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.scheduled-game-card .badge-type.type-invite {
+    background-color: #198754;
+}
+
+.scheduled-game-card .badge-price {
+    background-color: #0b5ed7;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}

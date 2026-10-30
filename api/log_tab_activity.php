@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser([]);
 /**
  * api/log_tab_activity.php
  * Endpoint for recording generic tab, sub-tab, and modal activity into ca_player_logs.
@@ -7,7 +9,7 @@
 header('Content-Type: application/json');
 
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+
 }
 
 // Include DB connection

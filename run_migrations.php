@@ -7,7 +7,8 @@ include('dbConnection.php');
 $logFile = 'migration_output.txt';
 $output = "=== Starting DB Migration: " . date('Y-m-d H:i:s') . " ===\n";
 
-function runQuery($conn, $sql, &$output) {
+function runQuery($conn, $sql, &$output)
+{
     $output .= "Running: " . substr(preg_replace('/\s+/', ' ', $sql), 0, 100) . "...\n";
     if ($conn->query($sql)) {
         $output .= "✓ SUCCESS\n\n";
@@ -116,7 +117,9 @@ try {
         'MESSAGE' => "ALTER TABLE `ca_payment` ADD COLUMN `MESSAGE` TEXT NOT NULL DEFAULT ''",
         'REVIEWED_BY' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_BY` INT(11) NULL DEFAULT NULL",
         'REVIEWED_AT' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_AT` TIMESTAMP NULL DEFAULT NULL",
-        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL"
+        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL",
+        'IS_REINITIATED' => "ALTER TABLE `ca_payment` ADD COLUMN `IS_REINITIATED` TINYINT(1) NOT NULL DEFAULT 0",
+        'PREV_REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `PREV_REJECTION_REASON` TEXT NULL DEFAULT NULL"
     ];
     foreach ($payment_cols as $col => $alter_sql) {
         $check = $conn->query("SHOW COLUMNS FROM `ca_payment` LIKE '$col'");
@@ -133,9 +136,9 @@ try {
 
     // 9. Host Audit Log — extend ca_player_logs with host/game/context + indexes
     $apl_cols = [
-        'HOST_ID'    => "ALTER TABLE `ca_player_logs` ADD COLUMN `HOST_ID` INT(11) NULL DEFAULT NULL AFTER `USER_ID`",
-        'GAME_ID'    => "ALTER TABLE `ca_player_logs` ADD COLUMN `GAME_ID` INT(11) NULL DEFAULT NULL AFTER `HOST_ID`",
-        'META'       => "ALTER TABLE `ca_player_logs` ADD COLUMN `META` TEXT NULL DEFAULT NULL AFTER `DESCRIPTION`",
+        'HOST_ID' => "ALTER TABLE `ca_player_logs` ADD COLUMN `HOST_ID` INT(11) NULL DEFAULT NULL AFTER `USER_ID`",
+        'GAME_ID' => "ALTER TABLE `ca_player_logs` ADD COLUMN `GAME_ID` INT(11) NULL DEFAULT NULL AFTER `HOST_ID`",
+        'META' => "ALTER TABLE `ca_player_logs` ADD COLUMN `META` TEXT NULL DEFAULT NULL AFTER `DESCRIPTION`",
         'IP_ADDRESS' => "ALTER TABLE `ca_player_logs` ADD COLUMN `IP_ADDRESS` VARCHAR(45) NULL DEFAULT NULL AFTER `META`",
     ];
     foreach ($apl_cols as $col => $alter_sql) {
@@ -155,7 +158,7 @@ try {
         'idx_apl_user_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_user_created` (`USER_ID`, `CREATED_AT`)",
         'idx_apl_host_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_host_created` (`HOST_ID`, `CREATED_AT`)",
         'idx_apl_type_created' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_type_created` (`ACTIVITY_TYPE`, `CREATED_AT`)",
-        'idx_apl_game'         => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_game` (`GAME_ID`)",
+        'idx_apl_game' => "ALTER TABLE `ca_player_logs` ADD INDEX `idx_apl_game` (`GAME_ID`)",
     ];
     foreach ($apl_indexes as $idx => $alter_sql) {
         $check = $conn->query("SHOW INDEX FROM `ca_player_logs` WHERE Key_name = '$idx'");

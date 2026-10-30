@@ -1,0 +1,675 @@
+/* Player Hub Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap');
+
+/* Payment Modal inputs */
+#PaymentModal .form-control,
+#PaymentModal .form-select {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border: 1px solid #334155 !important;
+}
+
+#PaymentModal label {
+    color: #94a3b8;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+/* Success Overlay */
+#successOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.98);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-card {
+    background: #1f2937;
+    padding: 50px;
+    border-radius: 24px;
+    text-align: center;
+    border: 1px solid #334155;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Tournament Card Styling */
+.tournamentCard {
+    display: flex;
+    background: #1f2937;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 1px solid #334155;
+    padding: 0;
+    box-shadow: none;
+}
+
+.tournamentCard .banner {
+    width: 132px;
+    flex-shrink: 0;
+    align-self: stretch;
+}
+
+.tournamentCard .banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tournamentCard .card-body {
+    flex: 1;
+    padding: 14px;
+    min-width: 0;
+}
+
+.tournamentCard .content {
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.tournamentCard .info-grid {
+    flex: 1 1 auto;
+    min-width: 0;
+    row-gap: 7px;
+    column-gap: 16px;
+}
+
+.tournamentCard .info {
+    font-size: 12px;
+    white-space: normal;
+}
+
+.tournamentCard .info-grid .info:nth-child(3) {
+    flex-basis: 100%;
+}
+
+.tournamentCard .actions.deskView {
+    flex-direction: column;
+    align-items: stretch;
+    flex-shrink: 0;
+    width: 92px;
+    gap: 6px;
+}
+
+.tournamentCard .actions.deskView .joinbtn,
+.tournamentCard .actions .joinbtn {
+    font-size: 11px;
+    padding: 5px 6px;
+    text-align: center;
+    border-radius: 8px;
+    display: block;
+    text-decoration: none;
+}
+
+/* Main Grid Layout - Fixed Columns & Equal Height Cards */
+.playerhub_sec .main-grid {
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) 280px !important;
+    gap: 20px !important;
+    margin-top: 20px !important;
+    align-items: stretch !important;
+}
+
+.playerhub_sec .panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.playerhub_sec .left-panel,
+.playerhub_sec .right-panel,
+.playerhub_sec .center-panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.playerhub_sec .left-panel .dossierCard {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.playerhub_sec .right-panel .scrollbox {
+    flex: 1 1 auto;
+    max-height: unset !important;
+    overflow-y: auto;
+}
+
+.playerhub_sec .right-panel .casastore_btn {
+    margin-top: auto !important;
+}
+
+@media (max-width: 1480px) and (min-width: 1200px) {
+    .playerhub_sec .main-grid {
+        grid-template-columns: 260px minmax(0, 1fr) 260px !important;
+        gap: 16px !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .playerhub_sec .main-grid {
+        grid-template-columns: 100% !important;
+        gap: 20px !important;
+    }
+}
+
+/* Dossier Card Styling */
+.dossierCard {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dossierCard .stats,
+.dossierCard .win,
+.dossierCard .block {
+    margin: 0;
+}
+
+.dossierCard .stats .statInnDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;
+    line-height: 1.25;
+}
+
+.dossierCard .stats .statInnDiv span {
+    margin-bottom: 2px;
+}
+
+.dossierCard .win {
+    padding-right: 26px;
+}
+
+.dossierCard .win .winParaDiv p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 6px;
+    align-items: baseline;
+    row-gap: 2px;
+}
+
+.dossierCard .win .winParaDiv small,
+.dossierCard .win .winParaDiv .small {
+    flex-basis: 100%;
+    padding-left: 0;
+}
+
+.dossierCard .win>p {
+    margin: 4px 0 0;
+}
+
+.dossierCard .upcmngBtn {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.dossierCard .block {
+    align-items: center;
+    gap: 8px;
+}
+
+.dossierCard .block h4 {
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dossierCard .block h4 img {
+    opacity: 0.5;
+    vertical-align: middle;
+}
+
+/* Tournaments / Skill Badges mini-sliders */
+.dossierCard .tournamentBtm,
+.dossierCard .badges {
+    width: calc(100% - 92px);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.dossierCard .tourSlider,
+.dossierCard .badgeSlider {
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.dossierCard .tourSlider.tourSlick:not(.slick-initialized),
+.dossierCard .badgeSlider.badgeSlick:not(.slick-initialized) {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+}
+
+.dossierCard .tourSlider.tourSlick:not(.slick-initialized) .tourSlide,
+.dossierCard .badgeSlider.badgeSlick:not(.slick-initialized) .badgeSlide {
+    display: none;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.dossierCard .tourSlider.tourSlick:not(.slick-initialized) .tourSlide:first-child,
+.dossierCard .badgeSlider.badgeSlick:not(.slick-initialized) .badgeSlide:first-child {
+    display: block;
+}
+
+.dossierCard .tourCard,
+.dossierCard .badgeCard {
+    padding: 5px 8px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.dossierCard .tourCard {
+    background: #0f172a;
+    border: 1px solid #334155;
+}
+
+.dossierCard .tourSpan {
+    font-size: 10px;
+    line-height: 1.35;
+    color: #ffffff;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+}
+
+.dossierCard .badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.dossierCard .badge.smash {
+    background: #ef4444;
+}
+
+.dossierCard .badge.net {
+    background: #3b82f6;
+}
+
+.dossierCard .badge.def {
+    background: #22c55e;
+}
+
+.dossierCard .tourSlider .slide-arrow,
+.dossierCard .badgeSlider .slide-arrow,
+.dossierCard .tourSlider .slick-arrow,
+.dossierCard .badgeSlider .slick-arrow {
+    width: 16px !important;
+    height: 16px !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    bottom: auto !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.dossierCard .tourSlider .slide-arrow.prev-arrow,
+.dossierCard .badgeSlider .slide-arrow.prev-arrow {
+    left: 0 !important;
+    right: auto !important;
+}
+
+.dossierCard .tourSlider .slide-arrow.next-arrow,
+.dossierCard .badgeSlider .slide-arrow.next-arrow {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.dossierCard .tourSlider .slide-arrow::after,
+.dossierCard .badgeSlider .slide-arrow::after {
+    color: #ffffff !important;
+    font-size: 11px !important;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+}
+
+.dossierCard .tourSlider .slide-arrow:hover::after,
+.dossierCard .badgeSlider .slide-arrow:hover::after {
+    opacity: 1;
+}
+
+/* Club Cards & Unified Action Bar */
+.playerhub_sec .panel .scrollbox .card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: #334155;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 0 5px 0px rgba(68, 193, 239, 0.35);
+    border: 1px solid #176c91;
+    margin-bottom: 15px;
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.playerhub_sec .panel h3 {
+    font-weight: 700;
+}
+
+.playerhub_sec .panel .scrollbox .card h4,
+.club-header-title {
+    margin: 0 0 2px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: normal;
+    line-height: 1.25;
+    text-align: left;
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.playerhub_sec .panel .scrollbox .card > .d-flex {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0 !important;
+}
+
+.playerhub_sec .panel .scrollbox .card > .content {
+    flex: 0 1 280px;
+}
+
+.playerhub_sec .panel .scrollbox .card > .d-flex h4,
+.playerhub_sec .panel .scrollbox .card > .d-flex > div > div,
+.club-host-subtext {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.club-host-subtext {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.club-logo-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ced4da;
+    flex-shrink: 0;
+    background: #ffffff;
+}
+
+.club-logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.order-capsule {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    padding: 2px 8px;
+    margin-bottom: 10px;
+    font-size: 0.55rem;
+    color: #cbd5e1;
+}
+
+.order-capsule b {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.order-capsule .divider {
+    opacity: 0.3;
+    color: #ffffff;
+}
+
+.action-bar-unified {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.action-bar-unified svg {
+    flex-shrink: 0;
+}
+
+.btn-stacked-synced {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 6px 2px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #333333;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    text-decoration: none;
+    min-height: 45px;
+}
+
+.btn-stacked-synced svg,
+.btn-stacked-synced i {
+    width: 18px;
+    height: 18px;
+    margin-bottom: 3px;
+    color: #0d6efd;
+    stroke-width: 0.5px;
+    stroke: #0d6efd;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-stacked-synced.status-member {
+    border-color: #198754;
+    color: #198754;
+    background-color: #f0fff4;
+}
+
+.btn-stacked-synced.status-member svg,
+.btn-stacked-synced.status-member i {
+    color: #198754;
+    stroke: #198754;
+}
+
+.btn-stacked-synced.status-pending-state {
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+    background-color: rgba(255, 193, 7, 0.08) !important;
+}
+
+.btn-stacked-synced.status-pending-state svg,
+.btn-stacked-synced.status-pending-state i {
+    color: #ffc107 !important;
+    stroke: #ffc107 !important;
+}
+
+.btn-stacked-synced.action-view {
+    background-color: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+}
+
+.btn-stacked-synced.action-view svg,
+.btn-stacked-synced.action-view i {
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+.btn-stacked-synced.action-view.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.btn-stacked-synced.join-club-btn {
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    background: #f8f9fa;
+    color: #333333;
+}
+
+@media(max-width: 768px) {
+    .tournamentCard {
+        flex-direction: column;
+    }
+
+    .tournamentCard .banner {
+        width: 100%;
+        height: 140px;
+    }
+}
+
+/* Fix Bootstrap Modal Scrollbar Layout Shift & Page Compression */
+html {
+    scrollbar-gutter: stable;
+}
+
+body.modal-open {
+    padding-right: 0 !important;
+}
+
+.modal-open .navbar,
+.modal-open .fixed-top,
+.modal-open .fixed-bottom,
+.modal-open .is-fixed,
+.modal-open .sticky-top {
+    padding-right: 0 !important;
+}
+
+/* Location Filter Selects Appearance */
+.header_Box_Right select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+
+/* Tournament Card Details */
+.regBtn.reg-closed {
+    background: #475569 !important;
+    border-color: #334155 !important;
+}
+
+.regBtn.reg-closed p {
+    color: #cbd5e1 !important;
+}
+
+.joinbtn.pay-now-trigger {
+    background: #fb172e !important;
+    border: none !important;
+}
+
+.joinbtn.status-pending {
+    background: #ffc107 !important;
+    color: #000000 !important;
+    cursor: default !important;
+}
+
+.joinbtn.status-paid {
+    background: #28a745 !important;
+    cursor: default !important;
+}
+
+.joinbtn.status-disabled {
+    background: #475569 !important;
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+    cursor: not-allowed !important;
+    opacity: 0.8 !important;
+}
+
+/* Payment Modal Custom Styles */
+#PaymentModal .modal-content {
+    background: #1f2937 !important;
+    color: #ffffff !important;
+}
+
+#PaymentModal .modal-header {
+    border-bottom: 1px solid #334155 !important;
+}
+
+#modalTournamentAmountDisplay {
+    color: #22c55e !important;
+}
+
+#paymentError {
+    font-size: 0.8rem !important;
+}
+
+#PaymentModal .modal-footer {
+    border-top: 1px solid #334155 !important;
+}
+
+/* Success Overlay Details */
+.success-icon {
+    font-size: 70px;
+    color: #22c55e;
+}
+
+.success-title {
+    color: #ffffff;
+    margin-top: 20px;
+    font-weight: 800;
+}
+
+.success-desc {
+    color: #94a3b8;
+    font-size: 1.2rem;
+}
+
+.success-desc strong {
+    color: #ffffff;
+}
+
+.success-note {
+    color: #94a3b8;
+}
+
+.success-close-btn {
+    background: #fb172e !important;
+    border: none !important;
+    padding: 12px 40px !important;
+    font-weight: bold !important;
+}

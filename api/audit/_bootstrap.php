@@ -15,11 +15,14 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    require_once __DIR__ . '/../_security.php';
 }
 
-// Match the timezone the rest of the API layer records timestamps in.
-date_default_timezone_set('America/Toronto');
+require_once __DIR__ . '/../../app/Config/env.php';
+$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
+if (!empty($appTz)) {
+    @date_default_timezone_set($appTz);
+}
 
 // An API must return clean JSON — never let a stray notice/warning corrupt it.
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
@@ -38,6 +41,8 @@ function json_out($data, int $code = 200): void
 }
 
 /* ---- Authorization: Host only, enforced server-side ---------------------- */
+require_once __DIR__ . '/../_security.php';
+requireApiUser(['Host']);
 $__uid  = $_SESSION['user_id']  ?? null;
 $__role = isset($_SESSION['usertype']) ? trim($_SESSION['usertype']) : '';
 
@@ -51,7 +56,7 @@ if (strcasecmp($__role, 'Host') !== 0) {
 $HOST_ID = (int) $__uid;
 
 /* ---- Database ---------------------------------------------------------- */
-require_once __DIR__ . '/../../config/env.php';
+require_once __DIR__ . '/../../app/Config/env.php';
 try {
     $pdo = new PDO(
         'mysql:host=' . env('DB_HOST', 'localhost') .

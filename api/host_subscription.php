@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 /**
  * api/host_subscription.php
  * ------------------------------------------------------------------
@@ -18,10 +20,11 @@
  * ------------------------------------------------------------------
  */
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+require_once __DIR__ . '/../app/Config/env.php';
+$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
+if (!empty($appTz)) {
+    @date_default_timezone_set($appTz);
 }
-date_default_timezone_set('America/Toronto');
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
@@ -44,7 +47,7 @@ if (strcasecmp($role, 'Player') === 0 || $role === '') {
 }
 $HOST_ID = (int) $uid;
 
-require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/../app/Config/env.php';
 try {
     $pdo = new PDO(
         'mysql:host=' . env('DB_HOST', 'localhost') . ';dbname=' . env('DB_NAME', 'casa_test') . ';charset=' . env('DB_CHARSET', 'utf8mb4'),

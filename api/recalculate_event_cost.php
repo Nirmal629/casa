@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 include('../dbConnection.php');
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$eventId   = (int)$data['event_id'];
+$eventId = requireOwnedEvent($conn, $data['event_id'] ?? null);
 $eventTime = $data['event_time'];
 $toTime    = $data['to_time'];
 

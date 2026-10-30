@@ -1,0 +1,56 @@
+/* Modern host dashboard skin. Keeps the existing tab IDs and form/API hooks intact. */
+:root {
+    --host-blue: #2563eb;
+    --host-indigo: #4338ca;
+    --host-ink: #0f172a;
+    --host-muted: #64748b;
+    --host-line: #e2e8f0;
+    --host-surface: #ffffff;
+    --host-bg: #f1f5f9;
+}
+
+body:has(.host-modern-dashboard) { background: var(--host-bg); }
+.host-modern-dashboard .custom_card,
+.host-modern-dashboard .newgame_host .custom_card {
+    border: 1px solid var(--host-line);
+    border-radius: 20px;
+    background: var(--host-surface);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, .07);
+}
+.host-modern-dashboard .heading { color: var(--host-ink); font-weight: 800; letter-spacing: -.02em; }
+.host-modern-dashboard .nav-stacked-pills { gap: 6px; padding: 6px; background: #f8fafc; border-radius: 16px; }
+.host-modern-dashboard .nav-stacked-pills .nav-link {
+    border: 0; border-radius: 11px; color: var(--host-muted); font-size: 12px;
+    font-weight: 800; padding: 10px 15px; transition: .2s ease;
+}
+.host-modern-dashboard .nav-stacked-pills .nav-link:hover { background: #eaf1ff; color: var(--host-blue); }
+.host-modern-dashboard .nav-stacked-pills .nav-link.active {
+    color: #fff; background: linear-gradient(135deg, var(--host-blue), var(--host-indigo));
+    box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+}
+.host-modern-dashboard .card_heading { color: #172554; font-weight: 800; letter-spacing: -.01em; }
+.host-modern-dashboard .form-label { color: #475569; font-size: 12px; font-weight: 800; }
+.host-modern-dashboard .form-control,
+.host-modern-dashboard .form-select {
+    border: 1.5px solid var(--host-line); border-radius: 10px; background: #f8fafc;
+    color: var(--host-ink); font-size: 13px; min-height: 40px;
+}
+.host-modern-dashboard .form-control:focus,
+.host-modern-dashboard .form-select:focus {
+    border-color: #60a5fa; background: #fff; box-shadow: 0 0 0 3px rgba(59,130,246,.13);
+}
+.host-modern-dashboard .discoverGames_card_sub {
+    border: 1px solid var(--host-line) !important; border-radius: 17px !important;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .07) !important; background: #fff;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.host-modern-dashboard .discoverGames_card_sub:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(15,23,42,.11) !important; }
+.host-modern-dashboard .discoverGames_card_sub .bg-primary { background: linear-gradient(90deg,#1d4ed8,#4338ca) !important; }
+.host-modern-dashboard .discoverGames_card_sub .btn-success { background: linear-gradient(135deg,#2563eb,#4338ca); border: 0; }
+.host-modern-dashboard .modal-content, .host-modern-dashboard .customModal_body {
+    border: 1px solid var(--host-line); border-radius: 20px; box-shadow: 0 20px 45px rgba(15,23,42,.2);
+}
+@media (max-width: 768px) {
+    .host-modern-dashboard .nav-stacked-pills { overflow-x: auto; flex-wrap: nowrap; }
+    .host-modern-dashboard .nav-stacked-pills .nav-link { white-space: nowrap; padding-inline: 11px; }
+}

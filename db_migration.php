@@ -139,10 +139,13 @@ try {
 
     // 7. Add missing columns to ca_payment if they don't exist
     $payment_cols = [
+        'HOST_ID' => "ALTER TABLE `ca_payment` ADD COLUMN `HOST_ID` INT(11) NULL DEFAULT NULL AFTER `USER_ID`",
         'MESSAGE' => "ALTER TABLE `ca_payment` ADD COLUMN `MESSAGE` TEXT NOT NULL DEFAULT ''",
         'REVIEWED_BY' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_BY` INT(11) NULL DEFAULT NULL",
         'REVIEWED_AT' => "ALTER TABLE `ca_payment` ADD COLUMN `REVIEWED_AT` TIMESTAMP NULL DEFAULT NULL",
-        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL"
+        'REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `REJECTION_REASON` TEXT NULL DEFAULT NULL",
+        'IS_REINITIATED' => "ALTER TABLE `ca_payment` ADD COLUMN `IS_REINITIATED` TINYINT(1) NOT NULL DEFAULT 0",
+        'PREV_REJECTION_REASON' => "ALTER TABLE `ca_payment` ADD COLUMN `PREV_REJECTION_REASON` TEXT NULL DEFAULT NULL"
     ];
     foreach ($payment_cols as $col => $alter_sql) {
         $check = $conn->query("SHOW COLUMNS FROM `ca_payment` LIKE '$col'");
@@ -155,6 +158,18 @@ try {
         } else {
             $log .= "• Column '$col' already exists in ca_payment\n";
         }
+    }
+
+    // 8. Add PASSWORD_HASH column to ca_users if it doesn't exist
+    $check_pwd_hash = $conn->query("SHOW COLUMNS FROM `ca_users` LIKE 'PASSWORD_HASH'");
+    if ($check_pwd_hash && $check_pwd_hash->num_rows == 0) {
+        if ($conn->query("ALTER TABLE `ca_users` ADD COLUMN `PASSWORD_HASH` VARCHAR(255) NULL AFTER `PASSWORD`")) {
+            $log .= "✓ Column 'PASSWORD_HASH' added to ca_users\n";
+        } else {
+            throw new Exception("Failed to add column PASSWORD_HASH to ca_users: " . $conn->error);
+        }
+    } else {
+        $log .= "• Column 'PASSWORD_HASH' already exists in ca_users\n";
     }
 
     $log .= "=== Migration SUCCESS! ===\n";

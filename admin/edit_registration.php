@@ -11,7 +11,7 @@ $dsn     = "mysql:host=$host;dbname=$db;charset=utf8";
 $conn = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);include "header.php"; // Using your header
 include "sidebar.php"; // Using your sidebar
 
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
+if (session_status() === PHP_SESSION_NONE) { require_once __DIR__ . '/_session.php'; }
 
 // 1. Get the Player ID from URL
 $player_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;

@@ -1,6 +1,11 @@
 <?php
-date_default_timezone_set('America/Toronto'); // Eastern Time (ET)
-require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/../app/Config/env.php';
+$appTimezone = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
+if (!empty($appTimezone)) {
+    @date_default_timezone_set((string) $appTimezone);
+}
+require_once __DIR__ . '/../app/Helpers/Session.php';
+\App\Helpers\Session::start();
 
 $host = env('DB_HOST', 'localhost');
 $dbName = env('DB_NAME', 'casa_test');

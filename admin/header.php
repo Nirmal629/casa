@@ -1,10 +1,10 @@
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
-	session_start();
+	require_once __DIR__ . '/_session.php';
 }
 
-if (!isset($_SESSION['user_id'])) {
+if (empty($_SESSION['admin_authenticated']) || !isset($_SESSION['user_id'])) {
 
 	header("Location: index.php");
 
@@ -18,6 +18,8 @@ if (!isset($_SESSION['user_id'])) {
 <html class="fixed">
 
 <head>
+<meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? \App\Helpers\Session::getCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+<script src="/app/script/security-transport.js"></script>
 
 
 

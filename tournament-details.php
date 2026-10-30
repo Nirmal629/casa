@@ -331,7 +331,7 @@ try {
 
 
 
-include "includes/header.php";
+include __DIR__ . "/app/Views/layouts/header/header.php";
 
 ?>
 <?php
@@ -1196,7 +1196,7 @@ if (!empty($event['CANCEL_DATE'])) {
 
 </div>
 
-<?php include "includes/footer.php"; ?>
+<?php include __DIR__ . "/app/Views/layouts/footer/footer.php"; ?>
 
 
 

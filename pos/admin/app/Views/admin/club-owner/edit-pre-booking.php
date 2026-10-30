@@ -43,6 +43,7 @@
                 </div>
             <?php endif; ?>
             <form class="row g-3 needs-validation" action="<?=base_url()?>club-owner/modifyprebooking" method="post" novalidate>
+              <?= csrf_field() ?>
               <input type="hidden" name="booking_type" value="pre_booking">
               <input type="hidden" name="booking_key" value="<?=$booking_key?>">
             <div class="card-body">

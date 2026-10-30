@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiUser([]);
+
 include('dbConnection.php');
 
     $user_id = $_POST['user_id'];

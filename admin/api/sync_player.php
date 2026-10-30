@@ -1,13 +1,13 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/_session.php';
 error_reporting(0); 
 header('Content-Type: application/json');
 
 /* --- 1. DATABASE CONNECTION (PDO) --- */
-$host    = 'localhost';
-$db      = 'casa_test';
-$user    = 'casa_test';
-$pass    = 'casa_test123#';
+$host = env('DB_HOST', 'localhost');
+$db = env('DB_NAME', 'casa_test');
+$user = env('DB_USER', 'root');
+$pass = env('DB_PASS', '');
 $charset = 'utf8mb4';
 
 if (empty($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {

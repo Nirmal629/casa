@@ -1,5 +1,9 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 include 'dbConnection.php';
+requireApiPost();
+requireOwnedEvent($conn, $_POST['id'] ?? null);
 
 // print_r($_POST);exit;
 
@@ -37,6 +41,7 @@ $snackscost = isset($_POST['snackscost']) ? validate_input($_POST['snackscost'])
 $eventtotalCostt = isset($_POST['eventtotalCostt']) ? validate_input($_POST['eventtotalCostt']) : null;
 $eventtotalplayerCostt = isset($_POST['eventtotalplayerCostt']) ? validate_input($_POST['eventtotalplayerCostt']) : null;
 $profitloss = isset($_POST['profitloss']) ? validate_input($_POST['profitloss']) : null;
+$courtconfirmed = isset($_POST['courtconfirmed']) ? (int)validate_input($_POST['courtconfirmed']) : null;
 
 // Check required fields
 if (!$id || !$event_date || !$event_time || !$event_cost) {
@@ -79,9 +84,10 @@ $sql = "UPDATE ca_events
             TOTAL_EVENT_COST='$eventtotalCostt',
             TOTAL_PLAYER_COST='$eventtotalplayerCostt',
             PROFIT_LOSS='$profitloss',
-            BIRDIE_USED = '".$_POST['birdieUsed']."',
+            BIRDIE_USED = '".(int)($_POST['birdieUsed'] ?? 0)."',
             BIRDIE_COST = '$accessoriesCost',
-            CLUB_COST = '".$_POST['clubClost']."'
+            CLUB_COST = '".(float)($_POST['clubClost'] ?? 0)."',
+            COURTS_CONFIRMED = '$courtconfirmed'
         WHERE ID = '$id'";
 
 if ($conn->query($sql) === TRUE) {

@@ -235,8 +235,8 @@ breadcrumbs
     font-weight: 300;
 }
 
-.breadcrumbs > :last-child::after {
-   display: none;
+.breadcrumbs> :last-child::after {
+    display: none;
 }
 
 /* 

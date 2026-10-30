@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/env.php';
+require_once __DIR__ . '/app/Config/env.php';
 
 $host    = env('DB_HOST', 'localhost');
 $db      = env('DB_NAME', 'casa_test');

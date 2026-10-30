@@ -2654,7 +2654,7 @@
     .tournament_Details .tournamentCardTxt p,
     .tournament_Details .tournamentCardTxt strong,
     .tournament_Details .tournamentCardTxt span {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .playerhub_sec .header_box span {
@@ -2670,3 +2670,275 @@
         font-size: 15px;
     }
 }
+
+/* Reference Screenshot Tournament Card Design */
+.tournamentcard_slider .slick-track {
+    display: flex !important;
+}
+.tournamentcard_slider .slick-slide {
+    height: auto !important;
+    display: flex !important;
+    padding: 0 10px;
+}
+.tournamentcard_slider .slick-slide > div {
+    display: flex;
+    width: 100%;
+}
+.tournament_card {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tournament_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+}
+.tournament_card .image {
+    width: 100%;
+    height: 200px;
+    background: #f1f5f9;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.tournament_card .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.tournament_card .content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+}
+.tournament_card .name {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+    margin-bottom: 2px !important;
+    line-height: 1.3;
+    min-height: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.tournament_card .tagline {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #2563eb !important;
+    text-align: center !important;
+    display: block;
+    margin-bottom: 8px !important;
+    min-height: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex: 1;
+}
+.card-info-list .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.card-info-list .info-icon {
+    color: #0284c7;
+    font-size: 16px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.card-info-list .info-text {
+    color: #334155;
+    font-weight: 500;
+}
+.card-info-list .info-text strong {
+    color: #0f172a;
+    font-weight: 700;
+}
+.tournament_card .openBtn {
+    margin-top: auto;
+    width: 100%;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease;
+}
+.tournament_card .open-btn-active {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+.tournament_card .open-btn-active:hover {
+    background: #0369a1 !important;
+}
+.tournament_card .open-btn-closed {
+    background: #8492a6 !important;
+    color: #ffffff !important;
+    cursor: default !important;
+}
+
+/* Prevent Hero Banner & Sliders FOUC / vertical layout jump on page refresh before Slick initializes */
+.herobanner_slider:not(.slick-initialized) {
+    display: block !important;
+    overflow: hidden !important;
+    position: relative !important;
+    max-height: 80vh !important;
+}
+
+.herobanner_slider:not(.slick-initialized) > .item:not(:first-child) {
+    display: none !important;
+}
+
+.herobanner_slider:not(.slick-initialized) > .item:first-child {
+    display: block !important;
+    width: 100% !important;
+}
+
+.tournamentcard_slider:not(.slick-initialized),
+.sttoreproduct_slider:not(.slick-initialized),
+.casaphotos_slider:not(.slick-initialized),
+.casavideo_slider:not(.slick-initialized),
+.advertisement_slider:not(.slick-initialized) {
+    display: flex !important;
+    overflow: hidden !important;
+    gap: 20px !important;
+}
+
+.tournamentcard_slider:not(.slick-initialized) > *:nth-child(n+5),
+.sttoreproduct_slider:not(.slick-initialized) > *:nth-child(n+5),
+.casaphotos_slider:not(.slick-initialized) > *:nth-child(n+5),
+.casavideo_slider:not(.slick-initialized) > *:nth-child(n+5),
+.advertisement_slider:not(.slick-initialized) > *:nth-child(n+5) {
+    display: none !important;
+}
+
+/* Gallery Images & Video Thumbnails Fixed Uniform Sizing */
+.casaphotos_slider .img-box,
+.casavideo_slider .casavideo-box {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    height: 240px !important;
+    margin: 0 8px !important;
+    background: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.casaphotos_slider .img-box:hover,
+.casavideo_slider .casavideo-box:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45) !important;
+}
+
+.casaphotos_slider .img-box a,
+.casavideo_slider .casavideo-box a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+}
+
+.casaphotos_slider .img-box img,
+.casavideo_slider .casavideo-box img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 12px !important;
+    transition: transform 0.4s ease !important;
+}
+
+.casaphotos_slider .img-box:hover img,
+.casavideo_slider .casavideo-box:hover img {
+    transform: scale(1.06) !important;
+}
+
+.casavideo-box .transparent-box {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.35) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.3s ease !important;
+}
+
+.casavideo-box:hover .transparent-box {
+    background: rgba(0, 0, 0, 0.55) !important;
+}
+
+.casavideo-box .caption {
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(2, 132, 199, 0.9) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    font-size: 18px !important;
+    padding-left: 3px !important;
+    box-shadow: 0 0 15px rgba(2, 132, 199, 0.8) !important;
+    transition: transform 0.3s ease, background 0.3s ease !important;
+}
+
+.casavideo-box:hover .caption {
+    transform: scale(1.15) !important;
+    background: #0284c7 !important;
+}
+
+@media (max-width: 576px) {
+    .casaphotos_slider .img-box,
+    .casavideo_slider .casavideo-box {
+        height: 200px !important;
+    }
+}
+
+/* Gallery Tab Content Stability & Smooth Transition */
+.gallerypage_sec .tab-content {
+    overflow: hidden !important;
+}
+
+.gallerypage_sec .tab-content:not(.active) {
+    display: none !important;
+}
+
+.gallerypage_sec .tab-content.active {
+    display: block !important;
+}
+
+.casaphotos_slider,
+.casavideo_slider {
+    overflow: hidden !important;
+}
+
+

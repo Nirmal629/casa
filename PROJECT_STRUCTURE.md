@@ -14,10 +14,9 @@
 ├── .user.ini
 ├── 404.shtml
 ├── index.php                  # Homepage — হিরো ব্যানার, টুর্নামেন্ট, স্টোর, গ্যালারি, টেস্টিমোনিয়াল
-├── init.php                   # Project Autoloader — সব হেলপার ও কনফিগ লোড করে
+├── init.php                   # সেন্ট্রাল বুটস্ট্র্যাপার (Config, DB & Helpers load)
 ├── dbConnection.php           # MySQLi সংযোগ (লিগ্যাসি)
 ├── dbConnection_PDO.php       # PDO সংযোগ (লিগ্যাসি)
-├── logout.php                 # সেশন ডেস্ট্রয় + redirect to index.php
 ├── home.html                  # স্ট্যাটিক HTML (সম্ভবত পুরনো ব্যাকআপ)
 ├── phpinfo.php                # PHP info (ডিবাগিং)
 ├── clear-opcache.php          # OPcache ক্লিয়ার
@@ -40,17 +39,29 @@
 ├── casa-trainers.php          # Trainers landing page
 ├── casa-clubs.php             # Clubs landing page
 │
-├──── Auth Related ────
-├── includes/
-│   ├── Auth/
+├──── Auth & Views ────
+├── app/Views/
+│   ├── auth/
 │   │   ├── login.php          # লগইন ফর্ম + PHP login logic + CSRF
 │   │   └── resister.php       # রেজিস্ট্রেশন মডেল ফর্ম (HTML/CSS/JS)
-│   ├── header.php             # সাইটের মূল হেডার
-│   ├── inner-header.php       # ভিতরের পেজের জন্য হেডার
-│   ├── store-header.php       # স্টোর পেজের জন্য হেডার
-│   ├── header-links.php       # <head> এর meta links
-│   ├── footer.php             # সাইটের ফুটার
-│   ├── footer-links.php       # ফুটারের স্ক্রিপ্ট লিংক
+│   ├── pages/
+│   │   ├── about-us.php       # আমাদের সম্পর্কে পেজ
+│   │   ├── contact-us.php     # যোগাযোগের ফর্ম সেকশন
+│   │   ├── contact-handler.php# যোগাযোগের ফর্ম প্রসেসর ও মেইল সেন্ডার
+│   │   ├── gallery.php        # গ্যালারি মিডিয়া গ্রিড
+│   │   ├── gallery-page.php   # গ্যালারি সম্পূর্ণ পেজ
+│   │   ├── casa-clubs.php     # ক্লাব পেজ
+│   │   ├── casa-trainers.php  # ট্রেইনার পেজ
+│   │   ├── organiser.php      # অর্গানাইজার পেজ
+│   │   ├── players.php        # প্লেয়ার ল্যান্ডিং পেজ
+│   │   ├── discover-games.php # গেমস ডিসকভার সেকশন
+│   │   └── legal/
+│   │       ├── privacy-policy.php     # প্রাইভেসি পলিসি
+│   │       ├── termsCondition.php     # টার্মস ও কন্ডিশন
+│   │       └── CancellationPolicy.php # ক্যানসেলেশন পলিসি
+│   ├── layouts/
+│   │   ├── header/            # হেডার লেআউট (header.php, inner-header.php, store-header.php)
+│   │   └── footer/            # ফুটার লেআউট (footer.php, footer-links.php)
 │
 ├──── Player Dashboard ────
 ├── player-hub.php             # প্লেয়ার হাব (মূল ড্যাশবোর্ড)
@@ -61,8 +72,7 @@
 ├── player-payment-list.php    # প্লেয়ারের পেমেন্ট লিস্ট
 ├── player-monthly-subscription.php # মাসিক সাবস্ক্রিপশন
 ├── player-profile.php         # প্লেয়ার প্রোফাইল
-├── player-rating.php          # প্লেয়ার রেটিং
-├── player-ratingbk.php        # রেটিং ব্যাকআপ
+├── player-rating.php          # [Obsolete] প্লেয়ার পিয়ার রেটিং (Decommissioned)
 │
 ├──── Host Dashboard ────
 ├── host-dashboard.php         # হোস্ট ড্যাশবোর্ড
@@ -147,10 +157,11 @@
 │   ├── play_filter_schedule.php   # প্লেয়ার ফিল্টার
 │   ├── player_filter_complete.php # প্লেয়ার কমপ্লিটেড ফিল্টার
 │   ├── pay_filter_complete.php    # পেমেন্ট কমপ্লিটেড ফিল্টার
-│   ├── save_payment.php           # পেমেন্ট সেভ
+│   ├── save_payment.php           # [Removed - Virtual Route: PlayerController::savePayment]
 │   ├── save_confirm.php           # কনফার্মেশন সেভ
-│   ├── save_rating.php            # রেটিং সেভ (প্লেয়ার)
-│   ├── save_rating_by_host.php    # রেটিং সেভ (হোস্ট)
+│   ├── save_rating.php            # [Obsolete] রেটিং সেভ (প্লেয়ার পিয়ার রেটিং)
+│   ├── save_rating_by_host.php    # [Removed - Virtual Route: HostController::saveRatingByHost]
+│   ├── save_review.php            # [Removed - Virtual Route: PlayerController::saveReview]
 │   ├── save_invitation.php        # ইনভাইটেশন সেভ
 │   ├── save_registration.php      # রেজিস্ট্রেশন সেভ
 │   ├── update_inviteJoin.php      # ইনভাইট জয়েন আপডেট
@@ -161,13 +172,13 @@
 │   ├── update-automation.php      # অটোমেশন আপডেট
 │   ├── updateAuto.php             # অটো আপডেট
 │   ├── upload_profile_image.php   # প্রোফাইল ইমেজ আপলোড
-│   ├── get_filtered_players.php   # ফিল্টার করা প্লেয়ার লিস্ট
-│   ├── get_player_info.php        # প্লেয়ার ইনফো
-│   ├── get_player_info_host.php   # হোস্টের জন্য প্লেয়ার ইনফো
+│   ├── get_filtered_players.php   # [Removed / Obsolete - ফিল্টার করা প্লেয়ার লিস্ট]
+│   ├── get_player_info.php        # [Obsolete] প্লেয়ার ইনফো (পিয়ার রেটিং)
+│   ├── get_player_info_host.php   # [Removed - Virtual Route: HostController::getPlayerInfoHost]
 │   ├── get_player_cost.php        # প্লেয়ার কস্ট
 │   ├── get-num-player-joined.php  # জয়েন করা প্লেয়ার সংখ্যা
-│   ├── get_rating_table.php       # রেটিং টেবিল
-│   ├── get_ranking_range.php      # র্যাঙ্কিং রেঞ্জ
+│   ├── get_rating_table.php       # [Obsolete] রেটিং টেবিল (প্লেয়ার পিয়ার রেটিং)
+│   ├── get_ranking_range.php      # [Removed - Virtual Route: HostController::getRankingRange]
 │   ├── view_player.php            # প্লেয়ার ভিউ
 │   ├── view_player_pay.php        # প্লেয়ার পেমেন্ট ভিউ
 │   ├── view_player_paylist.php    # পেমেন্ট লিস্ট ভিউ
@@ -303,7 +314,7 @@
 | **`logout.php`** | সেশন ডেস্ট্রয় করে `index.php`-তে রিডাইরেক্ট করে। |
 | **`clear-opcache.php`** | PHP OPcache ক্লিয়ার করে (ডিবাগিং টুল)। |
 
-### 🔷 Authentication (`includes/Auth/`)
+### 🔷 Authentication (`app/Views/auth/`)
 
 | ফাইল | কী করে |
 |---|---|
@@ -345,7 +356,7 @@
 | **`player-payment-list.php`** | পেমেন্ট লিস্ট ও হিস্টোরি |
 | **`player-monthly-subscription.php`** | মাসিক সাবস্ক্রিপশন প্ল্যান ও পেমেন্ট |
 | **`player-profile.php`** | প্রোফাইল এডিট/ভিউ |
-| **`player-rating.php`** | রেটিং ও রিভিউ সিস্টেম |
+| **`player-rating.php`** | [Obsolete] প্লেয়ার পিয়ার রেটিং (Redirects to Dashboard) |
 
 ### 🔷 Host Dashboard
 
@@ -412,11 +423,11 @@
 | **`api/join_event.php`** | প্লেয়ার ইভেন্ট জয়েন করে (AJAX) |
 | **`api/cancel_event.php`** | ইভেন্ট ক্যানসেল করে |
 | **`api/save_payment.php`** | পেমেন্ট সেভ/আপডেট করে (AJAX) |
-| **`api/save_rating.php`** | রেটিং সেভ করে (AJAX) |
+| **`api/save_rating.php`** | [Obsolete] প্লেয়ার রেটিং সেভ (Decommissioned) |
 | **`api/upload_profile_image.php`** | প্রোফাইল ছবি আপলোড (AJAX) |
 | **`api/save_registration.php`** | রেজিস্ট্রেশন ফর্ম ডাটা সেভ |
 | **`api/search_result.php`** | সার্চ রেজাল্ট রিটার্ন (AJAX) |
-| **`api/get_filtered_players.php`** | ফিল্টার করা প্লেয়ার লিস্ট (AJAX) |
+| **`api/get_filtered_players.php`** | [Removed / Obsolete] ফিল্টার করা প্লেয়ার লিস্ট |
 
 ---
 

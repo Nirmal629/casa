@@ -1,13 +1,19 @@
 <?php
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
+
 include('dbConnection.php');
+requireApiPost();
+requireOwnedEvent($conn, $_POST['game_id'] ?? null);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['payid'];
-    $game_id = $_POST['game_id'];
-    $status = $_POST['status'];
-    
-    $update_pay = mysqli_query($conn,"update ca_payment set STATUS='$status' where ID='$id'");
+    $id = filter_var($_POST['payid'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    $game_id = (int) $_POST['game_id'];
+    $status = $_POST['status'] ?? '';
+    if (!$id || !is_string($status) || !in_array($status, ['Y', 'N', 'R'], true)) apiSecurityDeny(400, 'Invalid payment.');
+    $stmt = $conn->prepare('UPDATE ca_payment SET STATUS = ? WHERE ID = ? AND GAME_ID = ?');
+    $stmt->bind_param('sii', $status, $id, $game_id);
+    $update_pay = $stmt->execute();
     if($update_pay)
     {
     // Fetch total amount paid by the user for this game

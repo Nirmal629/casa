@@ -1,5 +1,7 @@
 <?php
-session_start(); // Ensure session is started
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -16,8 +18,13 @@ include('dbConnection.php');
     //     exit();
     // }
 
+    if (empty($_SESSION['user_id'])) {
+        echo json_encode(["success" => false, "message" => "Unauthorized. Please log in first."]);
+        exit();
+    }
+
     // Sanitize inputs
-    $host_name = $conn->real_escape_string($_POST['host_name']);
+    $host_name = $conn->real_escape_string($_POST['host_name'] ?? '');
     $event_country = $conn->real_escape_string($_POST['event_country']);
     $event_province = $conn->real_escape_string($_POST['event_province']);
     $event_city = $conn->real_escape_string($_POST['event_city']);

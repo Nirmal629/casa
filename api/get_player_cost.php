@@ -1,5 +1,9 @@
-<?php 
+<?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']); 
 include('dbConnection.php');
+requireApiPost();
+requireOwnedEvent($conn, $_POST['event_id'] ?? null);
 
 $eventId = $_POST['event_id'];
 

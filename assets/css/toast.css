@@ -1,0 +1,81 @@
+/* Toastr Custom Royal Blue Theme - Location: assets/css/toast.css */
+#toast-container > div {
+  opacity: 0.98 !important;
+  background-color: #081b3cff !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
+  padding: 14px 20px 14px 44px !important;
+  width: auto !important;
+  min-width: 280px !important;
+  max-width: 450px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55) !important;
+  font-family: 'Figtree', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+}
+
+#toast-container > .toast-success {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important;
+  background-position: 16px center !important;
+  background-repeat: no-repeat !important;
+}
+
+#toast-container > .toast-error {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important;
+  background-position: 16px center !important;
+  background-repeat: no-repeat !important;
+}
+
+#toast-container > .toast-warning {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23eab308' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important;
+  background-position: 16px center !important;
+  background-repeat: no-repeat !important;
+}
+
+#toast-container > .toast-info {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'%3E%3C/line%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important;
+  background-position: 16px center !important;
+  background-repeat: no-repeat !important;
+}
+
+#toast-container > div:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7) !important;
+  opacity: 1 !important;
+}
+
+#toast-container .toast-message {
+  color: #ffffff !important;
+}
+
+#toast-container .toast-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+}
+
+#toast-container .toast-close-button {
+  color: #94a3b8 !important;
+  text-shadow: none !important;
+  opacity: 0.7 !important;
+}
+
+#toast-container .toast-close-button:hover {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+#toast-container .toast-progress {
+  height: 3px !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  opacity: 0.8 !important;
+}
+
+@font-face {
+  font-display: swap;
+}

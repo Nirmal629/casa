@@ -2,7 +2,7 @@
 // Ensure the login session is available before any output is sent by this header,
 // so tournament pages can read $_SESSION (host detection, etc.).
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    require_once __DIR__ . '/../../api/_security.php';
 }
 
 $isHostTournamentUser = in_array(trim((string)($_SESSION['usertype'] ?? '')), ['Host', 'Trainer'], true);
@@ -62,6 +62,8 @@ $isPlayoffDashboard = ($tournamentCurrentPage === 'court-dashboard.php');
 <html lang="en">
 
 <head>
+<meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? \App\Helpers\Session::getCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+<script src="/app/script/security-transport.js"></script>
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta name="keywords" content="">

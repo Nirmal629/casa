@@ -32,6 +32,7 @@
               <?php endif;?>
               <!-- General Form Elements -->
               <form class="row g-3 needs-validation" action="<?=base_url()?>club-owner/editstringing" method="post" novalidate>
+                <?= csrf_field() ?>
                 <input type="hidden" name="string_id" value="<?=$string_id?>">
                 <input type="hidden" name="service_no" value="<?=$string_details['service_no']?>">
                 

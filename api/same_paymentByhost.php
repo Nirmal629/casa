@@ -1,6 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
+
 include('dbConnection.php');
+requireApiPost();
+requireOwnedEvent($conn, $_POST['game_id'] ?? null);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_POST['user_id'];

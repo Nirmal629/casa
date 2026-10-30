@@ -212,7 +212,7 @@
                                                 <div class="info"><span>Venue:</span> <?php echo htmlspecialchars($row['EVENT_VENUE']); ?></div>
                                                 <div class="info">
                                                     <span>Teams Joined:</span>
-                                                    <?php echo $row['joined_count']; ?> / <?php echo $row['MAX_TEAMS']; ?>
+                                                    <?php echo htmlspecialchars((string)($row['joined_count'] ?? 0)); ?><?php echo !empty($row['MAX_TEAMS']) ? ' / ' . htmlspecialchars((string)$row['MAX_TEAMS']) : ''; ?>
                                                 </div>
                                             </div>
 

@@ -1,6 +1,15 @@
 <?php
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiUser([]);
+
 include('dbConnection.php');
+$requestedUser = filter_var($_POST['user_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$requestedGame = filter_var($_POST['game_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+if (!$requestedUser || !$requestedGame) apiSecurityDeny(400, 'Invalid request.');
+if ((int) $requestedUser !== (int) $_SESSION['user_id']) requireOwnedEvent($conn, $requestedGame);
+$_POST['user_id'] = (int) $requestedUser;
+$_POST['game_id'] = (int) $requestedGame;
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_POST['user_id'];

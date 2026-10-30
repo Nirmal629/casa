@@ -1,0 +1,94 @@
+/**
+ * Login Form Stylesheet
+ * Location: /app/Views/css/auth/login.css
+ */
+
+.form-2-wrapper .login-error-alert {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+}
+
+.form-2-wrapper .forgot-pw-btn {
+    color: #043a63;
+    font-size: 90%;
+    text-decoration: underline;
+    box-shadow: none;
+}
+
+.form-2-wrapper .register-modal-btn {
+    color: inherit;
+    font-weight: 500;
+    vertical-align: baseline;
+    box-shadow: none;
+}
+
+.form-2-wrapper .register-modal-btn:hover {
+    text-decoration: underline !important;
+}
+
+.form-2-wrapper .password-field .form-control {
+    padding-right: 46px;
+}
+
+.form-2-wrapper .toggle-password-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #94a3b8;
+    z-index: 30;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: none;
+    transition: background-color .25s ease, color .25s ease, transform .15s ease;
+}
+
+.form-2-wrapper .toggle-password-btn:hover {
+    background: rgba(4, 58, 99, 0.08);
+    color: #043a63;
+}
+
+.form-2-wrapper .toggle-password-btn:active {
+    transform: translateY(-50%) scale(0.88);
+}
+
+.form-2-wrapper .toggle-password-btn:focus-visible {
+    outline: 2px solid #043a63;
+    outline-offset: 2px;
+}
+
+.form-2-wrapper .toggle-password-btn .password-eye-icon {
+    font-size: 15px;
+    pointer-events: none;
+    transition: color .25s ease;
+}
+
+.form-2-wrapper .toggle-password-btn .fa-eye-slash {
+    color: #043a63;
+}
+
+.form-2-wrapper .toggle-password-btn.is-toggling .password-eye-icon {
+    animation: casaEyePop .3s ease;
+}
+
+@keyframes casaEyePop {
+    0% {
+        transform: scale(0.6) rotate(-15deg);
+        opacity: 0.4;
+    }
+    60% {
+        transform: scale(1.15) rotate(5deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}

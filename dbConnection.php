@@ -1,6 +1,9 @@
 <?php
-date_default_timezone_set('America/Toronto');
-require_once __DIR__ . '/config/env.php';
+require_once __DIR__ . '/app/Config/env.php';
+$appTimezone = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
+if (!empty($appTimezone)) {
+    @date_default_timezone_set((string) $appTimezone);
+}
 
 $host = env('DB_HOST', 'localhost');
 $dbName = env('DB_NAME', 'casa_test');
@@ -91,7 +94,7 @@ if (!function_exists('auditResolveHostId')) {
                 }
             }
 
-            $r2 = @mysqli_query($conn, "SELECT HOST_ID FROM ca_gamejoin WHERE USER_ID = $uid AND HOST_ID IS NOT NULL AND HOST_ID > 0 ORDER BY ID DESC LIMIT 1");
+            $r2 = @mysqli_query($conn, "SELECT ce.HOST_ID FROM ca_gamejoin cg JOIN ca_events ce ON cg.GAME_ID = ce.ID WHERE cg.USER_ID = $uid AND ce.HOST_ID IS NOT NULL AND ce.HOST_ID > 0 ORDER BY cg.ID DESC LIMIT 1");
             if ($r2 && ($row2 = mysqli_fetch_assoc($r2))) {
                 if (!empty($row2['HOST_ID']) && (int)$row2['HOST_ID'] > 0) {
                     return (int)$row2['HOST_ID'];

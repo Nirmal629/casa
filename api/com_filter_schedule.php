@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+
 }
 include('dbConnection.php');
 
@@ -37,15 +39,30 @@ echo '<table class="table table-success table-striped table-bordered table-sm te
                 <th scope="col">P&L</th>
                 <th scope="col">Joined</th>
                 <th scope="col">Confirmed</th>
-                <th scope="col">Players</th>
-                <th scope="col">Rollback</th>
                 <th scope="col">View</th>
+                <th scope="col">Rollback</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody>';
 
 if ($result && mysqli_num_rows($result) > 0) {
+    $whereEvents = "STATUS!='Active' AND HOST_ID='$host_id'";
+    if (!empty($conditions)) {
+        $whereEvents .= " AND " . implode(" AND ", $conditions);
+    }
+    $joinCounts = [];
+    $countsSql = "SELECT GAME_ID, COUNT(*) AS total_join, SUM(CASE WHEN CONFIRMED = 'Y' THEN 1 ELSE 0 END) AS total_confirmed FROM ca_gamejoin WHERE GAME_ID IN (SELECT ID FROM ca_events WHERE $whereEvents) GROUP BY GAME_ID";
+    $countsRes = mysqli_query($conn, $countsSql);
+    if ($countsRes) {
+        while ($cRow = mysqli_fetch_assoc($countsRes)) {
+            $joinCounts[(int)$cRow['GAME_ID']] = [
+                'total_join' => (int)$cRow['total_join'],
+                'total_confirmed' => (int)$cRow['total_confirmed']
+            ];
+        }
+    }
+
     $i = 1;
     $totalFacilityCost = 0;
     $totalAccessoriesCost = 0;
@@ -54,50 +71,48 @@ if ($result && mysqli_num_rows($result) > 0) {
     $totalPlayerCost = 0;
     $totalProfitLoss = 0;
     while ($event = mysqli_fetch_assoc($result)) {
-        $event_id = $event['ID'];
-        $event_date = date('D, d M Y', strtotime($event['EVENT_DATE']));
-        $event_venue = $event['EVENT_VENUE'];
-        $event_category = $event['EVENT_CATEGORY'];
-        $facility_cost = $event['FACILITY_COST'];
-        $accessories_cost = $event['ACCESSORIES_COST'];
-        $snacks_cost = $event['SNACKS_COST'];
-        $total_event_cost = $event['TOTAL_EVENT_COST'];
-        $total_player_cost = $event['TOTAL_PLAYER_COST'];
-        $profit_loss = $event['PROFIT_LOSS'];
-        $event_status = $event['STATUS'];
+        $event_id = (int)($event['ID'] ?? 0);
+        $event_host_id = (int)($event['HOST_ID'] ?? $host_id);
+        $event_date = !empty($event['EVENT_DATE']) ? date('D, d M Y', strtotime($event['EVENT_DATE'])) : '';
+        $event_venue = (string)($event['EVENT_VENUE'] ?? '');
+        $event_category = (string)($event['EVENT_CATEGORY'] ?? '');
+        $facility_cost = (string)($event['FACILITY_COST'] ?? '0.00');
+        $accessories_cost = (string)($event['ACCESSORIES_COST'] ?? '0.00');
+        $snacks_cost = (string)($event['SNACKS_COST'] ?? '0.00');
+        $total_event_cost = (string)($event['TOTAL_EVENT_COST'] ?? '0.00');
+        $total_player_cost = (string)($event['TOTAL_PLAYER_COST'] ?? '0.00');
+        $profit_loss = (string)($event['PROFIT_LOSS'] ?? '0.00');
+        $event_status = (string)($event['STATUS'] ?? '');
 
-        $status_class = ($event_status == 'Completed') ? 'green' : 'red';
-        
-        $totalJoin = mysqli_query($conn, "SELECT ID FROM ca_gamejoin WHERE GAME_ID='" . $event['ID'] . "'");
-        $countTotalJoin = $totalJoin ? mysqli_num_rows($totalJoin) : 0;
-        
-        $totalConfirmed = mysqli_query($conn, "SELECT ID FROM ca_gamejoin WHERE GAME_ID='" . $event['ID'] . "' AND CONFIRMED='Y'");
-        $countTotalConfirmed = $totalConfirmed ? mysqli_num_rows($totalConfirmed) : 0;
-        
-        $totalFacilityCost += floatval($facility_cost);
-        $totalAccessoriesCost += floatval($accessories_cost);
-        $totalSnacksCost += floatval($snacks_cost);
-        $totalEventCost += floatval($total_event_cost);
-        $totalPlayerCost += floatval($total_player_cost);
-        $totalProfitLoss += floatval($profit_loss);
+        $status_class = ($event_status === 'Completed') ? 'green' : 'red';
+        $pnlClass = ((float)$profit_loss < 0) ? 'text-danger fw-bold' : (((float)$profit_loss > 0) ? 'text-success fw-bold' : '');
+
+        $countTotalJoin = (int)($joinCounts[$event_id]['total_join'] ?? 0);
+        $countTotalConfirmed = (int)($joinCounts[$event_id]['total_confirmed'] ?? 0);
+
+        $totalFacilityCost += (float)$facility_cost;
+        $totalAccessoriesCost += (float)$accessories_cost;
+        $totalSnacksCost += (float)$snacks_cost;
+        $totalEventCost += (float)$total_event_cost;
+        $totalPlayerCost += (float)$total_player_cost;
+        $totalProfitLoss += (float)$profit_loss;
 
         echo '<tr>
-                <th scope="row">' . $i . '</th>
-                <td>' . htmlspecialchars($event_date) . '</td>
-                <td>' . htmlspecialchars($event_venue) . '</td>
-                <td>' . htmlspecialchars($event_category) . '</td>
-                <td>' . htmlspecialchars($facility_cost) . '</td>
-                <td>' . htmlspecialchars($accessories_cost) . '</td>
-                <td>' . htmlspecialchars($snacks_cost) . '</td>
-                <td>' . htmlspecialchars($total_event_cost) . '</td>
-                <td>' . htmlspecialchars($total_player_cost) . '</td>
-                <td>' . htmlspecialchars($profit_loss) . '</td>
-                <td><span class="slots-count badge bg-warning text-dark rounded-pill">' . $countTotalJoin . '</span></td>
-                <td><span class="slots-count badge bg-success text-light rounded-pill">' . $countTotalConfirmed . '</span></td>
-                <td><button type="button" class="btn played_btn playerviewmodal_open" data-id=' . $event_id . ' data-user-id=' . $host_id . '><i class="fa-solid fa-eye"></i></button></td>
-                <td><button type="button" class="btn btn-primary rollback_btn" data-id=' . $event_id . ' data-user-id=' . $host_id . '>Rollback</button></td>
-                <td><button type="button" class="btn eye_btn matchviewmodal_open" data-id="' . $event_id . '" data-user-id="' . $host_id . '"><i class="fa-solid fa-eye"></i></button></td>
-                <td><span class="' . $status_class . '">' . htmlspecialchars($event_status) . '</span></td>
+                <th scope="row" class="text-center">' . $i . '</th>
+                <td>' . htmlspecialchars($event_date, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($event_venue, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($event_category, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($facility_cost, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($accessories_cost, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($snacks_cost, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($total_event_cost, ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($total_player_cost, ENT_QUOTES, 'UTF-8') . '</td>
+                <td class="' . $pnlClass . '">' . htmlspecialchars($profit_loss, ENT_QUOTES, 'UTF-8') . '</td>
+                <td class="text-center"><span class="slots-count badge bg-warning text-dark rounded-pill">' . $countTotalJoin . '</span></td>
+                <td class="text-center"><span class="slots-count badge bg-success text-light rounded-pill">' . $countTotalConfirmed . '</span></td>
+                <td class="text-center"><button type="button" class="btn comp-view-btn playerviewmodal_open matchviewmodal_open" data-id="' . $event_id . '" data-user-id="' . $event_host_id . '" title="View Players & History"><i class="fa-solid fa-eye"></i></button></td>
+                <td class="text-center"><button type="button" class="btn btn-sm comp-rollback-btn rollback_btn" data-id="' . $event_id . '" data-user-id="' . $event_host_id . '">Rollback</button></td>
+                <td class="text-center"><span class="' . $status_class . '">' . htmlspecialchars($event_status, ENT_QUOTES, 'UTF-8') . '</span></td>
             </tr>';
         $i++;
     }
@@ -109,10 +124,10 @@ if ($result && mysqli_num_rows($result) > 0) {
         <td>' . number_format($totalEventCost, 2) . '</td>
         <td>' . number_format($totalPlayerCost, 2) . '</td>
         <td>' . number_format($totalProfitLoss, 2) . '</td>
-        <td colspan="6"></td>
+        <td colspan="5"></td>
       </tr>';
 } else {
-    echo '<tr><td colspan="16" class="text-center text-muted py-3">No events found.</td></tr>';
+    echo '<tr><td colspan="15" class="text-center text-muted py-3">No events found.</td></tr>';
 }
 
 echo '</tbody></table>';

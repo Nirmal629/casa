@@ -1,8 +1,9 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 // api/remove_member.php
 // Rejects a pending join request or removes an accepted member from the roster.
 
-session_start();
 include('../dbConnection.php');
 
 header('Content-Type: application/json');

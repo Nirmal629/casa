@@ -1,0 +1,17 @@
+Options -Indexes
+RewriteEngine On
+# Defense for Apache. Nginx/IIS require equivalent explicit location rules.
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(vendor|brain|scratch|scripts|tests|sql|PHPMailer)(/|$) - [F,L,NC]
+RewriteRule ^pos/admin/(app|system|writable|vendor)(/|$) - [F,L,NC]
+RewriteRule ^app/.*\.php(/|$) - [F,L,NC]
+RewriteRule ^(dbConnection[^/]*|init|.*migration[^/]*|reset)\.php$ - [F,L,NC]
+RewriteRule (^|/)(composer\.(json|lock)|AGENTS\.md|error_log|migration_[^/]+|ci_session[^/]*)$ - [F,L,NC]
+RewriteRule \.(env|ini|log|sql|sqlite|db|bak|old|orig|save|md|toml|ya?ml)($|/) - [F,L,NC]
+RewriteRule ^(uploads|profile_img)/.*\.(php[0-9]*|phtml|phar|cgi|pl)([./]|$) - [F,L,NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+RewriteRule (^|/)(\x7e|\[[0-9]|AnuragBackup(/|$)) - [F,L,NC]
+RewriteRule (^|/)assets/.*\.(php[0-9]*|phtml|phar)([./]|$) - [F,L,NC]

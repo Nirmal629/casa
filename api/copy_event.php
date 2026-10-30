@@ -1,5 +1,7 @@
 <?php
-session_start(); // Ensure session is started
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
+
 include('dbConnection.php');
 $response = array();
     // Sanitize inputs
