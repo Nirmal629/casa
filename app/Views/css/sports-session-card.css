@@ -55,10 +55,9 @@ html {
   display: none !important;
 }
 
-/* Responsive Grid / Flex for Player, Host & Subscription Cards Container */
+/* Responsive Grid / Flex for Player & Host Cards Container */
 .discoverGames_wraper.plyerGame_wrapper,
-.discoverGames_wraper.hostWrapper,
-.discoverGames_wraper.subscriptionWrapper {
+.discoverGames_wraper.hostWrapper {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 16px !important;
@@ -69,18 +68,35 @@ html {
   contain: layout;
 }
 
+/* Responsive Grid / Flex for Weekly Schedule / Subscription Cards Container */
+.discoverGames_wraper.subscriptionWrapper {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
 .discoverGames_wraper.plyerGame_wrapper .discoverGames_card,
 .discoverGames_wraper.plyerGame_wrapper .discoverGames_card.player_cards,
 .discoverGames_wraper.plyerGame_wrapper .discoverGames_card.session-card,
 .discoverGames_wraper.hostWrapper .discoverGames_card,
-.discoverGames_wraper.hostWrapper .discoverGames_card.session-card,
+.discoverGames_wraper.hostWrapper .discoverGames_card.session-card {
+  flex: 0 0 465px !important;
+  width: 465px !important;
+  max-width: 465px !important;
+  margin: 0 0 16px 0 !important;
+}
+
 .discoverGames_wraper.subscriptionWrapper .discoverGames_card,
 .discoverGames_wraper.subscriptionWrapper .discoverGames_card.session-card,
 .discoverGames_wraper.subscriptionWrapper .discoverGames_card_sub {
   flex: 0 0 465px !important;
   width: 465px !important;
   max-width: 465px !important;
-  margin: 0 0 16px 0 !important;
+  margin: 0 !important;
 }
 
 @media (max-width: 1540px) and (min-width: 992px) {
@@ -1013,5 +1029,33 @@ html {
     text-overflow: clip !important;
   }
 }
+
+/* =========================================================================
+   Weekly Game Schedule (Subscription List) Compact Spacing Fix
+   ========================================================================= */
+.weekly-schedule-section .custom_card {
+  padding: 20px 24px !important;
+}
+
+.weekly-schedule-section .card_heading {
+  margin-bottom: 16px !important;
+}
+
+.weekly-schedule-section .mb-4 {
+  margin-bottom: 20px !important;
+}
+
+.weekly-schedule-section .mb-4:last-child {
+  margin-bottom: 0 !important;
+}
+
+.weekly-schedule-section h4.text-uppercase {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  color: #475569 !important;
+  margin-bottom: 10px !important;
+}
+
 
 

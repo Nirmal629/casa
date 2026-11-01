@@ -46,24 +46,31 @@ $msMonths = getMonthOptions(true);
         overflow: hidden;
     }
 
-    /* header */
+    /* header - merged with toolbar */
     .msWrap .ms-head {
-        display: flex; align-items: flex-start; justify-content: space-between;
+        display: flex; align-items: center; justify-content: space-between;
         gap: 14px; flex-wrap: wrap;
-        padding: 16px 18px;
+        padding: 12px 18px;
         background: linear-gradient(180deg, #fbfbfe, #fff);
         border-bottom: 1px solid var(--ms-line);
     }
+    .msWrap .ms-head-left {
+        display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
     .msWrap .ms-title {
-        display: flex; align-items: center; gap: 10px;
+        display: flex; align-items: center; gap: 8px;
         font-size: 15px; font-weight: 800; color: #0f172a; margin: 0;
     }
     .msWrap .ms-title .ms-ic {
-        width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
+        width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;
         background: #e7f1ff; color: var(--ms-accent); flex-shrink: 0;
     }
-    .msWrap .ms-sub { font-size: 12px; color: #64748b; margin: 5px 0 0 40px; }
-    .msWrap .ms-sub b { color: #334155; }
+    .msWrap .ms-filters {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .msWrap .ms-head-right {
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-left: auto;
+    }
     .msWrap .ms-btn {
         border: 1px solid var(--ms-line); background: #fff; color: #475569;
         border-radius: 9px; height: 34px; padding: 0 12px; font-size: 12.5px; font-weight: 600;
@@ -78,12 +85,6 @@ $msMonths = getMonthOptions(true);
     .msWrap .ms-btn.danger { border-color: #f1aeb5; color: var(--ms-bad); background: #fff; }
     .msWrap .ms-btn.danger:hover { background: #fdf2f3; border-color: #ea868f; }
     .msWrap .ms-btn.sm { height: 28px; padding: 0 10px; font-size: 11.5px; border-radius: 7px; }
-
-    /* toolbar */
-    .msWrap .ms-toolbar {
-        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-        padding: 12px 18px; border-bottom: 1px solid var(--ms-line); background: #fcfcfd;
-    }
     .msWrap .ms-select {
         height: 34px; border: 1px solid #d7dbe3; border-radius: 9px;
         padding: 0 30px 0 11px; font-size: 13px; font-weight: 600; color: #334155;
@@ -197,34 +198,35 @@ $msMonths = getMonthOptions(true);
     <div class="ms-card">
 
         <div class="ms-head">
-            <div>
+            <div class="ms-head-left">
                 <h6 class="ms-title">
                     <span class="ms-ic">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="m9 16 2 2 4-4"/></svg>
                     </span>
                     Monthly Subscription
                 </h6>
-                <div class="ms-sub">Players who played <b>2 or more</b> completed games in the selected month.</div>
+                <div class="ms-filters">
+                    <select id="msYear" class="ms-select">
+                        <?php for ($y = 2025; $y <= $msCurYear + 1; $y++): ?>
+                            <option value="<?= $y ?>" <?= $y === $msCurYear ? 'selected' : '' ?>><?= $y ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <select id="msMonth" class="ms-select">
+                        <?php foreach ($msMonths as $n => $nm): ?>
+                            <option value="<?= $n ?>" <?= $n === $msCurMonth ? 'selected' : '' ?>><?= $nm ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span id="msPeriodBadge" class="ms-pill"><span class="dot"></span>current month</span>
+                </div>
             </div>
-            <button id="msRefresh" class="ms-btn" type="button" title="Refresh">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-                Refresh
-            </button>
-        </div>
 
-        <div class="ms-toolbar">
-            <select id="msYear" class="ms-select">
-                <?php for ($y = 2025; $y <= $msCurYear + 1; $y++): ?>
-                    <option value="<?= $y ?>" <?= $y === $msCurYear ? 'selected' : '' ?>><?= $y ?></option>
-                <?php endfor; ?>
-            </select>
-            <select id="msMonth" class="ms-select">
-                <?php foreach ($msMonths as $n => $nm): ?>
-                    <option value="<?= $n ?>" <?= $n === $msCurMonth ? 'selected' : '' ?>><?= $nm ?></option>
-                <?php endforeach; ?>
-            </select>
-            <span id="msPeriodBadge" class="ms-pill"><span class="dot"></span>current month</span>
-            <div class="ms-stats" id="msSummary"></div>
+            <div class="ms-head-right">
+                <div class="ms-stats" id="msSummary"></div>
+                <button id="msRefresh" class="ms-btn" type="button" title="Refresh">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                    Refresh
+                </button>
+            </div>
         </div>
 
         <div class="ms-bulk">
@@ -237,7 +239,7 @@ $msMonths = getMonthOptions(true);
             <span class="ms-selcount" id="msSelCount">0 selected</span>
         </div>
 
-        <div class="ms-note" id="msNote"></div>
+        
 
         <div class="ms-body" id="msTableWrap">
             <div class="ms-loading"><div class="ms-spin"></div>Loading players…</div>
@@ -333,8 +335,8 @@ $msMonths = getMonthOptions(true);
     function render(d) {
         periodBadge(d.period);
         renderSummary(d.summary);
-        elNote.className = 'ms-note' + (d.period === 'current' ? ' show' : '');
-        if (d.period === 'current') elNote.textContent = 'This month is still running — game counts will keep changing until it ends.';
+        if (elNote) elNote.style.display = 'none';
+        
         if (!d.players.length) {
             elTable.innerHTML = '<div class="ms-empty">'
                 + '<div class="ms-empty-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></div>'

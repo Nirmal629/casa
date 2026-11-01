@@ -1,23 +1,25 @@
 /* Host Dashboard Styles */
 
-/* Ultra-compact stacked pills */
+/* Compact horizontal pills (icon beside text) */
 .nav-stacked-pills .nav-link {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 6px 4px;
-    font-size: 0.65rem;
-    font-weight: 600;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
     text-transform: uppercase;
-    min-width: 68px;
     color: #6c757d;
     border: none;
     background: none;
+    white-space: nowrap;
 }
 
 .nav-stacked-pills .nav-link svg {
-    margin-bottom: 3px;
+    margin-bottom: 0;
+    flex-shrink: 0;
 }
 
 .nav-stacked-pills .nav-link.active {

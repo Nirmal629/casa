@@ -121,6 +121,7 @@ $cssPrefix = $assetPrefix ?? (strpos($_SERVER['REQUEST_URI'] ?? '', '/host/') !=
       </div>
       <form id="ratingForm">
         <input type="hidden" id="rated_player_id" name="rated_player_id" value="">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Helpers\Session::getCsrfToken()) ?>">
         <div class="modal-body p-4">
           <div class="row g-3">
             <div class="col-md-7">

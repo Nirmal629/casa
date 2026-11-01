@@ -63,6 +63,8 @@ $router->post('/api/get_player_stats.php', [HostController::class, 'getPlayerSta
 
 $router->post('/api/save_rating_by_host.php', [HostController::class, 'saveRatingByHost'], $hostGuard);
 $router->post('/api/save-rating-by-host', [HostController::class, 'saveRatingByHost'], $hostGuard);
+$router->post('/host/api/save_rating_by_host.php', [HostController::class, 'saveRatingByHost'], $hostGuard);
+$router->post('/host/api/save-rating-by-host', [HostController::class, 'saveRatingByHost'], $hostGuard);
 
 // Shared Guard for Host, Trainer, and Player
 $gamePlayersGuard = [AuthGuard::class, ['Host', 'Trainer', 'Player']];

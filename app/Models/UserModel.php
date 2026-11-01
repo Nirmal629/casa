@@ -215,11 +215,14 @@ class UserModel extends Model
 
     public function adjustAndSaveRanking(int $playerId, string $newLevel, int $newRank): array
     {
-        $stmt = $this->db->prepare("SELECT CURRENT_RANKING, VERIFIED_LEVEL FROM {$this->table} WHERE ID = ? LIMIT 1");
+        $stmt = $this->db->prepare("SELECT CURRENT_RANKING, VERIFIED_LEVEL, LEVEL FROM {$this->table} WHERE ID = ? LIMIT 1");
         $stmt->execute([$playerId]);
         $curr = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
         $oldRank = (int) ($curr['CURRENT_RANKING'] ?? 0);
-        $oldLevel = (string) ($curr['VERIFIED_LEVEL'] ?? '');
+        $oldLevel = trim((string) ($curr['VERIFIED_LEVEL'] ?? ''));
+        if ($oldLevel === '') {
+            $oldLevel = trim((string) ($curr['LEVEL'] ?? ''));
+        }
 
         if ($oldLevel !== '' && $oldLevel !== $newLevel && $oldRank > 0) {
             // Level changed:
@@ -244,11 +247,12 @@ class UserModel extends Model
         $updateStmt = $this->db->prepare("
             UPDATE {$this->table} 
             SET VERIFIED_LEVEL = ?, 
+                LEVEL = ?, 
                 PREV_RANKING = ?, 
                 CURRENT_RANKING = ? 
             WHERE ID = ?
         ");
-        $updateStmt->execute([$newLevel, ($oldRank > 0 ? $oldRank : null), $newRank, $playerId]);
+        $updateStmt->execute([$newLevel, $newLevel, ($oldRank > 0 ? $oldRank : null), $newRank, $playerId]);
 
         return [
             'player_id' => $playerId,

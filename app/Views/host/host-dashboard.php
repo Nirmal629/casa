@@ -31,7 +31,7 @@ $cssPrefix = $assetPrefix ?? (strpos($_SERVER['REQUEST_URI'] ?? '', '/host/') !=
 ?>
 
 <link rel="stylesheet" href="<?= e($cssPrefix) ?>app/Views/css/host/dashboard.css?v=<?= $dashboardCssVer ?>">
-<link rel="stylesheet" href="<?= e($cssPrefix) ?>assets/css/host/modern-dashboard.css?v=1">
+<link rel="stylesheet" href="<?= e($cssPrefix) ?>assets/css/host/modern-dashboard.css?v=<?= time() ?>">
 
 <!----Dashboard------>
 <section class="bothSide_gap host-modern-dashboard">

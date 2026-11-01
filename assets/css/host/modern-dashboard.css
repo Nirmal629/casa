@@ -21,7 +21,13 @@ body:has(.host-modern-dashboard) { background: var(--host-bg); }
 .host-modern-dashboard .nav-stacked-pills { gap: 6px; padding: 6px; background: #f8fafc; border-radius: 16px; }
 .host-modern-dashboard .nav-stacked-pills .nav-link {
     border: 0; border-radius: 11px; color: var(--host-muted); font-size: 12px;
-    font-weight: 800; padding: 10px 15px; transition: .2s ease;
+    font-weight: 800; padding: 9px 15px; transition: .2s ease;
+    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;
+    white-space: nowrap;
+}
+.host-modern-dashboard .nav-stacked-pills .nav-link svg {
+    margin: 0;
+    flex-shrink: 0;
 }
 .host-modern-dashboard .nav-stacked-pills .nav-link:hover { background: #eaf1ff; color: var(--host-blue); }
 .host-modern-dashboard .nav-stacked-pills .nav-link.active {

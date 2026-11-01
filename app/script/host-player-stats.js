@@ -479,7 +479,7 @@
                 var formData = $ ? $(this).serialize() : new FormData(ratingFormEl);
 
                 var onSuccess = function (res) {
-                    if (res.success) {
+                    if (res && res.success) {
                         hasSaved = true;
                         var feedbackEl = document.getElementById('feedback');
                         if (feedbackEl) {
@@ -487,28 +487,42 @@
                             feedbackEl.innerHTML = `<div class="alert alert-success py-2 px-3 mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill me-2 fs-6"></i>${escapeHtml(res.message || 'Rating saved successfully!')}</div>`;
                         }
 
-                        // Refresh background table via AJAX without closing modal
-                        fetchPlayerStats(false);
-
                         var pId = document.getElementById('rated_player_id')?.value;
                         var newLvl = document.getElementById('newLevel')?.value || '';
                         var newRnk = document.getElementById('newRank')?.value || '';
                         var pName = document.querySelector(`.trigger-edit-rating[data-id="${pId}"]`)?.dataset.name || '';
                         updateModalHeader(pName, newLvl, newRnk);
+
+                        // Update in-memory player immediately
+                        var player = cachedPlayersList.find(function (item) {
+                            return String(item.player_id) === String(pId);
+                        });
+                        if (player) {
+                            player.verified_level = newLvl;
+                            player.skill_level = newLvl;
+                            player.current_ranking = newRnk;
+                            player.rank = newRnk;
+                        }
+
+                        // Refresh background table via AJAX without closing modal
+                        fetchPlayerStats(false);
                     } else {
                         var feedbackEl = document.getElementById('feedback');
                         if (feedbackEl) {
                             feedbackEl.className = 'small mt-3';
-                            feedbackEl.innerHTML = `<div class="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2 fs-6"></i>${escapeHtml(res.message || 'Failed to save rating.')}</div>`;
+                            feedbackEl.innerHTML = `<div class="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2 fs-6"></i>${escapeHtml((res && res.message) || 'Failed to save rating.')}</div>`;
                         }
                     }
                 };
 
-                var onError = function () {
+                var onError = function (xhr) {
+                    var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message)
+                        ? xhr.responseJSON.message
+                        : (xhr && xhr.message ? xhr.message : 'Server error while saving rating.');
                     var feedbackEl = document.getElementById('feedback');
                     if (feedbackEl) {
                         feedbackEl.className = 'small mt-3';
-                        feedbackEl.innerHTML = `<div class="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2 fs-6"></i>Server error while saving rating.</div>`;
+                        feedbackEl.innerHTML = `<div class="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2 fs-6"></i>${escapeHtml(msg)}</div>`;
                     }
                 };
 
@@ -524,6 +538,17 @@
                     $.post(getApiUrl('save-rating-by-host'), formData, onSuccess, 'json')
                         .fail(onError)
                         .always(onComplete);
+                } else {
+                    var token = window.Casa?.csrfToken?.() || '';
+                    fetch(getApiUrl('save-rating-by-host'), {
+                        method: 'POST',
+                        body: formData,
+                        headers: token ? { 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' } : { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(function (r) { return r.json(); })
+                    .then(onSuccess)
+                    .catch(onError)
+                    .finally(onComplete);
                 }
             });
         }

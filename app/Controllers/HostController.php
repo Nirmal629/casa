@@ -593,9 +593,10 @@ class HostController extends Controller
         }
 
         $raterId = $authUserId;
-        $ratedPlayerId = (int) ($_POST['rated_player_id'] ?? ($_POST['player_id'] ?? 0));
-        $skillLevel = trim((string) ($_POST['skill_level'] ?? ''));
-        $newRank = (int) ($_POST['ranking'] ?? ($_POST['rank'] ?? 0));
+        $body = !empty($_POST) ? $_POST : (json_decode((string) file_get_contents('php://input'), true) ?: $_REQUEST);
+        $ratedPlayerId = (int) ($body['rated_player_id'] ?? ($body['player_id'] ?? 0));
+        $skillLevel = trim((string) ($body['skill_level'] ?? ''));
+        $newRank = (int) ($body['ranking'] ?? ($body['rank'] ?? 0));
 
         if ($ratedPlayerId <= 0 || $skillLevel === '' || $newRank <= 0) {
             $this->json(['success' => false, 'message' => 'Please select a valid player, level, and rank.'], 400);
@@ -618,7 +619,7 @@ class HostController extends Controller
 
         // Host/Trainer can modify only players/events they are authorized to manage
         if (!$isAdmin) {
-            $eventId = (int) ($_POST['event_id'] ?? ($_POST['game_id'] ?? 0));
+            $eventId = (int) ($body['event_id'] ?? ($body['game_id'] ?? 0));
             $isAuthorized = ($eventId > 0)
                 ? $this->isAuthorizedHostForEventPlayer($authUserId, $eventId, $ratedPlayerId)
                 : $this->isAuthorizedHostForPlayer($authUserId, $ratedPlayerId);
@@ -1101,39 +1102,51 @@ class HostController extends Controller
 
     private function isAuthorizedHostForPlayer(int $hostId, int $playerId): bool
     {
-        $stmt = $this->db->prepare("
-            SELECT 1 FROM ca_users u WHERE u.ID = :player_id AND u.DEL_STATUS = 'N'
-            AND (
-                EXISTS (SELECT 1 FROM ca_gamejoin cg WHERE cg.USER_ID = u.ID AND cg.HOST_ID = :host_id1 AND cg.STATUS = 'Y')
-                OR EXISTS (SELECT 1 FROM ca_expense ce WHERE ce.USER_ID = u.ID AND ce.HOST_ID = :host_id2 AND ce.STATUS = 'Y')
-                OR EXISTS (SELECT 1 FROM ca_events ev JOIN ca_gamejoin cgj ON (ev.ID = cgj.EVENT_ID OR ev.ID = cgj.GAME_ID) WHERE cgj.USER_ID = u.ID AND ev.HOST_ID = :host_id3 AND ev.DEL_STATUS = 'N')
-                OR EXISTS (SELECT 1 FROM ca_player_club_status pcs WHERE pcs.player_id = u.ID AND pcs.host_id = :host_id4 AND (pcs.status = 'accepted' OR pcs.status = 'Y'))
-            ) LIMIT 1
-        ");
-        $stmt->execute([
-            ':player_id' => $playerId,
-            ':host_id1'  => $hostId,
-            ':host_id2'  => $hostId,
-            ':host_id3'  => $hostId,
-            ':host_id4'  => $hostId,
-        ]);
-        return (bool) $stmt->fetchColumn();
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 1 FROM ca_users u WHERE u.ID = :player_id AND u.DEL_STATUS = 'N'
+                AND (
+                    EXISTS (SELECT 1 FROM ca_gamejoin cg WHERE cg.USER_ID = u.ID AND cg.HOST_ID = :host_id1 AND (cg.STATUS = 'Y' OR cg.CONFIRMED = 'Y'))
+                    OR EXISTS (SELECT 1 FROM ca_expense ce WHERE ce.USER_ID = u.ID AND ce.HOST_ID = :host_id2 AND ce.STATUS = 'Y')
+                    OR EXISTS (SELECT 1 FROM ca_events ev JOIN ca_gamejoin cgj ON ev.ID = cgj.GAME_ID WHERE cgj.USER_ID = u.ID AND ev.HOST_ID = :host_id3 AND (ev.STATUS != 'Cancelled' AND ev.STATUS != 'C'))
+                    OR EXISTS (SELECT 1 FROM ca_player_club_status pcs WHERE pcs.player_id = u.ID AND pcs.host_id = :host_id4 AND (pcs.status = 'accepted' OR pcs.status = 'Y'))
+                    OR EXISTS (SELECT 1 FROM ca_player_ratings cpr WHERE cpr.RATED_PLAYER_ID = u.ID AND cpr.RATER_ID = :host_id5)
+                ) LIMIT 1
+            ");
+            $stmt->execute([
+                ':player_id' => $playerId,
+                ':host_id1'  => $hostId,
+                ':host_id2'  => $hostId,
+                ':host_id3'  => $hostId,
+                ':host_id4'  => $hostId,
+                ':host_id5'  => $hostId,
+            ]);
+            return (bool) $stmt->fetchColumn();
+        } catch (\Throwable $e) {
+            \error_log('[HostController::isAuthorizedHostForPlayer Error] ' . $e->getMessage());
+            return false;
+        }
     }
 
     private function isAuthorizedHostForEventPlayer(int $hostId, int $eventId, int $playerId): bool
     {
-        $stmt = $this->db->prepare("
-            SELECT 1 FROM ca_events e 
-            JOIN ca_gamejoin gj ON (e.ID = gj.EVENT_ID OR e.ID = gj.GAME_ID)
-            WHERE e.ID = :event_id AND e.HOST_ID = :host_id AND gj.USER_ID = :player_id AND e.DEL_STATUS = 'N'
-            LIMIT 1
-        ");
-        $stmt->execute([
-            ':event_id'  => $eventId,
-            ':host_id'   => $hostId,
-            ':player_id' => $playerId,
-        ]);
-        return (bool) $stmt->fetchColumn();
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 1 FROM ca_events e 
+                JOIN ca_gamejoin gj ON e.ID = gj.GAME_ID
+                WHERE e.ID = :event_id AND e.HOST_ID = :host_id AND gj.USER_ID = :player_id AND (e.STATUS != 'Cancelled' AND e.STATUS != 'C')
+                LIMIT 1
+            ");
+            $stmt->execute([
+                ':event_id'  => $eventId,
+                ':host_id'   => $hostId,
+                ':player_id' => $playerId,
+            ]);
+            return (bool) $stmt->fetchColumn();
+        } catch (\Throwable $e) {
+            \error_log('[HostController::isAuthorizedHostForEventPlayer Error] ' . $e->getMessage());
+            return false;
+        }
     }
 
     private function getVerifiedGameHostId(int $gameId): ?int
