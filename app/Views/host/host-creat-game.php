@@ -185,15 +185,15 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <select class="form-control" id="toTime" name="to_Time" required></select>
 
             </div>
+            <input type="hidden" id="freezeType" name="freeze_type" value="custom">
             <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-3">
-                <label for="eventDate" class="form-label">Freeze Date<span>*</span></label>
+                <label for="freezeDate" class="form-label">Freeze Date<span>*</span></label>
                 <input type="date" class="form-control" id="freezeDate" name="freeze_date" required>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-3">
-                <label for="eventTime" class="form-label">Freeze Time<span>*</span></label>
+                <label for="freezeTime" class="form-label">Freeze Time<span>*</span></label>
                 <!--<input type="time" class="form-control" id="freezeTime" name="freeze_time" required step="1800">-->
-                                <select class="form-control" id="freezeTime" name="freeze_time" required></select>
-
+                <select class="form-control" id="freezeTime" name="freeze_time" required></select>
             </div>
 
             <!-- Event Cost -->
@@ -276,5 +276,5 @@ if ($result && mysqli_num_rows($result) > 0) {
 })();
 </script>
 
-<?= renderDynamicCalendarInit(['date' => '#eventDate', 'freezeDate' => '#freezeDate', 'fromTime' => '#eventTime', 'toTime' => '#toTime', 'freezeTime' => '#freezeTime']) ?>
+<?= renderDynamicCalendarInit(['date' => '#eventDate', 'freezeDate' => '#freezeDate', 'fromTime' => '#eventTime', 'toTime' => '#toTime', 'freezeTime' => '#freezeTime', 'freezeType' => '#freezeType']) ?>
 

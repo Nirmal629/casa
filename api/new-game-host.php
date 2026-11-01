@@ -37,8 +37,24 @@ include('dbConnection.php');
     $event_date = $conn->real_escape_string($_POST['event_date']);
     $event_time = $conn->real_escape_string($_POST['event_time']);
     $to_time = $conn->real_escape_string($_POST['to_Time']);
-    $freeze_date = $conn->real_escape_string($_POST['freeze_date']);
-    $freeze_time = $conn->real_escape_string($_POST['freeze_time']);
+
+    $eventModel = new \App\Models\EventModel();
+    $freezeValidation = $eventModel->validateFreezeDateTime(
+        (string) ($_POST['event_date'] ?? ''),
+        (string) ($_POST['event_time'] ?? ''),
+        isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+        isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+        (string) ($_POST['freeze_type'] ?? '')
+    );
+
+    if (!$freezeValidation['valid']) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => $freezeValidation['error']]);
+        exit();
+    }
+
+    $freeze_date = $conn->real_escape_string($freezeValidation['freeze_date']);
+    $freeze_time = $conn->real_escape_string($freezeValidation['freeze_time']);
     $event_cost = $conn->real_escape_string($_POST['event_cost']);
     $event_discount = $conn->real_escape_string($_POST['event_discount']);
     $event_description = $conn->real_escape_string($_POST['event_description']);

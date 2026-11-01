@@ -40,14 +40,17 @@ class CsrfGuard
             }
 
             if (!Session::verifyCsrfToken($token)) {
+                $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
                 $isJson = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
                     || (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
-                    || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'));
+                    || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+                    || str_contains($uri, '/api/');
 
                 if ($isJson) {
                     http_response_code(403);
                     header('Content-Type: application/json; charset=utf-8');
                     echo json_encode([
+                        'status' => 'error',
                         'success' => false,
                         'message' => 'Security token validation failed (CSRF mismatch). Please refresh the page and try again.',
                         'error' => 'CsrfTokenMismatch'

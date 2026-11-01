@@ -89,6 +89,19 @@ class EventModel extends Model
         return $row ?: null;
     }
 
+    public function getAppTimezone(): DateTimeZone
+    {
+        $timezoneName = function_exists('env')
+            ? (string) env('APP_TIMEZONE', env('TIMEZONE', date_default_timezone_get() ?: 'Asia/Kolkata'))
+            : (date_default_timezone_get() ?: 'Asia/Kolkata');
+
+        try {
+            return new DateTimeZone($timezoneName);
+        } catch (Throwable) {
+            return new DateTimeZone('Asia/Kolkata');
+        }
+    }
+
     public function isEventExpired(int|array $event): bool
     {
         $eventData = is_array($event) ? $event : $this->getEventById($event);
@@ -100,15 +113,7 @@ class EventModel extends Model
         $eventStartTimeStr = trim((string) ($eventData['EVENT_TIME'] ?? '00:00:00'));
         $eventEndTimeStr = trim((string) ($eventData['TO_TIME'] ?? ''));
 
-        $timezoneName = function_exists('env')
-            ? (string) env('APP_TIMEZONE', date_default_timezone_get() ?: 'America/Toronto')
-            : (date_default_timezone_get() ?: 'America/Toronto');
-
-        try {
-            $tz = new DateTimeZone($timezoneName);
-        } catch (Throwable $e) {
-            $tz = new DateTimeZone('America/Toronto');
-        }
+        $tz = $this->getAppTimezone();
 
         try {
             $startDt = new DateTimeImmutable("{$eventDateStr} {$eventStartTimeStr}", $tz);
@@ -134,6 +139,152 @@ class EventModel extends Model
                 $endTimestamp = $startTimestamp + 7200;
             }
             return time() >= $endTimestamp;
+        }
+    }
+
+    /**
+     * Determine if event booking is frozen (past the freeze cutoff).
+     * Rule: Booking can be made until the exact freeze DateTime.
+     * By default, freeze DateTime equals the Event Start DateTime.
+     */
+    public function isBookingFrozen(int|array $event, ?DateTimeImmutable $referenceNow = null): bool
+    {
+        $eventData = is_array($event) ? $event : $this->getEventById($event);
+        if (!$eventData) {
+            return true;
+        }
+
+        $eventDate = trim((string) ($eventData['EVENT_DATE'] ?? ''));
+        $eventTime = trim((string) ($eventData['EVENT_TIME'] ?? '00:00:00'));
+        $freezeDate = trim((string) ($eventData['CANCEL_DATE'] ?? ''));
+        $freezeTime = trim((string) ($eventData['CANCEL_TIME'] ?? ''));
+
+        // Default to event start date & time if freeze date/time are not specified
+        if ($freezeDate === '') {
+            $freezeDate = $eventDate;
+        }
+        if ($freezeTime === '') {
+            $freezeTime = $eventTime;
+        }
+
+        if ($freezeDate === '') {
+            return false;
+        }
+
+        $tz = $this->getAppTimezone();
+
+        try {
+            $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);
+            $freezeDt = new DateTimeImmutable("{$freezeDate} {$freezeTime}", $tz);
+
+            // Freeze deadline cannot be later than event start date & time
+            if ($freezeDt > $eventStartDt) {
+                $freezeDt = $eventStartDt;
+            }
+
+            $now = $referenceNow ?? new DateTimeImmutable('now', $tz);
+            return $now >= $freezeDt;
+        } catch (Throwable) {
+            $freezeTimestamp = strtotime("{$freezeDate} {$freezeTime}");
+            $startTimestamp = strtotime("{$eventDate} {$eventTime}");
+            if ($freezeTimestamp === false) {
+                return false;
+            }
+            if ($startTimestamp !== false && $freezeTimestamp > $startTimestamp) {
+                $freezeTimestamp = $startTimestamp;
+            }
+            $nowTimestamp = $referenceNow ? $referenceNow->getTimestamp() : time();
+            return $nowTimestamp >= $freezeTimestamp;
+        }
+    }
+
+    /**
+     * Validate event start date/time vs booking freeze date/time.
+     *
+     * Business Rules:
+     * 1. Booking Freeze Date & Time can be equal to or earlier than Event Start Date & Time, but never later.
+     * 2. If Host selects "Until Event Start", freeze date & time are automatically set equal to event start.
+     * 3. Complete DateTime values are compared (accounting for cross-day and midnight).
+     *
+     * @return array{valid: bool, error: ?string, freeze_date: string, freeze_time: string}
+     */
+    public function validateFreezeDateTime(
+        string $eventDate,
+        string $eventTime,
+        ?string $freezeDate,
+        ?string $freezeTime,
+        string $freezeType = ''
+    ): array {
+        $eventDate = trim($eventDate);
+        $eventTime = trim($eventTime);
+        $freezeDate = trim((string) $freezeDate);
+        $freezeTime = trim((string) $freezeTime);
+        $freezeType = trim($freezeType);
+
+        if ($eventDate === '') {
+            return [
+                'valid'       => false,
+                'error'       => 'Event date is required.',
+                'freeze_date' => '',
+                'freeze_time' => '',
+            ];
+        }
+
+        if ($eventTime === '') {
+            return [
+                'valid'       => false,
+                'error'       => 'Event start time is required.',
+                'freeze_date' => '',
+                'freeze_time' => '',
+            ];
+        }
+
+        // If host selects "Until Event Start" (or freeze values are omitted), automatically set to event start
+        if ($freezeType === 'until_start' || ($freezeDate === '' && $freezeTime === '')) {
+            return [
+                'valid'       => true,
+                'error'       => null,
+                'freeze_date' => $eventDate,
+                'freeze_time' => $eventTime,
+            ];
+        }
+
+        // Fallback individual missing components to event start counterparts
+        if ($freezeDate === '') {
+            $freezeDate = $eventDate;
+        }
+        if ($freezeTime === '') {
+            $freezeTime = $eventTime;
+        }
+
+        $tz = $this->getAppTimezone();
+
+        try {
+            $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);
+            $freezeDt = new DateTimeImmutable("{$freezeDate} {$freezeTime}", $tz);
+
+            if ($freezeDt > $eventStartDt) {
+                return [
+                    'valid'       => false,
+                    'error'       => 'Booking freeze date & time cannot be later than event start date & time.',
+                    'freeze_date' => $freezeDate,
+                    'freeze_time' => $freezeTime,
+                ];
+            }
+
+            return [
+                'valid'       => true,
+                'error'       => null,
+                'freeze_date' => $freezeDate,
+                'freeze_time' => $freezeTime,
+            ];
+        } catch (Throwable) {
+            return [
+                'valid'       => false,
+                'error'       => 'Invalid event or freeze date/time format.',
+                'freeze_date' => $freezeDate,
+                'freeze_time' => $freezeTime,
+            ];
         }
     }
 

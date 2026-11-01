@@ -43,7 +43,8 @@
                     freezeDate: '#freezeDatee',
                     fromTime: '#eventTimee',
                     toTime: '#toTimee',
-                    freezeTime: '#freezeTimee'
+                    freezeTime: '#freezeTimee',
+                    freezeType: '#freezeTypee'
                 });
             }
         },
@@ -100,6 +101,10 @@
             $('#toTimee').val(toTime);
             $('#freezeTimee').val(cancelTime);
 
+            const isUntilStart = (!data.CANCEL_DATE || data.CANCEL_DATE === data.EVENT_DATE) &&
+                                 (!cancelTime || cancelTime === fromTime);
+            $('#freezeTypee').val(isUntilStart ? 'until_start' : 'custom').trigger('change');
+
             EditSessionModule.calculateHours();
 
             $('#eventCostt').val(data.EVENT_COST || '');
@@ -151,6 +156,21 @@
             if (!data.event_time) errors.push('Event start time is required.');
             if (!data.to_time) errors.push('Event end time is required.');
             if (!data.event_cost || isNaN(data.event_cost)) errors.push('Valid player cost is required.');
+
+            if (data.event_date && data.event_time && data.freeze_date && data.freeze_time) {
+                var check = (typeof window.validateFreezeDateTime === 'function')
+                    ? window.validateFreezeDateTime(data.event_date, data.event_time, data.freeze_date, data.freeze_time)
+                    : null;
+                if (check && !check.valid) {
+                    errors.push(check.error);
+                } else if (!check) {
+                    var dtStart = new Date(data.event_date + 'T' + data.event_time);
+                    var dtFreeze = new Date(data.freeze_date + 'T' + data.freeze_time);
+                    if (!isNaN(dtStart.getTime()) && !isNaN(dtFreeze.getTime()) && dtFreeze.getTime() > dtStart.getTime()) {
+                        errors.push('Booking freeze date & time cannot be later than event start date & time.');
+                    }
+                }
+            }
             return errors;
         },
 
@@ -169,6 +189,7 @@
                 event_date: $('#eventDatee').val(),
                 event_time: $('#eventTimee').val(),
                 to_time: $('#toTimee').val(),
+                freeze_type: $('#freezeTypee').val(),
                 freeze_date: $('#freezeDatee').val(),
                 freeze_time: $('#freezeTimee').val(),
                 event_cost: $('#eventCostt').val(),
@@ -254,6 +275,7 @@
                 event_date: $('#eventDatee').val(),
                 event_time: $('#eventTimee').val(),
                 to_time: $('#toTimee').val(),
+                freeze_type: $('#freezeTypee').val(),
                 freeze_date: $('#freezeDatee').val(),
                 freeze_time: $('#freezeTimee').val(),
                 event_cost: $('#eventCostt').val(),
@@ -262,6 +284,16 @@
                 event_message: $('#eventMessagee').val(),
                 status: $('#statusevent').val()
             };
+
+            const errors = EditSessionModule.validateForm(formData);
+            if (errors.length > 0) {
+                if (typeof window.showToast === 'function') {
+                    window.showToast('warning', errors.join('\n'));
+                } else {
+                    alert(errors.join('\n'));
+                }
+                return;
+            }
 
             const $btn = $('#copy_btn');
             $btn.prop('disabled', true).text('Copying...');

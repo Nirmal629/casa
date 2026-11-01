@@ -63,6 +63,21 @@ window.CasaHost = window.CasaHost || {};
             if (!formData.to_time) errors.push("To time is required.");
             if (!formData.freeze_date) errors.push("Freeze date is required.");
             if (!formData.freeze_time) errors.push("Freeze time is required.");
+
+            if (formData.event_date && formData.event_time && formData.freeze_date && formData.freeze_time) {
+                var check = (typeof window.validateFreezeDateTime === 'function')
+                    ? window.validateFreezeDateTime(formData.event_date, formData.event_time, formData.freeze_date, formData.freeze_time)
+                    : null;
+                if (check && !check.valid) {
+                    errors.push(check.error);
+                } else if (!check) {
+                    var dtStart = new Date(formData.event_date + 'T' + formData.event_time);
+                    var dtFreeze = new Date(formData.freeze_date + 'T' + formData.freeze_time);
+                    if (!isNaN(dtStart.getTime()) && !isNaN(dtFreeze.getTime()) && dtFreeze.getTime() > dtStart.getTime()) {
+                        errors.push("Booking freeze date & time cannot be later than event start date & time.");
+                    }
+                }
+            }
             if (!formData.event_cost || isNaN(formData.event_cost)) errors.push("Event cost must be a valid number.");
             if (formData.event_discount && isNaN(formData.event_discount)) errors.push("Event discount must be a valid number.");
             if (!formData.event_description) errors.push("Event description is required.");
@@ -123,10 +138,15 @@ window.CasaHost = window.CasaHost || {};
                 const fromTime = (parseData.EVENT_TIME || '').slice(0, 5); // HH:mm
                 const toTime = (parseData.TO_TIME || '').slice(0, 5);      // HH:mm
 
+                const freezeTime = (parseData.CANCEL_TIME || '').slice(0, 5);
                 $('#eventTimee').val(fromTime).change();
                 $('#toTimee').val(toTime).change();
                 $('#freezeDatee').val(parseData.CANCEL_DATE);
-                $('#freezeTimee').val((parseData.CANCEL_TIME || '').slice(0, 5)).change();
+                $('#freezeTimee').val(freezeTime).change();
+
+                const isUntilStart = (!parseData.CANCEL_DATE || parseData.CANCEL_DATE === parseData.EVENT_DATE) &&
+                                     (!freezeTime || freezeTime === fromTime);
+                $('#freezeTypee').val(isUntilStart ? 'until_start' : 'custom').trigger('change');
 
                 const [fromH, fromM] = fromTime.split(':').map(Number);
                 const [toH, toM] = toTime.split(':').map(Number);
@@ -192,6 +212,7 @@ window.CasaHost = window.CasaHost || {};
                 event_date: $('#eventDatee').val(),
                 event_time: $('#eventTimee').val(),
                 to_time: $('#toTimee').val(),
+                freeze_type: $('#freezeTypee').val(),
                 freeze_date: $('#freezeDatee').val(),
                 freeze_time: $('#freezeTimee').val(),
                 event_cost: $('#eventCostt').val(),
@@ -269,6 +290,7 @@ window.CasaHost = window.CasaHost || {};
                 event_date: $('#eventDateee').val(),
                 event_time: $('#eventTimeee').val(),
                 to_time: $('#toTimeee').val(),
+                freeze_type: $('#freezeTypeee').val(),
                 freeze_date: $('#freezeDateee').val(),
                 freeze_time: $('#freezeTimeee').val(),
                 event_cost: $('#eventCosttt').val(),
@@ -403,6 +425,7 @@ window.CasaHost = window.CasaHost || {};
                 event_date: $('#eventDatee').val(),
                 event_time: $('#eventTimee').val(),
                 to_time: $('#toTimee').val(),
+                freeze_type: $('#freezeTypee').val(),
                 freeze_date: $('#freezeDatee').val(),
                 freeze_time: $('#freezeTimee').val(),
                 event_cost: $('#eventCostt').val(),
@@ -522,12 +545,8 @@ window.CasaHost = window.CasaHost || {};
 
         onNewGameSubmit: function (e) {
             e.preventDefault();
+            const formEl = this;
             const $form = $(this);
-            const $submitBtn = $form.find('button[type="submit"]');
-            const originalBtnHtml = $submitBtn.html();
-            $submitBtn.prop('disabled', true);
-
-            const formData = $form.serialize();
 
             function triggerToast(type, msg) {
                 if (typeof window.showToast === 'function') {
@@ -536,8 +555,45 @@ window.CasaHost = window.CasaHost || {};
                     window.Casa.showToast(msg, type);
                 } else if (typeof toastr !== 'undefined' && typeof toastr[type] === 'function') {
                     toastr[type](msg);
+                } else {
+                    alert(msg);
                 }
             }
+
+            const eventDate = $form.find('#eventDate').val();
+            const eventTime = $form.find('#eventTime').val();
+            const freezeDate = $form.find('#freezeDate').val();
+            const freezeTime = $form.find('#freezeTime').val();
+
+            if (eventDate && eventTime && freezeDate && freezeTime) {
+                var check = (typeof window.validateFreezeDateTime === 'function')
+                    ? window.validateFreezeDateTime(eventDate, eventTime, freezeDate, freezeTime)
+                    : null;
+                if (check && !check.valid) {
+                    triggerToast("error", check.error);
+                    const freezeTimeEl = document.getElementById('freezeTime');
+                    if (freezeTimeEl) {
+                        freezeTimeEl.setCustomValidity(check.error);
+                        if (typeof freezeTimeEl.reportValidity === 'function') {
+                            freezeTimeEl.reportValidity();
+                        }
+                    }
+                    return;
+                }
+            }
+
+            if (typeof formEl.checkValidity === 'function' && !formEl.checkValidity()) {
+                if (typeof formEl.reportValidity === 'function') {
+                    formEl.reportValidity();
+                }
+                return;
+            }
+
+            const $submitBtn = $form.find('button[type="submit"]');
+            const originalBtnHtml = $submitBtn.html();
+            $submitBtn.prop('disabled', true);
+
+            const formData = $form.serialize();
 
             $.ajax({
                 type: "POST",

@@ -633,15 +633,22 @@ $('.badgeSlick').slick({
     nextArrow: '<button class="slide-arrow next-arrow"></button>'
 });
 
-$('.reviewSlick').slick({
-    infinite: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    dots: false,
-    arrows: true,
-    prevArrow: '<button class="slide-arrow prev-arrow"></button>',
-    nextArrow: '<button class="slide-arrow next-arrow"></button>'
-});
+if ($('.reviewSlick').length) {
+    try {
+        $('.reviewSlick').slick({
+            infinite: false,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: false,
+            arrows: true,
+            accessibility: false,
+            prevArrow: '<button class="slide-arrow prev-arrow"></button>',
+            nextArrow: '<button class="slide-arrow next-arrow"></button>'
+        });
+    } catch (e) {
+        console.warn('reviewSlick init notice:', e);
+    }
+}
 
 // Book Venues Slider
 $('.bookVenues_slider').slick({

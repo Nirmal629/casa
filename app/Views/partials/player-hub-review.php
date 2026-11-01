@@ -296,6 +296,7 @@ $hub_reviews = $reviews ?? [];
                                         data-bs-target="#reviewmodal"
                                         data-id="<?= $rRow['ID'] ?>"
                                         data-rating="<?= $rRating ?>"
+                                        onclick="if(window.openEditReviewModal){ window.openEditReviewModal('<?= $rRow['ID'] ?>', <?= $rRating ?>, this); return false; }"
                                         title="Edit Review">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -322,7 +323,7 @@ $hub_reviews = $reviews ?? [];
             </div>
         <?php endif; ?>
     </div>
-    <button type="button" class="writeReviewBtn" data-bs-toggle="modal" data-bs-target="#reviewmodal">Please Write a Review</button>
+    <button type="button" class="writeReviewBtn" data-bs-toggle="modal" data-bs-target="#reviewmodal" onclick="if(window.openWriteReviewModal){ window.openWriteReviewModal(); return false; }">Please Write a Review</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════════
@@ -357,7 +358,7 @@ $hub_reviews = $reviews ?? [];
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-ghost btn-icon review-bs-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn btn-ghost btn-icon review-bs-close" data-bs-dismiss="modal" aria-label="Close" onclick="if(window.closeReviewModal){ window.closeReviewModal(); }">
                     <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
                         <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
                     </svg>
@@ -381,6 +382,7 @@ $hub_reviews = $reviews ?? [];
                     <input type="hidden" name="rating"    id="reviewRatingInput" value="5">
                     <input type="hidden" name="review_id" id="reviewIdInput"     value="">
                     <input type="hidden" name="user_id"   id="reviewUserIdInput" value="<?= htmlspecialchars((string)($reviewUserId ?? ($current_user_id ?? ($_SESSION['user_id'] ?? '')))) ?>">
+                    <input type="hidden" name="csrf_token" id="reviewCsrfInput"  value="<?= htmlspecialchars(\App\Helpers\Session::getCsrfToken()) ?>">
                 </div>
             </div>
 
@@ -419,7 +421,7 @@ $hub_reviews = $reviews ?? [];
 
             <!-- Footer -->
             <div style="display:flex;justify-content:flex-end;gap:var(--space-2)">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="if(window.closeReviewModal){ window.closeReviewModal(); }">Cancel</button>
                 <button type="button" class="btn btn-primary"   id="reviewSubmitBtn">Submit Review</button>
             </div>
         </div>
@@ -430,36 +432,83 @@ $hub_reviews = $reviews ?? [];
      REVIEW  —  JavaScript  (self-contained DOMContentLoaded)
 ═══════════════════════════════════════════════════════════════════════ -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var $ = window.jQuery;
+(function () {
     'use strict';
 
-    // Move modal element directly under <body> to prevent parent stacking contexts from placing .modal-backdrop over it
-    var reviewModalEl = document.getElementById('reviewmodal');
-    if (reviewModalEl && reviewModalEl.parentNode !== document.body) {
-        document.body.appendChild(reviewModalEl);
+    function ensureModalInBody() {
+        var modal = document.getElementById('reviewmodal');
+        if (modal && modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        return modal;
     }
 
-    // PHP data injected into JS
-    var currentUserData = {
-        name:     <?= json_encode($reviewUserName) ?>,
-        role:     <?= json_encode(!empty($player_prefs['LEVEL']) ? $player_prefs['LEVEL'] : 'Player') ?>,
-        img:      <?= json_encode($reviewUserImg) ?>,
-        initials: <?= json_encode($reviewInitials) ?>
+    function getModalInstance(modalEl) {
+        if (!modalEl) return null;
+        if (window.bootstrap && bootstrap.Modal) {
+            return (typeof bootstrap.Modal.getOrCreateInstance === 'function')
+                ? bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static', keyboard: false })
+                : (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false }));
+        }
+        return null;
+    }
+
+    function openModalDirectly() {
+        var modalEl = ensureModalInBody();
+        if (!modalEl) return;
+
+        // Clean any stray backdrops that may have gotten desynchronized
+        document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
+        document.body.classList.remove('modal-open');
+
+        var inst = getModalInstance(modalEl);
+        if (inst) {
+            inst.show();
+            return;
+        }
+
+        var $ = window.jQuery;
+        if ($ && typeof $(modalEl).modal === 'function') {
+            $(modalEl).modal('show');
+            return;
+        }
+
+        modalEl.classList.add('show');
+        modalEl.style.display = 'block';
+        document.body.classList.add('modal-open');
+    }
+
+    window.closeReviewModal = function () {
+        var modalEl = document.getElementById('reviewmodal');
+        if (!modalEl) return;
+
+        var inst = (window.bootstrap && bootstrap.Modal) ? bootstrap.Modal.getInstance(modalEl) : null;
+        if (inst) {
+            inst.hide();
+        } else {
+            var $ = window.jQuery;
+            if ($ && typeof $(modalEl).modal === 'function') {
+                $(modalEl).modal('hide');
+            } else {
+                modalEl.classList.remove('show');
+                modalEl.style.display = 'none';
+            }
+        }
+
+        setTimeout(function () {
+            document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+        }, 200);
     };
 
-    // DOM refs
-    var stars         = document.querySelectorAll('#reviewStars .review-star-btn');
-    var ratingInput   = document.getElementById('reviewRatingInput');
-    var reviewIdInput = document.getElementById('reviewIdInput');
-    var ratingText    = document.getElementById('reviewRatingText');
-    var editor        = document.getElementById('reviewMessageEditor');
-    var submitBtn     = document.getElementById('reviewSubmitBtn');
-    var labels        = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+    // Rating star helpers
+    var labels = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
     var currentRating = 5;
 
-    // Star helpers
     function paintStars(val) {
+        var stars = document.querySelectorAll('#reviewStars .review-star-btn');
         stars.forEach(function (star) {
             var starVal = parseInt(star.getAttribute('data-value'), 10);
             if (val > 0) star.classList.toggle('is-hover', starVal <= val);
@@ -469,6 +518,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setModalRating(val) {
         currentRating = Math.min(5, Math.max(1, parseInt(val, 10) || 5));
+        var ratingInput = document.getElementById('reviewRatingInput');
+        var ratingText  = document.getElementById('reviewRatingText');
+        var stars       = document.querySelectorAll('#reviewStars .review-star-btn');
+
         if (ratingInput) ratingInput.value = currentRating;
         if (ratingText)  ratingText.textContent = labels[currentRating] || 'Select a rating';
         stars.forEach(function (s) {
@@ -478,220 +531,295 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    stars.forEach(function (star) {
-        var val = parseInt(star.getAttribute('data-value'), 10);
-        star.addEventListener('mouseenter', function () {
-            paintStars(val);
-            if (ratingText) ratingText.textContent = labels[val] || 'Select a rating';
-        });
-        star.addEventListener('click', function () { setModalRating(val); });
-    });
-
-    var starsWrap = document.getElementById('reviewStars');
-    if (starsWrap) {
-        starsWrap.addEventListener('mouseleave', function () {
-            paintStars(0);
-            if (ratingText) ratingText.textContent = currentRating ? labels[currentRating] : 'Select a rating';
-        });
-    }
-
-    // Toolbar
-    document.querySelectorAll('#reviewmodal .tb-btn-act').forEach(function (btn) {
-        btn.addEventListener('mousedown', function (e) {
-            e.preventDefault();
-            var command = btn.getAttribute('data-command');
-            var value   = btn.getAttribute('data-value') || null;
-            if (command === 'createLink') {
-                var url = prompt('Enter the link URL:', 'https://');
-                if (url) document.execCommand(command, false, url);
-            } else if (command === 'formatBlock') {
-                document.execCommand(command, false, '<' + value + '>');
-            } else if (command) {
-                document.execCommand(command, false, value);
-            }
-            if (editor) editor.focus();
-        });
-    });
-
-    // Helpers
-    function escapeHtml(text) {
-        if (!text) return '';
-        var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-        return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
-    }
-
-    function showReviewToast(msg, isError) {
-        var toast = document.getElementById('reviewSuccessToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'reviewSuccessToast';
-            document.body.appendChild(toast);
-        }
-        var iconHtml = isError
-            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M20 6 9 17l-5-5"/></svg>';
-        toast.innerHTML = iconHtml + ' <span>' + (msg || (isError ? 'An error occurred.' : 'Review submitted successfully!')) + '</span>';
-        toast.classList.add('show');
-        setTimeout(function () { toast.classList.remove('show'); }, 3500);
-    }
-
     function resetModalForNew() {
+        var reviewIdInput = document.getElementById('reviewIdInput');
+        var editor        = document.getElementById('reviewMessageEditor');
+        var submitBtn     = document.getElementById('reviewSubmitBtn');
+
         if (reviewIdInput) reviewIdInput.value = '';
         setModalRating(5);
-        if (editor)    editor.innerHTML = '';
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Review'; }
-    }
-
-    // Bootstrap modal events
-    var reviewModalElement = document.getElementById('reviewmodal');
-    if (reviewModalElement) {
-        reviewModalElement.addEventListener('show.bs.modal', function (event) {
-            var trigger = event.relatedTarget;
-            var editBtn = trigger ? (trigger.closest ? trigger.closest('.btn-edit-review') : (trigger.classList && trigger.classList.contains('btn-edit-review') ? trigger : null)) : null;
-            if (editBtn) {
-                var id = editBtn.getAttribute('data-id');
-                var rating = editBtn.getAttribute('data-rating') || 5;
-                var slide = editBtn.closest ? editBtn.closest('.reviewSlide') : null;
-                var msgHtml = slide ? (slide.querySelector('.reviewTextDiv') ? slide.querySelector('.reviewTextDiv').innerHTML.trim() : '') : '';
-                if (reviewIdInput) reviewIdInput.value = id;
-                setModalRating(rating);
-                if (editor) editor.innerHTML = msgHtml;
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Update Review'; }
-            } else {
-                resetModalForNew();
-            }
-        });
-
-        reviewModalElement.addEventListener('hidden.bs.modal', function () {
-            document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('overflow');
-            document.body.style.removeProperty('padding-right');
-        });
-    }
-
-    if ($) {
-        $(document).on('click', '[data-bs-target="#reviewmodal"]:not(.btn-edit-review), .writeReviewBtn', function () {
-            resetModalForNew();
-        });
-    } else {
-        var writeBtn = document.querySelector('.writeReviewBtn');
-        if (writeBtn) writeBtn.addEventListener('click', resetModalForNew);
-    }
-
-    // DOM update helpers
-    function updateReviewSlideDirectly(reviewId, rating, cleanMessage) {
-        var rVal     = parseInt(rating, 10) || 5;
-        var starHtml = '';
-        for (var s = 1; s <= 5; s++) {
-            starHtml += (s <= rVal) ? '★' : '<span style="color:#cbd5e1;">★</span>';
-        }
-        var slide = $ ? $('.reviewSlide[data-review-id="' + reviewId + '"]') : null;
-        if (slide && slide.length) {
-            slide.find('.reviewCardStars').html(starHtml);
-            slide.find('.reviewTextDiv').html(cleanMessage);
-            slide.find('.btn-edit-review').attr('data-rating', rVal).data('rating', rVal);
+        if (editor) editor.innerHTML = '';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Review';
         }
     }
 
-    function addReviewSlideDirectly(rating, cleanMessage, reviewId) {
-        var rVal           = parseInt(rating, 10) || 5;
-        var starHtml       = '';
-        for (var s = 1; s <= 5; s++) {
-            starHtml += (s <= rVal) ? '★' : '<span style="color:#cbd5e1;">★</span>';
+    window.openWriteReviewModal = function () {
+        resetModalForNew();
+        openModalDirectly();
+    };
+
+    window.openEditReviewModal = function (id, rating, btn) {
+        var reviewIdInput = document.getElementById('reviewIdInput');
+        var editor        = document.getElementById('reviewMessageEditor');
+        var submitBtn     = document.getElementById('reviewSubmitBtn');
+
+        if (reviewIdInput) reviewIdInput.value = id || '';
+        setModalRating(rating || 5);
+
+        var slide = null;
+        if (btn && btn.closest) {
+            slide = btn.closest('.reviewSlide');
         }
-        var currentDateStr = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g, '.');
-
-        var authorImgHtml = currentUserData.img
-            ? '<img src="' + escapeHtml(currentUserData.img) + '" alt="' + escapeHtml(currentUserData.name) + '" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid #0088b0;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
-              '<div style="display:none;width:38px;height:38px;border-radius:50%;background:#e9f8ff;color:#006786;font-weight:700;font-size:13px;align-items:center;justify-content:center;flex-shrink:0;">' + escapeHtml(currentUserData.initials) + '</div>'
-            : '<div style="width:38px;height:38px;border-radius:50%;background:#e9f8ff;color:#006786;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + escapeHtml(currentUserData.initials) + '</div>';
-
-        var editBtnHtml = '<button type="button" class="btn-edit-review" data-bs-toggle="modal" data-bs-target="#reviewmodal" data-id="' + (reviewId || '') + '" data-rating="' + rVal + '" onclick="if(window.openEditReviewModal){ window.openEditReviewModal(' + (reviewId || 0) + ', ' + rVal + ', this); }" title="Edit Review"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg><span>Edit</span></button>';
-
-        var slideHtml = '<div class="reviewSlide" data-review-id="' + (reviewId || '') + '"><div class="reviewCard"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;"><div style="display:flex;align-items:center;gap:10px;overflow:hidden;">' + authorImgHtml + '<div style="text-align:left;overflow:hidden;"><h6 style="margin:0;font-weight:700;font-size:14px;color:#0f172a;line-height:1.2;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">' + escapeHtml(currentUserData.name) + '</h6><small style="color:#64748b;font-size:11px;display:block;">' + escapeHtml(currentUserData.role) + ' • ' + currentDateStr + '</small></div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><div class="reviewCardStars" style="color:#E8A339;font-size:14px;letter-spacing:1px;display:flex;align-items:center;">' + starHtml + '</div>' + editBtnHtml + '</div></div><div class="reviewTextDiv" style="text-align:left;color:#334155;font-size:14px;line-height:1.5;">' + cleanMessage + '</div></div></div>';
-
-        if ($) {
-            var $slider = $('.reviewSlick');
-            if ($slider.length) {
-                if ($slider.hasClass('slick-initialized')) $slider.slick('unslick');
-                $slider.find('.reviewSlide').each(function () {
-                    if ($(this).text().indexOf("haven't submitted any reviews") !== -1) $(this).remove();
-                });
-                $slider.prepend(slideHtml);
-                $slider.slick({
-                    infinite: false, slidesToShow: 1, slidesToScroll: 1,
-                    dots: false, arrows: true,
-                    prevArrow: '<button class="slide-arrow prev-arrow"></button>',
-                    nextArrow: '<button class="slide-arrow next-arrow"></button>'
-                });
-                $slider.slick('slickGoTo', 0, true);
-                $slider.slick('setPosition');
+        if (!slide && id) {
+            slide = document.querySelector('.reviewSlide[data-review-id="' + id + '"]');
+        }
+        var msgHtml = '';
+        if (slide) {
+            var textDiv = slide.querySelector('.reviewTextDiv');
+            if (textDiv) {
+                msgHtml = textDiv.innerHTML.trim();
             }
         }
-    }
+        if (editor) editor.innerHTML = msgHtml;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Update Review';
+        }
+        openModalDirectly();
+    };
 
-    // Submit Review AJAX
-    if (submitBtn) {
-        submitBtn.addEventListener('click', function (e) {
+    // Capture phase document click listener to guarantee clicks always trigger
+    document.addEventListener('click', function (e) {
+        var editBtn = e.target.closest ? e.target.closest('.btn-edit-review') : null;
+        if (editBtn) {
             e.preventDefault();
-            var rating      = ratingInput ? ratingInput.value : 5;
-            var message     = editor ? editor.innerHTML.trim() : '';
-            var textContent = editor ? editor.innerText.trim() : '';
+            e.stopPropagation();
+            var id = editBtn.getAttribute('data-id');
+            var rating = editBtn.getAttribute('data-rating') || 5;
+            window.openEditReviewModal(id, rating, editBtn);
+            return;
+        }
 
-            if (!textContent && (!message || message === '<br>' || message === '<div><br></div>')) {
-                showReviewToast('Please write your review before submitting.', true);
-                return;
-            }
+        var writeBtn = e.target.closest ? e.target.closest('.writeReviewBtn') : null;
+        if (writeBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.openWriteReviewModal();
+            return;
+        }
+    }, true);
 
-            var revId = reviewIdInput ? reviewIdInput.value : '';
-            submitBtn.disabled    = true;
-            submitBtn.textContent = revId ? 'Updating...' : 'Submitting...';
+    document.addEventListener('DOMContentLoaded', function () {
+        var $ = window.jQuery;
+        ensureModalInBody();
 
-            var formData = new FormData();
-            if (revId) formData.append('review_id', revId);
-            var userIdInput = document.getElementById('reviewUserIdInput');
-            if (userIdInput && userIdInput.value) formData.append('user_id', userIdInput.value);
-            formData.append('rating',  rating);
-            formData.append('message', message);
+        // Star events
+        var stars = document.querySelectorAll('#reviewStars .review-star-btn');
+        var ratingText = document.getElementById('reviewRatingText');
 
-            var saveApiUrl = <?= json_encode(($pathPrefix ?? '../') . 'api/save_review.php') ?>;
-            fetch(saveApiUrl, { method: 'POST', body: formData })
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    submitBtn.disabled    = false;
-                    submitBtn.textContent = revId ? 'Update Review' : 'Submit Review';
-                    if (data.status === 'success') {
-                        var reviewModalEl = document.getElementById('reviewmodal');
-                        if (window.bootstrap && bootstrap.Modal) {
-                            var modalInst = (typeof bootstrap.Modal.getOrCreateInstance === 'function')
-                                ? bootstrap.Modal.getOrCreateInstance(reviewModalEl)
-                                : (bootstrap.Modal.getInstance(reviewModalEl) || new bootstrap.Modal(reviewModalEl));
-                            if (modalInst) modalInst.hide();
-                        } else if ($ && typeof $(reviewModalEl).modal === 'function') {
-                            $(reviewModalEl).modal('hide');
-                        }
-                        revId ? updateReviewSlideDirectly(revId, rating, message)
-                              : addReviewSlideDirectly(rating, message, data.review_id);
+        stars.forEach(function (star) {
+            var val = parseInt(star.getAttribute('data-value'), 10);
+            star.addEventListener('mouseenter', function () {
+                paintStars(val);
+                if (ratingText) ratingText.textContent = labels[val] || 'Select a rating';
+            });
+            star.addEventListener('click', function () { setModalRating(val); });
+        });
+
+        var starsWrap = document.getElementById('reviewStars');
+        if (starsWrap) {
+            starsWrap.addEventListener('mouseleave', function () {
+                paintStars(0);
+                if (ratingText) ratingText.textContent = currentRating ? labels[currentRating] : 'Select a rating';
+            });
+        }
+
+        // Toolbar
+        document.querySelectorAll('#reviewmodal .tb-btn-act').forEach(function (btn) {
+            btn.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                var command = btn.getAttribute('data-command');
+                var value   = btn.getAttribute('data-value') || null;
+                var editor  = document.getElementById('reviewMessageEditor');
+                if (command === 'createLink') {
+                    var url = prompt('Enter the link URL:', 'https://');
+                    if (url) document.execCommand(command, false, url);
+                } else if (command === 'formatBlock') {
+                    document.execCommand(command, false, '<' + value + '>');
+                } else if (command) {
+                    document.execCommand(command, false, value);
+                }
+                if (editor) editor.focus();
+            });
+        });
+
+        // Bootstrap modal event listeners
+        var reviewModalElement = document.getElementById('reviewmodal');
+        if (reviewModalElement) {
+            reviewModalElement.addEventListener('show.bs.modal', function (event) {
+                var trigger = event.relatedTarget;
+                var editBtn = trigger ? (trigger.closest ? trigger.closest('.btn-edit-review') : (trigger.classList && trigger.classList.contains('btn-edit-review') ? trigger : null)) : null;
+                if (editBtn) {
+                    var id = editBtn.getAttribute('data-id');
+                    var rating = editBtn.getAttribute('data-rating') || 5;
+                    window.openEditReviewModal(id, rating, editBtn);
+                } else {
+                    // Only reset if reviewIdInput is empty (not already prefilled by openEditReviewModal)
+                    var reviewIdInput = document.getElementById('reviewIdInput');
+                    if (!reviewIdInput || !reviewIdInput.value) {
                         resetModalForNew();
-                        setTimeout(function () {
-                            document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
-                            document.body.classList.remove('modal-open');
-                            document.body.style.removeProperty('overflow');
-                            document.body.style.removeProperty('padding-right');
-                        }, 300);
-                        showReviewToast(data.message || 'Saved successfully!', false);
-                    } else {
-                        showReviewToast(data.message || 'Failed to submit review.', true);
+                    }
+                }
+            });
+
+            reviewModalElement.addEventListener('hidden.bs.modal', function () {
+                document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('padding-right');
+                resetModalForNew();
+            });
+        }
+
+        // Helpers
+        function escapeHtml(text) {
+            if (!text) return '';
+            var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function showReviewToast(msg, isError) {
+            var toast = document.getElementById('reviewSuccessToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'reviewSuccessToast';
+                document.body.appendChild(toast);
+            }
+            var iconHtml = isError
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M20 6 9 17l-5-5"/></svg>';
+            toast.innerHTML = iconHtml + ' <span>' + (msg || (isError ? 'An error occurred.' : 'Review submitted successfully!')) + '</span>';
+            toast.classList.add('show');
+            setTimeout(function () { toast.classList.remove('show'); }, 3500);
+        }
+
+        // Live DOM update functions
+        var currentUserData = {
+            name:     <?= json_encode($reviewUserName) ?>,
+            role:     <?= json_encode(!empty($player_prefs['LEVEL']) ? $player_prefs['LEVEL'] : 'Player') ?>,
+            img:      <?= json_encode($reviewUserImg) ?>,
+            initials: <?= json_encode($reviewInitials) ?>
+        };
+
+        function updateReviewSlideDirectly(reviewId, rating, cleanMessage) {
+            var rVal = parseInt(rating, 10) || 5;
+            var starHtml = '';
+            for (var s = 1; s <= 5; s++) {
+                starHtml += (s <= rVal) ? '★' : '<span style="color:#cbd5e1;">★</span>';
+            }
+            var slide = $ ? $('.reviewSlide[data-review-id="' + reviewId + '"]') : null;
+            if (slide && slide.length) {
+                slide.find('.reviewCardStars').html(starHtml);
+                slide.find('.reviewTextDiv').html(cleanMessage);
+                slide.find('.btn-edit-review').attr('data-rating', rVal).data('rating', rVal);
+            }
+        }
+
+        function addReviewSlideDirectly(rating, cleanMessage, reviewId) {
+            var rVal = parseInt(rating, 10) || 5;
+            var starHtml = '';
+            for (var s = 1; s <= 5; s++) {
+                starHtml += (s <= rVal) ? '★' : '<span style="color:#cbd5e1;">★</span>';
+            }
+            var currentDateStr = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g, '.');
+
+            var authorImgHtml = currentUserData.img
+                ? '<img src="' + escapeHtml(currentUserData.img) + '" alt="' + escapeHtml(currentUserData.name) + '" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid #0088b0;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
+                  '<div style="display:none;width:38px;height:38px;border-radius:50%;background:#e9f8ff;color:#006786;font-weight:700;font-size:13px;align-items:center;justify-content:center;flex-shrink:0;">' + escapeHtml(currentUserData.initials) + '</div>'
+                : '<div style="width:38px;height:38px;border-radius:50%;background:#e9f8ff;color:#006786;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + escapeHtml(currentUserData.initials) + '</div>';
+
+            var editBtnHtml = '<button type="button" class="btn-edit-review" data-bs-toggle="modal" data-bs-target="#reviewmodal" data-id="' + (reviewId || '') + '" data-rating="' + rVal + '" onclick="if(window.openEditReviewModal){ window.openEditReviewModal(\'' + (reviewId || '') + '\', ' + rVal + ', this); return false; }" title="Edit Review"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg><span>Edit</span></button>';
+
+            var slideHtml = '<div class="reviewSlide" data-review-id="' + (reviewId || '') + '"><div class="reviewCard"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;"><div style="display:flex;align-items:center;gap:10px;overflow:hidden;">' + authorImgHtml + '<div style="text-align:left;overflow:hidden;"><h6 style="margin:0;font-weight:700;font-size:14px;color:#0f172a;line-height:1.2;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">' + escapeHtml(currentUserData.name) + '</h6><small style="color:#64748b;font-size:11px;display:block;">' + escapeHtml(currentUserData.role) + ' • ' + currentDateStr + '</small></div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><div class="reviewCardStars" style="color:#E8A339;font-size:14px;letter-spacing:1px;display:flex;align-items:center;">' + starHtml + '</div>' + editBtnHtml + '</div></div><div class="reviewTextDiv" style="text-align:left;color:#334155;font-size:14px;line-height:1.5;">' + cleanMessage + '</div></div></div>';
+
+            if ($) {
+                var $slider = $('.reviewSlick');
+                if ($slider.length) {
+                    if ($slider.hasClass('slick-initialized')) $slider.slick('unslick');
+                    $slider.find('.reviewSlide').each(function () {
+                        if ($(this).text().indexOf("haven't submitted any reviews") !== -1) $(this).remove();
+                    });
+                    $slider.prepend(slideHtml);
+                    $slider.slick({
+                        infinite: false, slidesToShow: 1, slidesToScroll: 1,
+                        dots: false, arrows: true, accessibility: false,
+                        prevArrow: '<button class="slide-arrow prev-arrow"></button>',
+                        nextArrow: '<button class="slide-arrow next-arrow"></button>'
+                    });
+                    $slider.slick('slickGoTo', 0, true);
+                    $slider.slick('setPosition');
+                }
+            }
+        }
+
+        // Submit review
+        var submitBtn = document.getElementById('reviewSubmitBtn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var ratingInput   = document.getElementById('reviewRatingInput');
+                var reviewIdInput = document.getElementById('reviewIdInput');
+                var editor        = document.getElementById('reviewMessageEditor');
+
+                var rating      = ratingInput ? ratingInput.value : 5;
+                var message     = editor ? editor.innerHTML.trim() : '';
+                var textContent = editor ? editor.innerText.trim() : '';
+
+                if (!textContent && (!message || message === '<br>' || message === '<div><br></div>')) {
+                    showReviewToast('Please write your review before submitting.', true);
+                    return;
+                }
+
+                var revId = reviewIdInput ? reviewIdInput.value : '';
+                submitBtn.disabled    = true;
+                submitBtn.textContent = revId ? 'Updating...' : 'Submitting...';
+
+                var formData = new FormData();
+                if (revId) formData.append('review_id', revId);
+                var userIdInput = document.getElementById('reviewUserIdInput');
+                if (userIdInput && userIdInput.value) formData.append('user_id', userIdInput.value);
+                formData.append('rating',  rating);
+                formData.append('message', message);
+
+                var csrfTokenEl = document.getElementById('reviewCsrfInput');
+                var csrfToken = (csrfTokenEl && csrfTokenEl.value) ? csrfTokenEl.value :
+                                (document.querySelector('input[name="csrf_token"]') ? document.querySelector('input[name="csrf_token"]').value : '<?= \App\Helpers\Session::getCsrfToken() ?>');
+                if (csrfToken) formData.append('csrf_token', csrfToken);
+
+                var saveApiUrl = <?= json_encode(($pathPrefix ?? '../') . 'api/save_review.php') ?>;
+                fetch(saveApiUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken || '',
+                        'Accept': 'application/json'
                     }
                 })
-                .catch(function (err) {
-                    console.error('Save review error:', err);
-                    submitBtn.disabled    = false;
-                    submitBtn.textContent = revId ? 'Update Review' : 'Submit Review';
-                    showReviewToast('Something went wrong. Please try again.', true);
-                });
-        });
-    }
-});
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        submitBtn.disabled    = false;
+                        submitBtn.textContent = revId ? 'Update Review' : 'Submit Review';
+                        if (data.status === 'success') {
+                            window.closeReviewModal();
+                            revId ? updateReviewSlideDirectly(revId, rating, message)
+                                  : addReviewSlideDirectly(rating, message, data.review_id);
+                            resetModalForNew();
+                            showReviewToast(data.message || 'Saved successfully!', false);
+                        } else {
+                            showReviewToast(data.message || 'Failed to submit review.', true);
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error('Save review error:', err);
+                        submitBtn.disabled    = false;
+                        submitBtn.textContent = revId ? 'Update Review' : 'Submit Review';
+                        showReviewToast('Something went wrong. Please try again.', true);
+                    });
+            });
+        }
+    });
+})();
 </script>

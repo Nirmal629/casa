@@ -14,12 +14,29 @@ $response = array();
     $event_category = $conn->real_escape_string($_POST['event_category']);
     $gender_category = $conn->real_escape_string($_POST['gender_category']);
     $gender_skill_level = $conn->real_escape_string($_POST['gender_skill_level']);
-    $event_type = $conn->real_escape_string($_POST['event_type']);
     $event_date = $conn->real_escape_string($_POST['event_date']);
     $event_time = $conn->real_escape_string($_POST['event_time']);
     $to_time = $conn->real_escape_string($_POST['to_time']);
-    $freeze_date = $conn->real_escape_string($_POST['freeze_date']);
-    $freeze_time = $conn->real_escape_string($_POST['freeze_time']);
+
+    $eventModel = new \App\Models\EventModel();
+    $freezeValidation = $eventModel->validateFreezeDateTime(
+        (string) ($_POST['event_date'] ?? ''),
+        (string) ($_POST['event_time'] ?? ''),
+        isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+        isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+        (string) ($_POST['freeze_type'] ?? '')
+    );
+
+    if (!$freezeValidation['valid']) {
+        http_response_code(400);
+        $response['success'] = false;
+        $response['error'] = $freezeValidation['error'];
+        echo json_encode($response);
+        exit;
+    }
+
+    $freeze_date = $conn->real_escape_string($freezeValidation['freeze_date']);
+    $freeze_time = $conn->real_escape_string($freezeValidation['freeze_time']);
     $event_cost = $conn->real_escape_string($_POST['event_cost']);
     $event_discount = $conn->real_escape_string($_POST['event_discount']);
     $event_description = $conn->real_escape_string($_POST['event_description']);

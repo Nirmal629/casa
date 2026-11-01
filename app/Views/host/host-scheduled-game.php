@@ -272,6 +272,8 @@ if (!in_array('Mix', $uniqueLevels, true)) {
                         <input type="date" class="form-control" id="eventDatee" placeholder="Event Date">
                     </div>
 
+                    <input type="hidden" id="freezeTypee" name="freeze_type" value="custom">
+
                     <div class="col-6 col-md-4">
                         <label for="freezeDatee" class="form-label">Freeze Date<span>*</span></label>
                         <input type="date" class="form-control" id="freezeDatee" placeholder="Freeze Date">

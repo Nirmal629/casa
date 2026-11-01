@@ -59,6 +59,26 @@ if (!is_numeric($event_cost)) {
     exit;
 }
 
+$eventModel = new \App\Models\EventModel();
+$freezeValidation = $eventModel->validateFreezeDateTime(
+    (string) $event_date,
+    (string) $event_time,
+    isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+    isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+    (string) ($_POST['freeze_type'] ?? '')
+);
+
+if (!$freezeValidation['valid']) {
+    http_response_code(400);
+    $response['success'] = false;
+    $response['error'] = $freezeValidation['error'];
+    echo json_encode($response);
+    exit;
+}
+
+$freeze_date = $conn->real_escape_string($freezeValidation['freeze_date']);
+$freeze_time = $conn->real_escape_string($freezeValidation['freeze_time']);
+
 // Update query
 $sql = "UPDATE ca_events 
         SET EVENT_CITY = '$event_city',

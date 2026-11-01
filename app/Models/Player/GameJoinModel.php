@@ -236,6 +236,14 @@ class GameJoinModel extends Model
                 );
             }
 
+            if ($this->eventModel->isBookingFrozen($event)) {
+                if ($isOwnerTx && $this->db->inTransaction()) $this->db->rollBack();
+                return $this->response(
+                    false,
+                    'Booking for this event is closed. The booking freeze deadline has passed.'
+                );
+            }
+
             // Enforce private event restriction: public join is not allowed for Private events
             if (strcasecmp((string) ($event['EVENT_TYPE'] ?? ''), 'Private') === 0 && strcasecmp($type, 'Private') !== 0) {
                 if ($isOwnerTx && $this->db->inTransaction()) $this->db->rollBack();
@@ -538,6 +546,11 @@ class GameJoinModel extends Model
             if ($this->eventModel->isEventExpired($gameId)) {
                 if ($isOwnerTx && $this->db->inTransaction()) $this->db->rollBack();
                 return $this->response(false, 'This event has expired. Joining is not permitted.');
+            }
+
+            if ($this->eventModel->isBookingFrozen($event)) {
+                if ($isOwnerTx && $this->db->inTransaction()) $this->db->rollBack();
+                return $this->response(false, 'Booking for this event is closed. The booking freeze deadline has passed.');
             }
 
             $stmt = $this->db->prepare(

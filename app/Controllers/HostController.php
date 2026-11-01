@@ -519,6 +519,28 @@ class HostController extends Controller
         }
 
         $input = !empty($_POST) ? $_POST : (json_decode((string) file_get_contents('php://input'), true) ?: []);
+
+        $freezeValidation = $this->eventModel->validateFreezeDateTime(
+            (string) ($input['event_date'] ?? ''),
+            (string) ($input['event_time'] ?? ''),
+            isset($input['freeze_date']) ? (string) $input['freeze_date'] : null,
+            isset($input['freeze_time']) ? (string) $input['freeze_time'] : null,
+            (string) ($input['freeze_type'] ?? '')
+        );
+
+        if (!$freezeValidation['valid']) {
+            if ($this->isAjaxRequest()) {
+                $this->json(['status' => 'error', 'message' => $freezeValidation['error']], 400);
+                return;
+            }
+            $this->setFlashToast('error', $freezeValidation['error']);
+            $this->redirect('/host/host-creat-game.php');
+            return;
+        }
+
+        $input['freeze_date'] = $freezeValidation['freeze_date'];
+        $input['freeze_time'] = $freezeValidation['freeze_time'];
+
         $data = $this->buildGameData($input, $userId);
 
         try {
@@ -955,6 +977,22 @@ class HostController extends Controller
                 return;
             }
         }
+
+        $freezeValidation = $this->eventModel->validateFreezeDateTime(
+            (string) ($_POST['event_date'] ?? ''),
+            (string) ($_POST['event_time'] ?? ''),
+            isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+            isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+            (string) ($_POST['freeze_type'] ?? '')
+        );
+
+        if (!$freezeValidation['valid']) {
+            $this->json(['success' => false, 'error' => $freezeValidation['error']], 400);
+            return;
+        }
+
+        $_POST['freeze_date'] = $freezeValidation['freeze_date'];
+        $_POST['freeze_time'] = $freezeValidation['freeze_time'];
 
         $this->db->beginTransaction();
         try {

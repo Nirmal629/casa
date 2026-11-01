@@ -424,6 +424,8 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
                         <select class="form-control" id="toTimeee" name="to_Time" required></select>
                     </div>
 
+                    <input type="hidden" id="freezeTypeee" name="freeze_type" value="custom">
+
                     <div class="col-md-6 col-12 mb-3">
                         <label for="freezeDateee" class="form-label">Freeze Date<span>*</span></label>
                         <input type="date" class="form-control" id="freezeDateee" placeholder="Freeze Date">
@@ -525,6 +527,17 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
     populateTimeDropdown("freezeTimeee");
     populateTimeDropdown("eventTimeee");
     populateTimeDropdown("toTimeee");
+
+    if (typeof window.initDynamicEventCalendar === 'function') {
+        window.initDynamicEventCalendar({
+            date: '#eventDateee',
+            freezeDate: '#freezeDateee',
+            fromTime: '#eventTimeee',
+            toTime: '#toTimeee',
+            freezeTime: '#freezeTimeee',
+            freezeType: '#freezeTypeee'
+        });
+    }
 
     function getNextDayOfWeek(dayIndex) {
         const date = new Date();
