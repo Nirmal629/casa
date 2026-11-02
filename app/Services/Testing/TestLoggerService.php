@@ -26,10 +26,17 @@ class TestLoggerService
      */
     public static function isDev(): bool
     {
-        $appDebug = function_exists('env') ? filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN) : false;
         $appEnv = function_exists('env') ? strtolower((string) env('APP_ENV', 'local')) : 'local';
+        if (in_array($appEnv, ['production', 'prod'], true)) {
+            return false;
+        }
 
-        return $appDebug && in_array($appEnv, ['local', 'dev', 'development'], true);
+        $appDebug = function_exists('env') ? env('APP_DEBUG', null) : null;
+        if ($appDebug !== null && filter_var($appDebug, FILTER_VALIDATE_BOOLEAN) === false) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -259,3 +266,4 @@ class TestLoggerService
         return basename($fullPath);
     }
 }
+

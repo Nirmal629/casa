@@ -97,3 +97,4 @@ if (file_exists($testFile)) {
 echo "9. Cleaned up temporary test log file: $testFile" . PHP_EOL;
 
 echo PHP_EOL . "=== ALL LOGGER TESTS PASSED ===" . PHP_EOL;
+

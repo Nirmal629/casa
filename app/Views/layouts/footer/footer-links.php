@@ -37,9 +37,12 @@ $calJsVer   = file_exists($calJsFile) ? filemtime($calJsFile) : '1.0';
 <script src="<?php echo $assetPrefix; ?>app/script/index.js?v=<?php echo $scriptVer; ?>"></script>
 
 <?php
-$qaDebug = function_exists('env') ? filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN) : false;
-$qaEnv   = function_exists('env') ? strtolower((string) env('APP_ENV', 'local')) : 'local';
-if ($qaDebug && in_array($qaEnv, ['local', 'dev', 'development'], true)):
+$qaEnv = function_exists('env') ? strtolower((string) env('APP_ENV', 'local')) : 'local';
+$isNotProd = !in_array($qaEnv, ['production', 'prod'], true);
+$appDebug = function_exists('env') ? env('APP_DEBUG', null) : null;
+$debugNotFalse = ($appDebug === null || filter_var($appDebug, FILTER_VALIDATE_BOOLEAN) !== false);
+
+if ($isNotProd && $debugNotFalse):
     $qaJsFile = __DIR__ . '/../../../../assets/js/manual-test-logger.js';
     $qaJsVer = file_exists($qaJsFile) ? filemtime($qaJsFile) : '1.0';
 ?>

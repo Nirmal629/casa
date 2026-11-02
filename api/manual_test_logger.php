@@ -132,3 +132,4 @@ if ($method === 'GET') {
 
 http_response_code(405);
 exit;
+
