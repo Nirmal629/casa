@@ -4,15 +4,16 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 error_reporting(E_ALL & ~E_NOTICE);
 
-include __DIR__ . "/../layouts/header/inner-header.php";
-
 $host_id = $host_id ?? (isset($_GET['host_id']) ? intval($_GET['host_id']) : ($_SESSION['mapped_host_id'] ?? 0));
 if ($host_id === 0 && !empty($_SESSION['user_id'])) {
     if (file_exists(__DIR__ . '/../../Helpers/audit.php')) {
         require_once __DIR__ . '/../../Helpers/audit.php';
     }
-    $host_id = function_exists('auditResolveHostId') ? auditResolveHostId($conn, $_SESSION['user_id']) : 0;
+    $conn = \App\Config\Database::getMysqli();
+    $host_id = function_exists('auditResolveHostId') ? auditResolveHostId($conn, (int) $_SESSION['user_id']) : 0;
 }
+
+include __DIR__ . "/../layouts/header/inner-header.php";
 
 if (empty($_SESSION['usertype']) || strcasecmp(trim((string) $_SESSION['usertype']), 'Player') !== 0) {
     echo "<script>window.location.href='/';</script>";

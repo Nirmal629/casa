@@ -50,6 +50,67 @@ if (!empty($cleanProfileImg) && file_exists($rootDir . '/profile_img/' . $cleanP
 
 $userInitials  = getUserInitials($userProfile->name);
 $chipRoleClass = $isHost ? 'host' : ($isTrainer ? 'trainer' : '');
+
+// 6. Dynamic Navbar Store Label (Club Context Awareness)
+$reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+$isClubGamesPage = (
+    $currentInnerPage === 'player-dashboard.php'
+    || str_contains($reqPath, 'player-dashboard')
+    || str_contains($reqPath, 'player/dashboard')
+    || !empty($is_club_games_page)
+);
+
+$navbarStoreLabel = 'Casa Store';
+
+if ($isClubGamesPage) {
+    $resolvedClubName = '';
+
+    // Check pre-passed controller or view data
+    if (!empty($club_name) && is_string($club_name)) {
+        $resolvedClubName = trim($club_name);
+    } elseif (!empty($club['club_name']) && is_string($club['club_name'])) {
+        $resolvedClubName = trim((string) $club['club_name']);
+    }
+
+    // Safely resolve from database via ClubModel
+    if ($resolvedClubName === '') {
+        $candidateClubId = isset($_GET['club_id']) ? (int) $_GET['club_id'] : (isset($club_id) ? (int) $club_id : 0);
+        $candidateHostId = isset($host_id) && (int) $host_id > 0
+            ? (int) $host_id
+            : (isset($_GET['host_id']) ? (int) $_GET['host_id'] : 0);
+
+        if ($candidateHostId === 0 && !empty($_SESSION['mapped_host_id'])) {
+            $candidateHostId = (int) $_SESSION['mapped_host_id'];
+        }
+
+        if ($candidateHostId === 0 && !empty($_SESSION['user_id']) && !empty($conn)) {
+            $baseDir = defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 4);
+            if (file_exists($baseDir . '/app/Helpers/audit.php')) {
+                require_once $baseDir . '/app/Helpers/audit.php';
+            }
+            if (function_exists('auditResolveHostId')) {
+                $candidateHostId = auditResolveHostId($conn, (int) $_SESSION['user_id']);
+            }
+        }
+
+        $clubModel = new \App\Models\ClubModel();
+        if ($candidateClubId > 0) {
+            $clubData = $clubModel->find($candidateClubId);
+            if (!empty($clubData['club_name'])) {
+                $resolvedClubName = trim((string) $clubData['club_name']);
+            }
+        } elseif ($candidateHostId > 0) {
+            $clubData = $clubModel->findByHostId($candidateHostId);
+            if (!empty($clubData['club_name'])) {
+                $resolvedClubName = trim((string) $clubData['club_name']);
+            }
+        }
+    }
+
+    if ($resolvedClubName !== '') {
+        $navbarStoreLabel = $resolvedClubName;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -97,7 +158,7 @@ $chipRoleClass = $isHost ? 'host' : ($isTrainer ? 'trainer' : '');
                     <?php endif; ?>
                     <?php if (canViewProductListing()): ?>
                     <li><a href="<?= e($routes['productListing']) ?>" class="nav_link <?php echo $currentInnerPage === 'product-listing.php' ? 'active' : ''; ?>">
-                        <span>Casa Store</span></a></li>
+                        <span><?= e($navbarStoreLabel) ?></span></a></li>
                     <?php endif; ?>
                 </ul>
 

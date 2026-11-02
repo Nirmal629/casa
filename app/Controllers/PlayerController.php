@@ -175,6 +175,10 @@ class PlayerController extends Controller
         $subController = new \App\Controllers\Player\PlayerSubscriptionController($this->db);
         $subData = $subController->getSubscriptionViewData($userId, $hostId, $vlevel, $gender);
 
+        $clubModel = new \App\Models\ClubModel($this->db);
+        $club = $hostId > 0 ? $clubModel->findByHostId($hostId) : null;
+        $clubName = !empty($club['club_name']) ? (string) $club['club_name'] : null;
+
         $currentMonth = (int) date('n');
         $currentYear = (int) date('Y');
 
@@ -185,6 +189,8 @@ class PlayerController extends Controller
         $this->render('player/player-dashboard', array_merge([
             'current_user_id' => $userId,
             'host_id' => $hostId,
+            'club' => $club,
+            'club_name' => $clubName,
             'upcomingTournaments' => $upcomingTournaments,
             'active_tab' => $_GET['tab'] ?? 'Upcoming',
             'premiumStatus' => $premiumStatus,
