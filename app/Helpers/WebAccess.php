@@ -10,7 +10,7 @@ final class WebAccess
         $path = str_replace('\\', '/', rawurldecode($path));
         if (str_contains($path, "\0") || preg_match('~(?:^|/)\.{1,2}(?:/|$)~', $path)) return true;
         if (preg_match('~(?:^|/)\.[^/]+~', $path)) return true;
-        if (preg_match('~^/(?:vendor|brain|scratch|scripts|tests|sql|PHPMailer)(?:/|$)~i', $path)) return true;
+        if (preg_match('~^/(?:vendor|brain|scratch|scripts|tests|sql|PHPMailer|storage)(?:/|$)~i', $path)) return true;
         if (preg_match('~^/pos/admin/(?:app|system|writable|vendor)(?:/|$)~i', $path)) return true;
         if (preg_match('~^/app/.*\.php(?:/|$)~i', $path)) return true;
         if (preg_match('~^/(?:dbConnection[^/]*|init|.*migration[^/]*|reset)\.php$~i', $path)) return true;

@@ -59,6 +59,10 @@ set_exception_handler(function (\Throwable $e) use ($isDev) {
     $errRef = 'ERR-' . strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
     error_log(sprintf('[%s] [Uncaught Exception] %s: %s in %s:%d', $errRef, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()));
 
+    if ($isDev && class_exists('App\Services\Testing\TestLoggerService')) {
+        \App\Services\Testing\TestLoggerService::logBackendException($e, $errRef);
+    }
+
     $isJson = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
         || (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
         || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'));

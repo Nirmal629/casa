@@ -36,6 +36,18 @@ $calJsVer   = file_exists($calJsFile) ? filemtime($calJsFile) : '1.0';
 <?php endif; ?>
 <script src="<?php echo $assetPrefix; ?>app/script/index.js?v=<?php echo $scriptVer; ?>"></script>
 
+<?php
+$qaDebug = function_exists('env') ? filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN) : false;
+$qaEnv   = function_exists('env') ? strtolower((string) env('APP_ENV', 'local')) : 'local';
+if ($qaDebug && in_array($qaEnv, ['local', 'dev', 'development'], true)):
+    $qaJsFile = __DIR__ . '/../../../../assets/js/manual-test-logger.js';
+    $qaJsVer = file_exists($qaJsFile) ? filemtime($qaJsFile) : '1.0';
+?>
+<!-- Development-Only Manual Testing Journey Logger & Control Panel -->
+<script src="<?php echo $assetPrefix; ?>assets/js/manual-test-logger.js?v=<?php echo $qaJsVer; ?>"></script>
+<?php include __DIR__ . '/manual-test-panel.php'; ?>
+<?php endif; ?>
+
 <script>
   // Global Toast Notification Helper - Supports both (type, message, title) and (message, type) signatures
   function showToast(arg1, arg2, title) {
