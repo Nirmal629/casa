@@ -144,3 +144,4 @@ echo "\nSummary: {$passed} passed, {$failed} failed.\n";
 if ($failed > 0) {
     exit(1);
 }
+
