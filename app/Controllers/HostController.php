@@ -968,6 +968,12 @@ class HostController extends Controller
         }
         $hostId = $sessionUserId;
 
+        $csrfToken = $_POST['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null);
+        if ($csrfToken !== null && !Session::verifyCsrfToken($csrfToken)) {
+            $this->json(['success' => false, 'error' => 'Invalid or expired CSRF token.'], 403);
+            return;
+        }
+
         $defaultGameId = (int) ($_POST['id'] ?? 0);
         if ($defaultGameId > 0) {
             $chkStmt = $this->db->prepare("SELECT HOST_ID FROM ca_events_default WHERE ID = ? LIMIT 1");
@@ -979,9 +985,18 @@ class HostController extends Controller
             }
         }
 
+        $eventDate = (string) ($_POST['event_date'] ?? '');
+        $eventTime = (string) ($_POST['event_time'] ?? '');
+
+        $eventValidation = $this->eventModel->validateEventDateTime($eventDate, $eventTime);
+        if (!$eventValidation['valid']) {
+            $this->json(['success' => false, 'error' => $eventValidation['error']], 400);
+            return;
+        }
+
         $freezeValidation = $this->eventModel->validateFreezeDateTime(
-            (string) ($_POST['event_date'] ?? ''),
-            (string) ($_POST['event_time'] ?? ''),
+            $eventDate,
+            $eventTime,
             isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
             isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
             (string) ($_POST['freeze_type'] ?? '')
@@ -1801,15 +1816,30 @@ class HostController extends Controller
             return;
         }
 
+        $checkExistingStmt = $this->db->prepare("SELECT 1 FROM ca_gamejoin WHERE GAME_ID = ? AND USER_ID = ? LIMIT 1");
+
         $insertJoinStmt = $this->db->prepare("
             INSERT INTO ca_gamejoin (
                 USER_ID, GAME_ID, HOST_ID, PRICE, CURRENCY, TYPE, STATUS, CONFIRMED, CREATED_AT
             ) VALUES (?, ?, ?, ?, ?, ?, ?, 'N', ?)
         ");
         $now = date('Y-m-d H:i:s');
+        $seenUserIds = [];
+
         foreach ($joinedData as $row) {
+            $userId = (int) ($row['USER_ID'] ?? 0);
+            if ($userId <= 0 || isset($seenUserIds[$userId])) {
+                continue;
+            }
+
+            $checkExistingStmt->execute([$newGameId, $userId]);
+            if ($checkExistingStmt->fetchColumn() !== false) {
+                $seenUserIds[$userId] = true;
+                continue;
+            }
+
             $insertJoinStmt->execute([
-                (int) $row['USER_ID'],
+                $userId,
                 $newGameId,
                 (int) $row['HOST_ID'],
                 trim((string) ($row['PRICE'] ?? '')),
@@ -1818,6 +1848,8 @@ class HostController extends Controller
                 trim((string) ($row['STATUS'] ?? '')),
                 $now,
             ]);
+
+            $seenUserIds[$userId] = true;
         }
     }
 }

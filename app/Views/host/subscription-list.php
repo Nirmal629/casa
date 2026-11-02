@@ -311,7 +311,8 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
         </button>
 
         <div class="customModal_content">
-            <form>
+            <form id="createGameSubForm">
+                <input type="hidden" name="csrf_token" id="csrf_token_sub" value="<?= htmlspecialchars(\App\Helpers\Session::csrfToken() ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 <div class="row">
                     <div class="col-md-6 col-12 mb-3">
                         <label for="host-nameee" class="form-label">Host Name<span>*</span></label>
@@ -411,7 +412,7 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
 
                     <div class="col-md-6 col-12 mb-3">
                         <label for="eventDateee" class="form-label">Event Date<span>*</span></label>
-                        <input type="date" class="form-control" id="eventDateee" placeholder="Event Date">
+                        <input type="date" class="form-control" id="eventDateee" placeholder="Event Date" min="<?= date('Y-m-d') ?>">
                     </div>
 
                     <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-3">
@@ -428,7 +429,7 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
 
                     <div class="col-md-6 col-12 mb-3">
                         <label for="freezeDateee" class="form-label">Freeze Date<span>*</span></label>
-                        <input type="date" class="form-control" id="freezeDateee" placeholder="Freeze Date">
+                        <input type="date" class="form-control" id="freezeDateee" placeholder="Freeze Date" min="<?= date('Y-m-d') ?>">
                     </div>
 
                     <div class="col-md-6 col-12 mb-3">
@@ -539,27 +540,89 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
         });
     }
 
-    function getNextDayOfWeek(dayIndex) {
-        const date = new Date();
-        const currentDay = date.getDay(); // Sunday=0 ... Saturday=6
-        let diff = (dayIndex + 7 - currentDay) % 7;
-        if (diff === 0) diff = 7; // always next, not today
-        date.setDate(date.getDate() + diff);
-        return date.toISOString().split("T")[0]; // yyyy-mm-dd
+    function formatDateLocal(d) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
-    const dayMap = {
-        "MONDAY": 1,
-        "TUESDAY": 2,
-        "WEDNESDAY": 3,
-        "THURSDAY": 4,
-        "FRIDAY": 5,
-        "SATURDAY": 6,
-        "SUNDAY": 7
-    };
+    /**
+     * Automatic Weekly Date Selection:
+     * Calculates the next valid event date based on template weekday and start time.
+     * If the weekly event weekday is today and the start time has already passed (or is equal to now),
+     * it rolls forward to next week's occurrence.
+     */
+    function calculateAutoScheduleDate(dayName, eventTimeStr) {
+        const dayMap = {
+            "SUNDAY": 0,
+            "MONDAY": 1,
+            "TUESDAY": 2,
+            "WEDNESDAY": 3,
+            "THURSDAY": 4,
+            "FRIDAY": 5,
+            "SATURDAY": 6
+        };
 
-    $(document).off('click.subEdit', '.discoverGames_card_sub .edit_btn').on('click.subEdit', '.discoverGames_card_sub .edit_btn', function () {
-        const id = $(this).attr('data-id');
+        const now = new Date();
+        const cleanDay = (dayName || '').toUpperCase().trim();
+        if (!dayMap.hasOwnProperty(cleanDay)) {
+            const todayStr = formatDateLocal(now);
+            return {
+                eventDate: todayStr,
+                freezeDate: todayStr,
+                targetDay: now.getDay()
+            };
+        }
+
+        const targetDay = dayMap[cleanDay];
+        const currentDay = now.getDay();
+
+        let diff = (targetDay - currentDay + 7) % 7;
+
+        if (diff === 0) {
+            let isPastOrEqual = false;
+            if (eventTimeStr) {
+                const parts = eventTimeStr.split(':');
+                const startH = parseInt(parts[0], 10) || 0;
+                const startM = parseInt(parts[1], 10) || 0;
+                const curH = now.getHours();
+                const curM = now.getMinutes();
+
+                if (curH > startH || (curH === startH && curM >= startM)) {
+                    isPastOrEqual = true;
+                }
+            }
+
+            diff = isPastOrEqual ? 7 : 0;
+        }
+
+        const eventDateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+        const eventDate = formatDateLocal(eventDateObj);
+
+        // Saturday templates freeze on Friday (1 day before); others on event date
+        const freezeDateObj = new Date(eventDateObj);
+        if (targetDay === 6) {
+            freezeDateObj.setDate(freezeDateObj.getDate() - 1);
+        }
+
+        const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        if (freezeDateObj < todayMid) {
+            freezeDateObj.setTime(todayMid.getTime());
+        }
+
+        const freezeDate = formatDateLocal(freezeDateObj);
+
+        return {
+            eventDate: eventDate,
+            freezeDate: freezeDate,
+            targetDay: targetDay
+        };
+    }
+
+    // Expose reusable modal opening function
+    window.openCreateSubGameModal = function (id) {
+        if (!id) return;
         const data = $('#data_' + id).val();
         if (!data) return;
 
@@ -584,21 +647,21 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
         $('#genderSkillLevelll').val(parseData.GENDER_SKILL_LEVEL || '');
         $('#eventTypeee').val(parseData.EVENT_TYPE || '');
 
-        setTimeout(() => {
-            const eventTimeFormatted = (parseData.EVENT_TIME || '').slice(0, 5); 
-            const toTimeFormatted = (parseData.TO_TIME || '').slice(0, 5);
-            const freezeTimeFormatted = (parseData.CANCEL_TIME || '').slice(0, 5);
+        const eventTimeFormatted = (parseData.EVENT_TIME || '').slice(0, 5);
+        const toTimeFormatted = (parseData.TO_TIME || '').slice(0, 5);
+        const freezeTimeFormatted = (parseData.CANCEL_TIME || '').slice(0, 5);
 
+        setTimeout(() => {
             if (eventTimeFormatted) $('#eventTimeee').val(eventTimeFormatted).trigger('change');
             if (toTimeFormatted) $('#toTimeee').val(toTimeFormatted).trigger('change');
             if (freezeTimeFormatted) $('#freezeTimeee').val(freezeTimeFormatted).trigger('change');
-        }, 100); 
+        }, 100);
 
         $('#eventCosttt').val(parseData.EVENT_COST || '');
         $('#eventDiscounttt').val(parseData.EVENT_DISCOUNT || '');
         $('#eventDescriptionnn').val(parseData.EVENT_DESCRIPTION || '');
         $('#eventMessageee').val(parseData.EVENT_MESSAGE || '');
-        $('#statuseventt').val(parseData.STATUS || '');
+        $('#statuseventt').val(parseData.STATUS || 'Active');
         $('#evnt_idd, #evnt_id').val(parseData.ID || '');
         $('#facilitycostt').val(parseData.FACILITY_COST || '');
         $('#accessoriesCostt').val(parseData.ACCESSORIES_COST || '');
@@ -606,18 +669,62 @@ $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.
         $('#eventtotalCosttt').val(parseData.TOTAL_EVENT_COST || '');
         $('#eventtotalplayerCosttt').val(parseData.TOTAL_PLAYER_COST || '');
         $('#profitlosss').val(parseData.PROFIT_LOSS || '');
-        
-        const dayName = parseData.DAY ? parseData.DAY.toUpperCase().trim() : "";
-        if (dayMap.hasOwnProperty(dayName)) {
-            const targetDay = dayMap[dayName];
-            const nextDate = getNextDayOfWeek(targetDay);
-            $('#eventDateee').val(nextDate);
-            if (targetDay === 6) {
-                $('#freezeDateee').val(getNextDayOfWeek(5)); // Saturday freeze on Friday
-            } else {
-                $('#freezeDateee').val(nextDate);
+
+        // Step 2: Automatic Date Calculation
+        const schedule = calculateAutoScheduleDate(parseData.DAY, eventTimeFormatted);
+        $('#eventDateee').val(schedule.eventDate);
+        $('#freezeDateee').val(schedule.freezeDate);
+    };
+
+    // Step 3: Manual Date Override Validation Handler
+    $(document).off('change.subDate', '#eventDateee').on('change.subDate', '#eventDateee', function () {
+        const selectedDateStr = $(this).val();
+        if (!selectedDateStr) return;
+
+        const now = new Date();
+        const todayStr = formatDateLocal(now);
+
+        // Rule 1: Past Date not allowed
+        if (selectedDateStr < todayStr) {
+            alert('Past dates are not allowed. Please select today or a future date.');
+            $(this).val(todayStr);
+            return;
+        }
+
+        // Rule 2: If Today is selected, start time must be in future
+        if (selectedDateStr === todayStr) {
+            const timeVal = $('#eventTimeee').val() || '';
+            if (timeVal) {
+                const parts = timeVal.split(':');
+                const startH = parseInt(parts[0], 10) || 0;
+                const startM = parseInt(parts[1], 10) || 0;
+                const curH = now.getHours();
+                const curM = now.getMinutes();
+
+                if (curH > startH || (curH === startH && curM >= startM)) {
+                    alert('Game start time has already passed for today. Please select a future date or choose a later start time.');
+                }
             }
         }
+
+        // Keep freeze date within range
+        const currentFreeze = $('#freezeDateee').val();
+        if (!currentFreeze || currentFreeze > selectedDateStr || currentFreeze < todayStr) {
+            $('#freezeDateee').val(selectedDateStr);
+        }
+    });
+
+    // Reusable click handlers for Edit and Create buttons
+    $(document).off('click.subEdit', '.discoverGames_card_sub .edit_btn').on('click.subEdit', '.discoverGames_card_sub .edit_btn', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const id = $(this).attr('data-id');
+        window.openCreateSubGameModal(id);
+    });
+
+    $(document).off('click.subCreate', '.discoverGames_card_sub #create_btn, .discoverGames_card_sub .session-create-sub-btn').on('click.subCreate', '.discoverGames_card_sub #create_btn, .discoverGames_card_sub .session-create-sub-btn', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const id = $(this).attr('data-id');
+        window.openCreateSubGameModal(id);
     });
 })(jQuery);
 </script>

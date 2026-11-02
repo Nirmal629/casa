@@ -199,6 +199,64 @@ class EventModel extends Model
     }
 
     /**
+     * Validate single game event start date and time.
+     * Rejects invalid date format (must be YYYY-MM-DD) and past date/time in configured timezone.
+     *
+     * @return array{valid: bool, error: ?string}
+     */
+    public function validateEventDateTime(string $eventDate, string $eventTime): array
+    {
+        $eventDate = trim($eventDate);
+        $eventTime = trim($eventTime);
+
+        if ($eventDate === '') {
+            return [
+                'valid' => false,
+                'error' => 'Event date is required.',
+            ];
+        }
+
+        if ($eventTime === '') {
+            return [
+                'valid' => false,
+                'error' => 'Event start time is required.',
+            ];
+        }
+
+        $dateObj = DateTimeImmutable::createFromFormat('Y-m-d', $eventDate);
+        if (!$dateObj || $dateObj->format('Y-m-d') !== $eventDate) {
+            return [
+                'valid' => false,
+                'error' => 'Invalid event date format. Please use YYYY-MM-DD.',
+            ];
+        }
+
+        $tz = $this->getAppTimezone();
+
+        try {
+            $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);
+            $now = new DateTimeImmutable('now', $tz);
+
+            if ($eventStartDt <= $now) {
+                return [
+                    'valid' => false,
+                    'error' => 'Game start time cannot be in the past or current time.',
+                ];
+            }
+
+            return [
+                'valid' => true,
+                'error' => null,
+            ];
+        } catch (Throwable) {
+            return [
+                'valid' => false,
+                'error' => 'Invalid event date or time format.',
+            ];
+        }
+    }
+
+    /**
      * Validate event start date/time vs booking freeze date/time.
      *
      * Business Rules:

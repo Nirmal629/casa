@@ -275,7 +275,52 @@ window.CasaHost = window.CasaHost || {};
         },
 
         onSaveSubs: function () {
+            const eventDate = $('#eventDateee').val();
+            const eventTime = $('#eventTimeee').val();
+
+            if (!eventDate) {
+                alert('Please select an event date.');
+                $('#eventDateee').focus();
+                return;
+            }
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
+            if (eventDate < todayStr) {
+                alert('Past dates are not allowed. Please select today or a future date.');
+                $('#eventDateee').focus();
+                return;
+            }
+
+            if (eventDate === todayStr && eventTime) {
+                const parts = eventTime.split(':');
+                const startH = parseInt(parts[0], 10) || 0;
+                const startM = parseInt(parts[1], 10) || 0;
+                const curH = now.getHours();
+                const curM = now.getMinutes();
+
+                if (curH > startH || (curH === startH && curM >= startM)) {
+                    alert('Game start time has already passed for today. Please select a future date or adjust the start time.');
+                    return;
+                }
+            }
+
+            const freezeDate = $('#freezeDateee').val();
+            if (freezeDate && eventDate && freezeDate > eventDate) {
+                alert('Freeze date cannot be later than event date.');
+                return;
+            }
+
+            const csrfToken = $('#csrf_token_sub').val() ||
+                              (window.Casa && typeof window.Casa.csrfToken === 'function' ? window.Casa.csrfToken() : '') ||
+                              $('input[name="csrf_token"]').val() || '';
+
             const formData = {
+                csrf_token: csrfToken,
                 id: $('#event_sub_id').val(),
                 host_name: $('#host-nameee').val(),
                 event_country: $('#eventCountryyy').val(),
@@ -287,8 +332,8 @@ window.CasaHost = window.CasaHost || {};
                 gender_category: $('#genderCategoryyy').val(),
                 gender_skill_level: $('#genderSkillLevelll').val(),
                 event_type: $('#eventTypeee').val(),
-                event_date: $('#eventDateee').val(),
-                event_time: $('#eventTimeee').val(),
+                event_date: eventDate,
+                event_time: eventTime,
                 to_time: $('#toTimeee').val(),
                 freeze_type: $('#freezeTypeee').val(),
                 freeze_date: $('#freezeDateee').val(),
@@ -306,10 +351,14 @@ window.CasaHost = window.CasaHost || {};
                 profitloss: $('#profitlosss').val(),
             };
 
+            const $btn = $('#save_btn_subs');
+            $btn.prop('disabled', true).text('Creating Game...');
+
             $.ajax({
                 url: CasaHost.Utils.getActionUrl('api/create_event_sub.php'),
                 type: 'POST',
                 data: formData,
+                headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : {},
                 success: function (response) {
                     const res = CasaHost.Utils.parseJson(response) || response;
                     if (res && res.success) {
@@ -317,25 +366,88 @@ window.CasaHost = window.CasaHost || {};
                         $('.hostgameupdate_modal').removeClass('open');
                         window.location.href = 'host-dashboard.php';
                     } else {
-                        alert('Failed to update event. ' + ((res && (res.error || res.message)) || ''));
+                        alert('Failed to create event. ' + ((res && (res.error || res.message)) || ''));
                     }
                 },
                 error: function (xhr) {
                     const res = xhr.responseJSON || CasaHost.Utils.parseJson(xhr.responseText);
-                    const errMsg = (res && (res.error || res.message)) ? (res.error || res.message) : 'An error occurred while updating the event.';
+                    const errMsg = (res && (res.error || res.message)) ? (res.error || res.message) : 'An error occurred while creating the event.';
                     alert(errMsg);
+                },
+                complete: function () {
+                    $btn.prop('disabled', false).text('Create Game');
                 }
             });
         },
 
-        onCreateSubCard: function () {
+        onCreateSubCard: function (e) {
+            if (e && e.preventDefault) e.preventDefault();
             const id = $(this).attr('data-id');
+            if (typeof window.openCreateSubGameModal === 'function') {
+                window.openCreateSubGameModal(id);
+                return;
+            }
+
             const data = $('#data_' + id).val();
             if (!data) return;
 
             const parseData = CasaHost.Utils.parseJson(data) || {};
 
+            const eventTimeFormatted = (parseData.EVENT_TIME || '').slice(0, 5);
+            const toTimeFormatted = (parseData.TO_TIME || '').slice(0, 5);
+            const freezeTimeFormatted = (parseData.CANCEL_TIME || '').slice(0, 5);
+
+            const dayName = parseData.DAY ? parseData.DAY.toUpperCase().trim() : "";
+            const dayIndexMap = {
+                "SUNDAY": 0, "MONDAY": 1, "TUESDAY": 2, "WEDNESDAY": 3,
+                "THURSDAY": 4, "FRIDAY": 5, "SATURDAY": 6
+            };
+
+            const now = new Date();
+            let eventDate = '';
+            let freezeDate = '';
+
+            if (dayIndexMap.hasOwnProperty(dayName)) {
+                const targetDay = dayIndexMap[dayName];
+                const currentDay = now.getDay();
+                let diff = (targetDay - currentDay + 7) % 7;
+
+                if (diff === 0 && eventTimeFormatted) {
+                    const parts = eventTimeFormatted.split(':');
+                    const startH = parseInt(parts[0], 10) || 0;
+                    const startM = parseInt(parts[1], 10) || 0;
+                    if (now.getHours() > startH || (now.getHours() === startH && now.getMinutes() >= startM)) {
+                        diff = 7;
+                    }
+                }
+
+                const evObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+                const ey = evObj.getFullYear();
+                const em = String(evObj.getMonth() + 1).padStart(2, '0');
+                const ed = String(evObj.getDate()).padStart(2, '0');
+                eventDate = `${ey}-${em}-${ed}`;
+
+                const frObj = new Date(evObj);
+                if (targetDay === 6) {
+                    frObj.setDate(frObj.getDate() - 1);
+                }
+                const fy = frObj.getFullYear();
+                const fm = String(frObj.getMonth() + 1).padStart(2, '0');
+                const fd = String(frObj.getDate()).padStart(2, '0');
+                freezeDate = `${fy}-${fm}-${fd}`;
+            } else {
+                const ey = now.getFullYear();
+                const em = String(now.getMonth() + 1).padStart(2, '0');
+                const ed = String(now.getDate()).padStart(2, '0');
+                eventDate = `${ey}-${em}-${ed}`;
+                freezeDate = eventDate;
+            }
+
+            const csrfToken = (window.Casa && typeof window.Casa.csrfToken === 'function' ? window.Casa.csrfToken() : '') ||
+                              $('input[name="csrf_token"]').val() || '';
+
             const formData = {
+                csrf_token: csrfToken,
                 id: id,
                 host_id: parseData.HOST_ID || '',
                 host_name: parseData.HOST_NAME,
@@ -348,9 +460,11 @@ window.CasaHost = window.CasaHost || {};
                 gender_category: parseData.GENDER_CATEGORY,
                 gender_skill_level: parseData.GENDER_SKILL_LEVEL,
                 event_type: parseData.EVENT_TYPE,
-                event_time: (parseData.EVENT_TIME || '').slice(0, 5),
-                to_time: (parseData.TO_TIME || '').slice(0, 5),
-                freeze_time: (parseData.CANCEL_TIME || '').slice(0, 5),
+                event_date: eventDate,
+                event_time: eventTimeFormatted,
+                to_time: toTimeFormatted,
+                freeze_time: freezeTimeFormatted,
+                freeze_date: freezeDate,
                 event_cost: parseData.EVENT_COST,
                 event_discount: parseData.EVENT_DISCOUNT,
                 event_description: parseData.EVENT_DESCRIPTION,
@@ -364,34 +478,11 @@ window.CasaHost = window.CasaHost || {};
                 profitloss: parseData.PROFIT_LOSS
             };
 
-            const dayName = parseData.DAY ? parseData.DAY.toUpperCase().trim() : "";
-            const dayIndexMap = {
-                "SUNDAY": 0, "MONDAY": 1, "TUESDAY": 2, "WEDNESDAY": 3,
-                "THURSDAY": 4, "FRIDAY": 5, "SATURDAY": 6
-            };
-
-            if (dayIndexMap.hasOwnProperty(dayName)) {
-                const date = new Date();
-                const currentDay = date.getDay();
-                let diff = (dayIndexMap[dayName] + 7 - currentDay) % 7;
-                if (diff === 0) diff = 7;
-                date.setDate(date.getDate() + diff);
-
-                const eventDate = date.toISOString().split("T")[0];
-                const freezeDateObj = new Date(date);
-
-                if (dayIndexMap[dayName] === 6) {
-                    freezeDateObj.setDate(freezeDateObj.getDate() - 1);
-                }
-
-                formData.event_date = eventDate;
-                formData.freeze_date = freezeDateObj.toISOString().split("T")[0];
-            }
-
             $.ajax({
                 url: CasaHost.Utils.getActionUrl('api/create_event_sub.php'),
                 type: 'POST',
                 data: formData,
+                headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : {},
                 success: function (response) {
                     const res = CasaHost.Utils.parseJson(response) || response;
                     if (res && res.success) {
