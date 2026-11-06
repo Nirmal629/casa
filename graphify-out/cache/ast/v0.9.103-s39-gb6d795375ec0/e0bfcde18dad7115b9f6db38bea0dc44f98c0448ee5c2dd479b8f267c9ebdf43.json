@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_dbconnection_pdo_php", "label": "dbConnection_PDO.php", "file_type": "code", "source_file": "dbConnection_PDO.php", "source_location": "L1"}], "edges": [], "raw_calls": [], "php_type_table": {"path": "$graphify-root$/dbConnection_PDO.php", "table": {"pdo": "PDO"}}}

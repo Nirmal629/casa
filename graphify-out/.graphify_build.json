@@ -1,0 +1,29 @@
+{
+  "excludes": [
+    "vendor/**",
+    "vendor",
+    "pos/admin/system/**",
+    "pos/admin/system",
+    "pos/admin/writable/**",
+    "pos/admin/writable",
+    "node_modules/**",
+    "node_modules",
+    "storage/**",
+    "storage",
+    "uploads/**",
+    "uploads",
+    "profile_img/**",
+    "profile_img",
+    "PHPMailer/**",
+    "PHPMailer",
+    "brain/**",
+    "brain",
+    "scratch/**",
+    "scratch",
+    ".git/**",
+    ".git",
+    "assets/img/**",
+    "assets/images/**",
+    "assets/fonts/**"
+  ]
+}

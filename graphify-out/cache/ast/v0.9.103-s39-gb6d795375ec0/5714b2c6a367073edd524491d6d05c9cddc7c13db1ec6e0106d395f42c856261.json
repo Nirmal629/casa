@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_admin_edit_registration_php", "label": "edit_registration.php", "file_type": "code", "source_file": "admin/edit_registration.php", "source_location": "L1"}], "edges": [], "raw_calls": [], "php_type_table": {"path": "$graphify-root$/admin/edit_registration.php", "table": {"conn": "PDO", "pdo": "PDO"}}}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_api_new_game_host_php", "label": "new-game-host.php", "file_type": "code", "source_file": "api/new-game-host.php", "source_location": "L1"}], "edges": [], "raw_calls": [], "php_type_table": {"path": "$graphify-root$/api/new-game-host.php", "table": {"eventModel": "EventModel", "start": "DateTime", "end": "DateTime"}}}

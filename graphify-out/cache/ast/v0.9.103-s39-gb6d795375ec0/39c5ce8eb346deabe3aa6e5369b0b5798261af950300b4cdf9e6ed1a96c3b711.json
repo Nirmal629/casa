@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_app_views_layouts_header_inner_header_php", "label": "inner-header.php", "file_type": "code", "source_file": "app/Views/layouts/header/inner-header.php", "source_location": "L1"}], "edges": [], "raw_calls": [], "php_type_table": {"path": "$graphify-root$/app/Views/layouts/header/inner-header.php", "table": {"clubModel": "ClubModel"}}}

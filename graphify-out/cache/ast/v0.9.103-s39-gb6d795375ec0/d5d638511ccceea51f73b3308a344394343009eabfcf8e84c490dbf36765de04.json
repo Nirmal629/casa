@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_admin_api_sync_player_php", "label": "sync_player.php", "file_type": "code", "source_file": "admin/api/sync_player.php", "source_location": "L1"}], "edges": [], "raw_calls": [], "php_type_table": {"path": "$graphify-root$/admin/api/sync_player.php", "table": {"pdo": "PDO"}}}

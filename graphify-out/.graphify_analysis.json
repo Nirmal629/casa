@@ -1,0 +1,3955 @@
+{
+  "communities": {
+    "0": [
+      "app_controllers_hostcontroller_hostcontroller",
+      "app_controllers_hostcontroller_hostcontroller_buildeventfilters",
+      "app_controllers_hostcontroller_hostcontroller_buildgamedata",
+      "app_controllers_hostcontroller_hostcontroller_buildplayersearchfilterclauses",
+      "app_controllers_hostcontroller_hostcontroller_copytemplatejoins",
+      "app_controllers_hostcontroller_hostcontroller_createeventsub",
+      "app_controllers_hostcontroller_hostcontroller_creategame",
+      "app_controllers_hostcontroller_hostcontroller_dashboard",
+      "app_controllers_hostcontroller_hostcontroller_deleteevent",
+      "app_controllers_hostcontroller_hostcontroller_extracteventidfromrequest",
+      "app_controllers_hostcontroller_hostcontroller_extractsubeventdata",
+      "app_controllers_hostcontroller_hostcontroller_fetchgameplayerslist",
+      "app_controllers_hostcontroller_hostcontroller_fetchpaymentlistusers",
+      "app_controllers_hostcontroller_hostcontroller_filterschedule",
+      "app_controllers_hostcontroller_hostcontroller_formatandpartitionplayers",
+      "app_controllers_hostcontroller_hostcontroller_formatshortname",
+      "app_controllers_hostcontroller_hostcontroller_getauthuser",
+      "app_controllers_hostcontroller_hostcontroller_geteventdata",
+      "app_controllers_hostcontroller_hostcontroller_getpendingrequestscount",
+      "app_controllers_hostcontroller_hostcontroller_getplayerstats",
+      "app_controllers_hostcontroller_hostcontroller_getverifiedgamehostid",
+      "app_controllers_hostcontroller_hostcontroller_isajaxrequest",
+      "app_controllers_hostcontroller_hostcontroller_isauthorizedhostforeventplayer",
+      "app_controllers_hostcontroller_hostcontroller_isauthorizedhostforplayer",
+      "app_controllers_hostcontroller_hostcontroller_loaddashboardspecialdata",
+      "app_controllers_hostcontroller_hostcontroller_loaddefaulteventsbyday",
+      "app_controllers_hostcontroller_hostcontroller_logactivity",
+      "app_controllers_hostcontroller_hostcontroller_resolveclubaccessflags",
+      "app_controllers_hostcontroller_hostcontroller_resolvegameplayereventdetails",
+      "app_controllers_hostcontroller_hostcontroller_resolvepaymentlisthostid",
+      "app_controllers_hostcontroller_hostcontroller_resolveplayerstatsfilters",
+      "app_controllers_hostcontroller_hostcontroller_resolveschedulecontext",
+      "app_controllers_hostcontroller_hostcontroller_respondpremiumerror",
+      "app_controllers_hostcontroller_hostcontroller_saveconfirm",
+      "app_controllers_hostcontroller_hostcontroller_saveinvitation",
+      "app_controllers_hostcontroller_hostcontroller_saveratingbyhost",
+      "app_controllers_hostcontroller_hostcontroller_searchgameplayers",
+      "app_controllers_hostcontroller_hostcontroller_setflashtoast",
+      "app_controllers_hostcontroller_hostcontroller_unpackscheduleargs",
+      "app_controllers_hostcontroller_hostcontroller_updateautomation",
+      "app_controllers_hostcontroller_hostcontroller_updatebadmintoneventcosts",
+      "app_controllers_hostcontroller_hostcontroller_updateplayerpremium",
+      "app_controllers_hostcontroller_hostcontroller_updateprice",
+      "app_controllers_hostcontroller_php_pdo",
+      "app_controllers_player_playersubscriptioncontroller",
+      "app_controllers_player_playersubscriptioncontroller_playersubscriptioncontroller",
+      "app_controllers_player_playersubscriptioncontroller_playersubscriptioncontroller_construct",
+      "app_controllers_player_playersubscriptioncontroller_playersubscriptioncontroller_getsubscriptionviewdata",
+      "app_controllers_playercontroller_playercontroller_acceptinvite",
+      "app_controllers_playercontroller_playercontroller_cancelevent",
+      "app_controllers_playercontroller_playercontroller_joinevent",
+      "app_models_eventmodel_eventmodel",
+      "app_models_eventmodel_eventmodel_applyautoconfirmandmessage",
+      "app_models_eventmodel_eventmodel_applycategoryfilter",
+      "app_models_eventmodel_eventmodel_applydatefilter",
+      "app_models_eventmodel_eventmodel_applyplayerfilter",
+      "app_models_eventmodel_eventmodel_calculatebadmintoncosts",
+      "app_models_eventmodel_eventmodel_calculateeventdurationhours",
+      "app_models_eventmodel_eventmodel_deleteeventforhost",
+      "app_models_eventmodel_eventmodel_enricheventwithjoins",
+      "app_models_eventmodel_eventmodel_formateventsharetext",
+      "app_models_eventmodel_eventmodel_getapptimezone",
+      "app_models_eventmodel_eventmodel_getdefaultsubscriptionevents",
+      "app_models_eventmodel_eventmodel_geteventbyid",
+      "app_models_eventmodel_eventmodel_geteventdata",
+      "app_models_eventmodel_eventmodel_getfilteredevents",
+      "app_models_eventmodel_eventmodel_gethostbirdieprice",
+      "app_models_eventmodel_eventmodel_getjoinsbyeventids",
+      "app_models_eventmodel_eventmodel_isbookingfrozen",
+      "app_models_eventmodel_eventmodel_iseventexpired",
+      "app_models_eventmodel_eventmodel_normalizefilters",
+      "app_models_eventmodel_eventmodel_updatejoinmessage",
+      "app_models_eventmodel_eventmodel_validateeventdatetime",
+      "app_models_eventmodel_eventmodel_validatefreezedatetime",
+      "app_models_eventmodel_php_pdo",
+      "app_models_player_gamejoinmodel_gamejoinmodel",
+      "app_models_player_gamejoinmodel_gamejoinmodel_acceptinvite",
+      "app_models_player_gamejoinmodel_gamejoinmodel_cancelevent",
+      "app_models_player_gamejoinmodel_gamejoinmodel_findbygameanduser",
+      "app_models_player_gamejoinmodel_gamejoinmodel_geteventjoinstats",
+      "app_models_player_gamejoinmodel_gamejoinmodel_getjoineddefaultgameids",
+      "app_models_player_gamejoinmodel_gamejoinmodel_getjoinedplayers",
+      "app_models_player_gamejoinmodel_gamejoinmodel_gettimezone",
+      "app_models_player_gamejoinmodel_gamejoinmodel_isuserjoined",
+      "app_models_player_gamejoinmodel_gamejoinmodel_joinevent",
+      "app_models_player_gamejoinmodel_gamejoinmodel_response",
+      "app_models_player_gamejoinmodel_gamejoinmodel_runpostaction",
+      "app_models_player_gamejoinmodel_gamejoinmodel_validids",
+      "app_models_player_gamejoinmodel_php_pdo",
+      "app_models_usermodel_usermodel_getalluniqueverifiedlevels"
+    ],
+    "1": [
+      "app_views_host_host_audit_log",
+      "app_views_host_host_audit_log_api",
+      "app_views_host_host_audit_log_applyrange",
+      "app_views_host_host_audit_log_applyurl",
+      "app_views_host_host_audit_log_avatar",
+      "app_views_host_host_audit_log_behaviourchip",
+      "app_views_host_host_audit_log_closeall",
+      "app_views_host_host_audit_log_closedrill",
+      "app_views_host_host_audit_log_closemini",
+      "app_views_host_host_audit_log_closeusermodal",
+      "app_views_host_host_audit_log_daylabel",
+      "app_views_host_host_audit_log_dplabel",
+      "app_views_host_host_audit_log_drillhead",
+      "app_views_host_host_audit_log_empty",
+      "app_views_host_host_audit_log_loadanalytics",
+      "app_views_host_host_audit_log_loadtable",
+      "app_views_host_host_audit_log_loaduserdetail",
+      "app_views_host_host_audit_log_loadusergamespage",
+      "app_views_host_host_audit_log_loadusertimeline",
+      "app_views_host_host_audit_log_minishell",
+      "app_views_host_host_audit_log_mins",
+      "app_views_host_host_audit_log_mkchart",
+      "app_views_host_host_audit_log_opendayusers",
+      "app_views_host_host_audit_log_opendrillshell",
+      "app_views_host_host_audit_log_openevent",
+      "app_views_host_host_audit_log_opengameusers",
+      "app_views_host_host_audit_log_openmini",
+      "app_views_host_host_audit_log_opentopgames",
+      "app_views_host_host_audit_log_openusergame",
+      "app_views_host_host_audit_log_openusermodal",
+      "app_views_host_host_audit_log_pager",
+      "app_views_host_host_audit_log_parsedate",
+      "app_views_host_host_audit_log_rangelabel",
+      "app_views_host_host_audit_log_reloadall",
+      "app_views_host_host_audit_log_renderbehaviour",
+      "app_views_host_host_audit_log_renderbreadcrumb",
+      "app_views_host_host_audit_log_renderengagement",
+      "app_views_host_host_audit_log_renderfunnel",
+      "app_views_host_host_audit_log_renderkpis",
+      "app_views_host_host_audit_log_rendertable",
+      "app_views_host_host_audit_log_rendertime",
+      "app_views_host_host_audit_log_rendertrend",
+      "app_views_host_host_audit_log_renderumgames",
+      "app_views_host_host_audit_log_rp",
+      "app_views_host_host_audit_log_scrolltable",
+      "app_views_host_host_audit_log_setbehaviour",
+      "app_views_host_host_audit_log_setrangechip",
+      "app_views_host_host_audit_log_statuspill",
+      "app_views_host_host_audit_log_syncurl",
+      "app_views_host_host_audit_log_timeago",
+      "app_views_host_host_audit_log_todaystr",
+      "app_views_host_host_audit_log_umbreakchart",
+      "app_views_host_host_audit_log_umchart",
+      "app_views_host_host_audit_log_umdestroycharts",
+      "app_views_host_host_audit_log_umengchart",
+      "app_views_host_host_audit_log_umtrendchart",
+      "app_views_host_host_audit_log_userrowhtml",
+      "app_views_host_host_audit_log_wiredrillclose"
+    ],
+    "2": [
+      "tournament_includes_scorer_footer",
+      "tournament_includes_scorer_footer_addsetboardpoint",
+      "tournament_includes_scorer_footer_applymatchconfigtostate",
+      "tournament_includes_scorer_footer_applysetlimitvisibility",
+      "tournament_includes_scorer_footer_assignplayerimages",
+      "tournament_includes_scorer_footer_buildscoreannouncement",
+      "tournament_includes_scorer_footer_buildserveannouncement",
+      "tournament_includes_scorer_footer_cloneplayablestate",
+      "tournament_includes_scorer_footer_courtsideforteam",
+      "tournament_includes_scorer_footer_currentserver",
+      "tournament_includes_scorer_footer_enablesetboardedit",
+      "tournament_includes_scorer_footer_getcompletedmatchwinner",
+      "tournament_includes_scorer_footer_getconfiguredmatchrules",
+      "tournament_includes_scorer_footer_getteamid",
+      "tournament_includes_scorer_footer_getteamname",
+      "tournament_includes_scorer_footer_getteamscore",
+      "tournament_includes_scorer_footer_handlematchsetupaction",
+      "tournament_includes_scorer_footer_incrementscore",
+      "tournament_includes_scorer_footer_isbadmintonsetwon",
+      "tournament_includes_scorer_footer_maybeswitchsidesafterpoint",
+      "tournament_includes_scorer_footer_normalizedoublesplayers",
+      "tournament_includes_scorer_footer_opensetupchildmodal",
+      "tournament_includes_scorer_footer_playerindexinservicecourt",
+      "tournament_includes_scorer_footer_readsetboardscore",
+      "tournament_includes_scorer_footer_renderdoublescourt",
+      "tournament_includes_scorer_footer_rendermatchresult",
+      "tournament_includes_scorer_footer_renderphysicalcourtside",
+      "tournament_includes_scorer_footer_renderplayablescore",
+      "tournament_includes_scorer_footer_rendersetscoreboard",
+      "tournament_includes_scorer_footer_resetset",
+      "tournament_includes_scorer_footer_restoreplayablestate",
+      "tournament_includes_scorer_footer_savemanualsetscore",
+      "tournament_includes_scorer_footer_savematchpause",
+      "tournament_includes_scorer_footer_saveplayablepoint",
+      "tournament_includes_scorer_footer_savesetboardmanualscore",
+      "tournament_includes_scorer_footer_savestartmatch",
+      "tournament_includes_scorer_footer_saveundopoint",
+      "tournament_includes_scorer_footer_scorercanmanage",
+      "tournament_includes_scorer_footer_servicecourtforscore",
+      "tournament_includes_scorer_footer_servicecourtlabel",
+      "tournament_includes_scorer_footer_setboardisediting",
+      "tournament_includes_scorer_footer_setscorebuttonsenabled",
+      "tournament_includes_scorer_footer_setsetboardreadonly",
+      "tournament_includes_scorer_footer_setsneededtowin",
+      "tournament_includes_scorer_footer_speakscore",
+      "tournament_includes_scorer_footer_startplayablematch",
+      "tournament_includes_scorer_footer_swapplayersondisplayedcourtside",
+      "tournament_includes_scorer_footer_swapservingpair",
+      "tournament_includes_scorer_footer_syncmatchconfigfromstate",
+      "tournament_includes_scorer_footer_teamoncourtside",
+      "tournament_includes_scorer_footer_togglevoice",
+      "tournament_includes_scorer_footer_undolastpoint",
+      "tournament_includes_scorer_footer_updatecourtswapbutton",
+      "tournament_includes_scorer_footer_updatesetboardeditingui",
+      "tournament_includes_scorer_footer_updatesetboardlivescore",
+      "tournament_includes_scorer_footer_updatevoicebutton"
+    ],
+    "3": [
+      "api_manual_test_logger",
+      "app_app",
+      "app_app_closure_1",
+      "app_app_closure_2",
+      "app_app_php_throwable",
+      "app_core_request",
+      "app_core_request_request",
+      "app_core_request_request_all",
+      "app_core_request_request_bearertoken",
+      "app_core_request_request_get",
+      "app_core_request_request_getmethod",
+      "app_core_request_request_geturi",
+      "app_core_request_request_has",
+      "app_core_request_request_ip",
+      "app_core_request_request_isajax",
+      "app_core_request_request_isget",
+      "app_core_request_request_ispost",
+      "app_core_request_request_post",
+      "app_core_request_request_query",
+      "app_core_request_request_route",
+      "app_core_request_request_routeparams",
+      "app_core_request_request_setrouteparams",
+      "app_core_response",
+      "app_core_response_response",
+      "app_core_response_response_json",
+      "app_core_response_response_redirect",
+      "app_core_response_response_setstatuscode",
+      "app_core_router",
+      "app_core_router_router",
+      "app_core_router_router_addroute",
+      "app_core_router_router_construct",
+      "app_core_router_router_get",
+      "app_core_router_router_getroutes",
+      "app_core_router_router_post",
+      "app_core_router_router_resolve",
+      "app_core_router_router_runmiddleware",
+      "app_core_router_router_use",
+      "app_services_testing_testloggerservice_testloggerservice",
+      "app_services_testing_testloggerservice_testloggerservice_cleanfilepath",
+      "app_services_testing_testloggerservice_testloggerservice_getlogdirectory",
+      "app_services_testing_testloggerservice_testloggerservice_getrecentlogs",
+      "app_services_testing_testloggerservice_testloggerservice_getsessionfilepath",
+      "app_services_testing_testloggerservice_testloggerservice_isdev",
+      "app_services_testing_testloggerservice_testloggerservice_listsessions",
+      "app_services_testing_testloggerservice_testloggerservice_logbackendexception",
+      "app_services_testing_testloggerservice_testloggerservice_sanitizedata",
+      "app_services_testing_testloggerservice_testloggerservice_sanitizemessage",
+      "app_services_testing_testloggerservice_testloggerservice_sanitizesessionid",
+      "app_services_testing_testloggerservice_testloggerservice_writeentry",
+      "app_tests_test_logger_service_test"
+    ],
+    "4": [
+      "tournament_includes_23_08_26_scorer_footer",
+      "tournament_includes_23_08_26_scorer_footer_addsetboardpoint",
+      "tournament_includes_23_08_26_scorer_footer_applymatchconfigtostate",
+      "tournament_includes_23_08_26_scorer_footer_applysetlimitvisibility",
+      "tournament_includes_23_08_26_scorer_footer_assignplayerimages",
+      "tournament_includes_23_08_26_scorer_footer_buildscoreannouncement",
+      "tournament_includes_23_08_26_scorer_footer_buildserveannouncement",
+      "tournament_includes_23_08_26_scorer_footer_cloneplayablestate",
+      "tournament_includes_23_08_26_scorer_footer_courtsideforteam",
+      "tournament_includes_23_08_26_scorer_footer_currentserver",
+      "tournament_includes_23_08_26_scorer_footer_enablesetboardedit",
+      "tournament_includes_23_08_26_scorer_footer_getconfiguredmatchrules",
+      "tournament_includes_23_08_26_scorer_footer_getteamid",
+      "tournament_includes_23_08_26_scorer_footer_getteamname",
+      "tournament_includes_23_08_26_scorer_footer_getteamscore",
+      "tournament_includes_23_08_26_scorer_footer_incrementscore",
+      "tournament_includes_23_08_26_scorer_footer_isbadmintonsetwon",
+      "tournament_includes_23_08_26_scorer_footer_maybeswitchsidesafterpoint",
+      "tournament_includes_23_08_26_scorer_footer_normalizedoublesplayers",
+      "tournament_includes_23_08_26_scorer_footer_playerindexinservicecourt",
+      "tournament_includes_23_08_26_scorer_footer_readsetboardscore",
+      "tournament_includes_23_08_26_scorer_footer_renderdoublescourt",
+      "tournament_includes_23_08_26_scorer_footer_rendermatchresult",
+      "tournament_includes_23_08_26_scorer_footer_renderphysicalcourtside",
+      "tournament_includes_23_08_26_scorer_footer_renderplayablescore",
+      "tournament_includes_23_08_26_scorer_footer_rendersetscoreboard",
+      "tournament_includes_23_08_26_scorer_footer_restoreplayablestate",
+      "tournament_includes_23_08_26_scorer_footer_savemanualsetscore",
+      "tournament_includes_23_08_26_scorer_footer_saveplayablepoint",
+      "tournament_includes_23_08_26_scorer_footer_savesetboardmanualscore",
+      "tournament_includes_23_08_26_scorer_footer_savestartmatch",
+      "tournament_includes_23_08_26_scorer_footer_saveundopoint",
+      "tournament_includes_23_08_26_scorer_footer_scorercanmanage",
+      "tournament_includes_23_08_26_scorer_footer_servicecourtforscore",
+      "tournament_includes_23_08_26_scorer_footer_servicecourtlabel",
+      "tournament_includes_23_08_26_scorer_footer_setboardisediting",
+      "tournament_includes_23_08_26_scorer_footer_setscorebuttonsenabled",
+      "tournament_includes_23_08_26_scorer_footer_setsetboardreadonly",
+      "tournament_includes_23_08_26_scorer_footer_setsneededtowin",
+      "tournament_includes_23_08_26_scorer_footer_speakscore",
+      "tournament_includes_23_08_26_scorer_footer_startplayablematch",
+      "tournament_includes_23_08_26_scorer_footer_swapinputvalues",
+      "tournament_includes_23_08_26_scorer_footer_swapservingpair",
+      "tournament_includes_23_08_26_scorer_footer_teamoncourtside",
+      "tournament_includes_23_08_26_scorer_footer_togglevoice",
+      "tournament_includes_23_08_26_scorer_footer_undolastpoint",
+      "tournament_includes_23_08_26_scorer_footer_updatecourtswapbutton",
+      "tournament_includes_23_08_26_scorer_footer_updatesetboardeditingui",
+      "tournament_includes_23_08_26_scorer_footer_updatesetboardlivescore",
+      "tournament_includes_23_08_26_scorer_footer_updatevoicebutton"
+    ],
+    "5": [
+      "tournament_includes_9_8_2026_scorer_footer",
+      "tournament_includes_9_8_2026_scorer_footer_addsetboardpoint",
+      "tournament_includes_9_8_2026_scorer_footer_applymatchconfigtostate",
+      "tournament_includes_9_8_2026_scorer_footer_applysetlimitvisibility",
+      "tournament_includes_9_8_2026_scorer_footer_assignplayerimages",
+      "tournament_includes_9_8_2026_scorer_footer_buildscoreannouncement",
+      "tournament_includes_9_8_2026_scorer_footer_buildserveannouncement",
+      "tournament_includes_9_8_2026_scorer_footer_cloneplayablestate",
+      "tournament_includes_9_8_2026_scorer_footer_courtsideforteam",
+      "tournament_includes_9_8_2026_scorer_footer_currentserver",
+      "tournament_includes_9_8_2026_scorer_footer_enablesetboardedit",
+      "tournament_includes_9_8_2026_scorer_footer_getconfiguredsetlimit",
+      "tournament_includes_9_8_2026_scorer_footer_getteamid",
+      "tournament_includes_9_8_2026_scorer_footer_getteamname",
+      "tournament_includes_9_8_2026_scorer_footer_getteamscore",
+      "tournament_includes_9_8_2026_scorer_footer_incrementscore",
+      "tournament_includes_9_8_2026_scorer_footer_isbadmintonsetwon",
+      "tournament_includes_9_8_2026_scorer_footer_maybeswitchsidesafterpoint",
+      "tournament_includes_9_8_2026_scorer_footer_normalizedoublesplayers",
+      "tournament_includes_9_8_2026_scorer_footer_playerindexinservicecourt",
+      "tournament_includes_9_8_2026_scorer_footer_readsetboardscore",
+      "tournament_includes_9_8_2026_scorer_footer_renderdoublescourt",
+      "tournament_includes_9_8_2026_scorer_footer_rendermatchresult",
+      "tournament_includes_9_8_2026_scorer_footer_renderphysicalcourtside",
+      "tournament_includes_9_8_2026_scorer_footer_renderplayablescore",
+      "tournament_includes_9_8_2026_scorer_footer_rendersetscoreboard",
+      "tournament_includes_9_8_2026_scorer_footer_restoreplayablestate",
+      "tournament_includes_9_8_2026_scorer_footer_savemanualsetscore",
+      "tournament_includes_9_8_2026_scorer_footer_saveplayablepoint",
+      "tournament_includes_9_8_2026_scorer_footer_savesetboardmanualscore",
+      "tournament_includes_9_8_2026_scorer_footer_savestartmatch",
+      "tournament_includes_9_8_2026_scorer_footer_saveundopoint",
+      "tournament_includes_9_8_2026_scorer_footer_scorercanmanage",
+      "tournament_includes_9_8_2026_scorer_footer_servicecourtforscore",
+      "tournament_includes_9_8_2026_scorer_footer_servicecourtlabel",
+      "tournament_includes_9_8_2026_scorer_footer_setboardisediting",
+      "tournament_includes_9_8_2026_scorer_footer_setscorebuttonsenabled",
+      "tournament_includes_9_8_2026_scorer_footer_setsetboardreadonly",
+      "tournament_includes_9_8_2026_scorer_footer_setsneededtowin",
+      "tournament_includes_9_8_2026_scorer_footer_speakscore",
+      "tournament_includes_9_8_2026_scorer_footer_startplayablematch",
+      "tournament_includes_9_8_2026_scorer_footer_swapinputvalues",
+      "tournament_includes_9_8_2026_scorer_footer_swapservingpair",
+      "tournament_includes_9_8_2026_scorer_footer_teamoncourtside",
+      "tournament_includes_9_8_2026_scorer_footer_togglevoice",
+      "tournament_includes_9_8_2026_scorer_footer_undolastpoint",
+      "tournament_includes_9_8_2026_scorer_footer_updatecourtswapbutton",
+      "tournament_includes_9_8_2026_scorer_footer_updatesetboardeditingui",
+      "tournament_includes_9_8_2026_scorer_footer_updatesetboardlivescore",
+      "tournament_includes_9_8_2026_scorer_footer_updatevoicebutton"
+    ],
+    "6": [
+      "tournament_includes_11_07_2026_scorer_footer",
+      "tournament_includes_11_07_2026_scorer_footer_addsetboardpoint",
+      "tournament_includes_11_07_2026_scorer_footer_applymatchconfigtostate",
+      "tournament_includes_11_07_2026_scorer_footer_applysetlimitvisibility",
+      "tournament_includes_11_07_2026_scorer_footer_assignplayerimages",
+      "tournament_includes_11_07_2026_scorer_footer_buildscoreannouncement",
+      "tournament_includes_11_07_2026_scorer_footer_buildserveannouncement",
+      "tournament_includes_11_07_2026_scorer_footer_cloneplayablestate",
+      "tournament_includes_11_07_2026_scorer_footer_courtsideforteam",
+      "tournament_includes_11_07_2026_scorer_footer_currentserver",
+      "tournament_includes_11_07_2026_scorer_footer_enablesetboardedit",
+      "tournament_includes_11_07_2026_scorer_footer_getconfiguredsetlimit",
+      "tournament_includes_11_07_2026_scorer_footer_getteamid",
+      "tournament_includes_11_07_2026_scorer_footer_getteamname",
+      "tournament_includes_11_07_2026_scorer_footer_getteamscore",
+      "tournament_includes_11_07_2026_scorer_footer_incrementscore",
+      "tournament_includes_11_07_2026_scorer_footer_isbadmintonsetwon",
+      "tournament_includes_11_07_2026_scorer_footer_maybeswitchsidesafterpoint",
+      "tournament_includes_11_07_2026_scorer_footer_normalizedoublesplayers",
+      "tournament_includes_11_07_2026_scorer_footer_playerindexinservicecourt",
+      "tournament_includes_11_07_2026_scorer_footer_readsetboardscore",
+      "tournament_includes_11_07_2026_scorer_footer_renderdoublescourt",
+      "tournament_includes_11_07_2026_scorer_footer_rendermatchresult",
+      "tournament_includes_11_07_2026_scorer_footer_renderphysicalcourtside",
+      "tournament_includes_11_07_2026_scorer_footer_renderplayablescore",
+      "tournament_includes_11_07_2026_scorer_footer_rendersetscoreboard",
+      "tournament_includes_11_07_2026_scorer_footer_restoreplayablestate",
+      "tournament_includes_11_07_2026_scorer_footer_savemanualsetscore",
+      "tournament_includes_11_07_2026_scorer_footer_saveplayablepoint",
+      "tournament_includes_11_07_2026_scorer_footer_savesetboardmanualscore",
+      "tournament_includes_11_07_2026_scorer_footer_savestartmatch",
+      "tournament_includes_11_07_2026_scorer_footer_saveundopoint",
+      "tournament_includes_11_07_2026_scorer_footer_servicecourtforscore",
+      "tournament_includes_11_07_2026_scorer_footer_servicecourtlabel",
+      "tournament_includes_11_07_2026_scorer_footer_setboardisediting",
+      "tournament_includes_11_07_2026_scorer_footer_setscorebuttonsenabled",
+      "tournament_includes_11_07_2026_scorer_footer_setsetboardreadonly",
+      "tournament_includes_11_07_2026_scorer_footer_setsneededtowin",
+      "tournament_includes_11_07_2026_scorer_footer_speakscore",
+      "tournament_includes_11_07_2026_scorer_footer_startplayablematch",
+      "tournament_includes_11_07_2026_scorer_footer_swapinputvalues",
+      "tournament_includes_11_07_2026_scorer_footer_swapservingpair",
+      "tournament_includes_11_07_2026_scorer_footer_teamoncourtside",
+      "tournament_includes_11_07_2026_scorer_footer_togglevoice",
+      "tournament_includes_11_07_2026_scorer_footer_undolastpoint",
+      "tournament_includes_11_07_2026_scorer_footer_updatecourtswapbutton",
+      "tournament_includes_11_07_2026_scorer_footer_updatesetboardeditingui",
+      "tournament_includes_11_07_2026_scorer_footer_updatesetboardlivescore",
+      "tournament_includes_11_07_2026_scorer_footer_updatevoicebutton"
+    ],
+    "7": [
+      "tournament_assets_js_score",
+      "tournament_assets_js_score_addclass",
+      "tournament_assets_js_score_addstyle",
+      "tournament_assets_js_score_appendchild",
+      "tournament_assets_js_score_delayforvoice",
+      "tournament_assets_js_score_disableelement",
+      "tournament_assets_js_score_enableelement",
+      "tournament_assets_js_score_enablefullintervalinput",
+      "tournament_assets_js_score_enableingamevoiceover",
+      "tournament_assets_js_score_enablemidintervalinput",
+      "tournament_assets_js_score_enablenewgame",
+      "tournament_assets_js_score_enablevoiceover",
+      "tournament_assets_js_score_endmatch",
+      "tournament_assets_js_score_evenscoreshowhideplayers",
+      "tournament_assets_js_score_gamestart",
+      "tournament_assets_js_score_getelementsrc",
+      "tournament_assets_js_score_getelementvalue",
+      "tournament_assets_js_score_hideelement",
+      "tournament_assets_js_score_incrementscore",
+      "tournament_assets_js_score_initializegamecourt",
+      "tournament_assets_js_score_intervalcountdown",
+      "tournament_assets_js_score_issueblackcard",
+      "tournament_assets_js_score_issueproperyellowcard",
+      "tournament_assets_js_score_issueredcard",
+      "tournament_assets_js_score_issueyellowcard",
+      "tournament_assets_js_score_modalshowhide",
+      "tournament_assets_js_score_oddscoreshowhideplayers",
+      "tournament_assets_js_score_player",
+      "tournament_assets_js_score_removeclass",
+      "tournament_assets_js_score_removestyle",
+      "tournament_assets_js_score_sendmail",
+      "tournament_assets_js_score_setbackgroundcolor",
+      "tournament_assets_js_score_setelementinnerhtml",
+      "tournament_assets_js_score_setelementsrc",
+      "tournament_assets_js_score_setelementvalue",
+      "tournament_assets_js_score_setpropertyvalue",
+      "tournament_assets_js_score_showallplayers",
+      "tournament_assets_js_score_showelement",
+      "tournament_assets_js_score_showgameresult",
+      "tournament_assets_js_score_showhideplayers",
+      "tournament_assets_js_score_showhideshuttle",
+      "tournament_assets_js_score_speakthismsg",
+      "tournament_assets_js_score_startnewmatch",
+      "tournament_assets_js_score_switchcourt",
+      "tournament_assets_js_score_switchplayer",
+      "tournament_assets_js_score_switchplayerside",
+      "tournament_assets_js_score_validateemail",
+      "tournament_assets_js_score_validatekeypress"
+    ],
+    "8": [
+      "app_controllers_playercontroller_php_mysqli",
+      "app_controllers_playercontroller_php_pdo",
+      "app_controllers_playercontroller_playercontroller",
+      "app_controllers_playercontroller_playercontroller_dashboard",
+      "app_controllers_playercontroller_playercontroller_fetchmonthlyledger",
+      "app_controllers_playercontroller_playercontroller_fetchmonthlyledgerdata",
+      "app_controllers_playercontroller_playercontroller_filtercompletedgames",
+      "app_controllers_playercontroller_playercontroller_getclubs",
+      "app_controllers_playercontroller_playercontroller_getplayerhostjoinedgames",
+      "app_controllers_playercontroller_playercontroller_getplayerpremiumstatus",
+      "app_controllers_playercontroller_playercontroller_getproductsandorders",
+      "app_controllers_playercontroller_playercontroller_getreviews",
+      "app_controllers_playercontroller_playercontroller_gettotalsessions",
+      "app_controllers_playercontroller_playercontroller_gettournaments",
+      "app_controllers_playercontroller_playercontroller_getuserinfo",
+      "app_controllers_playercontroller_playercontroller_handledefaulteventaction",
+      "app_controllers_playercontroller_playercontroller_hub",
+      "app_controllers_playercontroller_playercontroller_isvalidhost",
+      "app_controllers_playercontroller_playercontroller_renderscheduledgameshtml",
+      "app_controllers_playercontroller_playercontroller_resolvehostid",
+      "app_controllers_playercontroller_playercontroller_resolveledgerperiod",
+      "app_controllers_playercontroller_playercontroller_resolveplayerledgerselectedmonth",
+      "app_controllers_playercontroller_playercontroller_resolveproductimage",
+      "app_controllers_playercontroller_playercontroller_resolveprofileimage",
+      "app_controllers_playercontroller_playercontroller_submittournamentpayment",
+      "app_helpers_audit",
+      "app_helpers_audit_auditresolvegamehost",
+      "app_helpers_audit_auditresolvehostid",
+      "app_helpers_audit_logplayeractivity",
+      "app_helpers_player_hub_helper",
+      "app_helpers_player_hub_helper_e",
+      "app_helpers_player_hub_helper_formateventquote",
+      "app_helpers_player_hub_helper_get_club_logo_url",
+      "app_helpers_player_hub_helper_getpaymentstate",
+      "app_helpers_player_hub_helper_php_datetimeimmutable",
+      "app_helpers_player_hub_helper_php_datetimezone",
+      "app_helpers_player_hub_helper_preparetournamentdata",
+      "app_helpers_player_hub_helper_render_scrollable_modal",
+      "app_helpers_player_hub_helper_resolvetournamentimage",
+      "app_models_player_gamejoinmodel_gamejoinmodel_logactivity",
+      "app_models_player_playerledgermodel_php_pdo",
+      "app_models_player_playerledgermodel_playerledgermodel",
+      "app_models_player_playerledgermodel_playerledgermodel_calculatesummary",
+      "app_models_player_playerledgermodel_playerledgermodel_fetchledgerdata",
+      "app_models_player_playerledgermodel_playerledgermodel_reinitiateplayerpayment",
+      "app_models_player_playerledgermodel_playerledgermodel_saveplayerpayment",
+      "app_routes_player"
+    ],
+    "9": [
+      "app_script_common",
+      "app_script_common_checkvisibility",
+      "app_script_common_initpopovers",
+      "app_script_common_onscroll",
+      "app_script_common_refreshlayoutandslick",
+      "app_script_common_settext",
+      "app_script_common_startcounting",
+      "app_script_common_updateschedulercardstats",
+      "pos_admin_public_assets_js_sweetalert_min",
+      "pos_admin_public_assets_js_sweetalert_min_constructor",
+      "pos_admin_public_assets_js_sweetalert_min_de",
+      "pos_admin_public_assets_js_sweetalert_min_dt",
+      "pos_admin_public_assets_js_sweetalert_min_e",
+      "pos_admin_public_assets_js_sweetalert_min_emit",
+      "pos_admin_public_assets_js_sweetalert_min_en",
+      "pos_admin_public_assets_js_sweetalert_min_en_constructor",
+      "pos_admin_public_assets_js_sweetalert_min_en_gettimerleft",
+      "pos_admin_public_assets_js_sweetalert_min_en_increase",
+      "pos_admin_public_assets_js_sweetalert_min_en_isrunning",
+      "pos_admin_public_assets_js_sweetalert_min_en_start",
+      "pos_admin_public_assets_js_sweetalert_min_en_stop",
+      "pos_admin_public_assets_js_sweetalert_min_ft",
+      "pos_admin_public_assets_js_sweetalert_min_gethandlersbyeventname",
+      "pos_admin_public_assets_js_sweetalert_min_it",
+      "pos_admin_public_assets_js_sweetalert_min_jt",
+      "pos_admin_public_assets_js_sweetalert_min_main",
+      "pos_admin_public_assets_js_sweetalert_min_mt",
+      "pos_admin_public_assets_js_sweetalert_min_n",
+      "pos_admin_public_assets_js_sweetalert_min_nn",
+      "pos_admin_public_assets_js_sweetalert_min_nt",
+      "pos_admin_public_assets_js_sweetalert_min_on",
+      "pos_admin_public_assets_js_sweetalert_min_once",
+      "pos_admin_public_assets_js_sweetalert_min_pe",
+      "pos_admin_public_assets_js_sweetalert_min_qt",
+      "pos_admin_public_assets_js_sweetalert_min_removealllisteners",
+      "pos_admin_public_assets_js_sweetalert_min_removelistener",
+      "pos_admin_public_assets_js_sweetalert_min_reset",
+      "pos_admin_public_assets_js_sweetalert_min_rt",
+      "pos_admin_public_assets_js_sweetalert_min_sn",
+      "pos_admin_public_assets_js_sweetalert_min_t",
+      "pos_admin_public_assets_js_sweetalert_min_un",
+      "pos_admin_public_assets_js_sweetalert_min_un_constructor",
+      "pos_admin_public_assets_js_sweetalert_min_un_finally",
+      "pos_admin_public_assets_js_sweetalert_min_un_main",
+      "pos_admin_public_assets_js_sweetalert_min_un_then",
+      "pos_admin_public_assets_js_sweetalert_min_ut",
+      "pos_admin_public_assets_js_sweetalert_min_vt"
+    ],
+    "10": [
+      "app_controllers_hostcontroller_hostcontroller_gethostpaymentlist",
+      "app_controllers_hostcontroller_hostcontroller_paginatepaymentplayers",
+      "app_controllers_hostcontroller_hostcontroller_respondemptypaymentlist",
+      "app_helpers_pagination",
+      "app_helpers_pagination_closure_1",
+      "app_helpers_pagination_paginate",
+      "app_helpers_pagination_pagination",
+      "app_helpers_pagination_pagination_construct",
+      "app_helpers_pagination_pagination_escape",
+      "app_helpers_pagination_pagination_getcurrentpage",
+      "app_helpers_pagination_pagination_getdefaultlimit",
+      "app_helpers_pagination_pagination_getfirstpage",
+      "app_helpers_pagination_pagination_getfrom",
+      "app_helpers_pagination_pagination_getlastpage",
+      "app_helpers_pagination_pagination_getlimit",
+      "app_helpers_pagination_pagination_getnextpage",
+      "app_helpers_pagination_pagination_getoffset",
+      "app_helpers_pagination_pagination_getpage",
+      "app_helpers_pagination_pagination_getpagerange",
+      "app_helpers_pagination_pagination_getperpage",
+      "app_helpers_pagination_pagination_getperpageselecthtml",
+      "app_helpers_pagination_pagination_getprevpage",
+      "app_helpers_pagination_pagination_getto",
+      "app_helpers_pagination_pagination_gettotal",
+      "app_helpers_pagination_pagination_gettotalpages",
+      "app_helpers_pagination_pagination_hasnext",
+      "app_helpers_pagination_pagination_hasprev",
+      "app_helpers_pagination_pagination_isfirst",
+      "app_helpers_pagination_pagination_islast",
+      "app_helpers_pagination_pagination_jsonserialize",
+      "app_helpers_pagination_pagination_make",
+      "app_helpers_pagination_pagination_paginatearray",
+      "app_helpers_pagination_pagination_render",
+      "app_helpers_pagination_pagination_renderfooter",
+      "app_helpers_pagination_pagination_renderitem",
+      "app_helpers_pagination_pagination_rendersummary",
+      "app_helpers_pagination_pagination_resetdefaultlimit",
+      "app_helpers_pagination_pagination_setdefaultlimit",
+      "app_helpers_pagination_pagination_toarray",
+      "app_helpers_pagination_php_self",
+      "app_services_ledger_ledgerpresenter",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_renderemptypaymentlisthtml",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_renderpaymentlisttablehtml",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_sorticon",
+      "jsonserializable"
+    ],
+    "11": [
+      "app_controllers_hostcontroller_hostcontroller_buildplayerpaymentsummary",
+      "app_helpers_player_ledger_helper",
+      "app_helpers_player_ledger_helper_calculateledgersummary",
+      "app_helpers_player_ledger_helper_fetchplayerledgerdata",
+      "app_helpers_player_ledger_helper_renderplayerpayhtml",
+      "app_helpers_player_ledger_helper_renderplayersideledgerhtml",
+      "app_models_ledger_ledgermodel_ledgermodel",
+      "app_models_ledger_ledgermodel_ledgermodel_approvepayment",
+      "app_models_ledger_ledgermodel_ledgermodel_counthistoricaltransactions",
+      "app_models_ledger_ledgermodel_ledgermodel_deletecarryrecord",
+      "app_models_ledger_ledgermodel_ledgermodel_deletepayment",
+      "app_models_ledger_ledgermodel_ledgermodel_findpendingpaymentbygame",
+      "app_models_ledger_ledgermodel_ledgermodel_getappliedsubscription",
+      "app_models_ledger_ledgermodel_ledgermodel_getcarryrecord",
+      "app_models_ledger_ledgermodel_ledgermodel_getcarryrecordbyid",
+      "app_models_ledger_ledgermodel_ledgermodel_getexpenses",
+      "app_models_ledger_ledgermodel_ledgermodel_getfullledgerdata",
+      "app_models_ledger_ledgermodel_ledgermodel_getgames",
+      "app_models_ledger_ledgermodel_ledgermodel_gethistoricaltransactions",
+      "app_models_ledger_ledgermodel_ledgermodel_getpayments",
+      "app_models_ledger_ledgermodel_ledgermodel_getpaymentsforgameids",
+      "app_models_ledger_ledgermodel_ledgermodel_getuser",
+      "app_models_ledger_ledgermodel_ledgermodel_getvenues",
+      "app_models_ledger_ledgermodel_ledgermodel_insertexpense",
+      "app_models_ledger_ledgermodel_ledgermodel_isvalidhost",
+      "app_models_ledger_ledgermodel_ledgermodel_reinitiatepayment",
+      "app_models_ledger_ledgermodel_ledgermodel_rejectpayment",
+      "app_models_ledger_ledgermodel_ledgermodel_upsertcarryrecord",
+      "app_models_ledger_ledgermodel_php_pdo",
+      "app_services_ledger_ledgeractionservice",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_construct",
+      "app_services_ledger_ledgerservice",
+      "app_services_ledger_ledgerservice_closure_1",
+      "app_services_ledger_ledgerservice_closure_2",
+      "app_services_ledger_ledgerservice_closure_3",
+      "app_services_ledger_ledgerservice_ledgerservice",
+      "app_services_ledger_ledgerservice_ledgerservice_buildemptyresult",
+      "app_services_ledger_ledgerservice_ledgerservice_calculatesummary",
+      "app_services_ledger_ledgerservice_ledgerservice_construct",
+      "app_services_ledger_ledgerservice_ledgerservice_getmonthlyledger",
+      "app_services_ledger_ledgerservice_ledgerservice_resolvehostforplayer"
+    ],
+    "12": [
+      "pos_admin_public_assets_js_jquery_min",
+      "pos_admin_public_assets_js_jquery_min_addgethookif",
+      "pos_admin_public_assets_js_jquery_min_addtoprefiltersortransports",
+      "pos_admin_public_assets_js_jquery_min_adjustcss",
+      "pos_admin_public_assets_js_jquery_min_adoptvalue",
+      "pos_admin_public_assets_js_jquery_min_ajaxconvert",
+      "pos_admin_public_assets_js_jquery_min_ajaxextend",
+      "pos_admin_public_assets_js_jquery_min_ajaxhandleresponses",
+      "pos_admin_public_assets_js_jquery_min_classestoarray",
+      "pos_admin_public_assets_js_jquery_min_clonecopyevent",
+      "pos_admin_public_assets_js_jquery_min_completed",
+      "pos_admin_public_assets_js_jquery_min_computestyletests",
+      "pos_admin_public_assets_js_jquery_min_createdisabledpseudo",
+      "pos_admin_public_assets_js_jquery_min_createoptions",
+      "pos_admin_public_assets_js_jquery_min_data",
+      "pos_admin_public_assets_js_jquery_min_dataattr",
+      "pos_admin_public_assets_js_jquery_min_done",
+      "pos_admin_public_assets_js_jquery_min_fcssescape",
+      "pos_admin_public_assets_js_jquery_min_finalpropname",
+      "pos_admin_public_assets_js_jquery_min_fixinput",
+      "pos_admin_public_assets_js_jquery_min_focusmappedhandler",
+      "pos_admin_public_assets_js_jquery_min_genfx",
+      "pos_admin_public_assets_js_jquery_min_getclass",
+      "pos_admin_public_assets_js_jquery_min_getdata",
+      "pos_admin_public_assets_js_jquery_min_leveragenative",
+      "pos_admin_public_assets_js_jquery_min_on",
+      "pos_admin_public_assets_js_jquery_min_rationale_2516",
+      "pos_admin_public_assets_js_jquery_min_rationale_4200",
+      "pos_admin_public_assets_js_jquery_min_returnfalse",
+      "pos_admin_public_assets_js_jquery_min_returntrue",
+      "pos_admin_public_assets_js_jquery_min_roundpixelmeasures",
+      "pos_admin_public_assets_js_jquery_min_safeactiveelement",
+      "pos_admin_public_assets_js_jquery_min_schedule",
+      "pos_admin_public_assets_js_jquery_min_setfilters",
+      "pos_admin_public_assets_js_jquery_min_setpositivenumber",
+      "pos_admin_public_assets_js_jquery_min_sibling",
+      "pos_admin_public_assets_js_jquery_min_stripandcollapse",
+      "pos_admin_public_assets_js_jquery_min_tween",
+      "pos_admin_public_assets_js_jquery_min_vendorpropname",
+      "pos_admin_public_assets_js_jquery_min_winnow"
+    ],
+    "13": [
+      "app_core_model",
+      "app_core_model_closure_1",
+      "app_core_model_model",
+      "app_core_model_model_all",
+      "app_core_model_model_create",
+      "app_core_model_model_delete",
+      "app_core_model_model_filterfillable",
+      "app_core_model_model_find",
+      "app_core_model_model_firstwhere",
+      "app_core_model_model_update",
+      "app_core_model_model_where",
+      "app_models_host_expensemodel",
+      "app_models_host_expensemodel_expensemodel",
+      "app_models_host_expensemodel_expensemodel_getexpensesbyhost",
+      "app_models_host_expensemodel_php_pdo",
+      "app_models_host_hostplayercarryforwardmodel",
+      "app_models_host_hostplayercarryforwardmodel_hostplayercarryforwardmodel",
+      "app_models_paymentmodel",
+      "app_models_player_playerclubstatusmodel",
+      "app_models_player_playerclubstatusmodel_php_pdo",
+      "app_models_player_playerclubstatusmodel_playerclubstatusmodel",
+      "app_models_player_playerclubstatusmodel_playerclubstatusmodel_findmembership",
+      "app_models_reviewmodel",
+      "app_models_reviewmodel_php_pdo",
+      "app_models_reviewmodel_reviewmodel",
+      "app_models_reviewmodel_reviewmodel_getactivereviews",
+      "app_models_reviewmodel_reviewmodel_savereview",
+      "app_models_tournament_tournamentpaymentmodel",
+      "app_models_tournament_tournamentpaymentmodel_tournamentpaymentmodel",
+      "app_models_tournament_tournamentteammodel",
+      "app_models_tournament_tournamentteammodel_tournamentteammodel",
+      "app_models_tournament_tournamentusermodel",
+      "app_models_tournament_tournamentusermodel_tournamentusermodel",
+      "app_models_venuemodel",
+      "app_models_venuemodel_venuemodel"
+    ],
+    "14": [
+      "github_workflows_e2e_tests",
+      "github_workflows_e2e_tests_e2e_tests_runs_on",
+      "github_workflows_e2e_tests_e2e_tests_services",
+      "github_workflows_e2e_tests_e2e_tests_steps",
+      "github_workflows_e2e_tests_env_app_url",
+      "github_workflows_e2e_tests_env_headless",
+      "github_workflows_e2e_tests_env_mysql_allow_empty_password",
+      "github_workflows_e2e_tests_env_mysql_database",
+      "github_workflows_e2e_tests_jobs",
+      "github_workflows_e2e_tests_jobs_e2e_tests",
+      "github_workflows_e2e_tests_mysql_env",
+      "github_workflows_e2e_tests_mysql_image",
+      "github_workflows_e2e_tests_mysql_options",
+      "github_workflows_e2e_tests_mysql_ports",
+      "github_workflows_e2e_tests_name",
+      "github_workflows_e2e_tests_on",
+      "github_workflows_e2e_tests_on_pull_request",
+      "github_workflows_e2e_tests_on_push",
+      "github_workflows_e2e_tests_on_workflow_dispatch",
+      "github_workflows_e2e_tests_pull_request_branches",
+      "github_workflows_e2e_tests_push_branches",
+      "github_workflows_e2e_tests_services_mysql",
+      "github_workflows_e2e_tests_steps_env",
+      "github_workflows_e2e_tests_steps_if",
+      "github_workflows_e2e_tests_steps_name",
+      "github_workflows_e2e_tests_steps_run",
+      "github_workflows_e2e_tests_steps_uses",
+      "github_workflows_e2e_tests_steps_with",
+      "github_workflows_e2e_tests_with_coverage",
+      "github_workflows_e2e_tests_with_extensions",
+      "github_workflows_e2e_tests_with_name",
+      "github_workflows_e2e_tests_with_node_version",
+      "github_workflows_e2e_tests_with_path",
+      "github_workflows_e2e_tests_with_php_version"
+    ],
+    "15": [
+      "app_config_database",
+      "app_config_database_database",
+      "app_config_database_database_begintransaction",
+      "app_config_database_database_commit",
+      "app_config_database_database_config",
+      "app_config_database_database_getmysqli",
+      "app_config_database_database_getpdo",
+      "app_config_database_database_inittimezone",
+      "app_config_database_database_intransaction",
+      "app_config_database_database_rollback",
+      "app_config_database_database_transaction",
+      "app_config_database_php_pdo",
+      "app_core_controller",
+      "app_database_migrationrunner",
+      "app_helpers_rememberme",
+      "app_tests_schedule_auto_date_test",
+      "app_views_host_host_account",
+      "app_views_host_host_complete_game",
+      "app_views_layouts_header_header",
+      "app_views_player_player_profile",
+      "app_views_store_cart",
+      "app_views_store_checkout",
+      "app_views_store_checkout_generatebookingno",
+      "app_views_store_orders",
+      "app_views_store_product_listing",
+      "app_views_store_product_listing_addwithsize",
+      "app_views_store_product_listing_requirelogin",
+      "exception",
+      "mysqli",
+      "runtimeexception"
+    ],
+    "16": [
+      "app_helpers_session_session",
+      "app_helpers_session_session_canviewproductlisting",
+      "app_helpers_session_session_checkratelimit",
+      "app_helpers_session_session_clearratelimit",
+      "app_helpers_session_session_computesecurityversion",
+      "app_helpers_session_session_csrftoken",
+      "app_helpers_session_session_establishuser",
+      "app_helpers_session_session_get",
+      "app_helpers_session_session_getcsrftoken",
+      "app_helpers_session_session_getcurrentuser",
+      "app_helpers_session_session_getcurrentuserid",
+      "app_helpers_session_session_getcurrentusertype",
+      "app_helpers_session_session_getflash",
+      "app_helpers_session_session_getuserinitials",
+      "app_helpers_session_session_has",
+      "app_helpers_session_session_logout",
+      "app_helpers_session_session_normalizerole",
+      "app_helpers_session_session_normalizeuserdata",
+      "app_helpers_session_session_regenerateid",
+      "app_helpers_session_session_remove",
+      "app_helpers_session_session_requirelogin",
+      "app_helpers_session_session_requireusertype",
+      "app_helpers_session_session_set",
+      "app_helpers_session_session_setflash",
+      "app_helpers_session_session_start",
+      "app_helpers_session_session_user",
+      "app_helpers_session_session_userid",
+      "app_helpers_session_session_usertype",
+      "app_helpers_session_session_verifycsrftoken",
+      "app_views_layouts_header_store_header"
+    ],
+    "17": [
+      "app_controllers_playercontroller_playercontroller_paymentaction",
+      "app_models_ledger_ledgermodel_ledgermodel_begintransaction",
+      "app_models_ledger_ledgermodel_ledgermodel_commit",
+      "app_models_ledger_ledgermodel_ledgermodel_getcarryrecordforupdate",
+      "app_models_ledger_ledgermodel_ledgermodel_getpaymenteffectivedate",
+      "app_models_ledger_ledgermodel_ledgermodel_getpaymentforupdate",
+      "app_models_ledger_ledgermodel_ledgermodel_insertcarryhistory",
+      "app_models_ledger_ledgermodel_ledgermodel_insertpayment",
+      "app_models_ledger_ledgermodel_ledgermodel_intransaction",
+      "app_models_ledger_ledgermodel_ledgermodel_ismonthlocked",
+      "app_models_ledger_ledgermodel_ledgermodel_isplayerassociatedwithhost",
+      "app_models_ledger_ledgermodel_ledgermodel_isvalidexpenseforplayerandhost",
+      "app_models_ledger_ledgermodel_ledgermodel_isvalidgameforplayerandhost",
+      "app_models_ledger_ledgermodel_ledgermodel_lockplayerforupdate",
+      "app_models_ledger_ledgermodel_ledgermodel_logaudit",
+      "app_models_ledger_ledgermodel_ledgermodel_resolvepaymenthostid",
+      "app_models_ledger_ledgermodel_ledgermodel_rollback",
+      "app_models_ledger_ledgermodel_ledgermodel_updatesubscriptioncarried",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_approvepayment",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_carryforward",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_createexpense",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_recordpayment",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_reinitiatepayment",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_rejectpayment",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_reversecarry",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_reversepayment",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_toggleoverride",
+      "app_services_ledger_ledgeractionservice_ledgeractionservice_verifyhostpaymentownership"
+    ],
+    "18": [
+      "app_controllers_hostcontroller_hostcontroller_getplayerdetailedledger",
+      "app_controllers_hostcontroller_hostcontroller_resolvedetailedledgerfilters",
+      "app_controllers_ledgercontroller",
+      "app_controllers_ledgercontroller_ledgercontroller",
+      "app_controllers_ledgercontroller_ledgercontroller_approvepayment",
+      "app_controllers_ledgercontroller_ledgercontroller_attachrefreshedledger",
+      "app_controllers_ledgercontroller_ledgercontroller_carry",
+      "app_controllers_ledgercontroller_ledgercontroller_createexpense",
+      "app_controllers_ledgercontroller_ledgercontroller_createpayment",
+      "app_controllers_ledgercontroller_ledgercontroller_getauthcontext",
+      "app_controllers_ledgercontroller_ledgercontroller_history",
+      "app_controllers_ledgercontroller_ledgercontroller_monthly",
+      "app_controllers_ledgercontroller_ledgercontroller_paymentaction",
+      "app_controllers_ledgercontroller_ledgercontroller_reinitiatepayment",
+      "app_controllers_ledgercontroller_ledgercontroller_rejectpayment",
+      "app_controllers_ledgercontroller_ledgercontroller_renderplayerpayhtml",
+      "app_controllers_ledgercontroller_ledgercontroller_reversecarry",
+      "app_controllers_ledgercontroller_ledgercontroller_reversepayment",
+      "app_controllers_ledgercontroller_ledgercontroller_toggleoverride",
+      "app_controllers_ledgercontroller_ledgercontroller_viewplayerledger",
+      "app_controllers_playercontroller_playercontroller_savepayment",
+      "app_helpers_validators_validator_date",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_formatmoney",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_renderfilterbar",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_renderhistoryhtml",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_rendermonthlyhtml",
+      "app_services_ledger_ledgerservice_ledgerservice_gethistory"
+    ],
+    "19": [
+      "codeigniter_config_baseconfig",
+      "pos_admin_app_config_app",
+      "pos_admin_app_config_app_app",
+      "pos_admin_app_config_contentsecuritypolicy",
+      "pos_admin_app_config_contentsecuritypolicy_contentsecuritypolicy",
+      "pos_admin_app_config_cors",
+      "pos_admin_app_config_cors_cors",
+      "pos_admin_app_config_curlrequest",
+      "pos_admin_app_config_curlrequest_curlrequest",
+      "pos_admin_app_config_email",
+      "pos_admin_app_config_email_email",
+      "pos_admin_app_config_encryption",
+      "pos_admin_app_config_encryption_encryption",
+      "pos_admin_app_config_feature",
+      "pos_admin_app_config_feature_feature",
+      "pos_admin_app_config_generators",
+      "pos_admin_app_config_generators_generators",
+      "pos_admin_app_config_honeypot",
+      "pos_admin_app_config_honeypot_honeypot",
+      "pos_admin_app_config_migrations",
+      "pos_admin_app_config_migrations_migrations",
+      "pos_admin_app_config_pager",
+      "pos_admin_app_config_pager_pager",
+      "pos_admin_app_config_security",
+      "pos_admin_app_config_security_security",
+      "pos_admin_app_config_useragents",
+      "pos_admin_app_config_useragents_useragents"
+    ],
+    "20": [
+      "pos_admin_app_controllers_clubadmin_clubadmin",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addbrand",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addcategory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addnewinventory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addnewmembership",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addsize",
+      "pos_admin_app_controllers_clubadmin_clubadmin_deleteitem",
+      "pos_admin_app_controllers_clubadmin_clubadmin_editinventory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_get_user_details",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getbrand",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getcategory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getmembershipdetails",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getsize",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listbrand",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listcategory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listsize",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatebrand",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatecategory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatesize",
+      "pos_admin_app_models_posbrandmodel",
+      "pos_admin_app_models_posbrandmodel_posbrandmodel",
+      "pos_admin_app_models_posbrandmodel_posbrandmodel_getbrandbyid",
+      "pos_admin_app_models_poscategorymodel",
+      "pos_admin_app_models_poscategorymodel_poscategorymodel",
+      "pos_admin_app_models_poscategorymodel_poscategorymodel_getcategorybyid",
+      "pos_admin_app_models_possizemodel_possizemodel"
+    ],
+    "21": [
+      "app_models_paymentmodel_paymentmodel",
+      "app_models_paymentmodel_paymentmodel_getpaymentsbygame",
+      "app_models_paymentmodel_paymentmodel_getpaymentsbyuser",
+      "app_models_paymentmodel_php_pdo",
+      "codeigniter_config_view",
+      "codeigniter_view_viewdecoratorinterface",
+      "pos_admin_app_config_view",
+      "pos_admin_app_config_view_view",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addnewcourt",
+      "pos_admin_app_controllers_clubadmin_clubadmin_editmembership",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getalloccurrencesofday",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listbooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listmembership",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listprebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_makebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_makeprebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_modifyprebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_paymenthistory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_savemembership",
+      "pos_admin_app_controllers_clubadmin_clubadmin_savestringing",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatemembership",
+      "pos_admin_app_models_membershipmodel_membershipmodel",
+      "pos_admin_app_models_membershipmodel_membershipmodel_getuserdetailsbymembershipid",
+      "pos_admin_app_models_membershipmodel_membershipmodel_getuserdetailsbymembershipphone"
+    ],
+    "22": [
+      "app_routes_pages",
+      "app_routes_pages_get_about_us",
+      "app_routes_pages_get_about_us_php",
+      "app_routes_pages_get_cancellation_policy",
+      "app_routes_pages_get_cancellationpolicy_php",
+      "app_routes_pages_get_casa_clubs",
+      "app_routes_pages_get_casa_clubs_php",
+      "app_routes_pages_get_casa_trainers",
+      "app_routes_pages_get_casa_trainers_php",
+      "app_routes_pages_get_contact_handler_php",
+      "app_routes_pages_get_contact_us",
+      "app_routes_pages_get_contact_us_php",
+      "app_routes_pages_get_discover_games_php",
+      "app_routes_pages_get_gallery_page",
+      "app_routes_pages_get_gallery_page_php",
+      "app_routes_pages_get_gallery_php",
+      "app_routes_pages_get_organiser",
+      "app_routes_pages_get_organiser_php",
+      "app_routes_pages_get_players",
+      "app_routes_pages_get_players_php",
+      "app_routes_pages_get_privacy_policy",
+      "app_routes_pages_get_privacy_policy_php",
+      "app_routes_pages_get_terms_condition",
+      "app_routes_pages_get_termscondition_php",
+      "app_routes_pages_post_contact_handler_php"
+    ],
+    "23": [
+      "codeigniter_controller",
+      "codeigniter_filters_filterinterface",
+      "codeigniter_http_clirequest",
+      "codeigniter_http_incomingrequest",
+      "codeigniter_http_requestinterface",
+      "codeigniter_http_responseinterface",
+      "pos_admin_app_controllers_admin",
+      "pos_admin_app_controllers_admin_admin",
+      "pos_admin_app_controllers_admin_admin_index",
+      "pos_admin_app_controllers_auth",
+      "pos_admin_app_controllers_auth_auth",
+      "pos_admin_app_controllers_auth_auth_index",
+      "pos_admin_app_controllers_auth_auth_login",
+      "pos_admin_app_controllers_auth_auth_logout",
+      "pos_admin_app_controllers_basecontroller",
+      "pos_admin_app_controllers_basecontroller_basecontroller",
+      "pos_admin_app_controllers_basecontroller_basecontroller_initcontroller",
+      "pos_admin_app_controllers_home",
+      "pos_admin_app_controllers_home_home",
+      "pos_admin_app_controllers_home_home_index",
+      "pos_admin_app_filters_auth",
+      "pos_admin_app_filters_auth_auth",
+      "pos_admin_app_filters_auth_auth_after",
+      "pos_admin_app_filters_auth_auth_before",
+      "psr_log_loggerinterface"
+    ],
+    "24": [
+      "admin_tournaments_list",
+      "admin_tournaments_list_deleteselected",
+      "admin_tournaments_list_deletetournament",
+      "admin_tournaments_list_detailitem",
+      "admin_tournaments_list_fillform",
+      "admin_tournaments_list_getfilteredrows",
+      "admin_tournaments_list_getrowsearchtext",
+      "admin_tournaments_list_h",
+      "admin_tournaments_list_htmlescape",
+      "admin_tournaments_list_initcustomtable",
+      "admin_tournaments_list_normalizeskill",
+      "admin_tournaments_list_opentournamentmodal",
+      "admin_tournaments_list_openviewmodal",
+      "admin_tournaments_list_pagebutton",
+      "admin_tournaments_list_previewimage",
+      "admin_tournaments_list_removeimage",
+      "admin_tournaments_list_rendercustompagination",
+      "admin_tournaments_list_rendercustomtable",
+      "admin_tournaments_list_replacetoken",
+      "admin_tournaments_list_seteditor",
+      "admin_tournaments_list_showflash",
+      "admin_tournaments_list_synceditors",
+      "admin_tournaments_list_togglestatus",
+      "admin_tournaments_list_updatedynamictemplates"
+    ],
+    "25": [
+      "app_controllers_hostcontroller",
+      "app_controllers_hostcontroller_closure_1",
+      "app_controllers_hostcontroller_closure_2",
+      "app_controllers_hostcontroller_hostcontroller_construct",
+      "app_models_clubmodel",
+      "app_models_clubmodel_clubmodel",
+      "app_models_clubmodel_clubmodel_findbyhostid",
+      "app_models_clubmodel_clubmodel_getjointypebyhostid",
+      "app_models_clubmodel_php_pdo",
+      "app_models_player_playerlogmodel",
+      "app_models_player_playerlogmodel_playerlogmodel",
+      "app_models_player_playerlogmodel_playerlogmodel_logactivity",
+      "app_tests_navbar_dynamic_label_test",
+      "app_tests_navbar_dynamic_label_test_assertlabel",
+      "app_tests_navbar_dynamic_label_test_resolvenavbarstorelabel",
+      "count",
+      "formatshortname",
+      "in_array",
+      "is_array",
+      "strcasecmp",
+      "strtolower",
+      "strtoupper",
+      "trim"
+    ],
+    "26": [
+      "app_routes_host",
+      "app_routes_host_get_host_account",
+      "app_routes_host_get_host_account_php",
+      "app_routes_host_get_host_host_account",
+      "app_routes_host_get_host_host_account_php",
+      "app_routes_host_get_host_host_audit_log",
+      "app_routes_host_get_host_host_audit_log_php",
+      "app_routes_host_get_host_host_club_settings_php",
+      "app_routes_host_get_host_host_complete_game_php",
+      "app_routes_host_get_host_host_creat_game_php",
+      "app_routes_host_get_host_host_edit_tournament_php",
+      "app_routes_host_get_host_host_monthly_subscription_php",
+      "app_routes_host_get_host_host_payment_list_php",
+      "app_routes_host_get_host_host_player_stats_php",
+      "app_routes_host_get_host_host_roster_php",
+      "app_routes_host_get_host_host_scheduled_game_php",
+      "app_routes_host_get_host_host_tournament_list_php",
+      "app_routes_host_post_host_host_club_settings_php",
+      "app_routes_host_post_host_host_complete_game_php",
+      "app_routes_host_post_host_host_edit_tournament_php",
+      "app_routes_host_post_host_host_monthly_subscription_php",
+      "app_routes_host_post_host_host_payment_list_php",
+      "app_routes_host_post_host_host_scheduled_game_php"
+    ],
+    "27": [
+      "app_controllers_authcontroller_authcontroller_construct",
+      "app_controllers_homecontroller_homecontroller_construct",
+      "app_controllers_host_hostsubscriptioncontroller",
+      "app_controllers_host_hostsubscriptioncontroller_hostsubscriptioncontroller",
+      "app_controllers_host_hostsubscriptioncontroller_hostsubscriptioncontroller_construct",
+      "app_controllers_host_hostsubscriptioncontroller_hostsubscriptioncontroller_index",
+      "app_controllers_ledgercontroller_ledgercontroller_construct",
+      "app_controllers_playercontroller",
+      "app_controllers_playercontroller_closure_1",
+      "app_controllers_playercontroller_playercontroller_construct",
+      "app_core_controller_controller",
+      "app_core_controller_controller_construct",
+      "app_core_controller_controller_json",
+      "app_core_controller_controller_redirect",
+      "app_core_controller_controller_render",
+      "app_models_host_hostsubscriptionmodel",
+      "app_models_host_hostsubscriptionmodel_hostsubscriptionmodel",
+      "app_models_tournament_tournamentmodel",
+      "app_models_tournament_tournamentmodel_php_pdo",
+      "app_models_tournament_tournamentmodel_tournamentmodel",
+      "app_models_tournament_tournamentmodel_tournamentmodel_getupcomingactivetournaments",
+      "app_models_tournament_tournamentmodel_tournamentmodel_getupcomingtournaments"
+    ],
+    "28": [
+      "tournament_9_8_26_battle_tournament_new",
+      "tournament_9_8_26_battle_tournament_new_allowedquartergroups",
+      "tournament_9_8_26_battle_tournament_new_applystoredsetconfig",
+      "tournament_9_8_26_battle_tournament_new_battletournamentcanmanage",
+      "tournament_9_8_26_battle_tournament_new_battletournamentcategory",
+      "tournament_9_8_26_battle_tournament_new_battletournamentdate",
+      "tournament_9_8_26_battle_tournament_new_battletournamentesc",
+      "tournament_9_8_26_battle_tournament_new_battletournamentshorttext",
+      "tournament_9_8_26_battle_tournament_new_battletournamenttime",
+      "tournament_9_8_26_battle_tournament_new_closure_1",
+      "tournament_9_8_26_battle_tournament_new_groupleaguesetsselect",
+      "tournament_9_8_26_battle_tournament_new_groupselects",
+      "tournament_9_8_26_battle_tournament_new_groupsrequiredinput",
+      "tournament_9_8_26_battle_tournament_new_infergroupsrequiredfromteams",
+      "tournament_9_8_26_battle_tournament_new_openquartergroupspin",
+      "tournament_9_8_26_battle_tournament_new_php_pdo",
+      "tournament_9_8_26_battle_tournament_new_readtournamentsetconfig",
+      "tournament_9_8_26_battle_tournament_new_restorequartergrouppairinputs",
+      "tournament_9_8_26_battle_tournament_new_savetournamentsetconfig",
+      "tournament_9_8_26_battle_tournament_new_syncgroupfixturesandstandings",
+      "tournament_9_8_26_battle_tournament_new_togglecollapse",
+      "tournament_9_8_26_battle_tournament_new_updatequartergrouppairinputs"
+    ],
+    "29": [
+      "app_core_model_model_construct",
+      "app_models_clubmodel_clubmodel_construct",
+      "app_models_eventmodel_eventmodel_construct",
+      "app_models_host_expensemodel_expensemodel_construct",
+      "app_models_host_hostplayercarryforwardmodel_hostplayercarryforwardmodel_construct",
+      "app_models_host_hostsubscriptionmodel_hostsubscriptionmodel_construct",
+      "app_models_ledger_ledgermodel_ledgermodel_construct",
+      "app_models_paymentmodel_paymentmodel_construct",
+      "app_models_player_gamejoinmodel_gamejoinmodel_construct",
+      "app_models_player_playerclubstatusmodel_playerclubstatusmodel_construct",
+      "app_models_player_playerledgermodel_playerledgermodel_construct",
+      "app_models_player_playerlogmodel_playerlogmodel_construct",
+      "app_models_playerratingmodel_playerratingmodel_construct",
+      "app_models_reviewmodel_reviewmodel_construct",
+      "app_models_tournament_tournamentmodel_tournamentmodel_construct",
+      "app_models_tournament_tournamentpaymentmodel_tournamentpaymentmodel_construct",
+      "app_models_tournament_tournamentteammodel_tournamentteammodel_construct",
+      "app_models_tournament_tournamentusermodel_tournamentusermodel_construct",
+      "app_models_usermodel_usermodel_construct",
+      "app_models_venuemodel_venuemodel_construct",
+      "pdo"
+    ],
+    "30": [
+      "app_tests_security_http_regression",
+      "app_tests_security_http_regression_launch",
+      "app_tests_security_http_regression_port",
+      "app_tests_security_http_regression_record",
+      "app_tests_security_http_regression_request",
+      "argparse",
+      "collections",
+      "concurrent_futures",
+      "csv",
+      "http_cookiejar",
+      "json",
+      "pathlib",
+      "re",
+      "scripts_security_audit",
+      "scripts_security_audit_lint",
+      "socket",
+      "subprocess",
+      "tempfile",
+      "time",
+      "urllib_error",
+      "urllib_request"
+    ],
+    "31": [
+      "tournament_10_07_2026_battle_tournament_new",
+      "tournament_10_07_2026_battle_tournament_new_allowedquartergroups",
+      "tournament_10_07_2026_battle_tournament_new_applystoredsetconfig",
+      "tournament_10_07_2026_battle_tournament_new_battletournamentcategory",
+      "tournament_10_07_2026_battle_tournament_new_battletournamentdate",
+      "tournament_10_07_2026_battle_tournament_new_battletournamentesc",
+      "tournament_10_07_2026_battle_tournament_new_battletournamentshorttext",
+      "tournament_10_07_2026_battle_tournament_new_battletournamenttime",
+      "tournament_10_07_2026_battle_tournament_new_closure_1",
+      "tournament_10_07_2026_battle_tournament_new_groupleaguesetsselect",
+      "tournament_10_07_2026_battle_tournament_new_groupselects",
+      "tournament_10_07_2026_battle_tournament_new_groupsrequiredinput",
+      "tournament_10_07_2026_battle_tournament_new_infergroupsrequiredfromteams",
+      "tournament_10_07_2026_battle_tournament_new_openquartergroupspin",
+      "tournament_10_07_2026_battle_tournament_new_php_pdo",
+      "tournament_10_07_2026_battle_tournament_new_readtournamentsetconfig",
+      "tournament_10_07_2026_battle_tournament_new_restorequartergrouppairinputs",
+      "tournament_10_07_2026_battle_tournament_new_savetournamentsetconfig",
+      "tournament_10_07_2026_battle_tournament_new_syncgroupfixturesandstandings",
+      "tournament_10_07_2026_battle_tournament_new_togglecollapse",
+      "tournament_10_07_2026_battle_tournament_new_updatequartergrouppairinputs"
+    ],
+    "32": [
+      "pos_admin_app_config_session_session",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addnewbooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_changebookingstatus",
+      "pos_admin_app_controllers_clubadmin_clubadmin_checkcourtavailibity",
+      "pos_admin_app_controllers_clubadmin_clubadmin_editbooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_editprebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_get_time_intervals",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getavailablecourt",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getbookinghistory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_index",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listcourt",
+      "pos_admin_app_controllers_clubadmin_clubadmin_prebooking",
+      "pos_admin_app_controllers_clubadmin_clubadmin_profile",
+      "pos_admin_app_controllers_clubadmin_clubadmin_savecourt",
+      "pos_admin_app_models_bookingmodel",
+      "pos_admin_app_models_bookingmodel_bookingmodel",
+      "pos_admin_app_models_bookingmodel_bookingmodel_getbookinghistory",
+      "pos_admin_app_models_bookingmodel_bookingmodel_getbookings",
+      "pos_admin_app_models_courtmodel_courtmodel",
+      "pos_admin_app_models_courtmodel_courtmodel_getcourtsbyclub"
+    ],
+    "33": [
+      "pos_admin_composer_suggest",
+      "pos_admin_composer_suggest_ext_curl",
+      "pos_admin_composer_suggest_ext_dom",
+      "pos_admin_composer_suggest_ext_exif",
+      "pos_admin_composer_suggest_ext_fileinfo",
+      "pos_admin_composer_suggest_ext_gd",
+      "pos_admin_composer_suggest_ext_imagick",
+      "pos_admin_composer_suggest_ext_libxml",
+      "pos_admin_composer_suggest_ext_memcache",
+      "pos_admin_composer_suggest_ext_memcached",
+      "pos_admin_composer_suggest_ext_mysqli",
+      "pos_admin_composer_suggest_ext_oci8",
+      "pos_admin_composer_suggest_ext_pgsql",
+      "pos_admin_composer_suggest_ext_readline",
+      "pos_admin_composer_suggest_ext_redis",
+      "pos_admin_composer_suggest_ext_simplexml",
+      "pos_admin_composer_suggest_ext_sodium",
+      "pos_admin_composer_suggest_ext_sqlite3",
+      "pos_admin_composer_suggest_ext_sqlsrv",
+      "pos_admin_composer_suggest_ext_xdebug"
+    ],
+    "34": [
+      "app_controllers_homecontroller_homecontroller",
+      "app_controllers_homecontroller_homecontroller_emptystats",
+      "app_controllers_homecontroller_homecontroller_fetchall",
+      "app_controllers_homecontroller_homecontroller_fetchcolumn",
+      "app_controllers_homecontroller_homecontroller_getcommunityreviews",
+      "app_controllers_homecontroller_homecontroller_getherobanners",
+      "app_controllers_homecontroller_homecontroller_getplaygroundstats",
+      "app_controllers_homecontroller_homecontroller_getposters",
+      "app_controllers_homecontroller_homecontroller_getstoreproducts",
+      "app_controllers_homecontroller_homecontroller_getupcomingtournaments",
+      "app_controllers_homecontroller_homecontroller_index",
+      "app_controllers_homecontroller_homecontroller_logdatabaseerror",
+      "app_controllers_homecontroller_homecontroller_redirectauthenticateduser",
+      "app_controllers_homecontroller_php_pdo",
+      "app_routes_web",
+      "app_routes_web_get_api_manual_test_logger",
+      "app_routes_web_get_api_manual_test_logger_php",
+      "app_routes_web_post_api_manual_test_logger",
+      "app_routes_web_post_api_manual_test_logger_php"
+    ],
+    "35": [
+      "app_tests_security_transport_test",
+      "app_tests_security_transport_test_assert",
+      "app_tests_security_transport_test_calls",
+      "app_tests_security_transport_test_context",
+      "app_tests_security_transport_test_events",
+      "app_tests_security_transport_test_fs",
+      "app_tests_security_transport_test_input",
+      "app_tests_security_transport_test_path",
+      "app_tests_security_transport_test_vm",
+      "app_tests_security_transport_test_xhr",
+      "app_tests_security_transport_test_xhr_8f1f98fc56d0",
+      "app_tests_security_transport_test_xhr_open",
+      "app_tests_security_transport_test_xhr_send",
+      "app_tests_security_transport_test_xhr_setrequestheader",
+      "app_tests_security_transport_test_xhrheaders",
+      "ref_node_assert",
+      "ref_node_fs",
+      "ref_node_path",
+      "ref_node_vm"
+    ],
+    "36": [
+      "tournament_23_08_26_battle_tournament_new",
+      "tournament_23_08_26_battle_tournament_new_allowedquartergroups",
+      "tournament_23_08_26_battle_tournament_new_applytournamentcourtassignment",
+      "tournament_23_08_26_battle_tournament_new_battletournamentcanmanage",
+      "tournament_23_08_26_battle_tournament_new_battletournamentcategory",
+      "tournament_23_08_26_battle_tournament_new_battletournamentdate",
+      "tournament_23_08_26_battle_tournament_new_battletournamentesc",
+      "tournament_23_08_26_battle_tournament_new_battletournamentshorttext",
+      "tournament_23_08_26_battle_tournament_new_battletournamenttime",
+      "tournament_23_08_26_battle_tournament_new_closure_1",
+      "tournament_23_08_26_battle_tournament_new_closure_2",
+      "tournament_23_08_26_battle_tournament_new_closure_3",
+      "tournament_23_08_26_battle_tournament_new_groupselects",
+      "tournament_23_08_26_battle_tournament_new_groupsrequiredinput",
+      "tournament_23_08_26_battle_tournament_new_infergroupsrequiredfromteams",
+      "tournament_23_08_26_battle_tournament_new_matchruleselects",
+      "tournament_23_08_26_battle_tournament_new_php_pdo",
+      "tournament_23_08_26_battle_tournament_new_syncgroupfixturesandstandings",
+      "tournament_23_08_26_battle_tournament_new_togglecollapse"
+    ],
+    "37": [
+      "pos_admin_app_controllers_clubadmin",
+      "pos_admin_app_controllers_clubadmin_closure_1",
+      "pos_admin_app_controllers_clubadmin_closure_2",
+      "pos_admin_app_controllers_clubadmin_closure_3",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addnewstringing",
+      "pos_admin_app_controllers_clubadmin_clubadmin_editstringing",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getinventorydetails",
+      "pos_admin_app_controllers_clubadmin_clubadmin_listinventory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_liststringing",
+      "pos_admin_app_controllers_clubadmin_clubadmin_saveinventory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updateinventory",
+      "pos_admin_app_controllers_clubadmin_clubadmin_updatestringing",
+      "pos_admin_app_models_inventorymodel_inventorymodel",
+      "pos_admin_app_models_inventorymodel_inventorymodel_getinventorybyclub",
+      "pos_admin_app_models_inventorymodel_inventorymodel_getinventorydetailsbyid",
+      "pos_admin_app_models_stringmodel",
+      "pos_admin_app_models_stringmodel_stringmodel",
+      "pos_admin_app_models_stringmodel_stringmodel_getstringingbyclub"
+    ],
+    "38": [
+      "tournament_battle_tournament_new",
+      "tournament_battle_tournament_new_applytournamentcourtassignment",
+      "tournament_battle_tournament_new_battletournamentcanmanage",
+      "tournament_battle_tournament_new_battletournamentcategory",
+      "tournament_battle_tournament_new_battletournamentdate",
+      "tournament_battle_tournament_new_battletournamentesc",
+      "tournament_battle_tournament_new_battletournamenthasstarted",
+      "tournament_battle_tournament_new_battletournamentshorttext",
+      "tournament_battle_tournament_new_battletournamentstartedresponse",
+      "tournament_battle_tournament_new_battletournamenttime",
+      "tournament_battle_tournament_new_closure_1",
+      "tournament_battle_tournament_new_closure_2",
+      "tournament_battle_tournament_new_closure_3",
+      "tournament_battle_tournament_new_infergroupsrequiredfromteams",
+      "tournament_battle_tournament_new_php_pdo",
+      "tournament_battle_tournament_new_syncgroupfixturesandstandings",
+      "tournament_battle_tournament_new_togglecollapse",
+      "tournament_battle_tournament_new_warntournamentlocked"
+    ],
+    "39": [
+      "app_config_env",
+      "app_config_env_env",
+      "app_config_env_get_loaded_env_info",
+      "app_config_env_load_env_file",
+      "app_controllers_authcontroller_authcontroller_handlefailedattempt",
+      "app_controllers_authcontroller_authcontroller_logout",
+      "app_controllers_authcontroller_authcontroller_rememberuser",
+      "app_helpers_httplogger_httplogger_init",
+      "app_helpers_rememberme_rememberme",
+      "app_helpers_rememberme_rememberme_clearcookie",
+      "app_helpers_rememberme_rememberme_create",
+      "app_helpers_rememberme_rememberme_getcookiename",
+      "app_helpers_rememberme_rememberme_revokeallusertokens",
+      "app_helpers_rememberme_rememberme_revokecurrent",
+      "app_helpers_rememberme_rememberme_setcookie",
+      "app_helpers_rememberme_rememberme_verify",
+      "app_middleware_authguard_authguard_attemptrememberlogin"
+    ],
+    "40": [
+      "app_controllers_playercontroller_playercontroller_profile",
+      "app_helpers_session",
+      "app_models_usermodel",
+      "app_models_usermodel_php_pdo",
+      "app_models_usermodel_usermodel",
+      "app_models_usermodel_usermodel_adjustandsaveranking",
+      "app_models_usermodel_usermodel_findauthuserbyid",
+      "app_models_usermodel_usermodel_findbyemail",
+      "app_models_usermodel_usermodel_findbyid",
+      "app_models_usermodel_usermodel_findbyremembertoken",
+      "app_models_usermodel_usermodel_findbyusernameoremail",
+      "app_models_usermodel_usermodel_getalluniquegenders",
+      "app_models_usermodel_usermodel_hassecurityversioncolumn",
+      "app_models_usermodel_usermodel_shiftrankings",
+      "app_models_usermodel_usermodel_updatepasswordhash",
+      "app_models_usermodel_usermodel_updateprofileimage",
+      "app_models_usermodel_usermodel_updateremembertoken"
+    ],
+    "41": [
+      "app_routes_tournament",
+      "app_routes_tournament_get_player_tournament",
+      "app_routes_tournament_get_player_tournament_details",
+      "app_routes_tournament_get_player_tournament_details_php",
+      "app_routes_tournament_get_tournament",
+      "app_routes_tournament_get_tournament_api_match_score_php",
+      "app_routes_tournament_get_tournament_badminton_scorer_php",
+      "app_routes_tournament_get_tournament_court_dashboard_php",
+      "app_routes_tournament_get_tournament_details",
+      "app_routes_tournament_get_tournament_details_php",
+      "app_routes_tournament_get_tournament_spin_wheel_php",
+      "app_routes_tournament_post_player_tournament",
+      "app_routes_tournament_post_tournament",
+      "app_routes_tournament_post_tournament_api_match_score_php",
+      "app_routes_tournament_post_tournament_badminton_scorer_php",
+      "app_routes_tournament_post_tournament_court_dashboard_php",
+      "app_routes_tournament_post_tournament_spin_wheel_php"
+    ],
+    "42": [
+      "app_script_host_player_stats",
+      "app_script_host_player_stats_escapehtml",
+      "app_script_host_player_stats_fetchplayerstats",
+      "app_script_host_player_stats_getapiurl",
+      "app_script_host_player_stats_getcurrenthostid",
+      "app_script_host_player_stats_getrankbadgehtml",
+      "app_script_host_player_stats_getratingmodal",
+      "app_script_host_player_stats_getsearchinput",
+      "app_script_host_player_stats_getshell",
+      "app_script_host_player_stats_getstatusbadgehtml",
+      "app_script_host_player_stats_init",
+      "app_script_host_player_stats_openratingmodal",
+      "app_script_host_player_stats_populaterankoptions",
+      "app_script_host_player_stats_rendergenericpagination",
+      "app_script_host_player_stats_renderplayerrowhtml",
+      "app_script_host_player_stats_rendertablerows",
+      "app_script_host_player_stats_updatemodalheader"
+    ],
+    "43": [
+      "app_views_host_host_monthly_subscription",
+      "app_views_host_host_monthly_subscription_apicall",
+      "app_views_host_host_monthly_subscription_currentperiod",
+      "app_views_host_host_monthly_subscription_doapply",
+      "app_views_host_host_monthly_subscription_dorowaction",
+      "app_views_host_host_monthly_subscription_esc",
+      "app_views_host_host_monthly_subscription_load",
+      "app_views_host_host_monthly_subscription_money",
+      "app_views_host_host_monthly_subscription_notebox",
+      "app_views_host_host_monthly_subscription_periodbadge",
+      "app_views_host_host_monthly_subscription_render",
+      "app_views_host_host_monthly_subscription_rendersummary",
+      "app_views_host_host_monthly_subscription_rowamount",
+      "app_views_host_host_monthly_subscription_rowhtml",
+      "app_views_host_host_monthly_subscription_selectedpids",
+      "app_views_host_host_monthly_subscription_syncselcount",
+      "app_views_host_host_monthly_subscription_wirerows"
+    ],
+    "44": [
+      "codeigniter_model",
+      "pos_admin_app_controllers_clubadmin_clubadmin_addentry",
+      "pos_admin_app_controllers_clubadmin_clubadmin_getcourtcost",
+      "pos_admin_app_models_clubmodel",
+      "pos_admin_app_models_clubmodel_clubmodel",
+      "pos_admin_app_models_clubmodel_clubmodel_getopenclosetime",
+      "pos_admin_app_models_courtmodel",
+      "pos_admin_app_models_courtpricemodel",
+      "pos_admin_app_models_courtpricemodel_courtpricemodel",
+      "pos_admin_app_models_courtpricemodel_courtpricemodel_getcostdata",
+      "pos_admin_app_models_entrymodel",
+      "pos_admin_app_models_entrymodel_entrymodel",
+      "pos_admin_app_models_inventorymodel",
+      "pos_admin_app_models_membershipmodel",
+      "pos_admin_app_models_paymentmodel",
+      "pos_admin_app_models_paymentmodel_paymentmodel",
+      "pos_admin_app_models_possizemodel"
+    ],
+    "45": [
+      "pos_admin_public_assets_js_jquery_min_addcombinator",
+      "pos_admin_public_assets_js_jquery_min_assert",
+      "pos_admin_public_assets_js_jquery_min_compile",
+      "pos_admin_public_assets_js_jquery_min_condense",
+      "pos_admin_public_assets_js_jquery_min_createpositionalpseudo",
+      "pos_admin_public_assets_js_jquery_min_elementmatcher",
+      "pos_admin_public_assets_js_jquery_min_find",
+      "pos_admin_public_assets_js_jquery_min_markfunction",
+      "pos_admin_public_assets_js_jquery_min_matcherfromgroupmatchers",
+      "pos_admin_public_assets_js_jquery_min_matcherfromtokens",
+      "pos_admin_public_assets_js_jquery_min_multiplecontexts",
+      "pos_admin_public_assets_js_jquery_min_select",
+      "pos_admin_public_assets_js_jquery_min_setdocument",
+      "pos_admin_public_assets_js_jquery_min_setmatcher",
+      "pos_admin_public_assets_js_jquery_min_testcontext",
+      "pos_admin_public_assets_js_jquery_min_tokenize",
+      "pos_admin_public_assets_js_jquery_min_toselector"
+    ],
+    "46": [
+      "app_helpers_session_functions",
+      "app_helpers_session_functions_canviewproductlisting",
+      "app_helpers_session_functions_checkratelimit",
+      "app_helpers_session_functions_clearratelimit",
+      "app_helpers_session_functions_getcsrftoken",
+      "app_helpers_session_functions_getcurrentuser",
+      "app_helpers_session_functions_getcurrentuserid",
+      "app_helpers_session_functions_getcurrentusertype",
+      "app_helpers_session_functions_getuserinitials",
+      "app_helpers_session_functions_logoutuser",
+      "app_helpers_session_functions_normalizerole",
+      "app_helpers_session_functions_normalizeuserdata",
+      "app_helpers_session_functions_requirelogin",
+      "app_helpers_session_functions_requireusertype",
+      "app_helpers_session_functions_startsession",
+      "app_helpers_session_functions_verifycsrftoken"
+    ],
+    "47": [
+      "tournament_spin_wheel",
+      "tournament_spin_wheel_addteam",
+      "tournament_spin_wheel_colormap",
+      "tournament_spin_wheel_colors",
+      "tournament_spin_wheel_createwheel",
+      "tournament_spin_wheel_itemlabel",
+      "tournament_spin_wheel_itemvalue",
+      "tournament_spin_wheel_rememberitemcolor",
+      "tournament_spin_wheel_removependingwinnerbeforenextspin",
+      "tournament_spin_wheel_resetwheel",
+      "tournament_spin_wheel_schedulependingwinnerremoval",
+      "tournament_spin_wheel_selectedlabels",
+      "tournament_spin_wheel_showresults",
+      "tournament_spin_wheel_spin",
+      "tournament_spin_wheel_teams",
+      "tournament_spin_wheel_winners"
+    ],
+    "48": [
+      "admin_manage_products",
+      "admin_manage_products_closeformmodal",
+      "admin_manage_products_closeviewmodal",
+      "admin_manage_products_getemptyproduct",
+      "admin_manage_products_h",
+      "admin_manage_products_normalize_value",
+      "admin_manage_products_openformmodal",
+      "admin_manage_products_openviewmodal",
+      "admin_manage_products_product_page_url",
+      "admin_manage_products_setfieldvalue",
+      "admin_manage_products_setproductform",
+      "admin_manage_products_setproductview",
+      "admin_manage_products_setviewvalue",
+      "admin_manage_products_updateimagepreview",
+      "admin_manage_products_updateproducttypeoptions"
+    ],
+    "49": [
+      "app_controllers_authcontroller",
+      "app_controllers_homecontroller",
+      "app_models_eventmodel",
+      "app_models_ledger_ledgermodel",
+      "app_models_ledger_ledgermodel_closure_1",
+      "app_models_player_gamejoinmodel",
+      "app_models_player_playerledgermodel",
+      "app_models_player_playerledgermodel_closure_1",
+      "app_models_player_playerledgermodel_closure_2",
+      "app_services_testing_testloggerservice",
+      "app_services_testing_testloggerservice_closure_1",
+      "datetimeimmutable",
+      "datetimezone",
+      "pdoexception",
+      "throwable"
+    ],
+    "50": [
+      "app_controllers_playercontroller_playercontroller_savereview",
+      "app_middleware_authguard_authguard",
+      "app_middleware_authguard_authguard_authenticate",
+      "app_middleware_authguard_authguard_authorize",
+      "app_middleware_authguard_authguard_check",
+      "app_middleware_authguard_authguard_clearremembercookie",
+      "app_middleware_authguard_authguard_denyunauthorized",
+      "app_middleware_authguard_authguard_guest",
+      "app_middleware_authguard_authguard_handle",
+      "app_middleware_authguard_authguard_id",
+      "app_middleware_authguard_authguard_isjsonrequest",
+      "app_middleware_authguard_authguard_redirectbyrole",
+      "app_middleware_authguard_authguard_sendjsonresponse",
+      "app_middleware_authguard_authguard_user",
+      "app_routes_ledger"
+    ],
+    "51": [
+      "admin_herobanner_list",
+      "admin_herobanner_list_closemodal",
+      "admin_herobanner_list_closeviewmodal",
+      "admin_herobanner_list_getemptyherobanner",
+      "admin_herobanner_list_h",
+      "admin_herobanner_list_herobanner_page_url",
+      "admin_herobanner_list_normalize_value",
+      "admin_herobanner_list_openmodal",
+      "admin_herobanner_list_openviewmodal",
+      "admin_herobanner_list_setfieldvalue",
+      "admin_herobanner_list_setherobannermodal",
+      "admin_herobanner_list_setherobannerview",
+      "admin_herobanner_list_setviewvalue",
+      "admin_herobanner_list_updateimagepreview"
+    ],
+    "52": [
+      "admin_manage_adds",
+      "admin_manage_adds_advertisement_page_url",
+      "admin_manage_adds_closemodal",
+      "admin_manage_adds_closeviewmodal",
+      "admin_manage_adds_getemptyadvertisement",
+      "admin_manage_adds_h",
+      "admin_manage_adds_normalize_value",
+      "admin_manage_adds_openmodal",
+      "admin_manage_adds_openviewmodal",
+      "admin_manage_adds_setadvertisementmodal",
+      "admin_manage_adds_setadvertisementview",
+      "admin_manage_adds_setfieldvalue",
+      "admin_manage_adds_setselectvalue",
+      "admin_manage_adds_setviewvalue"
+    ],
+    "53": [
+      "admin_media_list",
+      "admin_media_list_closemodal",
+      "admin_media_list_closeviewmodal",
+      "admin_media_list_getemptymedia",
+      "admin_media_list_h",
+      "admin_media_list_media_page_url",
+      "admin_media_list_normalize_value",
+      "admin_media_list_openmodal",
+      "admin_media_list_openviewmodal",
+      "admin_media_list_setfieldvalue",
+      "admin_media_list_setmediamodal",
+      "admin_media_list_setmediaview",
+      "admin_media_list_setviewvalue",
+      "admin_media_list_updatepreview"
+    ],
+    "54": [
+      "app_controllers_authcontroller_authcontroller",
+      "app_controllers_authcontroller_authcontroller_authenticate",
+      "app_controllers_authcontroller_authcontroller_changepassword",
+      "app_controllers_authcontroller_authcontroller_createsession",
+      "app_controllers_authcontroller_authcontroller_getclientip",
+      "app_controllers_authcontroller_authcontroller_isjsonrequest",
+      "app_controllers_authcontroller_authcontroller_logactivity",
+      "app_controllers_authcontroller_authcontroller_login",
+      "app_controllers_authcontroller_authcontroller_migratelegacypassword",
+      "app_controllers_authcontroller_authcontroller_synchomeclubs",
+      "app_controllers_authcontroller_authcontroller_verifypassword",
+      "app_controllers_authcontroller_php_pdo",
+      "app_routes_auth",
+      "app_routes_auth_get_reset_php"
+    ],
+    "55": [
+      "app_database_migration",
+      "app_database_migration_migration",
+      "app_database_migration_migration_down",
+      "app_database_migration_migration_up",
+      "app_database_migrations_m2026_09_26_000001_init_database",
+      "app_database_migrations_m2026_09_26_000001_init_database_m20260926000001initdatabase",
+      "app_database_migrations_m2026_09_26_000001_init_database_m20260926000001initdatabase_down",
+      "app_database_migrations_m2026_09_26_000001_init_database_m20260926000001initdatabase_up",
+      "app_database_migrations_m2026_09_26_000001_init_database_php_pdo",
+      "app_database_migrations_m2026_10_25_000001_create_remember_tokens_table",
+      "app_database_migrations_m2026_10_25_000001_create_remember_tokens_table_m20261025000001createremembertokenstable",
+      "app_database_migrations_m2026_10_25_000001_create_remember_tokens_table_m20261025000001createremembertokenstable_down",
+      "app_database_migrations_m2026_10_25_000001_create_remember_tokens_table_m20261025000001createremembertokenstable_up",
+      "app_database_migrations_m2026_10_25_000001_create_remember_tokens_table_php_pdo"
+    ],
+    "56": [
+      "app_helpers_calendar_helper",
+      "app_helpers_calendar_helper_getcurrentperiod",
+      "app_helpers_calendar_helper_getdynamiccalendarjspath",
+      "app_helpers_calendar_helper_getdynamiccalendarjsurl",
+      "app_helpers_calendar_helper_getdynamiccalendarjsversion",
+      "app_helpers_calendar_helper_getmonthoptions",
+      "app_helpers_calendar_helper_getyearoptions",
+      "app_helpers_calendar_helper_renderdynamiccalendarassets",
+      "app_helpers_calendar_helper_renderdynamiccalendarinit",
+      "app_helpers_calendar_helper_renderdynamiccalendarscript",
+      "app_helpers_calendar_helper_rendermonthoptions",
+      "app_helpers_calendar_helper_renderscheduleperiodinit",
+      "app_helpers_calendar_helper_renderyearoptions",
+      "app_services_ledger_ledgerpresenter_ledgerpresenter_rendermodalfilterbar"
+    ],
+    "57": [
+      "app_helpers_helpers",
+      "app_helpers_helpers_debugprint",
+      "app_helpers_helpers_e",
+      "app_helpers_helpers_firetoast",
+      "app_helpers_helpers_formatcurrency",
+      "app_helpers_helpers_formatdate",
+      "app_helpers_helpers_formatshortname",
+      "app_helpers_helpers_formattime",
+      "app_helpers_helpers_generatebookingno",
+      "app_helpers_helpers_getcurrentpage",
+      "app_helpers_helpers_renderflashtoast",
+      "app_helpers_helpers_rendertoast",
+      "app_helpers_helpers_setflashtoast",
+      "app_helpers_helpers_uploadfile"
+    ],
+    "58": [
+      "app_helpers_validators",
+      "app_helpers_validators_php_self",
+      "app_helpers_validators_validator",
+      "app_helpers_validators_validator_construct",
+      "app_helpers_validators_validator_email",
+      "app_helpers_validators_validator_firsterror",
+      "app_helpers_validators_validator_geterrors",
+      "app_helpers_validators_validator_getsanitized",
+      "app_helpers_validators_validator_maxlength",
+      "app_helpers_validators_validator_minlength",
+      "app_helpers_validators_validator_numeric",
+      "app_helpers_validators_validator_passes",
+      "app_helpers_validators_validator_phone",
+      "app_helpers_validators_validator_required"
+    ],
+    "59": [
+      "assets_js_dynamic_event_calendar",
+      "assets_js_dynamic_event_calendar_autoinit",
+      "assets_js_dynamic_event_calendar_getcurrentperiod",
+      "assets_js_dynamic_event_calendar_initdynamiceventcalendar",
+      "assets_js_dynamic_event_calendar_initdynamiceventcalendar_ondatechange",
+      "assets_js_dynamic_event_calendar_initdynamiceventcalendar_onfromtimechange",
+      "assets_js_dynamic_event_calendar_initdynamiceventcalendar_syncbounds",
+      "assets_js_dynamic_event_calendar_initdynamiceventcalendar_validate",
+      "assets_js_dynamic_event_calendar_initscheduleperiod",
+      "assets_js_dynamic_event_calendar_localdatestring",
+      "assets_js_dynamic_event_calendar_nextweekday",
+      "assets_js_dynamic_event_calendar_pad",
+      "assets_js_dynamic_event_calendar_parsedatetime",
+      "assets_js_dynamic_event_calendar_validatefreezedatetime"
+    ],
+    "60": [
+      "pos_admin_app_views_admin_common_footer",
+      "pos_admin_app_views_admin_common_footer_bookingdatatable",
+      "pos_admin_app_views_admin_common_footer_branddatatable",
+      "pos_admin_app_views_admin_common_footer_categorydatatable",
+      "pos_admin_app_views_admin_common_footer_changestatus",
+      "pos_admin_app_views_admin_common_footer_courtdatatable",
+      "pos_admin_app_views_admin_common_footer_deleteitem",
+      "pos_admin_app_views_admin_common_footer_inventorydatatable",
+      "pos_admin_app_views_admin_common_footer_openmodal",
+      "pos_admin_app_views_admin_common_footer_paymentdatatable",
+      "pos_admin_app_views_admin_common_footer_sizedatatable",
+      "pos_admin_app_views_admin_common_footer_stringingdatatable",
+      "pos_admin_app_views_admin_common_footer_validateamountinput",
+      "pos_admin_app_views_admin_common_footer_validatephoneinput"
+    ],
+    "61": [
+      "api_audit_bootstrap",
+      "api_audit_bootstrap_audit_behaviour",
+      "api_audit_bootstrap_audit_behaviour_list",
+      "api_audit_bootstrap_audit_int",
+      "api_audit_bootstrap_audit_range",
+      "api_audit_bootstrap_json_out",
+      "api_audit_metrics",
+      "api_audit_metrics_audit_metrics_sql",
+      "api_audit_metrics_audit_shape_row",
+      "api_audit_user_detail",
+      "api_audit_user_detail_audit_behaviour_reasons",
+      "api_audit_user_detail_audit_user_trend",
+      "api_audit_user_detail_php_pdo"
+    ],
+    "62": [
+      "app_database_migrationrunner_migrationrunner",
+      "app_database_migrationrunner_migrationrunner_construct",
+      "app_database_migrationrunner_migrationrunner_createmigration",
+      "app_database_migrationrunner_migrationrunner_ensuremigrationstableexists",
+      "app_database_migrationrunner_migrationrunner_getallmigrationfiles",
+      "app_database_migrationrunner_migrationrunner_getclassnamefromfilename",
+      "app_database_migrationrunner_migrationrunner_getexecutedmigrations",
+      "app_database_migrationrunner_migrationrunner_getnextbatchnumber",
+      "app_database_migrationrunner_migrationrunner_migrate",
+      "app_database_migrationrunner_migrationrunner_rollback",
+      "app_database_migrationrunner_migrationrunner_status",
+      "app_database_migrationrunner_php_pdo",
+      "app_migrate"
+    ],
+    "63": [
+      "tournament_23_08_26_court_dashboard",
+      "tournament_23_08_26_court_dashboard_closure_1",
+      "tournament_23_08_26_court_dashboard_courtdashboardbuildstagestandings",
+      "tournament_23_08_26_court_dashboard_courtdashboarddate",
+      "tournament_23_08_26_court_dashboard_courtdashboardplayer",
+      "tournament_23_08_26_court_dashboard_courtdashboardplayers",
+      "tournament_23_08_26_court_dashboard_courtdashboardshorttext",
+      "tournament_23_08_26_court_dashboard_courtdashboardstageemptynote",
+      "tournament_23_08_26_court_dashboard_courtdashboardstagerow",
+      "tournament_23_08_26_court_dashboard_courtdashboardteamlabel",
+      "tournament_23_08_26_court_dashboard_courtdashboardtime",
+      "tournament_23_08_26_court_dashboard_courtdashboardvalue",
+      "tournament_23_08_26_court_dashboard_courtdashboardwinner"
+    ],
+    "64": [
+      "tournament_23_08_26_spin_wheel",
+      "tournament_23_08_26_spin_wheel_addteam",
+      "tournament_23_08_26_spin_wheel_colormap",
+      "tournament_23_08_26_spin_wheel_colors",
+      "tournament_23_08_26_spin_wheel_createwheel",
+      "tournament_23_08_26_spin_wheel_rememberitemcolor",
+      "tournament_23_08_26_spin_wheel_removependingwinnerbeforenextspin",
+      "tournament_23_08_26_spin_wheel_resetwheel",
+      "tournament_23_08_26_spin_wheel_schedulependingwinnerremoval",
+      "tournament_23_08_26_spin_wheel_showresults",
+      "tournament_23_08_26_spin_wheel_spin",
+      "tournament_23_08_26_spin_wheel_teams",
+      "tournament_23_08_26_spin_wheel_winners"
+    ],
+    "65": [
+      "tournament_court_dashboard",
+      "tournament_court_dashboard_closure_1",
+      "tournament_court_dashboard_courtdashboardbuildstagestandings",
+      "tournament_court_dashboard_courtdashboarddate",
+      "tournament_court_dashboard_courtdashboardplayer",
+      "tournament_court_dashboard_courtdashboardplayers",
+      "tournament_court_dashboard_courtdashboardshorttext",
+      "tournament_court_dashboard_courtdashboardstageemptynote",
+      "tournament_court_dashboard_courtdashboardstagerow",
+      "tournament_court_dashboard_courtdashboardteamlabel",
+      "tournament_court_dashboard_courtdashboardtime",
+      "tournament_court_dashboard_courtdashboardvalue",
+      "tournament_court_dashboard_courtdashboardwinner"
+    ],
+    "66": [
+      "admin_aboutus_review",
+      "admin_aboutus_review_adddots",
+      "admin_aboutus_review_buildpagebutton",
+      "admin_aboutus_review_closemodal",
+      "admin_aboutus_review_formatdate",
+      "admin_aboutus_review_getfilteredrows",
+      "admin_aboutus_review_getreview",
+      "admin_aboutus_review_openmodal",
+      "admin_aboutus_review_ratingstars",
+      "admin_aboutus_review_renderpagination",
+      "admin_aboutus_review_renderreviewstable",
+      "admin_aboutus_review_settext"
+    ],
+    "67": [
+      "admin_manage_order",
+      "admin_manage_order_buildpagebutton",
+      "admin_manage_order_calcmanualordertotal",
+      "admin_manage_order_closemanualordermodal",
+      "admin_manage_order_generatebookingno",
+      "admin_manage_order_getfilteredrows",
+      "admin_manage_order_openmanualordermodal",
+      "admin_manage_order_renderorderstable",
+      "admin_manage_order_renderpagination",
+      "admin_manage_order_updateitem",
+      "admin_manage_order_viewcustomer",
+      "admin_manage_order_viewfulldetails"
+    ],
+    "68": [
+      "admin_manage_user",
+      "admin_manage_user_adddots",
+      "admin_manage_user_buildpagebutton",
+      "admin_manage_user_closemodal",
+      "admin_manage_user_detailrow",
+      "admin_manage_user_getfilteredrows",
+      "admin_manage_user_getuser",
+      "admin_manage_user_openmodal",
+      "admin_manage_user_renderpagination",
+      "admin_manage_user_renderuserstable",
+      "admin_manage_user_setradio",
+      "admin_manage_user_setselectvalue"
+    ],
+    "69": [
+      "assets_js_manual_test_logger",
+      "assets_js_manual_test_logger_cleanstring",
+      "assets_js_manual_test_logger_emitlog",
+      "assets_js_manual_test_logger_generatecorrelationid",
+      "assets_js_manual_test_logger_getelementidentifier",
+      "assets_js_manual_test_logger_getendpointurl",
+      "assets_js_manual_test_logger_getsessionid",
+      "assets_js_manual_test_logger_isloggeractive",
+      "assets_js_manual_test_logger_nextsequence",
+      "assets_js_manual_test_logger_origxhr_open",
+      "assets_js_manual_test_logger_origxhr_send",
+      "assets_js_manual_test_logger_sanitizeurl"
+    ],
+    "70": [
+      "codeigniter_config_filters",
+      "codeigniter_filters_cors",
+      "codeigniter_filters_csrf",
+      "codeigniter_filters_debugtoolbar",
+      "codeigniter_filters_forcehttps",
+      "codeigniter_filters_honeypot",
+      "codeigniter_filters_invalidchars",
+      "codeigniter_filters_pagecache",
+      "codeigniter_filters_performancemetrics",
+      "codeigniter_filters_secureheaders",
+      "pos_admin_app_config_filters",
+      "pos_admin_app_config_filters_filters"
+    ],
+    "71": [
+      "admin_contact_list",
+      "admin_contact_list_adddots",
+      "admin_contact_list_buildpagebutton",
+      "admin_contact_list_closemodal",
+      "admin_contact_list_deletecontact",
+      "admin_contact_list_getfilteredrows",
+      "admin_contact_list_opencontactmodal",
+      "admin_contact_list_openmodal",
+      "admin_contact_list_rendercontactstable",
+      "admin_contact_list_renderpagination",
+      "admin_contact_list_settext"
+    ],
+    "72": [
+      "app_script_activity_tracker",
+      "app_script_activity_tracker_cleantext",
+      "app_script_activity_tracker_extractelementlabel",
+      "app_script_activity_tracker_findparenttabname",
+      "app_script_activity_tracker_getapiendpoint",
+      "app_script_activity_tracker_getqueryparam",
+      "app_script_activity_tracker_handleledgerclick",
+      "app_script_activity_tracker_handlepaymentbuttonclick",
+      "app_script_activity_tracker_handlestoreproductclick",
+      "app_script_activity_tracker_handletabclick",
+      "app_script_activity_tracker_sendactivitylog"
+    ],
+    "73": [
+      "app_views_partials_player_hub_review",
+      "app_views_partials_player_hub_review_addreviewslidedirectly",
+      "app_views_partials_player_hub_review_ensuremodalinbody",
+      "app_views_partials_player_hub_review_escapehtml",
+      "app_views_partials_player_hub_review_getmodalinstance",
+      "app_views_partials_player_hub_review_openmodaldirectly",
+      "app_views_partials_player_hub_review_paintstars",
+      "app_views_partials_player_hub_review_resetmodalfornew",
+      "app_views_partials_player_hub_review_setmodalrating",
+      "app_views_partials_player_hub_review_showreviewtoast",
+      "app_views_partials_player_hub_review_updatereviewslidedirectly"
+    ],
+    "74": [
+      "pos_admin_public_assets_js_jquery_min_buildfragment",
+      "pos_admin_public_assets_js_jquery_min_buildparams",
+      "pos_admin_public_assets_js_jquery_min_disablescript",
+      "pos_admin_public_assets_js_jquery_min_domeval",
+      "pos_admin_public_assets_js_jquery_min_dommanip",
+      "pos_admin_public_assets_js_jquery_min_getall",
+      "pos_admin_public_assets_js_jquery_min_isarraylike",
+      "pos_admin_public_assets_js_jquery_min_remove",
+      "pos_admin_public_assets_js_jquery_min_restorescript",
+      "pos_admin_public_assets_js_jquery_min_setglobaleval",
+      "pos_admin_public_assets_js_jquery_min_totype"
+    ],
+    "75": [
+      "tournament_23_08_26_api_match_score",
+      "tournament_23_08_26_api_match_score_applyconfiguredcourtstostagematches",
+      "tournament_23_08_26_api_match_score_closure_1",
+      "tournament_23_08_26_api_match_score_closure_2",
+      "tournament_23_08_26_api_match_score_createstagematches",
+      "tournament_23_08_26_api_match_score_fetchmatch",
+      "tournament_23_08_26_api_match_score_jsonresponse",
+      "tournament_23_08_26_api_match_score_maybecreatenextstage",
+      "tournament_23_08_26_api_match_score_php_pdo",
+      "tournament_23_08_26_api_match_score_recalculategroupstandings",
+      "tournament_23_08_26_api_match_score_stagematchcount"
+    ],
+    "76": [
+      "tournament_api_match_score",
+      "tournament_api_match_score_applyconfiguredcourtstostagematches",
+      "tournament_api_match_score_closure_1",
+      "tournament_api_match_score_closure_2",
+      "tournament_api_match_score_createstagematches",
+      "tournament_api_match_score_fetchmatch",
+      "tournament_api_match_score_jsonresponse",
+      "tournament_api_match_score_maybecreatenextstage",
+      "tournament_api_match_score_php_pdo",
+      "tournament_api_match_score_recalculategroupstandings",
+      "tournament_api_match_score_stagematchcount"
+    ],
+    "77": [
+      "api_host_subscription",
+      "api_host_subscription_closure_1",
+      "api_host_subscription_closure_2",
+      "api_host_subscription_closure_3",
+      "api_host_subscription_hs_eligibility",
+      "api_host_subscription_hs_items",
+      "api_host_subscription_hs_locate",
+      "api_host_subscription_hs_out",
+      "api_host_subscription_hs_period",
+      "api_host_subscription_php_pdo"
+    ],
+    "78": [
+      "api_security",
+      "api_security_apisecuritydeny",
+      "api_security_closure_1",
+      "api_security_php_mysqli",
+      "api_security_requireapipost",
+      "api_security_requireapiuser",
+      "api_security_requireownedevent",
+      "app_middleware_csrfguard",
+      "app_middleware_csrfguard_csrfguard",
+      "app_middleware_csrfguard_csrfguard_handle"
+    ],
+    "79": [
+      "app_helpers_loginthrottle",
+      "app_helpers_loginthrottle_loginthrottle",
+      "app_helpers_loginthrottle_loginthrottle_attempts",
+      "app_helpers_loginthrottle_loginthrottle_check",
+      "app_helpers_loginthrottle_loginthrottle_clear",
+      "app_helpers_loginthrottle_loginthrottle_consume",
+      "app_helpers_loginthrottle_loginthrottle_defaultdirectory",
+      "app_helpers_loginthrottle_loginthrottle_increment",
+      "app_helpers_loginthrottle_loginthrottle_remaining",
+      "app_helpers_loginthrottle_loginthrottle_reset"
+    ],
+    "80": [
+      "app_models_playerratingmodel",
+      "app_models_playerratingmodel_php_pdo",
+      "app_models_playerratingmodel_playerratingmodel",
+      "app_models_playerratingmodel_playerratingmodel_buildinnerwhere",
+      "app_models_playerratingmodel_playerratingmodel_buildouterwhere",
+      "app_models_playerratingmodel_playerratingmodel_findbyraterandplayer",
+      "app_models_playerratingmodel_playerratingmodel_getplayerratings",
+      "app_models_playerratingmodel_playerratingmodel_getplayerstats",
+      "app_models_playerratingmodel_playerratingmodel_getplayerstatssql",
+      "app_models_playerratingmodel_playerratingmodel_saverating"
+    ],
+    "81": [
+      "app_tests_security_regression_securityfakepdo",
+      "app_tests_security_regression_securityfakepdo_construct",
+      "app_tests_security_regression_securityfakepdo_prepare",
+      "app_tests_security_regression_securityfakestatement",
+      "app_tests_security_regression_securityfakestatement_construct",
+      "app_tests_security_regression_securityfakestatement_execute",
+      "app_tests_security_regression_securityfakestatement_fetch",
+      "app_tests_security_regression_securityfakestatement_fetchall",
+      "app_tests_security_regression_securityfakestatement_rowcount",
+      "pdostatement"
+    ],
+    "82": [
+      "api_audit_event",
+      "api_audit_event_closure_1",
+      "api_audit_scope",
+      "api_audit_scope_audit_game_in_scope",
+      "api_audit_scope_audit_game_name",
+      "api_audit_scope_audit_type_label",
+      "api_audit_scope_audit_user_in_scope",
+      "api_audit_scope_closure_1",
+      "api_audit_scope_php_pdo"
+    ],
+    "83": [
+      "app_routes_store",
+      "app_routes_store_get_accessories_shop_php",
+      "app_routes_store_get_addtocart_php",
+      "app_routes_store_get_check_out_php",
+      "app_routes_store_get_my_order_php",
+      "app_routes_store_get_product_details_page_php",
+      "app_routes_store_get_product_listing_php",
+      "app_routes_store_post_addtocart_php",
+      "app_routes_store_post_check_out_php"
+    ],
+    "84": [
+      "app_script_player",
+      "app_script_player_createdayelement",
+      "app_script_player_escapeledgerhtml",
+      "app_script_player_formatledgercurrency",
+      "app_script_player_handledayclick",
+      "app_script_player_loadplayerdetailedledger",
+      "app_script_player_rendercalendar",
+      "app_script_player_renderdetailedledgerhtml",
+      "app_script_player_slideimage"
+    ],
+    "85": [
+      "codeigniter_cache_cacheinterface",
+      "codeigniter_cache_handlers_dummyhandler",
+      "codeigniter_cache_handlers_filehandler",
+      "codeigniter_cache_handlers_memcachedhandler",
+      "codeigniter_cache_handlers_predishandler",
+      "codeigniter_cache_handlers_redishandler",
+      "codeigniter_cache_handlers_wincachehandler",
+      "pos_admin_app_config_cache",
+      "pos_admin_app_config_cache_cache"
+    ],
+    "86": [
+      "codeigniter_debug_toolbar_collectors_database",
+      "codeigniter_debug_toolbar_collectors_events",
+      "codeigniter_debug_toolbar_collectors_files",
+      "codeigniter_debug_toolbar_collectors_logs",
+      "codeigniter_debug_toolbar_collectors_routes",
+      "codeigniter_debug_toolbar_collectors_timers",
+      "codeigniter_debug_toolbar_collectors_views",
+      "pos_admin_app_config_toolbar",
+      "pos_admin_app_config_toolbar_toolbar"
+    ],
+    "87": [
+      "pos_admin_app_views_admin_club_owner_dashboard",
+      "pos_admin_app_views_admin_club_owner_dashboard_changebookingstatus",
+      "pos_admin_app_views_admin_club_owner_dashboard_deleteenrtyset",
+      "pos_admin_app_views_admin_club_owner_dashboard_editbooking",
+      "pos_admin_app_views_admin_club_owner_dashboard_openmodal",
+      "pos_admin_app_views_admin_club_owner_dashboard_paymentmodal",
+      "pos_admin_app_views_admin_club_owner_dashboard_searchbooking",
+      "pos_admin_app_views_admin_club_owner_dashboard_selectentrytype",
+      "pos_admin_app_views_admin_club_owner_dashboard_updatetotalcost"
+    ],
+    "88": [
+      "pos_admin_composer_require_dev",
+      "pos_admin_composer_require_dev_codeigniter_coding_standard",
+      "pos_admin_composer_require_dev_fakerphp_faker",
+      "pos_admin_composer_require_dev_friendsofphp_php_cs_fixer",
+      "pos_admin_composer_require_dev_kint_php_kint",
+      "pos_admin_composer_require_dev_mikey179_vfsstream",
+      "pos_admin_composer_require_dev_nexusphp_cs_config",
+      "pos_admin_composer_require_dev_phpunit_phpunit",
+      "pos_admin_composer_require_dev_predis_predis"
+    ],
+    "89": [
+      "pos_admin_public_assets_js_jquery_min_animation",
+      "pos_admin_public_assets_js_jquery_min_camelcase",
+      "pos_admin_public_assets_js_jquery_min_createfxnow",
+      "pos_admin_public_assets_js_jquery_min_createtween",
+      "pos_admin_public_assets_js_jquery_min_defaultprefilter",
+      "pos_admin_public_assets_js_jquery_min_fcamelcase",
+      "pos_admin_public_assets_js_jquery_min_getdefaultdisplay",
+      "pos_admin_public_assets_js_jquery_min_propfilter",
+      "pos_admin_public_assets_js_jquery_min_showhide"
+    ],
+    "90": [
+      "tournament_10_07_2026_api_match_score",
+      "tournament_10_07_2026_api_match_score_closure_1",
+      "tournament_10_07_2026_api_match_score_createstagematches",
+      "tournament_10_07_2026_api_match_score_fetchmatch",
+      "tournament_10_07_2026_api_match_score_jsonresponse",
+      "tournament_10_07_2026_api_match_score_maybecreatenextstage",
+      "tournament_10_07_2026_api_match_score_php_pdo",
+      "tournament_10_07_2026_api_match_score_recalculategroupstandings",
+      "tournament_10_07_2026_api_match_score_stagematchcount"
+    ],
+    "91": [
+      "tournament_9_8_2026_api_match_score",
+      "tournament_9_8_2026_api_match_score_closure_1",
+      "tournament_9_8_2026_api_match_score_createstagematches",
+      "tournament_9_8_2026_api_match_score_fetchmatch",
+      "tournament_9_8_2026_api_match_score_jsonresponse",
+      "tournament_9_8_2026_api_match_score_maybecreatenextstage",
+      "tournament_9_8_2026_api_match_score_php_pdo",
+      "tournament_9_8_2026_api_match_score_recalculategroupstandings",
+      "tournament_9_8_2026_api_match_score_stagematchcount"
+    ],
+    "92": [
+      "app_helpers_mail_helper",
+      "app_helpers_mail_helper_sendemail",
+      "app_helpers_mailer",
+      "app_helpers_mailer_mailer",
+      "app_helpers_mailer_mailer_ensureloaded",
+      "app_helpers_mailer_mailer_send",
+      "phpmailer_phpmailer_exception",
+      "phpmailer_phpmailer_phpmailer"
+    ],
+    "93": [
+      "app_helpers_webaccess",
+      "app_helpers_webaccess_webaccess",
+      "app_helpers_webaccess_webaccess_blocked",
+      "app_tests_security_regression",
+      "app_tests_security_regression_check",
+      "app_tests_security_regression_closure_1",
+      "app_tests_security_regression_closure_2",
+      "app_tests_security_regression_env"
+    ],
+    "94": [
+      "pos_admin_composer",
+      "pos_admin_composer_description",
+      "pos_admin_composer_homepage",
+      "pos_admin_composer_license",
+      "pos_admin_composer_name",
+      "pos_admin_composer_scripts",
+      "pos_admin_composer_scripts_test",
+      "pos_admin_composer_type"
+    ],
+    "95": [
+      "tournament_10_07_2026_court_dashboard",
+      "tournament_10_07_2026_court_dashboard_courtdashboarddate",
+      "tournament_10_07_2026_court_dashboard_courtdashboardplayers",
+      "tournament_10_07_2026_court_dashboard_courtdashboardshorttext",
+      "tournament_10_07_2026_court_dashboard_courtdashboardteamlabel",
+      "tournament_10_07_2026_court_dashboard_courtdashboardtime",
+      "tournament_10_07_2026_court_dashboard_courtdashboardvalue",
+      "tournament_10_07_2026_court_dashboard_courtdashboardwinner"
+    ],
+    "96": [
+      "tournament_10_8_26court_dashboard",
+      "tournament_10_8_26court_dashboard_courtdashboarddate",
+      "tournament_10_8_26court_dashboard_courtdashboardplayers",
+      "tournament_10_8_26court_dashboard_courtdashboardshorttext",
+      "tournament_10_8_26court_dashboard_courtdashboardteamlabel",
+      "tournament_10_8_26court_dashboard_courtdashboardtime",
+      "tournament_10_8_26court_dashboard_courtdashboardvalue",
+      "tournament_10_8_26court_dashboard_courtdashboardwinner"
+    ],
+    "97": [
+      "tournament_11_07_2026_court_dashboard",
+      "tournament_11_07_2026_court_dashboard_courtdashboarddate",
+      "tournament_11_07_2026_court_dashboard_courtdashboardplayers",
+      "tournament_11_07_2026_court_dashboard_courtdashboardshorttext",
+      "tournament_11_07_2026_court_dashboard_courtdashboardteamlabel",
+      "tournament_11_07_2026_court_dashboard_courtdashboardtime",
+      "tournament_11_07_2026_court_dashboard_courtdashboardvalue",
+      "tournament_11_07_2026_court_dashboard_courtdashboardwinner"
+    ],
+    "98": [
+      "tournament_court_dashboard_9_8_26",
+      "tournament_court_dashboard_9_8_26_courtdashboarddate",
+      "tournament_court_dashboard_9_8_26_courtdashboardplayers",
+      "tournament_court_dashboard_9_8_26_courtdashboardshorttext",
+      "tournament_court_dashboard_9_8_26_courtdashboardteamlabel",
+      "tournament_court_dashboard_9_8_26_courtdashboardtime",
+      "tournament_court_dashboard_9_8_26_courtdashboardvalue",
+      "tournament_court_dashboard_9_8_26_courtdashboardwinner"
+    ],
+    "99": [
+      "app_helpers_httplogger",
+      "app_helpers_httplogger_httplogger",
+      "app_helpers_httplogger_httplogger_capturerequestdata",
+      "app_helpers_httplogger_httplogger_formatdata",
+      "app_helpers_httplogger_httplogger_formatresponsedata",
+      "app_helpers_httplogger_httplogger_log",
+      "app_helpers_httplogger_httplogger_sanitize"
+    ],
+    "100": [
+      "app_script_security_transport",
+      "app_script_security_transport_local",
+      "app_script_security_transport_mutates",
+      "app_script_security_transport_protectform",
+      "app_script_security_transport_token",
+      "app_script_security_transport_xmlhttprequest_open",
+      "app_script_security_transport_xmlhttprequest_send"
+    ],
+    "101": [
+      "assets_js_casa_dropdown",
+      "assets_js_casa_dropdown_bindcustom",
+      "assets_js_casa_dropdown_closealldropdowns",
+      "assets_js_casa_dropdown_ensurenoscrollbarstyle",
+      "assets_js_casa_dropdown_initall",
+      "assets_js_casa_dropdown_initdropdown",
+      "assets_js_casa_dropdown_initdropdown_renderoptions"
+    ],
+    "102": [
+      "codeigniter_events_events",
+      "codeigniter_exceptions_frameworkexception",
+      "codeigniter_hotreloader_hotreloader",
+      "pos_admin_app_config_events",
+      "pos_admin_app_config_events_closure_1",
+      "pos_admin_app_config_events_closure_2",
+      "pos_admin_app_config_events_closure_3"
+    ],
+    "103": [
+      "pos_admin_app_config_paths",
+      "pos_admin_app_config_paths_paths",
+      "pos_admin_preload",
+      "pos_admin_preload_preload",
+      "pos_admin_preload_preload_construct",
+      "pos_admin_preload_preload_load",
+      "pos_admin_preload_preload_loadautoloader"
+    ],
+    "104": [
+      "pos_admin_public_assets_js_jquery_min_boxmodeladjustment",
+      "pos_admin_public_assets_js_jquery_min_createbuttonpseudo",
+      "pos_admin_public_assets_js_jquery_min_createinputpseudo",
+      "pos_admin_public_assets_js_jquery_min_curcss",
+      "pos_admin_public_assets_js_jquery_min_getwidthorheight",
+      "pos_admin_public_assets_js_jquery_min_manipulationtarget",
+      "pos_admin_public_assets_js_jquery_min_nodename"
+    ],
+    "105": [
+      "admin_add_event",
+      "admin_add_event_cfg",
+      "admin_add_event_previewimage",
+      "admin_add_event_removeimage",
+      "admin_add_event_showflash",
+      "admin_add_event_updatedynamictemplates"
+    ],
+    "106": [
+      "admin_edit_tournament",
+      "admin_edit_tournament_cfg",
+      "admin_edit_tournament_previewimage",
+      "admin_edit_tournament_removeimage",
+      "admin_edit_tournament_showflash",
+      "admin_edit_tournament_updatedynamictemplates"
+    ],
+    "107": [
+      "app_core_token",
+      "app_core_token_token",
+      "app_core_token_token_generate",
+      "app_core_token_token_secret",
+      "app_core_token_token_verify",
+      "app_middleware_authguard"
+    ],
+    "108": [
+      "codeigniter_debug_exceptionhandler",
+      "codeigniter_debug_exceptionhandlerinterface",
+      "pos_admin_app_config_exceptions",
+      "pos_admin_app_config_exceptions_exceptions",
+      "pos_admin_app_config_exceptions_exceptions_handler",
+      "psr_log_loglevel"
+    ],
+    "109": [
+      "codeigniter_validation_strictrules_creditcardrules",
+      "codeigniter_validation_strictrules_filerules",
+      "codeigniter_validation_strictrules_formatrules",
+      "codeigniter_validation_strictrules_rules",
+      "pos_admin_app_config_validation",
+      "pos_admin_app_config_validation_validation"
+    ],
+    "110": [
+      "pos_admin_app_views_admin_club_owner_add_new_booking",
+      "pos_admin_app_views_admin_club_owner_add_new_booking_calculatecourtcost",
+      "pos_admin_app_views_admin_club_owner_add_new_booking_getavailablecourt",
+      "pos_admin_app_views_admin_club_owner_add_new_booking_getcourtcost",
+      "pos_admin_app_views_admin_club_owner_add_new_booking_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_add_new_booking_selectcourt"
+    ],
+    "111": [
+      "pos_admin_app_views_admin_club_owner_edit_booking",
+      "pos_admin_app_views_admin_club_owner_edit_booking_calculatecourtcost",
+      "pos_admin_app_views_admin_club_owner_edit_booking_getavailablecourt",
+      "pos_admin_app_views_admin_club_owner_edit_booking_getcourtcost",
+      "pos_admin_app_views_admin_club_owner_edit_booking_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_edit_booking_selectcourt"
+    ],
+    "112": [
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking",
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking_cancelbookingset",
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking_deletebookingset",
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking_getavailablecourt",
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_edit_pre_booking_selectcourt"
+    ],
+    "113": [
+      "pos_admin_app_views_errors_html_debug",
+      "pos_admin_app_views_errors_html_debug_getfirstchildwithtagname",
+      "pos_admin_app_views_errors_html_debug_gethash",
+      "pos_admin_app_views_errors_html_debug_init",
+      "pos_admin_app_views_errors_html_debug_showtab",
+      "pos_admin_app_views_errors_html_debug_toggle"
+    ],
+    "114": [
+      "pos_admin_composer_require",
+      "pos_admin_composer_require_ext_intl",
+      "pos_admin_composer_require_ext_mbstring",
+      "pos_admin_composer_require_laminas_laminas_escaper",
+      "pos_admin_composer_require_php",
+      "pos_admin_composer_require_psr_log"
+    ],
+    "115": [
+      "admin_assets_javascripts_forms_examples_advanced_form",
+      "admin_assets_javascripts_forms_examples_advanced_form_multiselect_deselectall",
+      "admin_assets_javascripts_forms_examples_advanced_form_multiselect_selectall",
+      "admin_assets_javascripts_forms_examples_advanced_form_multiselect_selected",
+      "admin_assets_javascripts_forms_examples_advanced_form_multiselect_toggle"
+    ],
+    "116": [
+      "admin_assets_javascripts_theme",
+      "admin_assets_javascripts_theme_buildsidebarnav",
+      "admin_assets_javascripts_theme_collapse",
+      "admin_assets_javascripts_theme_ensurevisible",
+      "admin_assets_javascripts_theme_expand"
+    ],
+    "117": [
+      "admin_enrolled_tournaments",
+      "admin_enrolled_tournaments_copyfulltemplate",
+      "admin_enrolled_tournaments_deleteteam",
+      "admin_enrolled_tournaments_processpayment",
+      "admin_enrolled_tournaments_syncuser"
+    ],
+    "118": [
+      "app_config_db",
+      "app_config_db_getdbconnection",
+      "app_config_db_getpdoconnection",
+      "app_config_db_php_mysqli",
+      "app_config_db_php_pdo"
+    ],
+    "119": [
+      "app_entities_bridie",
+      "app_entities_bridie_bridie",
+      "app_entities_bridie_bridie_construct",
+      "app_entities_bridie_bridie_fromarray",
+      "app_entities_bridie_php_self"
+    ],
+    "120": [
+      "app_entities_club",
+      "app_entities_club_club",
+      "app_entities_club_club_construct",
+      "app_entities_club_club_fromarray",
+      "app_entities_club_php_self"
+    ],
+    "121": [
+      "app_entities_description",
+      "app_entities_description_description",
+      "app_entities_description_description_construct",
+      "app_entities_description_description_fromarray",
+      "app_entities_description_php_self"
+    ],
+    "122": [
+      "app_entities_eventcategory",
+      "app_entities_eventcategory_eventcategory",
+      "app_entities_eventcategory_eventcategory_construct",
+      "app_entities_eventcategory_eventcategory_fromarray",
+      "app_entities_eventcategory_php_self"
+    ],
+    "123": [
+      "app_entities_user",
+      "app_entities_user_php_self",
+      "app_entities_user_user",
+      "app_entities_user_user_construct",
+      "app_entities_user_user_fromarray"
+    ],
+    "124": [
+      "app_entities_userprofile",
+      "app_entities_userprofile_php_self",
+      "app_entities_userprofile_userprofile",
+      "app_entities_userprofile_userprofile_construct",
+      "app_entities_userprofile_userprofile_fromarray"
+    ],
+    "125": [
+      "app_entities_venue",
+      "app_entities_venue_php_self",
+      "app_entities_venue_venue",
+      "app_entities_venue_venue_construct",
+      "app_entities_venue_venue_fromarray"
+    ],
+    "126": [
+      "app_script_tournament",
+      "app_script_tournament_calculateaccessoriescost",
+      "app_script_tournament_calculatehoursandfacilitycost",
+      "app_script_tournament_calculatetotal",
+      "app_script_tournament_positioncalendar"
+    ],
+    "127": [
+      "app_views_layouts_footer_manual_test_panel",
+      "app_views_layouts_footer_manual_test_panel_formattime",
+      "app_views_layouts_footer_manual_test_panel_refreshlogs",
+      "app_views_layouts_footer_manual_test_panel_renderlogitems",
+      "app_views_layouts_footer_manual_test_panel_syncui"
+    ],
+    "128": [
+      "init",
+      "init_closure_1",
+      "init_closure_2",
+      "init_debug_exception_handler_registered",
+      "init_php_throwable"
+    ],
+    "129": [
+      "kint_parser_constructableplugininterface",
+      "kint_renderer_rich_tabplugininterface",
+      "kint_renderer_rich_valueplugininterface",
+      "pos_admin_app_config_kint",
+      "pos_admin_app_config_kint_kint"
+    ],
+    "130": [
+      "pos_admin_app_views_admin_club_owner_add_new_stringing",
+      "pos_admin_app_views_admin_club_owner_add_new_stringing_calculatetotalcost",
+      "pos_admin_app_views_admin_club_owner_add_new_stringing_getinventorydetails",
+      "pos_admin_app_views_admin_club_owner_add_new_stringing_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_add_new_stringing_getmembershipinfobyphone"
+    ],
+    "131": [
+      "pos_admin_app_views_admin_club_owner_edit_stringing",
+      "pos_admin_app_views_admin_club_owner_edit_stringing_calculatetotalcost",
+      "pos_admin_app_views_admin_club_owner_edit_stringing_getinventorydetails",
+      "pos_admin_app_views_admin_club_owner_edit_stringing_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_edit_stringing_getmembershipinfobyphone"
+    ],
+    "132": [
+      "pos_admin_app_views_admin_club_owner_pre_booking",
+      "pos_admin_app_views_admin_club_owner_pre_booking_deletebookingset",
+      "pos_admin_app_views_admin_club_owner_pre_booking_getavailablecourt",
+      "pos_admin_app_views_admin_club_owner_pre_booking_getmembershipinfo",
+      "pos_admin_app_views_admin_club_owner_pre_booking_selectcourt"
+    ],
+    "133": [
+      "api_audit_users",
+      "api_audit_users_closure_1",
+      "api_audit_users_closure_2",
+      "api_audit_users_closure_3"
+    ],
+    "134": [
+      "api_dbconnection",
+      "api_dbconnection_auditresolvegamehost",
+      "api_dbconnection_auditresolvehostid",
+      "api_dbconnection_logplayeractivity"
+    ],
+    "135": [
+      "app_helpers_player_ledger_helper_formatpayamount",
+      "scripts_import_location_data",
+      "scripts_import_location_data_getlocationcurrencymap",
+      "scripts_import_location_data_importlocationdata"
+    ],
+    "136": [
+      "app_views_host_subscription_list",
+      "app_views_host_subscription_list_calculateautoscheduledate",
+      "app_views_host_subscription_list_formatdatelocal",
+      "app_views_host_subscription_list_populatetimedropdown"
+    ],
+    "137": [
+      "app_views_pages_gallery_gallery",
+      "app_views_pages_gallery_gallery_get_video_thumb",
+      "app_views_pages_gallery_gallery_h",
+      "app_views_pages_gallery_gallery_normalize_media_path"
+    ],
+    "138": [
+      "codeigniter_cli_cli",
+      "pos_admin_app_views_errors_cli_error_404",
+      "pos_admin_app_views_errors_cli_error_exception",
+      "pos_admin_app_views_errors_cli_error_exception_closure_1"
+    ],
+    "139": [
+      "codeigniter_database_config",
+      "pos_admin_app_config_database",
+      "pos_admin_app_config_database_database",
+      "pos_admin_app_config_database_database_construct"
+    ],
+    "140": [
+      "codeigniter_format_jsonformatter",
+      "codeigniter_format_xmlformatter",
+      "pos_admin_app_config_format",
+      "pos_admin_app_config_format_format"
+    ],
+    "141": [
+      "codeigniter_images_handlers_gdhandler",
+      "codeigniter_images_handlers_imagemagickhandler",
+      "pos_admin_app_config_images",
+      "pos_admin_app_config_images_images"
+    ],
+    "142": [
+      "composer",
+      "composer_autoload",
+      "composer_autoload_psr_4",
+      "composer_psr_4_app"
+    ],
+    "143": [
+      "dbconnection",
+      "dbconnection_auditresolvegamehost",
+      "dbconnection_auditresolvehostid",
+      "dbconnection_logplayeractivity"
+    ],
+    "144": [
+      "notification",
+      "notification_dismissall",
+      "notification_dismissbtns",
+      "notification_notificationcards"
+    ],
+    "145": [
+      "pos_admin_app_config_mimes",
+      "pos_admin_app_config_mimes_mimes",
+      "pos_admin_app_config_mimes_mimes_guessextensionfromtype",
+      "pos_admin_app_config_mimes_mimes_guesstypefromextension"
+    ],
+    "146": [
+      "pos_admin_composer_autoload",
+      "pos_admin_composer_autoload_exclude_from_classmap",
+      "pos_admin_composer_autoload_psr_4",
+      "pos_admin_composer_psr_4_codeigniter"
+    ],
+    "147": [
+      "pos_admin_composer_config",
+      "pos_admin_composer_config_optimize_autoloader",
+      "pos_admin_composer_config_preferred_install",
+      "pos_admin_composer_config_sort_packages"
+    ],
+    "148": [
+      "pos_admin_composer_support",
+      "pos_admin_composer_support_forum",
+      "pos_admin_composer_support_slack",
+      "pos_admin_composer_support_source"
+    ],
+    "149": [
+      "admin_aboutus_poster",
+      "admin_aboutus_poster_deletemedia",
+      "admin_aboutus_poster_togglestatus"
+    ],
+    "150": [
+      "admin_assets_javascripts_dashboard_examples_dashboard",
+      "admin_assets_javascripts_dashboard_examples_dashboard_getrandomdata",
+      "admin_assets_javascripts_dashboard_examples_dashboard_update"
+    ],
+    "151": [
+      "admin_assets_javascripts_maps_examples_map_builder",
+      "admin_assets_javascripts_maps_examples_map_builder_fixmaplistener",
+      "admin_assets_javascripts_maps_examples_map_builder_fixmapsize"
+    ],
+    "152": [
+      "admin_assets_javascripts_theme_custom_js_admin_assets_javascripts_theme_custom_3f8817",
+      "admin_assets_javascripts_theme_custom_normalizepageheaders",
+      "admin_assets_javascripts_theme_custom_wrapwidetables"
+    ],
+    "153": [
+      "admin_assets_javascripts_theme_init",
+      "admin_assets_javascripts_theme_init_collapse",
+      "admin_assets_javascripts_theme_init_expand"
+    ],
+    "154": [
+      "admin_assets_javascripts_ui_elements_examples_charts",
+      "admin_assets_javascripts_ui_elements_examples_charts_getrandomdata",
+      "admin_assets_javascripts_ui_elements_examples_charts_update"
+    ],
+    "155": [
+      "admin_tournament_logindetails",
+      "admin_tournament_logindetails_copyemail",
+      "admin_tournament_logindetails_generateemail"
+    ],
+    "156": [
+      "api_helpers_gameautomation",
+      "api_helpers_gameautomation_php_mysqli",
+      "api_helpers_gameautomation_rungameautomation"
+    ],
+    "157": [
+      "api_save_club_settings",
+      "api_save_club_settings_cleanhtmlsnippet",
+      "api_save_club_settings_closure_1"
+    ],
+    "158": [
+      "api_sync_home_clubs",
+      "api_sync_home_clubs_synchomeclubtoplayers",
+      "api_sync_home_clubs_syncplayertohomeclubs"
+    ],
+    "159": [
+      "app_entities_column",
+      "app_entities_column_column",
+      "app_entities_column_column_construct"
+    ],
+    "160": [
+      "app_entities_table",
+      "app_entities_table_table",
+      "app_entities_table_table_construct"
+    ],
+    "161": [
+      "app_views_host_host_edit_tournament",
+      "app_views_host_host_edit_tournament_tournamentoptions",
+      "app_views_host_host_edit_tournament_tournamentvalue"
+    ],
+    "162": [
+      "app_views_host_host_payment_list",
+      "app_views_host_host_payment_list_handlepremiumchange",
+      "app_views_host_host_payment_list_triggerpaymenttableload"
+    ],
+    "163": [
+      "app_views_layouts_footer_footer",
+      "app_views_layouts_footer_footer_showad",
+      "app_views_layouts_footer_footer_startadrotation"
+    ],
+    "164": [
+      "app_views_pages_community_casa_trainers",
+      "app_views_pages_community_casa_trainers_courtapp",
+      "app_views_pages_community_casa_trainers_root"
+    ],
+    "165": [
+      "app_views_player_player_payment_list",
+      "app_views_player_player_payment_list_changedirectmonthlyledger",
+      "app_views_player_player_payment_list_syncpaymentdatetime"
+    ],
+    "166": [
+      "codeigniter_codeigniter",
+      "codeigniter_http_header",
+      "pos_admin_app_views_errors_html_error_exception"
+    ],
+    "167": [
+      "codeigniter_config_autoloadconfig",
+      "pos_admin_app_config_autoload",
+      "pos_admin_app_config_autoload_autoload"
+    ],
+    "168": [
+      "codeigniter_config_baseservice",
+      "pos_admin_app_config_services",
+      "pos_admin_app_config_services_services"
+    ],
+    "169": [
+      "codeigniter_config_foreigncharacters",
+      "pos_admin_app_config_foreigncharacters",
+      "pos_admin_app_config_foreigncharacters_foreigncharacters"
+    ],
+    "170": [
+      "codeigniter_config_publisher",
+      "pos_admin_app_config_publisher",
+      "pos_admin_app_config_publisher_publisher"
+    ],
+    "171": [
+      "codeigniter_config_routing",
+      "pos_admin_app_config_routing",
+      "pos_admin_app_config_routing_routing"
+    ],
+    "172": [
+      "codeigniter_log_handlers_filehandler",
+      "pos_admin_app_config_logger",
+      "pos_admin_app_config_logger_logger"
+    ],
+    "173": [
+      "codeigniter_modules_modules",
+      "pos_admin_app_config_modules",
+      "pos_admin_app_config_modules_modules"
+    ],
+    "174": [
+      "codeigniter_session_handlers_basehandler",
+      "codeigniter_session_handlers_filehandler",
+      "pos_admin_app_config_session"
+    ],
+    "175": [
+      "datetimeinterface",
+      "pos_admin_app_config_cookie",
+      "pos_admin_app_config_cookie_cookie"
+    ],
+    "176": [
+      "pos_admin_app_views_admin_club_owner_list_brand",
+      "pos_admin_app_views_admin_club_owner_list_brand_addbrand",
+      "pos_admin_app_views_admin_club_owner_list_brand_updatebrand"
+    ],
+    "177": [
+      "pos_admin_app_views_admin_club_owner_list_category",
+      "pos_admin_app_views_admin_club_owner_list_category_addcategory",
+      "pos_admin_app_views_admin_club_owner_list_category_updatecategory"
+    ],
+    "178": [
+      "pos_admin_app_views_admin_club_owner_list_size",
+      "pos_admin_app_views_admin_club_owner_list_size_addsize",
+      "pos_admin_app_views_admin_club_owner_list_size_updatesize"
+    ],
+    "179": [
+      "pos_admin_public_assets_js_jquery_min_identity",
+      "pos_admin_public_assets_js_jquery_min_resolve",
+      "pos_admin_public_assets_js_jquery_min_thrower"
+    ],
+    "180": [
+      "tournament_assets_js_main",
+      "tournament_assets_js_main_myheaderfunction",
+      "tournament_assets_js_main_showresults"
+    ],
+    "181": [
+      "admin_api_add_tournament",
+      "admin_api_add_tournament_clean"
+    ],
+    "182": [
+      "admin_api_manage_tournament",
+      "admin_api_manage_tournament_clean"
+    ],
+    "183": [
+      "admin_assets_javascripts_pages_examples_session_timeout",
+      "admin_assets_javascripts_pages_examples_session_timeout_rationale_85"
+    ],
+    "184": [
+      "admin_index",
+      "admin_index_toggleadminpwd"
+    ],
+    "185": [
+      "admin_session",
+      "admin_session_requireadminsession"
+    ],
+    "186": [
+      "api_audit_day_users",
+      "api_audit_day_users_closure_1"
+    ],
+    "187": [
+      "api_audit_game_users",
+      "api_audit_game_users_closure_1"
+    ],
+    "188": [
+      "api_audit_summary",
+      "api_audit_summary_closure_1"
+    ],
+    "189": [
+      "api_audit_top_games",
+      "api_audit_top_games_closure_1"
+    ],
+    "190": [
+      "api_audit_trend",
+      "api_audit_trend_closure_1"
+    ],
+    "191": [
+      "api_helpers_carry_forward_audit",
+      "api_helpers_carry_forward_audit_recordcarryforwardaudit"
+    ],
+    "192": [
+      "api_host_manage_tournament",
+      "api_host_manage_tournament_valueornull"
+    ],
+    "193": [
+      "api_log_tab_activity",
+      "api_log_tab_activity_closure_1"
+    ],
+    "194": [
+      "api_save_registration",
+      "api_save_registration_processuserwithteam"
+    ],
+    "195": [
+      "api_update_event",
+      "api_update_event_validate_input"
+    ],
+    "196": [
+      "api_update_user",
+      "api_update_user_closure_1"
+    ],
+    "197": [
+      "app_home",
+      "app_home_closure_1"
+    ],
+    "198": [
+      "app_script_auth_register",
+      "app_script_auth_register_initregisterform"
+    ],
+    "199": [
+      "app_script_host",
+      "app_script_host_triggertoast"
+    ],
+    "200": [
+      "app_tests_header_rendering_e2e_test",
+      "app_tests_header_rendering_e2e_test_runheadertest"
+    ],
+    "201": [
+      "app_views_host_host_club_settings",
+      "app_views_host_host_club_settings_previewlogo"
+    ],
+    "202": [
+      "app_views_host_host_creat_game",
+      "app_views_host_host_creat_game_inithostcreategame"
+    ],
+    "203": [
+      "app_views_host_host_scheduled_game",
+      "app_views_host_host_scheduled_game_hitautomationapi"
+    ],
+    "204": [
+      "app_views_layouts_footer_footer_links",
+      "app_views_layouts_footer_footer_links_showtoast"
+    ],
+    "205": [
+      "app_views_player_player_hub",
+      "app_views_player_player_hub_closure_1"
+    ],
+    "206": [
+      "codeigniter_router_routecollection",
+      "pos_admin_app_config_routes"
+    ],
+    "207": [
+      "pos_admin_app_config_doctypes",
+      "pos_admin_app_config_doctypes_doctypes"
+    ],
+    "208": [
+      "pos_admin_app_config_optimize",
+      "pos_admin_app_config_optimize_optimize"
+    ],
+    "209": [
+      "pos_admin_app_views_admin_club_owner_list_booking",
+      "pos_admin_app_views_admin_club_owner_list_booking_openmodal"
+    ],
+    "210": [
+      "pos_admin_app_views_admin_common_login",
+      "pos_admin_app_views_admin_common_login_togglepospwd"
+    ],
+    "211": [
+      "pos_admin_app_views_welcome_message",
+      "pos_admin_app_views_welcome_message_togglemenu"
+    ],
+    "212": [
+      "pos_admin_public_assets_js_jquery_min_createcache",
+      "pos_admin_public_assets_js_jquery_min_createcache_cache"
+    ],
+    "213": [
+      "pos_admin_public_assets_js_jquery_min_inspectprefiltersortransports",
+      "pos_admin_public_assets_js_jquery_min_inspectprefiltersortransports_inspect"
+    ],
+    "214": [
+      "run_migrations",
+      "run_migrations_runquery"
+    ],
+    "215": [
+      "admin_aboutus_image"
+    ],
+    "216": [
+      "admin_add_user_form_element"
+    ],
+    "217": [
+      "admin_admin_host"
+    ],
+    "218": [
+      "admin_anuragbackup_sidebar25mar2026"
+    ],
+    "219": [
+      "admin_api_add_user"
+    ],
+    "220": [
+      "admin_api_delete_ads"
+    ],
+    "221": [
+      "admin_api_delete_product"
+    ],
+    "222": [
+      "admin_api_delete_user"
+    ],
+    "223": [
+      "admin_api_sync_player"
+    ],
+    "224": [
+      "admin_api_togglestatus"
+    ],
+    "225": [
+      "admin_api_update_user"
+    ],
+    "226": [
+      "admin_assets_images_player_hub"
+    ],
+    "227": [
+      "admin_assets_javascripts_dashboard_examples_landing_dashboard"
+    ],
+    "228": [
+      "admin_assets_javascripts_extra_examples_ajax_made_easy"
+    ],
+    "229": [
+      "admin_assets_javascripts_forms_examples_validation"
+    ],
+    "230": [
+      "admin_assets_javascripts_forms_examples_wizard"
+    ],
+    "231": [
+      "admin_assets_javascripts_layouts_examples_header_menu"
+    ],
+    "232": [
+      "admin_assets_javascripts_maps_examples_gmap"
+    ],
+    "233": [
+      "admin_assets_javascripts_maps_examples_vector_maps"
+    ],
+    "234": [
+      "admin_assets_javascripts_maps_snazzy_themes"
+    ],
+    "235": [
+      "admin_assets_javascripts_pages_examples_calendar"
+    ],
+    "236": [
+      "admin_assets_javascripts_pages_examples_lockscreen"
+    ],
+    "237": [
+      "admin_assets_javascripts_pages_examples_mediagallery"
+    ],
+    "238": [
+      "admin_assets_javascripts_pages_examples_timeline"
+    ],
+    "239": [
+      "admin_assets_javascripts_tables_examples_datatables_ajax"
+    ],
+    "240": [
+      "admin_assets_javascripts_tables_examples_datatables_default"
+    ],
+    "241": [
+      "admin_assets_javascripts_tables_examples_datatables_editable"
+    ],
+    "242": [
+      "admin_assets_javascripts_tables_examples_datatables_row_with_details"
+    ],
+    "243": [
+      "admin_assets_javascripts_tables_examples_datatables_tabletools"
+    ],
+    "244": [
+      "admin_assets_javascripts_theme_admin_extension"
+    ],
+    "245": [
+      "admin_assets_javascripts_theme_custom_js_admin_assets_javascripts_theme_custom_853ff0"
+    ],
+    "246": [
+      "admin_assets_javascripts_ui_elements_examples_lightbox"
+    ],
+    "247": [
+      "admin_assets_javascripts_ui_elements_examples_loading_overlay"
+    ],
+    "248": [
+      "admin_assets_javascripts_ui_elements_examples_loading_progress"
+    ],
+    "249": [
+      "admin_assets_javascripts_ui_elements_examples_modals"
+    ],
+    "250": [
+      "admin_assets_javascripts_ui_elements_examples_nestable"
+    ],
+    "251": [
+      "admin_assets_javascripts_ui_elements_examples_notifications"
+    ],
+    "252": [
+      "admin_assets_javascripts_ui_elements_examples_portlets"
+    ],
+    "253": [
+      "admin_assets_javascripts_ui_elements_examples_treeview"
+    ],
+    "254": [
+      "admin_assets_javascripts_ui_elements_examples_widgets"
+    ],
+    "255": [
+      "admin_dashboard"
+    ],
+    "256": [
+      "admin_dbconnection"
+    ],
+    "257": [
+      "admin_edit_products"
+    ],
+    "258": [
+      "admin_edit_registration"
+    ],
+    "259": [
+      "admin_event_category"
+    ],
+    "260": [
+      "admin_event_description"
+    ],
+    "261": [
+      "admin_event_venue"
+    ],
+    "262": [
+      "admin_footer"
+    ],
+    "263": [
+      "admin_header"
+    ],
+    "264": [
+      "admin_logout"
+    ],
+    "265": [
+      "admin_manage_department"
+    ],
+    "266": [
+      "admin_manage_product_type"
+    ],
+    "267": [
+      "admin_registration_message"
+    ],
+    "268": [
+      "admin_sidebar"
+    ],
+    "269": [
+      "api_add_user"
+    ],
+    "270": [
+      "api_approve_member"
+    ],
+    "271": [
+      "api_audit_user_game"
+    ],
+    "272": [
+      "api_audit_user_timeline"
+    ],
+    "273": [
+      "api_com_filter_schedule"
+    ],
+    "274": [
+      "api_copy_event"
+    ],
+    "275": [
+      "api_fetch_payment"
+    ],
+    "276": [
+      "api_get_num_player_joined"
+    ],
+    "277": [
+      "api_get_player_cost"
+    ],
+    "278": [
+      "api_join_club"
+    ],
+    "279": [
+      "api_new_game_host"
+    ],
+    "280": [
+      "api_recalculate_event_cost"
+    ],
+    "281": [
+      "api_register"
+    ],
+    "282": [
+      "api_remove_member"
+    ],
+    "283": [
+      "api_rollback_event"
+    ],
+    "284": [
+      "api_same_paymentbyhost"
+    ],
+    "285": [
+      "api_save_review"
+    ],
+    "286": [
+      "api_update_paymenthis"
+    ],
+    "287": [
+      "api_upload_profile_image"
+    ],
+    "288": [
+      "api_view_game_player"
+    ],
+    "289": [
+      "api_view_player"
+    ],
+    "290": [
+      "api_view_player_paylist"
+    ],
+    "291": [
+      "api_view_player_paymenthis"
+    ],
+    "292": [
+      "app_routes_index"
+    ],
+    "293": [
+      "app_script_auth"
+    ],
+    "294": [
+      "app_script_home"
+    ],
+    "295": [
+      "app_script_index"
+    ],
+    "296": [
+      "app_script_inner_header"
+    ],
+    "297": [
+      "app_script_ledger"
+    ],
+    "298": [
+      "app_script_player_hub"
+    ],
+    "299": [
+      "app_script_script"
+    ],
+    "300": [
+      "app_views_auth_login"
+    ],
+    "301": [
+      "app_views_auth_resister"
+    ],
+    "302": [
+      "app_views_host_host_dashboard"
+    ],
+    "303": [
+      "app_views_host_host_player_stats"
+    ],
+    "304": [
+      "app_views_host_host_roster"
+    ],
+    "305": [
+      "app_views_host_host_tournament_list"
+    ],
+    "306": [
+      "app_views_host_index"
+    ],
+    "307": [
+      "app_views_host_player_search_table"
+    ],
+    "308": [
+      "app_views_host_scheduled_events_cards"
+    ],
+    "309": [
+      "app_views_layouts_header_header_links"
+    ],
+    "310": [
+      "app_views_layouts_header_inner_header"
+    ],
+    "311": [
+      "app_views_pages_community_casa_clubs"
+    ],
+    "312": [
+      "app_views_pages_community_discover_games"
+    ],
+    "313": [
+      "app_views_pages_community_organiser"
+    ],
+    "314": [
+      "app_views_pages_community_players"
+    ],
+    "315": [
+      "app_views_pages_company_about_us"
+    ],
+    "316": [
+      "app_views_pages_contact_contact_handler"
+    ],
+    "317": [
+      "app_views_pages_contact_contact_us"
+    ],
+    "318": [
+      "app_views_pages_gallery_gallery_page"
+    ],
+    "319": [
+      "app_views_pages_legal_cancellationpolicy"
+    ],
+    "320": [
+      "app_views_pages_legal_privacy_policy"
+    ],
+    "321": [
+      "app_views_pages_legal_termscondition"
+    ],
+    "322": [
+      "app_views_pages_poster_poster"
+    ],
+    "323": [
+      "app_views_partials_casa_dropdown"
+    ],
+    "324": [
+      "app_views_player_index"
+    ],
+    "325": [
+      "app_views_player_player_complete_game"
+    ],
+    "326": [
+      "app_views_player_player_dashboard"
+    ],
+    "327": [
+      "app_views_player_player_match"
+    ],
+    "328": [
+      "app_views_player_player_monthly_subscription"
+    ],
+    "329": [
+      "app_views_player_player_upcoming_game"
+    ],
+    "330": [
+      "app_views_player_scheduled_games_cards"
+    ],
+    "331": [
+      "app_views_store_accessories_shop"
+    ],
+    "332": [
+      "app_views_store_product_details"
+    ],
+    "333": [
+      "assets_data_currency_data"
+    ],
+    "334": [
+      "assets_js_casa_pagination"
+    ],
+    "335": [
+      "assets_js_host_copy_session_details"
+    ],
+    "336": [
+      "assets_js_host_delete_session"
+    ],
+    "337": [
+      "assets_js_host_edit_session"
+    ],
+    "338": [
+      "db_migration"
+    ],
+    "339": [
+      "dbconnection_pdo"
+    ],
+    "340": [
+      "fix_tournament_dates"
+    ],
+    "341": [
+      "index"
+    ],
+    "342": [
+      "pos_admin_app_common"
+    ],
+    "343": [
+      "pos_admin_app_config_boot_development"
+    ],
+    "344": [
+      "pos_admin_app_config_boot_production"
+    ],
+    "345": [
+      "pos_admin_app_config_boot_testing"
+    ],
+    "346": [
+      "pos_admin_app_config_constants"
+    ],
+    "347": [
+      "pos_admin_app_language_en_validation"
+    ],
+    "348": [
+      "pos_admin_app_views_admin_club_owner_add_new_court"
+    ],
+    "349": [
+      "pos_admin_app_views_admin_club_owner_add_new_inventory"
+    ],
+    "350": [
+      "pos_admin_app_views_admin_club_owner_add_new_membership"
+    ],
+    "351": [
+      "pos_admin_app_views_admin_club_owner_edit_inventory"
+    ],
+    "352": [
+      "pos_admin_app_views_admin_club_owner_edit_membership"
+    ],
+    "353": [
+      "pos_admin_app_views_admin_club_owner_list_court"
+    ],
+    "354": [
+      "pos_admin_app_views_admin_club_owner_list_inventory"
+    ],
+    "355": [
+      "pos_admin_app_views_admin_club_owner_list_membership"
+    ],
+    "356": [
+      "pos_admin_app_views_admin_club_owner_list_pre_booking"
+    ],
+    "357": [
+      "pos_admin_app_views_admin_club_owner_list_stringing"
+    ],
+    "358": [
+      "pos_admin_app_views_admin_club_owner_payment_history"
+    ],
+    "359": [
+      "pos_admin_app_views_admin_club_owner_profile"
+    ],
+    "360": [
+      "pos_admin_app_views_admin_common_header"
+    ],
+    "361": [
+      "pos_admin_app_views_admin_common_sidebar"
+    ],
+    "362": [
+      "pos_admin_app_views_errors_cli_production"
+    ],
+    "363": [
+      "pos_admin_app_views_errors_html_error_400"
+    ],
+    "364": [
+      "pos_admin_app_views_errors_html_error_404"
+    ],
+    "365": [
+      "pos_admin_app_views_errors_html_production"
+    ],
+    "366": [
+      "pos_admin_index"
+    ],
+    "367": [
+      "pos_admin_public_assets_js_main"
+    ],
+    "368": [
+      "pos_admin_spark"
+    ],
+    "369": [
+      "reset"
+    ],
+    "370": [
+      "tournament_10_07_2026_badminton_scorer"
+    ],
+    "371": [
+      "tournament_11_07_2026_badminton_scorer"
+    ],
+    "372": [
+      "tournament_23_08_26_badminton_scorer"
+    ],
+    "373": [
+      "tournament_9_8_26_badminton_scorer"
+    ],
+    "374": [
+      "tournament_badminton_scorer"
+    ],
+    "375": [
+      "tournament_battle_tournament"
+    ],
+    "376": [
+      "tournament_details"
+    ],
+    "377": [
+      "tournament_includes_23_08_26_scorer_header"
+    ],
+    "378": [
+      "tournament_includes_24_08_26header"
+    ],
+    "379": [
+      "tournament_includes_footer"
+    ],
+    "380": [
+      "tournament_includes_header"
+    ],
+    "381": [
+      "tournament_includes_header_09_08_26"
+    ],
+    "382": [
+      "tournament_includes_scorer_header"
+    ],
+    "383": [
+      "tournament_index"
+    ],
+    "384": [
+      "tournament_old_design_battle_board"
+    ],
+    "385": [
+      "tournament_old_design_battle_broadcast"
+    ],
+    "386": [
+      "tournament_old_design_battle_live"
+    ],
+    "387": [
+      "tournament_old_design_battle_page"
+    ],
+    "388": [
+      "tournament_old_design_index_old"
+    ],
+    "389": [
+      "tournament_old_design_log"
+    ],
+    "390": [
+      "train_complete_game"
+    ],
+    "391": [
+      "train_dashboard"
+    ],
+    "392": [
+      "train_game_create"
+    ],
+    "393": [
+      "train_payment_list"
+    ],
+    "394": [
+      "train_scheduled_game"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05293383270911361,
+    "1": 0.11373260738052027,
+    "2": 0.10064935064935066,
+    "3": 0.0636734693877551,
+    "4": 0.10285714285714286,
+    "5": 0.10285714285714286,
+    "6": 0.10289115646258504,
+    "7": 0.1374113475177305,
+    "8": 0.08233117483811286,
+    "9": 0.06845513413506013,
+    "10": 0.09292929292929293,
+    "11": 0.10121951219512196,
+    "12": 0.057692307692307696,
+    "13": 0.07563025210084033,
+    "14": 0.058823529411764705,
+    "15": 0.10574712643678161,
+    "16": 0.13333333333333333,
+    "17": 0.22413793103448276,
+    "18": 0.2275132275132275,
+    "19": 0.1111111111111111,
+    "20": 0.13230769230769232,
+    "21": 0.13333333333333333,
+    "22": 0.08,
+    "23": 0.11,
+    "24": 0.14492753623188406,
+    "25": 0.09486166007905138,
+    "26": 0.08695652173913043,
+    "27": 0.11688311688311688,
+    "28": 0.10822510822510822,
+    "29": 0.18571428571428572,
+    "30": 0.1380952380952381,
+    "31": 0.11428571428571428,
+    "32": 0.19473684210526315,
+    "33": 0.1,
+    "34": 0.21637426900584794,
+    "35": 0.10526315789473684,
+    "36": 0.12280701754385964,
+    "37": 0.12418300653594772,
+    "38": 0.13725490196078433,
+    "39": 0.25,
+    "40": 0.19852941176470587,
+    "41": 0.11764705882352941,
+    "42": 0.33088235294117646,
+    "43": 0.3088235294117647,
+    "44": 0.14705882352941177,
+    "45": 0.18382352941176472,
+    "46": 0.125,
+    "47": 0.23333333333333334,
+    "48": 0.17142857142857143,
+    "49": 0.18095238095238095,
+    "50": 0.29523809523809524,
+    "51": 0.17582417582417584,
+    "52": 0.17582417582417584,
+    "53": 0.17582417582417584,
+    "54": 0.26373626373626374,
+    "55": 0.18681318681318682,
+    "56": 0.23076923076923078,
+    "57": 0.15384615384615385,
+    "58": 0.1978021978021978,
+    "59": 0.2857142857142857,
+    "60": 0.14285714285714285,
+    "61": 0.15384615384615385,
+    "62": 0.3076923076923077,
+    "63": 0.19230769230769232,
+    "64": 0.2564102564102564,
+    "65": 0.19230769230769232,
+    "66": 0.24242424242424243,
+    "67": 0.22727272727272727,
+    "68": 0.24242424242424243,
+    "69": 0.3333333333333333,
+    "70": 0.18181818181818182,
+    "71": 0.3090909090909091,
+    "72": 0.509090909090909,
+    "73": 0.2545454545454545,
+    "74": 0.21818181818181817,
+    "75": 0.32727272727272727,
+    "76": 0.32727272727272727,
+    "77": 0.2222222222222222,
+    "78": 0.26666666666666666,
+    "79": 0.35555555555555557,
+    "80": 0.3333333333333333,
+    "81": 0.26666666666666666,
+    "82": 0.25,
+    "83": 0.2222222222222222,
+    "84": 0.3888888888888889,
+    "85": 0.2222222222222222,
+    "86": 0.2222222222222222,
+    "87": 0.25,
+    "88": 0.2222222222222222,
+    "89": 0.2222222222222222,
+    "90": 0.3888888888888889,
+    "91": 0.3888888888888889,
+    "92": 0.32142857142857145,
+    "93": 0.25,
+    "94": 0.25,
+    "95": 0.25,
+    "96": 0.25,
+    "97": 0.25,
+    "98": 0.25,
+    "99": 0.5238095238095238,
+    "100": 0.47619047619047616,
+    "101": 0.47619047619047616,
+    "102": 0.2857142857142857,
+    "103": 0.3333333333333333,
+    "104": 0.2857142857142857,
+    "105": 0.3333333333333333,
+    "106": 0.3333333333333333,
+    "107": 0.4666666666666667,
+    "108": 0.4,
+    "109": 0.3333333333333333,
+    "110": 0.4,
+    "111": 0.4,
+    "112": 0.4,
+    "113": 0.5333333333333333,
+    "114": 0.3333333333333333,
+    "115": 0.7,
+    "116": 0.7,
+    "117": 0.4,
+    "118": 0.4,
+    "119": 0.4,
+    "120": 0.4,
+    "121": 0.4,
+    "122": 0.4,
+    "123": 0.4,
+    "124": 0.4,
+    "125": 0.4,
+    "126": 0.6,
+    "127": 0.6,
+    "128": 0.4,
+    "129": 0.4,
+    "130": 0.5,
+    "131": 0.5,
+    "132": 0.5,
+    "133": 0.5,
+    "134": 0.8333333333333334,
+    "135": 0.5,
+    "136": 0.6666666666666666,
+    "137": 0.6666666666666666,
+    "138": 0.5,
+    "139": 0.6666666666666666,
+    "140": 0.5,
+    "141": 0.5,
+    "142": 0.5,
+    "143": 0.8333333333333334,
+    "144": 0.5,
+    "145": 0.5,
+    "146": 0.5,
+    "147": 0.5,
+    "148": 0.5,
+    "149": 0.6666666666666666,
+    "150": 1.0,
+    "151": 1.0,
+    "152": 0.6666666666666666,
+    "153": 0.6666666666666666,
+    "154": 1.0,
+    "155": 0.6666666666666666,
+    "156": 0.6666666666666666,
+    "157": 0.6666666666666666,
+    "158": 0.6666666666666666,
+    "159": 0.6666666666666666,
+    "160": 0.6666666666666666,
+    "161": 0.6666666666666666,
+    "162": 0.6666666666666666,
+    "163": 1.0,
+    "164": 0.6666666666666666,
+    "165": 0.6666666666666666,
+    "166": 0.6666666666666666,
+    "167": 1.0,
+    "168": 1.0,
+    "169": 1.0,
+    "170": 1.0,
+    "171": 1.0,
+    "172": 0.6666666666666666,
+    "173": 1.0,
+    "174": 0.6666666666666666,
+    "175": 0.6666666666666666,
+    "176": 0.6666666666666666,
+    "177": 0.6666666666666666,
+    "178": 0.6666666666666666,
+    "179": 0.6666666666666666,
+    "180": 0.6666666666666666,
+    "181": 1.0,
+    "182": 1.0,
+    "183": 1.0,
+    "184": 1.0,
+    "185": 1.0,
+    "186": 1.0,
+    "187": 1.0,
+    "188": 1.0,
+    "189": 1.0,
+    "190": 1.0,
+    "191": 1.0,
+    "192": 1.0,
+    "193": 1.0,
+    "194": 1.0,
+    "195": 1.0,
+    "196": 1.0,
+    "197": 1.0,
+    "198": 1.0,
+    "199": 1.0,
+    "200": 1.0,
+    "201": 1.0,
+    "202": 1.0,
+    "203": 1.0,
+    "204": 1.0,
+    "205": 1.0,
+    "206": 1.0,
+    "207": 1.0,
+    "208": 1.0,
+    "209": 1.0,
+    "210": 1.0,
+    "211": 1.0,
+    "212": 1.0,
+    "213": 1.0,
+    "214": 1.0,
+    "215": 1.0,
+    "216": 1.0,
+    "217": 1.0,
+    "218": 1.0,
+    "219": 1.0,
+    "220": 1.0,
+    "221": 1.0,
+    "222": 1.0,
+    "223": 1.0,
+    "224": 1.0,
+    "225": 1.0,
+    "226": 1.0,
+    "227": 1.0,
+    "228": 1.0,
+    "229": 1.0,
+    "230": 1.0,
+    "231": 1.0,
+    "232": 1.0,
+    "233": 1.0,
+    "234": 1.0,
+    "235": 1.0,
+    "236": 1.0,
+    "237": 1.0,
+    "238": 1.0,
+    "239": 1.0,
+    "240": 1.0,
+    "241": 1.0,
+    "242": 1.0,
+    "243": 1.0,
+    "244": 1.0,
+    "245": 1.0,
+    "246": 1.0,
+    "247": 1.0,
+    "248": 1.0,
+    "249": 1.0,
+    "250": 1.0,
+    "251": 1.0,
+    "252": 1.0,
+    "253": 1.0,
+    "254": 1.0,
+    "255": 1.0,
+    "256": 1.0,
+    "257": 1.0,
+    "258": 1.0,
+    "259": 1.0,
+    "260": 1.0,
+    "261": 1.0,
+    "262": 1.0,
+    "263": 1.0,
+    "264": 1.0,
+    "265": 1.0,
+    "266": 1.0,
+    "267": 1.0,
+    "268": 1.0,
+    "269": 1.0,
+    "270": 1.0,
+    "271": 1.0,
+    "272": 1.0,
+    "273": 1.0,
+    "274": 1.0,
+    "275": 1.0,
+    "276": 1.0,
+    "277": 1.0,
+    "278": 1.0,
+    "279": 1.0,
+    "280": 1.0,
+    "281": 1.0,
+    "282": 1.0,
+    "283": 1.0,
+    "284": 1.0,
+    "285": 1.0,
+    "286": 1.0,
+    "287": 1.0,
+    "288": 1.0,
+    "289": 1.0,
+    "290": 1.0,
+    "291": 1.0,
+    "292": 1.0,
+    "293": 1.0,
+    "294": 1.0,
+    "295": 1.0,
+    "296": 1.0,
+    "297": 1.0,
+    "298": 1.0,
+    "299": 1.0,
+    "300": 1.0,
+    "301": 1.0,
+    "302": 1.0,
+    "303": 1.0,
+    "304": 1.0,
+    "305": 1.0,
+    "306": 1.0,
+    "307": 1.0,
+    "308": 1.0,
+    "309": 1.0,
+    "310": 1.0,
+    "311": 1.0,
+    "312": 1.0,
+    "313": 1.0,
+    "314": 1.0,
+    "315": 1.0,
+    "316": 1.0,
+    "317": 1.0,
+    "318": 1.0,
+    "319": 1.0,
+    "320": 1.0,
+    "321": 1.0,
+    "322": 1.0,
+    "323": 1.0,
+    "324": 1.0,
+    "325": 1.0,
+    "326": 1.0,
+    "327": 1.0,
+    "328": 1.0,
+    "329": 1.0,
+    "330": 1.0,
+    "331": 1.0,
+    "332": 1.0,
+    "333": 1.0,
+    "334": 1.0,
+    "335": 1.0,
+    "336": 1.0,
+    "337": 1.0,
+    "338": 1.0,
+    "339": 1.0,
+    "340": 1.0,
+    "341": 1.0,
+    "342": 1.0,
+    "343": 1.0,
+    "344": 1.0,
+    "345": 1.0,
+    "346": 1.0,
+    "347": 1.0,
+    "348": 1.0,
+    "349": 1.0,
+    "350": 1.0,
+    "351": 1.0,
+    "352": 1.0,
+    "353": 1.0,
+    "354": 1.0,
+    "355": 1.0,
+    "356": 1.0,
+    "357": 1.0,
+    "358": 1.0,
+    "359": 1.0,
+    "360": 1.0,
+    "361": 1.0,
+    "362": 1.0,
+    "363": 1.0,
+    "364": 1.0,
+    "365": 1.0,
+    "366": 1.0,
+    "367": 1.0,
+    "368": 1.0,
+    "369": 1.0,
+    "370": 1.0,
+    "371": 1.0,
+    "372": 1.0,
+    "373": 1.0,
+    "374": 1.0,
+    "375": 1.0,
+    "376": 1.0,
+    "377": 1.0,
+    "378": 1.0,
+    "379": 1.0,
+    "380": 1.0,
+    "381": 1.0,
+    "382": 1.0,
+    "383": 1.0,
+    "384": 1.0,
+    "385": 1.0,
+    "386": 1.0,
+    "387": 1.0,
+    "388": 1.0,
+    "389": 1.0,
+    "390": 1.0,
+    "391": 1.0,
+    "392": 1.0,
+    "393": 1.0,
+    "394": 1.0
+  },
+  "gods": [
+    {
+      "id": "app_controllers_hostcontroller_hostcontroller",
+      "label": "HostController",
+      "degree": 59
+    },
+    {
+      "id": "pos_admin_app_controllers_clubadmin_clubadmin",
+      "label": "Clubadmin",
+      "degree": 57
+    },
+    {
+      "id": "app_core_model_model",
+      "label": "Model",
+      "degree": 49
+    },
+    {
+      "id": "app_models_ledger_ledgermodel_ledgermodel",
+      "label": "LedgerModel",
+      "degree": 48
+    },
+    {
+      "id": "app_models_eventmodel_eventmodel",
+      "label": "EventModel",
+      "degree": 41
+    },
+    {
+      "id": "app_helpers_pagination_pagination",
+      "label": "Pagination",
+      "degree": 39
+    },
+    {
+      "id": "app_helpers_session_session",
+      "label": "Session",
+      "degree": 38
+    },
+    {
+      "id": "app_controllers_playercontroller_playercontroller",
+      "label": "PlayerController",
+      "degree": 37
+    },
+    {
+      "id": "app_config_database_database",
+      "label": "Database",
+      "degree": 30
+    },
+    {
+      "id": "app_models_usermodel_usermodel",
+      "label": "UserModel",
+      "degree": 30
+    }
+  ],
+  "surprises": [
+    {
+      "source": "formatPayAmount()",
+      "target": "getLocationCurrencyMap()",
+      "source_files": [
+        "app/Helpers/player_ledger_helper.php",
+        "scripts/import_location_data.php"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories"
+    },
+    {
+      "source": "resolveNavbarStoreLabel()",
+      "target": "ClubModel",
+      "source_files": [
+        "app/tests/navbar_dynamic_label_test.php",
+        "app/Models/ClubModel.php"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `resolveNavbarStoreLabel()` unexpectedly reaches hub `ClubModel`"
+    },
+    {
+      "source": "audit_shape_row()",
+      "target": "audit_behaviour()",
+      "source_files": [
+        "api/audit/_metrics.php",
+        "api/audit/_bootstrap.php"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "audit_behaviour_reasons()",
+      "target": "audit_behaviour()",
+      "source_files": [
+        "api/audit/user_detail.php",
+        "api/audit/_bootstrap.php"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "{closure#1}()",
+      "target": "audit_type_label()",
+      "source_files": [
+        "api/audit/event.php",
+        "api/audit/_scope.php"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `HostController` connect `Community 0` to `Community 40`, `Community 10`, `Community 11`, `Community 15`, `Community 80`, `Community 18`, `Community 25`, `Community 26`, `Community 27`, `Community 29`?",
+      "why": "High betweenness centrality (0.029) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.05293383270911361 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Model` connect `Community 13` to `Community 0`, `Community 8`, `Community 40`, `Community 11`, `Community 80`, `Community 49`, `Community 21`, `Community 25`, `Community 27`, `Community 29`?",
+      "why": "High betweenness centrality (0.019) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11373260738052027 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `ClubModel` connect `Community 25` to `Community 0`, `Community 32`, `Community 37`, `Community 8`, `Community 13`, `Community 23`, `Community 29`?",
+      "why": "High betweenness centrality (0.017) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10064935064935066 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 3` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.0636734693877551 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
