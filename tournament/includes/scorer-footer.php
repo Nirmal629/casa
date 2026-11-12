@@ -128,6 +128,7 @@
       deuceEnabled: configuredMatchRules.deuce,
       deuceLimit: configuredMatchRules.deuceLimit,
       isStarted: (window.initialMatchData.matchStatus || '') === 'RUNNING',
+      hasBeenStarted: ['RUNNING', 'PAUSED', 'COMPLETED'].includes(window.initialMatchData.matchStatus || ''),
       isSaving: false,
       isCompleted: (window.initialMatchData.matchStatus || '') === 'COMPLETED'
     };
@@ -170,6 +171,13 @@
     $('#undo-point').on('click', undoLastPoint);
     $('#matchResult').on('shown.bs.modal', renderMatchResult);
     $('#match-result-set-breakdown').on('click', '[data-setup-action]', handleMatchSetupAction);
+    $('#matchConfig').on('hidden.bs.modal', function () {
+      if (window.configReturnToSetup) {
+        window.configReturnToSetup = false;
+        $('#matchResult').modal('show');
+      }
+    });
+    $('#matchResult').modal('show');
   });
 
   function normalizeDoublesPlayers(playerRows, names) {
@@ -339,19 +347,22 @@
 
     applyMatchConfigToState();
 
-    if (state.isStarted) {
+    const returnToSetup = !!window.configReturnToSetup;
+    if (state.hasBeenStarted) {
       $('#matchConfig').modal('hide');
-      setScoreButtonsEnabled(true);
+      if (returnToSetup) { window.configReturnToSetup = true; }
       return;
     }
 
     state.isSaving = true;
     saveStartMatch().then(function () {
       state.isStarted = true;
+      state.hasBeenStarted = true;
       state.isCompleted = false;
       startGame = true;
       setScoreButtonsEnabled(true);
       renderDoublesCourt();
+      window.configReturnToSetup = returnToSetup;
       $('#matchConfig').modal('hide');
       speakScore('Match started. ' + buildServeAnnouncement());
     }).catch(function (error) {
@@ -362,9 +373,35 @@
   }
 
   function openSetupChildModal(selector) {
+    window.setupChildReturnToSetup = true;
     $('#matchResult').one('hidden.bs.modal', function () {
       $(selector).modal('show');
     }).modal('hide');
+  }
+
+  $(document).on('hidden.bs.modal', '#setScoreBoard, #matchLog', function () {
+    if (window.setupChildReturnToSetup) {
+      window.setupChildReturnToSetup = false;
+      $('#matchResult').modal('show');
+    }
+  });
+
+  function resetWholeMatch() {
+    const state = window.liveMatchState;
+    if (!scorerCanManage() || !state || state.isSaving) { return; }
+    if (!window.confirm('Reset this entire match? All scores and match logs will be cleared.')) { return; }
+    state.isSaving = true;
+    const formData = new FormData();
+    formData.append('action', 'reset_match');
+    formData.append('match_id', state.matchId);
+    fetch('api-match-score.php', {method: 'POST', body: formData})
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        if (!data.success) { throw new Error(data.message || 'Match reset failed.'); }
+        // Rebuild the scorer from the now-reset database row and empty rally log.
+        // This also clears any restored or cached state from the previous game.
+        window.location.reload();
+      }).catch(function (error) { alert(error.message); }).finally(function () { state.isSaving = false; });
   }
 
   function saveMatchPause(paused) {
@@ -420,6 +457,7 @@
         return;
       }
       $('#matchResult').one('hidden.bs.modal', function () {
+        window.configReturnToSetup = true;
         syncMatchConfigFromState();
         $('#matchConfig').modal('show');
       }).modal('hide');
@@ -429,6 +467,7 @@
       const willPause = state.isStarted;
       saveMatchPause(willPause).then(function () {
         state.isStarted = !willPause;
+        state.hasBeenStarted = true;
         setScoreButtonsEnabled(state.isStarted);
         renderMatchResult();
       }).catch(function (error) { alert(error.message); }).finally(function () { state.isSaving = false; });
@@ -438,7 +477,7 @@
       state.scoreB = state.setScores[setIndex].b;
       openSetupChildModal('#setScoreBoard');
     } else if (action === 'reset') {
-      resetSet(setIndex);
+      resetWholeMatch();
     } else if (action === 'log') {
       openSetupChildModal('#matchLog');
     }
@@ -565,9 +604,7 @@
       setScoreButtonsEnabled(!matchCompleted);
       state.editingSetNo = null;
       speakScore('Manual score saved. ' + buildScoreAnnouncement());
-      if (matchCompleted) {
-        $('#setScoreBoard').one('hidden.bs.modal', function () { $('#matchResult').modal('show'); }).modal('hide');
-      }
+      $('#setScoreBoard').modal('hide');
     }).catch(function (error) {
       alert(error.message);
     }).finally(function () {
@@ -745,6 +782,7 @@
     $('#match-result-team-b-crown').toggle(winnerTeam === 'B');
     $('#match-result-set-indicator').text('Set - ' + state.setNo + '/' + (state.setLimit || 3));
     $('#match-setup-deuce').text(state.deuceEnabled ? 'Deuce On' : 'Deuce Off');
+    $('#match-config-save-label').text(state.hasBeenStarted ? 'SAVE' : 'SAVE & START');
 
     const rows = state.setScores.slice(0, state.setLimit || 3).map(function (score, index) {
       const played = index < state.completedSets.length || index === state.setNo - 1;
@@ -759,7 +797,7 @@
       const actions = '<button type="button" data-setup-action="position" data-set-index="' + index + '" title="Position"' + disabled + '><i class="fa-solid fa-right-left"></i></button>'
         + '<button type="button" data-setup-action="pause" data-set-index="' + index + '" title="' + pauseLabel + '"' + disabled + '><i class="fa-solid ' + (state.isStarted ? 'fa-pause' : 'fa-play') + '"></i> ' + pauseLabel + '</button>'
         + '<button type="button" data-setup-action="edit" data-set-index="' + index + '" title="Edit set score"' + disabled + '><i class="fa-solid fa-pen"></i></button>'
-        + '<button type="button" data-setup-action="reset" data-set-index="' + index + '" title="Reset set"' + disabled + '><i class="fa-solid fa-rotate-left"></i></button>'
+        + '<button type="button" data-setup-action="reset" data-set-index="' + index + '" title="Reset match" aria-label="Reset match"' + disabled + '><i class="fa-solid fa-rotate-left"></i></button>'
         + '<button type="button" data-setup-action="log" data-set-index="' + index + '" title="Match log"><i class="fa-solid fa-list-ul"></i></button>'
         + '<button type="button" disabled title="Coming soon"><i class="fa-solid fa-check"></i></button>';
       return '<div class="match-result-set-row">'

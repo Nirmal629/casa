@@ -417,7 +417,7 @@ if (!empty($completedSetScores)) {
 
                     <?php if ($canManage): ?>
                     <button class="match-config-save-btn" type="button" onclick="startPlayableMatch()">
-                        SAVE
+                        <span id="match-config-save-label">SAVE &amp; START</span>
                     </button>
                     <?php endif; ?>
                 </div>

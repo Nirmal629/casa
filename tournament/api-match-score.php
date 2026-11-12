@@ -299,7 +299,7 @@ try {
     ]);
 
     $action = $_POST['action'] ?? '';
-    if (!in_array($action, ['start_match', 'pause_match', 'record_point', 'undo_point', 'set_score_board', 'reset_set'], true)) {
+    if (!in_array($action, ['start_match', 'pause_match', 'record_point', 'undo_point', 'set_score_board', 'reset_set', 'reset_match'], true)) {
         jsonResponse(false, ['message' => 'Invalid action.']);
     }
 
@@ -354,6 +354,19 @@ try {
         $resetStmt = $pdo->prepare("UPDATE to_matches SET TEAM_1_SCORE = 0, TEAM_2_SCORE = 0, WINNER_TEAM_ID = NULL, STATUS = 'RUNNING' WHERE ID = :match_id");
         $resetStmt->execute([':match_id' => $matchId]);
         jsonResponse(true, ['status' => 'RUNNING']);
+    }
+
+    if ($action === 'reset_match') {
+        $pdo->beginTransaction();
+        $clearLogs = $pdo->prepare('DELETE FROM to_match_rally_logs WHERE MATCH_ID = :match_id');
+        $clearLogs->execute([':match_id' => $matchId]);
+        $resetMatch = $pdo->prepare("UPDATE to_matches SET TEAM_1_SCORE = 0, TEAM_2_SCORE = 0, WINNER_TEAM_ID = NULL, STATUS = 'PENDING' WHERE ID = :match_id");
+        $resetMatch->execute([':match_id' => $matchId]);
+        if (($match['STAGE'] ?? '') === 'GROUP' && !empty($match['GROUP_NAME'])) {
+            recalculateGroupStandings($pdo, (int)$match['TOURNAMENT_ID'], (string)$match['GROUP_NAME']);
+        }
+        $pdo->commit();
+        jsonResponse(true, ['status' => 'PENDING']);
     }
 
     if ($action === 'set_score_board') {
