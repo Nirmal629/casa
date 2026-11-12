@@ -621,6 +621,11 @@
     $('.left-court-shuttles, .right-court-shuttles').hide();
     const servingCourt = serviceCourtForScore(state.servingTeam, state.servingTeam === 'A' ? state.scoreA : state.scoreB);
     const servingSide = courtSideForTeam(state.servingTeam);
+    // Keep a single scoreboard arrow beside the active set, on the physical
+    // side of the team that is currently serving.
+    $('.scoreboard-shuttle').css('visibility', 'hidden');
+    const $activeSetRow = $('[data-set-row="' + state.setNo + '"]');
+    $activeSetRow.find('.scoreboard-shuttle').eq(servingSide === 'left' ? 0 : 1).css('visibility', 'visible');
     if (servingSide === 'left') {
       $(servingCourt === 'even' ? '#left-court-right-side-shuttle' : '#left-court-left-side-shuttle').show();
     } else {

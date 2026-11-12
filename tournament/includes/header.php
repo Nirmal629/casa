@@ -120,7 +120,6 @@ $isPlayoffDashboard = ($tournamentCurrentPage === 'court-dashboard.php');
                     <a class="breadcrumb-link breadcrumb-player" href="<?php echo htmlspecialchars($tournamentHubUrl); ?>"><?php echo htmlspecialchars($tournamentHubLabel); ?></a>
                     <a class="breadcrumb-link breadcrumb-tournament <?php echo $isTournamentDashboard ? 'active' : ''; ?>" href="<?php echo htmlspecialchars($headerTournamentDashboardUrl); ?>" <?php echo $isTournamentDashboard ? 'aria-current="page"' : ''; ?>>
                         <span>The Tournament Dashboard</span>
-                        <strong><?php echo htmlspecialchars($headerTournamentName); ?></strong>
                     </a>
                     <a class="breadcrumb-link breadcrumb-playoff <?php echo $isPlayoffDashboard ? 'active' : ''; ?>" href="<?php echo htmlspecialchars($headerPlayoffDashboardUrl); ?>" <?php echo $isPlayoffDashboard ? 'aria-current="page"' : ''; ?>>
                         <span>The Playoff Dashboard</span>

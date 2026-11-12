@@ -370,6 +370,23 @@ if (is_array($tournamentSummary)) {
     #league-stage {
         scroll-margin-top: 100px;
     }
+
+    .battleTournament_sec .court-event-details-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px 24px;
+    }
+
+    @media (max-width: 900px) {
+        .battleTournament_sec .court-event-details-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 600px) {
+        .battleTournament_sec .court-event-details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <section class="tournament_page bottomSide_gap">
@@ -383,11 +400,11 @@ if (is_array($tournamentSummary)) {
             <div class="card input-box">
                 <div class="court-event-details-grid">
                     <div class="detail">Club Name: <span><?php echo htmlspecialchars($summaryClubName); ?></span></div>
-                    <div class="detail">Date: <span><?php echo htmlspecialchars($summaryDate); ?></span></div>
                     <div class="detail">Tag Line: <span><?php echo htmlspecialchars($summaryTagline); ?></span></div>
-                    <div class="detail">Time: <span><?php echo htmlspecialchars($summaryTime); ?></span></div>
                     <div class="detail">Category: <span><?php echo htmlspecialchars($summaryCategoryLine); ?></span></div>
                     <div class="detail">Venue: <span><?php echo htmlspecialchars($summaryVenue); ?></span></div>
+                    <div class="detail">Date: <span><?php echo htmlspecialchars($summaryDate); ?></span></div>
+                    <div class="detail">Time: <span><?php echo htmlspecialchars($summaryTime); ?></span></div>
                 </div>
             </div>
 
