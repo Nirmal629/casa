@@ -1,16 +1,14 @@
 <?php
-require_once __DIR__ . '/../config/env.php';
-
 include('header.php');
 include('sidebar.php');
 
 // 1. Get ID and Fetch Data
 $id = $_GET['id'] ?? 0;
-$host    = env('DB_HOST', 'localhost');
-$db      = env('DB_NAME', 'casa_test');
-$user    = env('DB_USER', 'root');
-$pass    = env('DB_PASS', '');
-$dsn     = "mysql:host=$host;dbname=$db;charset=" . env('DB_CHARSET', 'utf8mb4');
+$host    = 'localhost';
+$db      = 'casa_test';
+$user    = 'casa_test';
+$pass    = 'casa_test123#';
+$dsn     = "mysql:host=$host;dbname=$db;charset=utf8";
 $conn    = new PDO($dsn, $user, $pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 
 // Fetch tournament and banner

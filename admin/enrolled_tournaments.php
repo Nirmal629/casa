@@ -10,37 +10,23 @@ include('sidebar.php');
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 if (empty($_SESSION['csrf_token'])) { $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); }
 
-$tournamentId = filter_input(INPUT_GET, 'tournament_id', FILTER_VALIDATE_INT) ?: null;
-$selectedTournamentName = null;
-
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
     // SQL includes Payment Status and specific Approval/Decline dates
-    $where = "WHERE u.USERTYPE = 'Player'";
-    $params = [];
-    if ($tournamentId) {
-        $where .= " AND tr.ID = :tournament_id";
-        $params[':tournament_id'] = $tournamentId;
-
-        $tournamentStmt = $pdo->prepare("SELECT CUP_NAME FROM to_tournaments WHERE ID = :tournament_id");
-        $tournamentStmt->execute([':tournament_id' => $tournamentId]);
-        $selectedTournamentName = $tournamentStmt->fetchColumn() ?: null;
-    }
-
     $sql = "SELECT u.*, t.ID AS TEAM_ID_VAL, t.NAME AS TEAM_NAME, tr.ID AS TOURN_ID, 
                    tr.PAYMENT_MAIL, p.STATUS AS PAY_STATUS, p.APPROVED_DATE, p.DECLINED_DATE
             FROM to_users u
             INNER JOIN to_teams t ON u.TEAM_ID = t.ID
             INNER JOIN to_tournaments tr ON t.TOURNAMENT_ID = tr.ID
             LEFT JOIN to_payments p ON p.USER_ID = u.ID AND p.GAME_ID = tr.ID
-            $where
+            WHERE u.USERTYPE = 'Player'
             ORDER BY tr.ID DESC, t.ID DESC, u.ID ASC";
             
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+    $stmt->execute();
     $registrations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>");
@@ -77,54 +63,28 @@ try {
 
     .btn-get-user { background-color: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
     .btn-create-user { background-color: #e67e22; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
-    /* Keep the payment controls and record actions together on one row. */
-    #registrationTable th:nth-child(5),
-    #registrationTable td:nth-child(5) { min-width: 132px; }
-    #registrationTable th:nth-child(6),
-    #registrationTable td:nth-child(6) { min-width: 94px; }
-    .approval-inline, .row-actions {
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        white-space: nowrap;
-        flex-wrap: nowrap !important;
-        width: max-content;
-    }
-    .approval-inline > *, .row-actions > * {
-        flex: 0 0 auto;
-    }
-    .approval-inline .st-paid, .approval-inline .st-unpaid, .approval-inline .st-success, .approval-inline .st-created, .approval-inline .st-pending {
-        margin: 0;
-    }
 </style>
 
 <section role="main" class="content-body">
-    <header class="page-header">
-        <h2>Manage Tournament Registrations<?php echo $selectedTournamentName ? ' — ' . htmlspecialchars($selectedTournamentName, ENT_QUOTES, 'UTF-8') : ''; ?></h2>
-    </header>
+    <header class="page-header"><h2>Manage Tournament Registrations</h2></header>
 
     <section class="panel">
         <div class="panel-body">
-            <?php if ($tournamentId): ?>
-                <p><a class="btn btn-default btn-sm" href="enrolled_tournaments.php"><i class="fa fa-users"></i> View All Enrolled Users</a></p>
-            <?php endif; ?>
             <table class="table table-bordered mb-none display nowrap" id="registrationTable" style="width:100%">
                 <thead>
                     <tr>
-                        <th rowspan="2">Team Name</th>
-                        <th rowspan="2">Name</th>
-                        <th rowspan="2">Email</th>
-                        <th rowspan="2">Contact</th>
-                        <th colspan="2" class="text-center">Payment</th>
-                        <th rowspan="2">Actions</th>
-                        <th colspan="2" class="text-center">Casa Database</th>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Tourn. ID</th>
+                        <th>Team Name</th>
+                        <th>Player ID</th>
+                        <th>Payment Info</th>
+                        <th>Approval Action</th>
+                        <th>Actions</th>
+                        <th>CA ID</th>
+                        <th>Sync Action</th>
+                        <th>Sync Status</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,10 +112,9 @@ try {
                         $isDeclined = !empty($row['DECLINED_DATE']) && !$hasPaid;
                     ?>
                         <tr class="<?php echo $rowBgClass . ' ' . $boundaryClass; ?>">
+                            <td class="text-center"><span class="label label-primary id-badge">#<?php echo str_pad($row['TOURN_ID'] ?? '', 4, "0", STR_PAD_LEFT); ?></span></td>
                             <td><strong><?php echo htmlspecialchars($row['TEAM_NAME'] ?? 'Singles'); ?></strong></td>
-                            <td><?php echo htmlspecialchars($row['NAME'] ?? ''); ?></td>
-                            <td id="email_<?php echo $row['ID']; ?>"><?php echo htmlspecialchars($row['EMAIL'] ?? ''); ?></td>
-                            <td id="whatsapp_<?php echo $row['ID']; ?>"><?php echo htmlspecialchars($row['WHATSAPP_NUMBER'] ?? ''); ?></td>
+                            <td class="text-center text-primary id-badge">#<?php echo str_pad($row['ID'] ?? '', 4, "0", STR_PAD_LEFT); ?></td>
                             
                             <!-- Column: Payment Info Badge -->
                             <td class="text-center">
@@ -166,8 +125,7 @@ try {
 
                             <!-- Column: Approval Action -->
                             <td class="text-center">
-                                <div class="approval-inline">
-                                    <button title="Approve Payment" class="btn btn-success btn-xs" onclick="processPayment(<?php echo $row['ID']; ?>, <?php echo $row['TOURN_ID']; ?>, 'approve')"><i class="fa fa-check"></i></button>
+                                <div style="margin-bottom: 4px;">
                                     <?php if ($isApproved): ?>
                                         <span class="st-success" style="background-color:#47a447;">APPROVED</span>
                                     <?php elseif ($isDeclined): ?>
@@ -177,12 +135,15 @@ try {
                                     <?php else: ?>
                                         <span class="st-pending">NO PAYMENT</span>
                                     <?php endif; ?>
+                                </div>
+                                <div class="btn-group">
+                                    <button title="Approve Payment" class="btn btn-success btn-xs" onclick="processPayment(<?php echo $row['ID']; ?>, <?php echo $row['TOURN_ID']; ?>, 'approve')"><i class="fa fa-check"></i></button>
                                     <button title="Decline Payment" class="btn btn-danger btn-xs" onclick="processPayment(<?php echo $row['ID']; ?>, <?php echo $row['TOURN_ID']; ?>, 'decline')"><i class="fa fa-times"></i></button>
                                 </div>
                             </td>
 
                             <td class="text-center">
-                                <div class="row-actions">
+                                <div class="btn-group">
     <button title="Copy Payment Template" class="btn btn-warning btn-xs" 
         onclick="copyFullTemplate(this, '<?php echo $row['ID']; ?>')"
         data-template="<?php echo htmlspecialchars($row['PAYMENT_MAIL'] ?? ''); ?>"
@@ -194,12 +155,8 @@ try {
                                 </div>
                             </td>
 
-                            <td class="text-center" id="status-cell-<?php echo $row['ID']; ?>">
-                                <span class="<?php echo $isSynced ? ($isExisting ? 'st-success' : 'st-created') : 'st-pending'; ?>">
-                                    <?php echo $isSynced ? ($isExisting ? 'SUCCESSFUL' : 'PLAYER CREATED') : 'PENDING'; ?>
-                                </span>
-                            </td>
-
+                            <td class="text-center id-badge" id="ca-id-<?php echo $row['ID']; ?>"><?php echo $isSynced ? $row['CA_ID'] : 'Pending'; ?></td>
+                            
                             <td class="text-center" id="action-cell-<?php echo $row['ID']; ?>">
                                 <?php if (!$isSynced): ?>
                                     <button class="<?php echo $isExisting ? 'btn-get-user' : 'btn-create-user'; ?>" onclick="syncUser(<?php echo $row['ID']; ?>, '<?php echo $isExisting ? 'get' : 'create'; ?>')">
@@ -207,6 +164,16 @@ try {
                                     </button>
                                 <?php else: ?><i class="fa fa-check text-success"></i> Synced<?php endif; ?>
                             </td>
+
+                            <td class="text-center" id="status-cell-<?php echo $row['ID']; ?>">
+                                <span class="<?php echo $isSynced ? ($isExisting ? 'st-success' : 'st-created') : 'st-pending'; ?>">
+                                    <?php echo $isSynced ? ($isExisting ? 'SUCCESSFUL' : 'PLAYER CREATED') : 'PENDING'; ?>
+                                </span>
+                            </td>
+
+                            <td><?php echo htmlspecialchars($row['NAME'] ?? ''); ?></td>
+                            <td id="email_<?php echo $row['ID']; ?>"><?php echo htmlspecialchars($row['EMAIL'] ?? ''); ?></td>
+                            <td id="whatsapp_<?php echo $row['ID']; ?>"><?php echo htmlspecialchars($row['WHATSAPP_NUMBER'] ?? ''); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
