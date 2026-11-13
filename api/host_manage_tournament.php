@@ -43,7 +43,9 @@ try {
         HOST_NAME = ?, CUP_NAME = ?, EVENT_COUNTRY = ?, EVENT_PROVINCE = ?, EVENT_CITY = ?, EVENT_CURRENCY = ?,
         EVENT_VENUE = ?, EVENT_CATEGORY = ?, GENDER_CATEGORY = ?, EVENT_TYPE = ?, GENDER_SKILL_LEVEL = ?,
         EVENT_DATE = ?, EVENT_TIME = ?, TO_TIME = ?, CANCEL_DATE = ?, CANCEL_TIME = ?, EVENT_COST = ?,
-        EVENT_DESCRIPTION = ?, EVENT_MESSAGE = ?, AMOUNT = ?, PAYMENT_ID = ?, PAYMENT_DEADLINE = ?,
+        EVENT_DESCRIPTION = ?, EVENT_MESSAGE = ?, FACILITY_COST = ?, ACCESSORIES_COST = ?, SNACKS_COST = ?,
+        TOTAL_EVENT_COST = ?, TOTAL_PLAYER_COST = ?, PROFIT_LOSS = ?, CLUB_COST = ?, BIRDIE_USED = ?, BIRDIE_COST = ?, BIRDIE_PRICE = ?,
+        AMOUNT = ?, PAYMENT_ID = ?, PAYMENT_DEADLINE = ?,
         REPORTING_TIME = ?, MATCH_START_TIME = ?, DRAW_ANNOUNCEMENT = ?, SHUTTLE_TYPE = ?, MATCH_FORMAT = ?,
         POPUP_MESSAGE = ?, PAYMENT_MAIL = ?
         WHERE ID = ? AND HOST_ID = ?';
@@ -52,7 +54,10 @@ try {
         valueOrNull($_POST['host_name'] ?? ''), valueOrNull($_POST['cup_name'] ?? ''), valueOrNull($_POST['event_country'] ?? ''), valueOrNull($_POST['event_province'] ?? ''), valueOrNull($_POST['event_city'] ?? ''), valueOrNull($_POST['event_currency'] ?? ''),
         valueOrNull($_POST['event_venue'] ?? ''), valueOrNull($_POST['event_category'] ?? ''), valueOrNull($_POST['gender_category'] ?? ''), valueOrNull($_POST['event_type'] ?? ''), $skill,
         valueOrNull($_POST['event_date'] ?? ''), valueOrNull($_POST['from_time'] ?? ''), valueOrNull($_POST['to_time'] ?? ''), valueOrNull($_POST['freeze_date'] ?? ''), valueOrNull($_POST['freeze_time'] ?? ''), valueOrNull($_POST['event_cost'] ?? ''),
-        $_POST['event_description'] ?? '', $_POST['event_message'] ?? '', valueOrNull($_POST['amount'] ?? ''), valueOrNull($_POST['payment_id'] ?? ''), valueOrNull($_POST['payment_deadline'] ?? ''),
+        $_POST['event_description'] ?? '', $_POST['event_message'] ?? '',
+        valueOrNull($_POST['facility_cost'] ?? ''), valueOrNull($_POST['accessories_cost'] ?? ''), valueOrNull($_POST['snacks_cost'] ?? ''),
+        valueOrNull($_POST['total_event_cost'] ?? ''), valueOrNull($_POST['total_player_cost'] ?? ''), valueOrNull($_POST['profit_loss'] ?? ''), valueOrNull($_POST['club_cost'] ?? ''), valueOrNull($_POST['birdie_used'] ?? ''), valueOrNull($_POST['birdie_cost'] ?? ''), valueOrNull($_POST['birdie_price'] ?? ''),
+        valueOrNull($_POST['amount'] ?? ''), valueOrNull($_POST['payment_id'] ?? ''), valueOrNull($_POST['payment_deadline'] ?? ''),
         valueOrNull($_POST['reporting_time'] ?? ''), valueOrNull($_POST['match_start_time'] ?? ''), valueOrNull($_POST['draw_announcement'] ?? ''), valueOrNull($_POST['shuttle_type'] ?? ''), valueOrNull($_POST['match_format'] ?? ''),
         $_POST['popup_message'] ?? '', $_POST['payment_mail'] ?? '', $tournamentId, $hostId
     ]);
