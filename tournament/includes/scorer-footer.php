@@ -40,11 +40,12 @@
       const storedRules = config[stage];
       const rules = storedRules && typeof storedRules === 'object' ? storedRules : {};
       const storedSets = typeof storedRules === 'number' ? storedRules : rules.sets;
-      const deuce = typeof rules.deuce === 'boolean' ? rules.deuce : defaults.deuce;
+      const overrides = initialMatchData.matchSettings || {};
+      const deuce = typeof overrides.deuce === 'boolean' ? overrides.deuce : (typeof rules.deuce === 'boolean' ? rules.deuce : defaults.deuce);
       const deuceLimit = ['25', '30'].includes(String(rules.deuceLimit)) ? String(rules.deuceLimit) : defaults.deuceLimit;
 
       return {
-        sets: parseInt(storedSets || defaults.sets, 10) === 1 ? 1 : 3,
+        sets: parseInt(overrides.sets || storedSets || defaults.sets, 10) === 1 ? 1 : 3,
         deuce: deuce,
         deuceLimit: deuce ? parseInt(deuceLimit, 10) : 0
       };
@@ -71,6 +72,7 @@
 
     const configuredMatchRules = getConfiguredMatchRules(window.initialMatchData);
     const configuredSetLimit = configuredMatchRules.sets;
+    $('#match-setup-sets').val(String(configuredSetLimit));
     const restoredSetScores = (window.initialMatchData.initialSetScores || [{a: window.initialMatchData.initialScoreA || 0, b: window.initialMatchData.initialScoreB || 0}, {a: 0, b: 0}, {a: 0, b: 0}]).map(function (score) {
       return {a: parseInt(score.a || 0, 10), b: parseInt(score.b || 0, 10)};
     });
@@ -170,6 +172,25 @@
     $('#set-board-score-a, #set-board-score-b').on('input', updateSetBoardLiveScore);
     $('#undo-point').on('click', undoLastPoint);
     $('#matchResult').on('shown.bs.modal', renderMatchResult);
+    $('#match-setup-sets').val(String(window.liveMatchState.setLimit || 3)).on('change', function () {
+      saveMatchSettings({sets: parseInt(this.value, 10)});
+    });
+    $('#match-setup-deuce').on('click', function () {
+      saveMatchSettings({deuce: !window.liveMatchState.deuceEnabled});
+    });
+    $('#match-court-number').on('click', function () {
+      if (!scorerCanManage() || $(this).find('input').length) { return; }
+      const button = $(this);
+      const input = $('<input type="number" min="1" step="1" class="scorer-court-number-input" aria-label="Court number">').val(window.initialMatchData.matchSettings.courtNo || '');
+      button.empty().append(input);
+      input.trigger('focus').on('keydown', function (event) { if (event.key === 'Enter') { event.preventDefault(); input.trigger('blur'); } });
+      input.on('blur', function () {
+        const value = parseInt(input.val(), 10);
+        if (!Number.isInteger(value) || value < 1) { button.text(window.initialMatchData.matchSettings.courtNo || '-'); return; }
+        button.text(value);
+        saveMatchSettings({courtNo: value});
+      });
+    });
     $('#match-result-set-breakdown').on('click', '[data-setup-action]', handleMatchSetupAction);
     $('#matchConfig').on('hidden.bs.modal', function () {
       if (window.configReturnToSetup) {
@@ -331,6 +352,33 @@
       }
       return data;
     });
+  }
+
+  function saveMatchSettings(changes) {
+    const state = window.liveMatchState;
+    if (!scorerCanManage() || !state || state.isSaving) { return; }
+    const formData = new FormData();
+    formData.append('action', 'save_match_settings');
+    formData.append('match_id', state.matchId);
+    if (Object.prototype.hasOwnProperty.call(changes, 'sets')) { formData.append('game_sets', changes.sets); }
+    if (Object.prototype.hasOwnProperty.call(changes, 'deuce')) { formData.append('deuce_enabled', changes.deuce ? '1' : '0'); }
+    if (Object.prototype.hasOwnProperty.call(changes, 'courtNo')) { formData.append('court_no', changes.courtNo); }
+    state.isSaving = true;
+    fetch('api-match-score.php', {method: 'POST', body: formData}).then(function (response) { return response.json(); }).then(function (data) {
+      if (!data.success) { throw new Error(data.message || 'Match settings could not be saved.'); }
+      if (Object.prototype.hasOwnProperty.call(changes, 'sets')) {
+        state.setLimit = changes.sets === 1 ? 1 : 3;
+        state.setNo = Math.min(state.setNo, state.setLimit);
+        window.initialMatchData.matchSettings.sets = state.setLimit;
+        applySetLimitVisibility(state.setLimit);
+      }
+      if (Object.prototype.hasOwnProperty.call(changes, 'deuce')) {
+        state.deuceEnabled = !!changes.deuce;
+        window.initialMatchData.matchSettings.deuce = state.deuceEnabled;
+      }
+      if (Object.prototype.hasOwnProperty.call(changes, 'courtNo')) { window.initialMatchData.matchSettings.courtNo = changes.courtNo; }
+      renderMatchResult();
+    }).catch(function (error) { alert(error.message); }).finally(function () { state.isSaving = false; });
   }
 
   function startPlayableMatch() {

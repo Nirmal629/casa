@@ -14,6 +14,7 @@ $team2PlayerRows = [];
 $rallyLogs = [];
 $completedSetScores = [];
 $matchRuleConfigs = [];
+$matchSettings = ['courtNo' => null, 'sets' => null, 'deuce' => null];
 
 try {
     include_once __DIR__ . '/../dbConnection_PDO.php';
@@ -38,6 +39,13 @@ try {
         $matchData = $matchStmt->fetch(PDO::FETCH_ASSOC) ?: null;
         if ($matchData) {
             $tournamentId = (int)$matchData['TOURNAMENT_ID'];
+            $matchSettings = [
+                'courtNo' => isset($matchData['COURT_NO']) && (int)$matchData['COURT_NO'] > 0
+                    ? (int)$matchData['COURT_NO']
+                    : (!empty($matchData['COURT_ID']) ? (int)$matchData['COURT_ID'] : null),
+                'sets' => isset($matchData['GAME_SETS']) ? (int)$matchData['GAME_SETS'] : null,
+                'deuce' => isset($matchData['DEUCE_ENABLED']) ? (int)$matchData['DEUCE_ENABLED'] === 1 : null,
+            ];
 
             // Only the organizer (to_tournaments.HOST_ID == logged-in ca_users.ID) can score this match.
             $hostStmt = $pdo->prepare("SELECT HOST_ID FROM to_tournaments WHERE ID = :tournament_id LIMIT 1");
@@ -175,6 +183,10 @@ if (!empty($completedSetScores)) {
     <div class="left-action-container">
         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&group=<?php echo urlencode($matchData['GROUP_NAME'] ?? ''); ?>" class="scorerback_btn btn btn-outline-info"><i class="fa-solid fa-arrow-left mr-1"></i></a>
         <div class="gameTimebox btn btn-outline-info">42 min</div>
+        <div class="scorer-court-label">
+            <span>Court</span>
+            <button type="button" id="match-court-number" class="btn btn-outline-info btn-sm" <?php echo $canManage ? 'title="Click to edit court number"' : 'disabled'; ?>><?php echo $matchSettings['courtNo'] !== null && $matchSettings['courtNo'] > 0 ? (int)$matchSettings['courtNo'] : '-'; ?></button>
+        </div>
     </div>
 
     <!----score-board---->
@@ -436,7 +448,8 @@ if (!empty($completedSetScores)) {
                 <div class="match-result-header-left">
                     <h6 class="modal-title text-info fw-bold text-uppercase small mr-1" id="matchResultLabel"><i class="fa-solid fa-sliders mr-1"></i>Match Setup</h6>
                     <span class="match-result-mini-select">Doubles</span>
-                    <span class="match-result-mini-select" id="match-setup-deuce">Deuce On</span>
+                    <?php if ($canManage): ?><button type="button" class="match-result-mini-select match-setting-toggle" id="match-setup-deuce" title="Toggle deuce">Deuce On</button><?php else: ?><span class="match-result-mini-select" id="match-setup-deuce">Deuce On</span><?php endif; ?>
+                    <?php if ($canManage): ?><label class="match-result-mini-select match-setting-control">Sets <select id="match-setup-sets" aria-label="Game sets"><option value="1">1</option><option value="3">3</option></select></label><?php endif; ?>
                     <span class="match-result-set-indicator" id="match-result-set-indicator">Set - 1/3</span>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -754,6 +767,7 @@ if (!empty($completedSetScores)) {
         initialSetNo: <?php echo (int)$initialSetNo; ?>,
         canManage: <?php echo $canManage ? 'true' : 'false'; ?>,
         matchRules: <?php echo json_encode($matchRuleConfigs); ?>,
+        matchSettings: <?php echo json_encode($matchSettings); ?>,
         defaultSetLimit: <?php echo (($matchData['STAGE'] ?? '') === 'GROUP') ? 1 : 3; ?>
     };
 </script>

@@ -282,6 +282,22 @@ body {
     gap: 15px;
 }
 
+.scorer-court-label {
+    position: absolute;
+    left: 0;
+    top: 48px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #17a2b8;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.scorer-court-label button { min-width: 42px; padding: 2px 7px; }
+.scorer-court-number-input { width: 54px; height: 25px; padding: 2px 4px; color: #fff; background: #07111d; border: 1px solid #17a2b8; border-radius: 4px; }
+
 /* Keep header controls vertically aligned with the two +1 scorer rails. */
 .scorer-top-controls {
     position: relative;
@@ -935,6 +951,10 @@ td {
     font-weight: 700;
     line-height: 18px;
 }
+
+button.match-result-mini-select { cursor: pointer; }
+.match-setting-control { display: inline-flex; align-items: center; gap: 3px; padding-right: 4px; }
+.match-setting-control select { width: 34px; padding: 0; color: #17a2b8; background: transparent; border: 0; font-size: 11px; font-weight: 700; }
 
 .match-result-set-indicator {
     display: inline-flex;
