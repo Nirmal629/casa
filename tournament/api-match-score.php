@@ -299,7 +299,7 @@ try {
     ]);
 
     $action = $_POST['action'] ?? '';
-    if (!in_array($action, ['start_match', 'pause_match', 'record_point', 'undo_point', 'set_score_board', 'reset_set'], true)) {
+    if (!in_array($action, ['start_match', 'pause_match', 'record_point', 'undo_point', 'set_score_board', 'reset_set', 'reset_match', 'save_match_settings'], true)) {
         jsonResponse(false, ['message' => 'Invalid action.']);
     }
 
@@ -318,6 +318,40 @@ try {
         && (int)$_SESSION['user_id'] === $tournamentHostId;
     if (!$canManage) {
         jsonResponse(false, ['message' => 'Only the tournament organizer can manage this match.']);
+    }
+    if ($action === 'save_match_settings') {
+        $updates = [];
+        $params = [':match_id' => $matchId];
+        if (array_key_exists('court_no', $_POST)) {
+            $courtNo = filter_var($_POST['court_no'], FILTER_VALIDATE_INT);
+            if ($courtNo === false || $courtNo < 1 || $courtNo > 999) {
+                jsonResponse(false, ['message' => 'Court number must be between 1 and 999.']);
+            }
+            $updates[] = 'COURT_NO = :court_no';
+            $params[':court_no'] = $courtNo;
+        }
+        if (array_key_exists('game_sets', $_POST)) {
+            $gameSets = filter_var($_POST['game_sets'], FILTER_VALIDATE_INT);
+            if ($gameSets === false || !in_array($gameSets, [1, 3], true)) {
+                jsonResponse(false, ['message' => 'Game sets must be 1 or 3.']);
+            }
+            $updates[] = 'GAME_SETS = :game_sets';
+            $params[':game_sets'] = $gameSets;
+        }
+        if (array_key_exists('deuce_enabled', $_POST)) {
+            $deuceEnabled = (string)$_POST['deuce_enabled'];
+            if (!in_array($deuceEnabled, ['0', '1'], true)) {
+                jsonResponse(false, ['message' => 'Invalid deuce setting.']);
+            }
+            $updates[] = 'DEUCE_ENABLED = :deuce_enabled';
+            $params[':deuce_enabled'] = (int)$deuceEnabled;
+        }
+        if (!$updates) {
+            jsonResponse(false, ['message' => 'No match settings were provided.']);
+        }
+        $settingsStmt = $pdo->prepare('UPDATE to_matches SET ' . implode(', ', $updates) . ' WHERE ID = :match_id');
+        $settingsStmt->execute($params);
+        jsonResponse(true, ['message' => 'Match settings saved.']);
     }
     if ($action === 'record_point' && ($match['STATUS'] ?? '') === 'COMPLETED') {
         jsonResponse(false, ['message' => 'This match is already completed.']);
@@ -354,6 +388,19 @@ try {
         $resetStmt = $pdo->prepare("UPDATE to_matches SET TEAM_1_SCORE = 0, TEAM_2_SCORE = 0, WINNER_TEAM_ID = NULL, STATUS = 'RUNNING' WHERE ID = :match_id");
         $resetStmt->execute([':match_id' => $matchId]);
         jsonResponse(true, ['status' => 'RUNNING']);
+    }
+
+    if ($action === 'reset_match') {
+        $pdo->beginTransaction();
+        $clearLogs = $pdo->prepare('DELETE FROM to_match_rally_logs WHERE MATCH_ID = :match_id');
+        $clearLogs->execute([':match_id' => $matchId]);
+        $resetMatch = $pdo->prepare("UPDATE to_matches SET TEAM_1_SCORE = 0, TEAM_2_SCORE = 0, WINNER_TEAM_ID = NULL, STATUS = 'PENDING' WHERE ID = :match_id");
+        $resetMatch->execute([':match_id' => $matchId]);
+        if (($match['STAGE'] ?? '') === 'GROUP' && !empty($match['GROUP_NAME'])) {
+            recalculateGroupStandings($pdo, (int)$match['TOURNAMENT_ID'], (string)$match['GROUP_NAME']);
+        }
+        $pdo->commit();
+        jsonResponse(true, ['status' => 'PENDING']);
     }
 
     if ($action === 'set_score_board') {

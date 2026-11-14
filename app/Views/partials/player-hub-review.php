@@ -292,11 +292,8 @@ $hub_reviews = $reviews ?? [];
                             </div>
                             <?php if ($isMyReview): ?>
                                 <button type="button" class="btn-edit-review"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#reviewmodal"
                                         data-id="<?= $rRow['ID'] ?>"
                                         data-rating="<?= $rRating ?>"
-                                        onclick="if(window.openEditReviewModal){ window.openEditReviewModal('<?= $rRow['ID'] ?>', <?= $rRating ?>, this); return false; }"
                                         title="Edit Review">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -585,7 +582,7 @@ $hub_reviews = $reviews ?? [];
         var editBtn = e.target.closest ? e.target.closest('.btn-edit-review') : null;
         if (editBtn) {
             e.preventDefault();
-            e.stopPropagation();
+            e.stopImmediatePropagation();
             var id = editBtn.getAttribute('data-id');
             var rating = editBtn.getAttribute('data-rating') || 5;
             window.openEditReviewModal(id, rating, editBtn);
