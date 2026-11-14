@@ -1,5 +1,5 @@
-<!-----Header------>
 <?php 
+// Header and authentication must run before any HTML is sent.
 include "includes/inner-header.php"; 
 // print_r($_SESSION);
 // exit;
