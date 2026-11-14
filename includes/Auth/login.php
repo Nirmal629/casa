@@ -8,12 +8,13 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Database constants (guarded so they don't collide with config/database.php when init.php is already loaded)
-if (!defined('DATABASE_NAME')) define('DATABASE_NAME', 'casa_test');
-if (!defined('USERNAME'))      define('USERNAME', 'casa_test');
-if (!defined('PASSWORD'))      define('PASSWORD', 'casa_test123#');
+// Use the environment configuration so this works in Docker and on the server.
+require_once __DIR__ . '/../../config/env.php';
+if (!defined('DATABASE_NAME')) define('DATABASE_NAME', env('DB_NAME', 'casa_test'));
+if (!defined('USERNAME'))      define('USERNAME', env('DB_USER', 'root'));
+if (!defined('PASSWORD'))      define('PASSWORD', env('DB_PASS', ''));
 
-$host = "localhost";
+$host = env('DB_HOST', 'localhost');
 $conn = new mysqli($host, USERNAME, PASSWORD, DATABASE_NAME);
 if ($conn->connect_error) {
     die("Connection failed.");
@@ -126,4 +127,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Don't have an account? <a href="javascript:void(0)" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerRequestModal">Register here</a>
     </p>
 </div>
-
