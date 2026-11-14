@@ -152,10 +152,6 @@ if ($isClubGamesPage) {
                         <li><a href="<?= e($routes['hostDashboard']) ?>" class="nav_link <?php echo $currentInnerPage === 'host-dashboard.php' ? 'active' : ''; ?>">
                             <span>Dashboard</span></a></li>
                     <?php endif; ?>
-                    <?php if ($isHost): ?>
-                        <li><a href="<?= e($routes['hostAuditLog']) ?>" class="nav_link <?php echo $currentInnerPage === 'host-audit-log.php' ? 'active' : ''; ?>">
-                            <span>Audit Log</span></a></li>
-                    <?php endif; ?>
                     <?php if (canViewProductListing()): ?>
                     <li><a href="<?= e($routes['productListing']) ?>" class="nav_link <?php echo $currentInnerPage === 'product-listing.php' ? 'active' : ''; ?>">
                         <span><?= e($navbarStoreLabel) ?></span></a></li>
@@ -198,11 +194,6 @@ if ($isClubGamesPage) {
                             </a>
                             <a href="<?= e($routes['hostDashboard']) ?>" role="menuitem">
                                 <i class="fa-solid fa-gauge" aria-hidden="true"></i> Host Dashboard
-                            </a>
-                            <?php endif; ?>
-                            <?php if ($isHost): ?>
-                            <a href="<?= e($routes['hostAuditLog']) ?>" role="menuitem">
-                                <i class="fa-solid fa-chart-line" aria-hidden="true"></i> Audit Log
                             </a>
                             <?php endif; ?>
                             <div class="ncd-divider"></div>

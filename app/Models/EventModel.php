@@ -638,6 +638,16 @@ class EventModel extends Model
         $f = $this->normalizeFilters($filters);
         $events = $this->getFilteredEvents($f);
 
+        // Expired scheduled games remain available to hosts for history and
+        // management, but must not be presented as available schedule options
+        // to players.
+        if ($f['is_player'] && !empty($events)) {
+            $events = array_values(array_filter(
+                $events,
+                fn (array $event): bool => !$this->isEventExpired($event)
+            ));
+        }
+
         if (empty($events)) {
             return [];
         }

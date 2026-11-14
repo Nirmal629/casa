@@ -36,8 +36,6 @@ $cssPrefix = $assetPrefix ?? (strpos($_SERVER['REQUEST_URI'] ?? '', '/host/') !=
 <!----Dashboard------>
 <section class="bothSide_gap host-modern-dashboard">
     <div class="cust_container">
-        <h2 class="heading"><?= e($dashboardHeading) ?></h2>
-
         <div class="custom_card">
             <div class="tab-scroll-container mb-3">
                 <ul class="nav nav-pills nav-stacked-pills flex-nowrap" id="myTab" role="tablist">

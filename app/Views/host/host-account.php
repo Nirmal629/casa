@@ -11,7 +11,6 @@ if ($userRole !== 'host' && $userRole !== 'trainer') {
     exit;
 }
 
-include __DIR__ . "/../layouts/header/inner-header.php";
 ?>
 
 <link rel="stylesheet" href="../app/Views/css/host/dashboard.css">
