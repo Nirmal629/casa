@@ -124,7 +124,7 @@ class AuthController extends Controller
                 $_SESSION['login_error'] = 'Invalid username or password.';
             }
 
-            header("Location: /");
+            header('Location: ' . appUrl());
             exit;
         }
 

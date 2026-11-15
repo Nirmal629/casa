@@ -175,15 +175,26 @@ $currentMonth = (int) date('n');
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    if (xhr.status === 200 && xhr.responseText.trim() === 'OK') {
+                    let response = null;
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (_) {
+                        response = null;
+                    }
+                    const updated = xhr.status === 200
+                        && ((response && response.success === true) || xhr.responseText.trim() === 'OK');
+                    if (updated) {
                         if (typeof showToast === 'function') {
                             showToast('success', 'Player premium status updated successfully');
                         }
                     } else {
+                        const errorMessage = response && (response.message || response.error)
+                            ? (response.message || response.error)
+                            : 'Failed to update premium status. Please try again.';
                         if (typeof showToast === 'function') {
-                            showToast('error', 'Failed to update premium status. Please try again.');
+                            showToast('error', errorMessage);
                         } else {
-                            alert('Failed to update premium status. Please try again.');
+                            alert(errorMessage);
                         }
 
                         // Revert checkbox & label
