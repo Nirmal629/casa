@@ -158,7 +158,8 @@ $currentMonth = (int) date('n');
             }
 
             // Retrieve CSRF token for secure mutation
-            const csrfToken = (typeof window.csrfToken === 'function' ? window.csrfToken() : null)
+            const csrfToken = (window.Casa && typeof window.Casa.csrfToken === 'function' ? window.Casa.csrfToken() : '')
+                || (typeof window.csrfToken === 'function' ? window.csrfToken() : null)
                 || (document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '')
                 || (document.querySelector('input[name="csrf_token"]') ? document.querySelector('input[name="csrf_token"]').value : '');
 
@@ -167,9 +168,9 @@ $currentMonth = (int) date('n');
             const apiUrl = baseUrl.replace(/\/$/, '') + '/api/update-player-premium';
             xhr.open('POST', apiUrl, true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             if (csrfToken) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             }
 
             xhr.onreadystatechange = function () {
