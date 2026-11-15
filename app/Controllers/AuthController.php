@@ -330,7 +330,7 @@ class AuthController extends Controller
         ]);
 
         Session::logout();
-        header('Location: /');
+        header('Location: ' . appUrl());
         exit;
     }
 
