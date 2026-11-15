@@ -367,7 +367,8 @@ if (is_array($tournamentSummary)) {
 <?php include __DIR__ . "/../app/Views/layouts/header/header.php"; ?>
 
 <!-- Tournament Bracket & Page Specific Styles -->
-<link rel="stylesheet" href="/tournament/assets/css/bracket.css" type="text/css">
+<?php $tournamentAssetPrefix = function_exists('appBasePath') ? appBasePath() : '/'; ?>
+<link rel="stylesheet" href="<?= htmlspecialchars($tournamentAssetPrefix, ENT_QUOTES, 'UTF-8') ?>tournament/assets/css/bracket.css?v=<?= (int) @filemtime(__DIR__ . '/assets/css/bracket.css') ?>" type="text/css">
 
 <!-- Offset the dashboard tables below the fixed header when reached via a dashboard link -->
 <style>

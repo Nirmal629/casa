@@ -805,6 +805,13 @@
     margin-bottom: 16px;
 }
 
+/* Keep tournament panels opaque so the light site background cannot wash out
+   the original tournament colors through the transparent fallback. */
+.battleTournament_sec .input-box,
+.battleTournament_sec .card {
+    background: #0a1d2a;
+}
+
 .battleTournament_sec .card h6 {
     margin-bottom: 10px;
     color: #38bdf8;
