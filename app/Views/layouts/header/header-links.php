@@ -1,6 +1,16 @@
 <meta charset="UTF-8">
 <meta name="description" content="Casa Games & Tournaments Platform">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(() => {
+    try {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (timezone && timezone !== document.cookie.match(/(?:^|; )casa_timezone=([^;]*)/)?.[1]) {
+            document.cookie = `casa_timezone=${encodeURIComponent(timezone)}; path=/; max-age=31536000; samesite=lax`;
+        }
+    } catch (_) {}
+})();
+</script>
 <meta name="csrf-token" content="<?= htmlspecialchars(\App\Helpers\Session::csrfToken()) ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="theme-color" content="#081b3c">

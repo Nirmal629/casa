@@ -135,7 +135,7 @@ class HomeController extends Controller
 
         $rows = $this->fetchAll($sql);
 
-        $tz = new \DateTimeZone('America/New_York');
+        $tz = \App\Config\Timezone::zone();
         $now = new \DateTime('now', $tz);
         $projectRoot = dirname(__DIR__, 2);
 
@@ -146,8 +146,8 @@ class HomeController extends Controller
             $words = preg_split('/\s+/', $desc, -1, PREG_SPLIT_NO_EMPTY);
             $tagline = implode(' ', array_slice($words ?: [], 0, 5)) . (count($words ?: []) > 5 ? '...' : '');
 
-            $date = !empty($row['EVENT_DATE']) ? date('M d, Y', strtotime($row['EVENT_DATE'])) : '';
-            $time = !empty($row['EVENT_TIME']) ? date('h:i A', strtotime($row['EVENT_TIME'])) : '';
+            $date = !empty($row['EVENT_DATE']) ? \App\Config\Timezone::formatEvent((string) $row['EVENT_DATE'], '', $row['EVENT_TIMEZONE'] ?? null, 'M d, Y') : '';
+            $time = !empty($row['EVENT_TIME']) ? \App\Config\Timezone::formatEvent((string) ($row['EVENT_DATE'] ?? ''), (string) $row['EVENT_TIME'], $row['EVENT_TIMEZONE'] ?? null, 'h:i A') : '';
 
             $image = trim((string)($row['IMAGE'] ?? $row['IMGAE'] ?? ''));
             $banner = $image ? self::TOURNAMENT_BANNER_DIR . basename($image) : '';

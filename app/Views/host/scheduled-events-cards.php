@@ -21,9 +21,12 @@ if (!empty($events)):
         $eventStartTimeStr = $event['EVENT_TIME'] ?? '00:00:00';
         $eventEndTimeStr = $event['TO_TIME'] ?? '';
 
+        $eventTimezone = $event['EVENT_TIMEZONE'] ?? null;
         $eventDateTime = strtotime($eventDateStr . ' ' . $eventStartTimeStr);
         $event_date_formatted = date('D, d M Y • h:i A', $eventDateTime);
         $event_toTime_formatted = !empty($eventEndTimeStr) ? date('h:i A', strtotime($eventEndTimeStr)) : '';
+        $event_date_formatted = \App\Config\Timezone::formatEvent((string) $eventDateStr, (string) $eventStartTimeStr, $eventTimezone, 'D, d M Y â€¢ h:i A');
+        $event_toTime_formatted = !empty($eventEndTimeStr) ? \App\Config\Timezone::formatEventEnd((string) $eventDateStr, (string) $eventStartTimeStr, (string) $eventEndTimeStr, $eventTimezone) : '';
 
         // Expiration check via unified timezone-aware HostController/EventModel
         $isExpired = isset($hostController) && method_exists($hostController, 'isEventExpired')

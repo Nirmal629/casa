@@ -30,18 +30,15 @@ class GameJoinModel extends Model
         'CONFIRMED',
     ];
 
-    private const string DEFAULT_TIMEZONE = 'America/Toronto';
-
     protected mysqli $mysqli;
     protected EventModel $eventModel;
 
     private function getTimezone(): DateTimeZone
     {
-        $timezoneName = function_exists('env')? (string) env('APP_TIMEZONE', date_default_timezone_get() ?: self::DEFAULT_TIMEZONE): (date_default_timezone_get() ?: self::DEFAULT_TIMEZONE);
         try {
-            return new DateTimeZone($timezoneName);
+            return \App\Config\Timezone::zone();
         } catch (Throwable $e) {
-            return new DateTimeZone(self::DEFAULT_TIMEZONE);
+            return new DateTimeZone('UTC');
         }
     }
 
@@ -443,7 +440,10 @@ class GameJoinModel extends Model
                 );
             }
 
-            $timezone = $this->getTimezone();
+            $savedTimezone = trim((string) ($eventData['EVENT_TIMEZONE'] ?? ''));
+            $timezone = in_array($savedTimezone, DateTimeZone::listIdentifiers(), true)
+                ? new DateTimeZone($savedTimezone)
+                : \App\Config\Timezone::configuredZone();
 
             try {
                 $deadline = new DateTimeImmutable(trim($cancelDate . ' ' . $cancelTime), $timezone);

@@ -109,7 +109,7 @@ $HOST_NAME = htmlspecialchars($_SESSION['name'] ?? 'Host');
                 </div>
                 <div class="rounded-xl bg-white border border-slate-200 shadow-sm p-4">
                     <h2 class="text-sm font-bold text-slate-800 mb-1 mt-0">Activity by time of day</h2>
-                    <p class="text-[11px] text-slate-400 mt-0 mb-1">America/Toronto</p>
+                    <p class="text-[11px] text-slate-400 mt-0 mb-1"><?= htmlspecialchars(\App\Config\Timezone::name(), ENT_QUOTES, 'UTF-8') ?></p>
                     <div id="chartTime" class="min-h-[240px]"></div>
                 </div>
             </div>

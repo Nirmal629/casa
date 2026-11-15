@@ -51,6 +51,8 @@ if (filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN) && in_array(str
 
 require_once __DIR__ . '/app/Config/Database.php';
 require_once __DIR__ . '/app/Config/db.php'; // getDbConnection(), getPdoConnection()
+require_once __DIR__ . '/app/Config/Timezone.php';
+date_default_timezone_set(\App\Config\Timezone::name());
 
 // Load Helpers
 require_once __DIR__ . '/app/Helpers/Session.php';

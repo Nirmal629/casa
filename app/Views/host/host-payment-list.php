@@ -5,10 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../../Helpers/calendar_helper.php';
 
-$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-if (!empty($appTz)) {
-    @date_default_timezone_set($appTz);
-}
+date_default_timezone_set(\App\Config\Timezone::configuredZone()->getName());
 $conn = \App\Config\Database::getMysqli();
 
 $currentYear = (int) date('Y');

@@ -570,7 +570,7 @@ class PlayerController extends Controller
             $rawTournaments = $tournamentQuery(true) ?: $tournamentQuery(false);
 
             require_once __DIR__ . '/../Helpers/player_hub_helper.php';
-            $tzEst = new \DateTimeZone('America/New_York');
+            $tzEst = \App\Config\Timezone::zone();
             $nowEst = new \DateTimeImmutable('now', $tzEst);
             $pathPrefix = '/';
 
@@ -1079,7 +1079,7 @@ class PlayerController extends Controller
         foreach ($events as $event) {
             $eventId = (int) $event['ID'];
             $hostName = htmlspecialchars($event['HOST_NAME'] ?? '', ENT_QUOTES, 'UTF-8');
-            $eventDate = date('D, d M Y, h:i A', strtotime(($event['EVENT_DATE'] ?? '') . ' ' . ($event['EVENT_TIME'] ?? '')));
+            $eventDate = \App\Config\Timezone::formatEvent((string) ($event['EVENT_DATE'] ?? ''), (string) ($event['EVENT_TIME'] ?? ''), $event['EVENT_TIMEZONE'] ?? null);
             $eventVenue = htmlspecialchars($event['EVENT_VENUE'] ?? '', ENT_QUOTES, 'UTF-8');
             $eventCost = htmlspecialchars((string) ($event['EVENT_COST'] ?? '0'), ENT_QUOTES, 'UTF-8');
             $eventCurrency = htmlspecialchars($event['EVENT_CURRENCY'] ?? '$', ENT_QUOTES, 'UTF-8');
@@ -1090,9 +1090,9 @@ class PlayerController extends Controller
             $eventMessage = (string) ($event['EVENT_MESSAGE'] ?? '');
             $eventType = htmlspecialchars($event['EVENT_TYPE'] ?? 'Public', ENT_QUOTES, 'UTF-8');
             $eventCourt = (int) ($event['EVENT_COURT'] ?? 0);
-            $eventCancelDate = !empty($event['CANCEL_DATE']) ? date('D, d M Y', strtotime((string) $event['CANCEL_DATE'])) : '';
-            $eventCancelTime = !empty($event['CANCEL_TIME']) ? date('h:i A', strtotime((string) $event['CANCEL_TIME'])) : '';
-            $eventToTime = !empty($event['TO_TIME']) ? date('h:i A', strtotime((string) $event['TO_TIME'])) : '';
+            $eventCancelDate = !empty($event['CANCEL_DATE']) ? \App\Config\Timezone::formatEvent((string) $event['CANCEL_DATE'], '', $event['EVENT_TIMEZONE'] ?? null, 'D, d M Y') : '';
+            $eventCancelTime = !empty($event['CANCEL_TIME']) ? \App\Config\Timezone::formatEvent((string) ($event['EVENT_DATE'] ?? ''), (string) $event['CANCEL_TIME'], $event['EVENT_TIMEZONE'] ?? null, 'h:i A') : '';
+            $eventToTime = !empty($event['TO_TIME']) ? \App\Config\Timezone::formatEventEnd((string) ($event['EVENT_DATE'] ?? ''), (string) ($event['EVENT_TIME'] ?? ''), (string) $event['TO_TIME'], $event['EVENT_TIMEZONE'] ?? null) : '';
 
             $jsonStringy = htmlspecialchars(json_encode($event) ?: '{}', ENT_QUOTES, 'UTF-8');
             $words = explode(" ", $eventMessage);

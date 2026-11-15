@@ -7,10 +7,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-if (!empty($appTz)) {
-    @date_default_timezone_set($appTz);
-}
+date_default_timezone_set(\App\Config\Timezone::configuredZone()->getName());
 $msCurYear  = (int) date('Y');
 $msCurMonth = (int) date('n');
 $msMonths = getMonthOptions(true);

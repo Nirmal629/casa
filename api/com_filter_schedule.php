@@ -73,7 +73,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     while ($event = mysqli_fetch_assoc($result)) {
         $event_id = (int)($event['ID'] ?? 0);
         $event_host_id = (int)($event['HOST_ID'] ?? $host_id);
-        $event_date = !empty($event['EVENT_DATE']) ? date('D, d M Y', strtotime($event['EVENT_DATE'])) : '';
+        $event_date = !empty($event['EVENT_DATE']) ? \App\Config\Timezone::formatEvent((string) $event['EVENT_DATE'], '', $event['EVENT_TIMEZONE'] ?? null, 'D, d M Y') : '';
         $event_venue = (string)($event['EVENT_VENUE'] ?? '');
         $event_category = (string)($event['EVENT_CATEGORY'] ?? '');
         $facility_cost = (string)($event['FACILITY_COST'] ?? '0.00');
