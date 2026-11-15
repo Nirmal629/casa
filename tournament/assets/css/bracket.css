@@ -812,6 +812,16 @@
     background: #0a1d2a;
 }
 
+/* The opaque dark panels need light labels for readable contrast. */
+.battleTournament_sec .input-box .detail {
+    color: #e5eef7;
+    line-height: 1.5;
+}
+
+.battleTournament_sec .input-box .detail span {
+    color: #38bdf8;
+}
+
 .battleTournament_sec .card h6 {
     margin-bottom: 10px;
     color: #38bdf8;
