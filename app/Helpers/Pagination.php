@@ -8,7 +8,7 @@ namespace App\Helpers {
 
     class Pagination implements JsonSerializable
     {
-        public const int DEFAULT_LIMIT = 10;
+        public const DEFAULT_LIMIT = 10;
         protected static int $globalDefaultLimit = self::DEFAULT_LIMIT;
 
         public int $total;
