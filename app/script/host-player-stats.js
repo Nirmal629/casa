@@ -246,6 +246,9 @@
         var status = (statusEl?.value || '').trim();
         var gender = (genderEl?.value || '').trim();
         var hostId = getCurrentHostId();
+        var csrfToken = (window.Casa && typeof window.Casa.csrfToken === 'function')
+            ? window.Casa.csrfToken()
+            : ((typeof window.csrfToken === 'function') ? window.csrfToken() : '');
 
         var params = {
             host_id: hostId,
@@ -253,7 +256,8 @@
             skill_level: level,
             status: status,
             gender: gender,
-            format: 'json'
+            format: 'json',
+            csrf_token: csrfToken
         };
 
         var $ = window.jQuery || window.$;
@@ -278,7 +282,10 @@
         } else {
             fetch(getApiUrl('get-player-stats'), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': csrfToken
+                },
                 body: new URLSearchParams(params).toString()
             })
             .then(function (r) { return r.json(); })
