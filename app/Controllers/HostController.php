@@ -40,7 +40,7 @@ class HostController extends Controller
     protected PlayerRatingModel $playerRatingModel;
     protected PlayerLogModel $playerLogModel;
 
-    private const array LEVEL_MAP = [
+    private const LEVEL_MAP = [
         'Beginner'       => 'Beg',
         'Amateur'        => 'Ama',
         'Intermediate'   => 'Int',
@@ -51,27 +51,27 @@ class HostController extends Controller
         'Pro'            => 'Pro',
     ];
 
-    private const array GENDER_MAP = [
+    private const GENDER_MAP = [
         'Male'   => 'M',
         'Female' => 'F',
         'Kid'    => 'K',
     ];
 
-    private const array SPECIAL_LEVEL_CLAUSES = [
+    private const SPECIAL_LEVEL_CLAUSES = [
         'advance'        => "COALESCE(NULLIF(cu.VERIFIED_LEVEL, ''), cu.LEVEL) IN ('Advance', 'Advanced')",
         'advanced'       => "COALESCE(NULLIF(cu.VERIFIED_LEVEL, ''), cu.LEVEL) IN ('Advance', 'Advanced')",
         'intermediate +' => "COALESCE(NULLIF(cu.VERIFIED_LEVEL, ''), cu.LEVEL) IN ('Intermediate +', 'Intermediate+')",
         'intermediate+'  => "COALESCE(NULLIF(cu.VERIFIED_LEVEL, ''), cu.LEVEL) IN ('Intermediate +', 'Intermediate+')",
     ];
 
-    private const array SPECIAL_GENDER_CLAUSES = [
+    private const SPECIAL_GENDER_CLAUSES = [
         'kid'  => "cu.GENDER IN ('Kid', 'Kids')",
         'kids' => "cu.GENDER IN ('Kid', 'Kids')",
     ];
 
-    private const array ALLOWED_PAGE_SIZES = [5, 10, 20, 50, 100];
-    private const array ALLOWED_SORT_COLUMNS = ['name', 'games', 'amount', 'paid', 'due'];
-    private const array DAYS_OF_WEEK = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+    private const ALLOWED_PAGE_SIZES = [5, 10, 20, 50, 100];
+    private const ALLOWED_SORT_COLUMNS = ['name', 'games', 'amount', 'paid', 'due'];
+    private const DAYS_OF_WEEK = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
 
     public function __construct(?PDO $db = null)
     {

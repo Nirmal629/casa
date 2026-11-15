@@ -393,7 +393,7 @@ class EventModel extends Model
         return $stmt->rowCount() > 0;
     }
 
-    public const array SKILL_HIERARCHY = [
+    public const SKILL_HIERARCHY = [
         'beginner'       => ['Beginner'],
         'amateur'        => ['Beginner', 'Amateur'],
         'intermediate'   => ['Beginner', 'Amateur', 'Intermediate'],

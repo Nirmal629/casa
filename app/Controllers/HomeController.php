@@ -12,14 +12,14 @@ use Throwable;
 
 class HomeController extends Controller
 {
-    private const int PRODUCT_LIMIT = 12;
-    private const int REVIEW_LIMIT = 20;
+    private const PRODUCT_LIMIT = 12;
+    private const REVIEW_LIMIT = 20;
 
     // Asset directory paths and fallback images
-    private const string TOURNAMENT_BANNER_DIR = 'admin/assets/images/tournaments_banner/';
-    private const string DEFAULT_TOURNAMENT_IMG = 'assets/images/default-tournament.jpg';
-    private const string PRODUCT_IMAGE_DIR      = 'admin/';
-    private const string DEFAULT_PRODUCT_IMG    = 'assets/images/product/badminton1.jpg';
+    private const TOURNAMENT_BANNER_DIR = 'admin/assets/images/tournaments_banner/';
+    private const DEFAULT_TOURNAMENT_IMG = 'assets/images/default-tournament.jpg';
+    private const PRODUCT_IMAGE_DIR      = 'admin/';
+    private const DEFAULT_PRODUCT_IMG    = 'assets/images/product/badminton1.jpg';
 
     private readonly PDO $db;
 

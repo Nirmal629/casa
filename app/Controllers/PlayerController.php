@@ -16,11 +16,11 @@ use PDOException;
 
 class PlayerController extends Controller
 {
-    private const string DEFAULT_PROFILE_IMG = '/assets/images/profile.jpg';
-    private const string DEFAULT_PRODUCT_IMG = '/assets/images/t-shirt.jpg';
-    private const string ADMIN_ASSETS_DIR = 'admin/assets/';
-    private const string ADMIN_DIR = 'admin/';
-    private const string PRODUCT_IMAGES_DIR = 'assets/images/product/';
+    private const DEFAULT_PROFILE_IMG = '/assets/images/profile.jpg';
+    private const DEFAULT_PRODUCT_IMG = '/assets/images/t-shirt.jpg';
+    private const ADMIN_ASSETS_DIR = 'admin/assets/';
+    private const ADMIN_DIR = 'admin/';
+    private const PRODUCT_IMAGES_DIR = 'assets/images/product/';
 
     protected PDO $db;
     protected UserModel $userModel;
