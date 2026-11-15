@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/_session.php';
 error_reporting(0); 
 header('Content-Type: application/json');
 

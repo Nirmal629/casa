@@ -32,6 +32,7 @@
               <?php endif;?>
               <!-- General Form Elements -->
               <form class="row g-3 needs-validation" action="<?=base_url()?>club-owner/editinventory" method="post" novalidate>
+                <?= csrf_field() ?>
                 <input type="hidden" name="inventory_id" id="inventory_id" value="<?=$inventory_id?>">
                 <div class="row mb-3">
                   <label for="name" class="col-sm-2 col-form-label">Inventory Name<small class="text-danger">*</small></label>

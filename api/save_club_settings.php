@@ -1,11 +1,12 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 /**
  * API: Save Club Settings
  * Handles POST from host-club-settings.php form.
  * Creates or updates a club row in ca_clubs for the logged-in host.
  */
 
-session_start();
 include('../dbConnection.php');
 
 // ── Auth Check ──
@@ -16,8 +17,25 @@ if (!isset($_SESSION['user_id']) || (trim($_SESSION['usertype']) !== 'Host' && t
 
 // ── Only accept POST ──
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../host-dashboard.php');
+    header('Location: ../host/host-account.php');
     exit;
+}
+
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$redirect_base = (strpos($referer, 'host-dashboard') !== false) ? '../host/host-dashboard.php' : '../host/host-account.php';
+
+// Helper to clean standalone HTML snippet and prevent global body/* style pollution
+function cleanHtmlSnippet($html) {
+    if (empty($html)) return '';
+    $clean = preg_replace('/<!DOCTYPE[^>]*>/i', '', $html);
+    $clean = preg_replace('/<\/?(?:html|head|meta|title|body)\b[^>]*>/i', '', $clean);
+    $clean = preg_replace_callback('/<style\b[^>]*>(.*?)<\/style>/is', function($matches) {
+        $css = $matches[1];
+        $css = preg_replace('/\b(body|html)\s*\{[^}]*\}/i', '', $css);
+        $css = preg_replace('/^\s*\*\s*\{[^}]*\}/mi', '', $css);
+        return '<style>' . $css . '</style>';
+    }, $clean);
+    return trim($clean);
 }
 
 // ── Sanitize Inputs ──
@@ -25,14 +43,14 @@ $host_id    = intval($_SESSION['user_id']);
 $club_name  = mysqli_real_escape_string($conn, trim($_POST['club_name'] ?? ''));
 $game_type  = mysqli_real_escape_string($conn, trim($_POST['game_type'] ?? 'Badminton'));
 $category   = mysqli_real_escape_string($conn, trim($_POST['category'] ?? ''));
-$club_info  = mysqli_real_escape_string($conn, trim($_POST['club_info'] ?? ''));
-$schedule   = mysqli_real_escape_string($conn, trim($_POST['schedule'] ?? ''));
-$cost_info  = mysqli_real_escape_string($conn, trim($_POST['cost_info'] ?? ''));
+$club_info  = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['club_info'] ?? ''));
+$schedule   = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['schedule'] ?? ''));
+$cost_info  = mysqli_real_escape_string($conn, cleanHtmlSnippet($_POST['cost_info'] ?? ''));
 $status     = mysqli_real_escape_string($conn, trim($_POST['status'] ?? 'Active'));
 
 // ── Validate Required Fields ──
 if (empty($club_name)) {
-    header('Location: ../host-dashboard.php?club_error=Club+name+is+required#ClubSettings');
+    header("Location: {$redirect_base}?club_error=Club+name+is+required#ClubSettings");
     exit;
 }
 
@@ -89,15 +107,15 @@ if (isset($_FILES['club_logo']) && $_FILES['club_logo']['error'] === UPLOAD_ERR_
                     }
                 }
             } else {
-                header('Location: ../host-dashboard.php?club_error=Failed+to+save+uploaded+image.#ClubSettings');
+                header("Location: {$redirect_base}?club_error=Failed+to+save+uploaded+image.#ClubSettings");
                 exit;
             }
         } else {
-            header('Location: ../host-dashboard.php?club_error=Image+must+be+less+than+2MB.#ClubSettings');
+            header("Location: {$redirect_base}?club_error=Image+must+be+less+than+2MB.#ClubSettings");
             exit;
         }
     } else {
-        header('Location: ../host-dashboard.php?club_error=Invalid+image+format.+Supported+formats:+JPG,+PNG,+GIF,+WebP.#ClubSettings');
+        header("Location: {$redirect_base}?club_error=Invalid+image+format.+Supported+formats:+JPG,+PNG,+GIF,+WebP.#ClubSettings");
         exit;
     }
 }
@@ -142,10 +160,10 @@ if (mysqli_query($conn, $sql)) {
         syncHomeClubToPlayers($conn, $target_club_id, $host_id, $country, $province, $city, $game_type);
     }
 
-    header('Location: ../host-dashboard.php?club_saved=1#ClubSettings');
+    header("Location: {$redirect_base}?club_saved=1#ClubSettings");
 } else {
     $error = urlencode(mysqli_error($conn));
-    header('Location: ../host-dashboard.php?club_error=' . $error . '#ClubSettings');
+    header("Location: {$redirect_base}?club_error={$error}#ClubSettings");
 }
 
 $conn->close();

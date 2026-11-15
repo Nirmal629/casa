@@ -1,5 +1,7 @@
 <?php
-session_start(); // Ensure session is started
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -16,8 +18,13 @@ include('dbConnection.php');
     //     exit();
     // }
 
+    if (empty($_SESSION['user_id'])) {
+        echo json_encode(["success" => false, "message" => "Unauthorized. Please log in first."]);
+        exit();
+    }
+
     // Sanitize inputs
-    $host_name = $conn->real_escape_string($_POST['host_name']);
+    $host_name = $conn->real_escape_string($_POST['host_name'] ?? '');
     $event_country = $conn->real_escape_string($_POST['event_country']);
     $event_province = $conn->real_escape_string($_POST['event_province']);
     $event_city = $conn->real_escape_string($_POST['event_city']);
@@ -30,8 +37,24 @@ include('dbConnection.php');
     $event_date = $conn->real_escape_string($_POST['event_date']);
     $event_time = $conn->real_escape_string($_POST['event_time']);
     $to_time = $conn->real_escape_string($_POST['to_Time']);
-    $freeze_date = $conn->real_escape_string($_POST['freeze_date']);
-    $freeze_time = $conn->real_escape_string($_POST['freeze_time']);
+
+    $eventModel = new \App\Models\EventModel();
+    $freezeValidation = $eventModel->validateFreezeDateTime(
+        (string) ($_POST['event_date'] ?? ''),
+        (string) ($_POST['event_time'] ?? ''),
+        isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+        isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+        (string) ($_POST['freeze_type'] ?? '')
+    );
+
+    if (!$freezeValidation['valid']) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => $freezeValidation['error']]);
+        exit();
+    }
+
+    $freeze_date = $conn->real_escape_string($freezeValidation['freeze_date']);
+    $freeze_time = $conn->real_escape_string($freezeValidation['freeze_time']);
     $event_cost = $conn->real_escape_string($_POST['event_cost']);
     $event_discount = $conn->real_escape_string($_POST['event_discount']);
     $event_description = $conn->real_escape_string($_POST['event_description']);

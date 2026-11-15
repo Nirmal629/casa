@@ -1183,38 +1183,40 @@ if (is_array($tournamentSummary)) {
                     <?php foreach ($allowedGroups as $groupName): ?>
                         <?php $groupRows = $leagueGroups[$groupName] ?? []; ?>
                         <div class="card">
-                            <div class="d-flex align-items-center justify-content-between gap-1">
+                            <div class="d-flex align-items-center justify-content-between gap-1 mb-2">
                                 <h6><?php echo htmlspecialchars($groupName); ?></h6>
                                 <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&stage=GROUP&group=<?php echo urlencode($groupName); ?>" class="btn">View</a>
                             </div>
-                            <table>
-                                <tr>
-                                    <th>Seq</th>
-                                    <th>Team</th>
-                                    <th>Player-1</th>
-                                    <th>Player-2</th>
-                                    <th>Point</th>
-                                    <th>Rank</th>
-                                </tr>
-                                <?php $leagueSeq = 0; ?>
-                                <?php if (empty($groupRows)): ?>
+                            <div class="table-responsive">
+                                <table>
                                     <tr>
-                                        <td colspan="6">No teams allocated.</td>
+                                        <th>Seq</th>
+                                        <th>Team</th>
+                                        <th>Player-1</th>
+                                        <th>Player-2</th>
+                                        <th>Point</th>
+                                        <th>Rank</th>
                                     </tr>
-                                <?php else: ?>
-                                    <?php foreach ($groupRows as $groupTeam): ?>
-                                        <?php $players = array_values(array_filter(explode('||', $groupTeam['PLAYERS'] ?? ''))); ?>
+                                    <?php $leagueSeq = 0; ?>
+                                    <?php if (empty($groupRows)): ?>
                                         <tr>
-                                            <td><?php echo ++$leagueSeq; ?></td>
-                                            <td><?php echo htmlspecialchars($groupTeam['TEAM_NAME'] ?? ''); ?></td>
-                                            <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
-                                            <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
-                                            <td><?php echo (int)($groupTeam['POINTS'] ?? 0); ?></td>
-                                            <td><?php echo htmlspecialchars((string)($groupTeam['RANK_NO'] ?? '-')); ?></td>
+                                            <td colspan="6">No teams allocated.</td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </table>
+                                    <?php else: ?>
+                                        <?php foreach ($groupRows as $groupTeam): ?>
+                                            <?php $players = array_values(array_filter(explode('||', $groupTeam['PLAYERS'] ?? ''))); ?>
+                                            <tr>
+                                                <td><?php echo ++$leagueSeq; ?></td>
+                                                <td><?php echo htmlspecialchars($groupTeam['TEAM_NAME'] ?? ''); ?></td>
+                                                <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
+                                                <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
+                                                <td><?php echo (int)($groupTeam['POINTS'] ?? 0); ?></td>
+                                                <td><?php echo htmlspecialchars((string)($groupTeam['RANK_NO'] ?? '-')); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </table>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -1223,174 +1225,182 @@ if (is_array($tournamentSummary)) {
             <div class="grid-4">
                 <!-- QUARTER FINAL -->
                 <div class="card">
-                    <div class="d-flex align-items-center justify-content-between gap-1">
+                    <div class="d-flex align-items-center justify-content-between gap-1 mb-2">
                         <h4 class="section-title">Quarter Final</h4>
                         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&stage=QUARTER_FINAL" class="btn">View</a>
                     </div>
-                    <table>
-                        <tr>
-                            <th>Seq</th>
-                            <th>Team</th>
-                            <th>Player-1</th>
-                            <th>Player-2</th>
-                            <th>Point</th>
-                            <th>Rank</th>
-                        </tr>
-                        <?php $quarterFinalSeq = 0; ?>
-                        <?php if ($directSemiFinal): ?>
+                    <div class="table-responsive">
+                        <table>
                             <tr>
-                                <td colspan="6" class="stage-empty-note stage-empty-note--qf">
-                                    <span class="stage-empty-badge">Skipped</span>
-                                    <span class="stage-empty-title">Quarter Final skipped</span>
-                                    <span class="stage-empty-hint">Four teams qualified from League Stage, so they advance directly to the Semi-Final draw.</span>
-                                </td>
+                                <th>Seq</th>
+                                <th>Team</th>
+                                <th>Player-1</th>
+                                <th>Player-2</th>
+                                <th>Point</th>
+                                <th>Rank</th>
                             </tr>
-                        <?php elseif (empty($quarterFinalRows)): ?>
-                            <tr>
-                                <td colspan="6" class="stage-empty-note stage-empty-note--qf">
-                                    <span class="stage-empty-badge">Awaiting draw</span>
-                                    <span class="stage-empty-title">Quarter Finals not available yet</span>
-                                    <span class="stage-empty-hint stage-empty-hint--action">Spin the wheel from Tournament Parameter to set the matchups.</span>
-                                    <span class="stage-empty-hint">Unlocks once all league matches are completed.</span>
-                                </td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($quarterFinalRows as $qfTeam): ?>
-                                <?php $players = array_values(array_filter(explode('||', $qfTeam['PLAYERS'] ?? ''))); ?>
+                            <?php $quarterFinalSeq = 0; ?>
+                            <?php if ($directSemiFinal): ?>
                                 <tr>
-                                    <td><?php echo ++$quarterFinalSeq; ?></td>
-                                    <td><?php echo htmlspecialchars($qfTeam['TEAM_NAME'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
-                                    <td><?php echo (int)($qfTeam['POINTS'] ?? 0); ?></td>
-                                    <td><?php echo htmlspecialchars((string)($qfTeam['RANK_NO'] ?? '-')); ?></td>
+                                    <td colspan="6" class="stage-empty-note stage-empty-note--qf">
+                                        <span class="stage-empty-badge">Skipped</span>
+                                        <span class="stage-empty-title">Quarter Final skipped</span>
+                                        <span class="stage-empty-hint">Four teams qualified from League Stage, so they advance directly to the Semi-Final draw.</span>
+                                    </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </table>
+                            <?php elseif (empty($quarterFinalRows)): ?>
+                                <tr>
+                                    <td colspan="6" class="stage-empty-note stage-empty-note--qf">
+                                        <span class="stage-empty-badge">Awaiting draw</span>
+                                        <span class="stage-empty-title">Quarter Finals not available yet</span>
+                                        <span class="stage-empty-hint stage-empty-hint--action">Spin the wheel from Tournament Parameter to set the matchups.</span>
+                                        <span class="stage-empty-hint">Unlocks once all league matches are completed.</span>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($quarterFinalRows as $qfTeam): ?>
+                                    <?php $players = array_values(array_filter(explode('||', $qfTeam['PLAYERS'] ?? ''))); ?>
+                                    <tr>
+                                        <td><?php echo ++$quarterFinalSeq; ?></td>
+                                        <td><?php echo htmlspecialchars($qfTeam['TEAM_NAME'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
+                                        <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
+                                        <td><?php echo (int)($qfTeam['POINTS'] ?? 0); ?></td>
+                                        <td><?php echo htmlspecialchars((string)($qfTeam['RANK_NO'] ?? '-')); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- SEMI FINAL -->
                 <div class="card">
-                    <div class="d-flex align-items-center justify-content-between gap-1">
+                    <div class="d-flex align-items-center justify-content-between gap-1 mb-2">
                         <h4 class="section-title">Semi Final</h4>
                         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&stage=SEMI_FINAL" class="btn">View</a>
                     </div>
-                    <table>
-                        <tr>
-                            <th>Seq</th>
-                            <th>Team</th>
-                            <th>Player-1</th>
-                            <th>Player-2</th>
-                            <th>Point</th>
-                            <th>Rank</th>
-                        </tr>
-                        <?php $semiFinalSeq = 0; ?>
-                        <?php if (empty($semiFinalRows)): ?>
+                    <div class="table-responsive">
+                        <table>
                             <tr>
-                                <td colspan="6" class="stage-empty-note stage-empty-note--sf">
-                                    <span class="stage-empty-badge">Awaiting draw</span>
-                                    <span class="stage-empty-title">Semi Finals not available yet</span>
-                                    <span class="stage-empty-hint stage-empty-hint--action">Spin the wheel from Tournament Parameter to set the matchups.</span>
-                                    <span class="stage-empty-hint"><?php echo $directSemiFinal ? 'Unlocks once all league matches are completed.' : 'Unlocks once the Quarter Finals are completed.'; ?></span>
-                                </td>
+                                <th>Seq</th>
+                                <th>Team</th>
+                                <th>Player-1</th>
+                                <th>Player-2</th>
+                                <th>Point</th>
+                                <th>Rank</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($semiFinalRows as $sfTeam): ?>
-                                <?php $players = array_values(array_filter(explode('||', $sfTeam['PLAYERS'] ?? ''))); ?>
+                            <?php $semiFinalSeq = 0; ?>
+                            <?php if (empty($semiFinalRows)): ?>
                                 <tr>
-                                    <td><?php echo ++$semiFinalSeq; ?></td>
-                                    <td><?php echo htmlspecialchars($sfTeam['TEAM_NAME'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
-                                    <td><?php echo (int)($sfTeam['POINTS'] ?? 0); ?></td>
-                                    <td><?php echo htmlspecialchars((string)($sfTeam['RANK_NO'] ?? '-')); ?></td>
+                                    <td colspan="6" class="stage-empty-note stage-empty-note--sf">
+                                        <span class="stage-empty-badge">Awaiting draw</span>
+                                        <span class="stage-empty-title">Semi Finals not available yet</span>
+                                        <span class="stage-empty-hint stage-empty-hint--action">Spin the wheel from Tournament Parameter to set the matchups.</span>
+                                        <span class="stage-empty-hint"><?php echo $directSemiFinal ? 'Unlocks once all league matches are completed.' : 'Unlocks once the Quarter Finals are completed.'; ?></span>
+                                    </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </table>
+                            <?php else: ?>
+                                <?php foreach ($semiFinalRows as $sfTeam): ?>
+                                    <?php $players = array_values(array_filter(explode('||', $sfTeam['PLAYERS'] ?? ''))); ?>
+                                    <tr>
+                                        <td><?php echo ++$semiFinalSeq; ?></td>
+                                        <td><?php echo htmlspecialchars($sfTeam['TEAM_NAME'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
+                                        <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
+                                        <td><?php echo (int)($sfTeam['POINTS'] ?? 0); ?></td>
+                                        <td><?php echo htmlspecialchars((string)($sfTeam['RANK_NO'] ?? '-')); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <div class="grid-4">
                 <!-- FINAL -->
                 <div class="card winner">
-                    <div class="d-flex align-items-center justify-content-between gap-1">
+                    <div class="d-flex align-items-center justify-content-between gap-1 mb-2">
                         <h4 class="section-title">Championship Final</h4>
                         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&stage=FINAL" class="btn">View</a>
                     </div>
-                    <table>
-                        <tr>
-                            <th>Seq</th>
-                            <th>Team</th>
-                            <th>Player-1</th>
-                            <th>Player-2</th>
-                            <th>Point</th>
-                            <th>Rank</th>
-                        </tr>
-                        <?php $championshipFinalSeq = 0; ?>
-                        <?php if (empty($finalRows)): ?>
+                    <div class="table-responsive">
+                        <table>
                             <tr>
-                                <td colspan="6" class="stage-empty-note stage-empty-note--final">
-                                    <span class="stage-empty-badge">Awaiting result</span>
-                                    <span class="stage-empty-title">Championship Final not available yet</span>
-                                    <span class="stage-empty-hint">Unlocks once the Semi Finals are completed.</span>
-                                </td>
+                                <th>Seq</th>
+                                <th>Team</th>
+                                <th>Player-1</th>
+                                <th>Player-2</th>
+                                <th>Point</th>
+                                <th>Rank</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($finalRows as $finalTeam): ?>
-                                <?php $players = array_values(array_filter(explode('||', $finalTeam['PLAYERS'] ?? ''))); ?>
+                            <?php $championshipFinalSeq = 0; ?>
+                            <?php if (empty($finalRows)): ?>
                                 <tr>
-                                    <td><?php echo ++$championshipFinalSeq; ?></td>
-                                    <td><?php echo htmlspecialchars($finalTeam['TEAM_NAME'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
-                                    <td><?php echo (int)($finalTeam['POINTS'] ?? 0); ?></td>
-                                    <td><?php echo htmlspecialchars((string)($finalTeam['RANK_NO'] ?? '-')); ?></td>
+                                    <td colspan="6" class="stage-empty-note stage-empty-note--final">
+                                        <span class="stage-empty-badge">Awaiting result</span>
+                                        <span class="stage-empty-title">Championship Final not available yet</span>
+                                        <span class="stage-empty-hint">Unlocks once the Semi Finals are completed.</span>
+                                    </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </table>
+                            <?php else: ?>
+                                <?php foreach ($finalRows as $finalTeam): ?>
+                                    <?php $players = array_values(array_filter(explode('||', $finalTeam['PLAYERS'] ?? ''))); ?>
+                                    <tr>
+                                        <td><?php echo ++$championshipFinalSeq; ?></td>
+                                        <td><?php echo htmlspecialchars($finalTeam['TEAM_NAME'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
+                                        <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
+                                        <td><?php echo (int)($finalTeam['POINTS'] ?? 0); ?></td>
+                                        <td><?php echo htmlspecialchars((string)($finalTeam['RANK_NO'] ?? '-')); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- LOOSER FINAL -->
                 <div class="card">
-                    <div class="d-flex align-items-center justify-content-between gap-1">
+                    <div class="d-flex align-items-center justify-content-between gap-1 mb-2">
                         <h4 class="section-title">Bronze Final</h4>
                         <a href="court-dashboard.php?id=<?php echo (int)$tournamentId; ?>&stage=BRONZE_FINAL" class="btn">View</a>
                     </div>
-                    <table>
-                        <tr>
-                            <th>Seq</th>
-                            <th>Team</th>
-                            <th>Player-1</th>
-                            <th>Player-2</th>
-                            <th>Point</th>
-                            <th>Rank</th>
-                        </tr>
-                        <?php $bronzeFinalSeq = 0; ?>
-                        <?php if (empty($bronzeFinalRows)): ?>
+                    <div class="table-responsive">
+                        <table>
                             <tr>
-                                <td colspan="6" class="stage-empty-note stage-empty-note--bronze">
-                                    <span class="stage-empty-badge">Awaiting result</span>
-                                    <span class="stage-empty-title">Bronze Final not available yet</span>
-                                    <span class="stage-empty-hint">Unlocks once the Semi Finals are completed.</span>
-                                </td>
+                                <th>Seq</th>
+                                <th>Team</th>
+                                <th>Player-1</th>
+                                <th>Player-2</th>
+                                <th>Point</th>
+                                <th>Rank</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($bronzeFinalRows as $bronzeTeam): ?>
-                                <?php $players = array_values(array_filter(explode('||', $bronzeTeam['PLAYERS'] ?? ''))); ?>
+                            <?php $bronzeFinalSeq = 0; ?>
+                            <?php if (empty($bronzeFinalRows)): ?>
                                 <tr>
-                                    <td><?php echo ++$bronzeFinalSeq; ?></td>
-                                    <td><?php echo htmlspecialchars($bronzeTeam['TEAM_NAME'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
-                                    <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
-                                    <td><?php echo (int)($bronzeTeam['POINTS'] ?? 0); ?></td>
-                                    <td><?php echo htmlspecialchars((string)($bronzeTeam['RANK_NO'] ?? '-')); ?></td>
+                                    <td colspan="6" class="stage-empty-note stage-empty-note--bronze">
+                                        <span class="stage-empty-badge">Awaiting result</span>
+                                        <span class="stage-empty-title">Bronze Final not available yet</span>
+                                        <span class="stage-empty-hint">Unlocks once the Semi Finals are completed.</span>
+                                    </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </table>
+                            <?php else: ?>
+                                <?php foreach ($bronzeFinalRows as $bronzeTeam): ?>
+                                    <?php $players = array_values(array_filter(explode('||', $bronzeTeam['PLAYERS'] ?? ''))); ?>
+                                    <tr>
+                                        <td><?php echo ++$bronzeFinalSeq; ?></td>
+                                        <td><?php echo htmlspecialchars($bronzeTeam['TEAM_NAME'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($players[0] ?? '-'); ?></td>
+                                        <td><?php echo htmlspecialchars($players[1] ?? '-'); ?></td>
+                                        <td><?php echo (int)($bronzeTeam['POINTS'] ?? 0); ?></td>
+                                        <td><?php echo htmlspecialchars((string)($bronzeTeam['RANK_NO'] ?? '-')); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

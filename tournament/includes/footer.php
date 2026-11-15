@@ -72,7 +72,7 @@
 <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 
 <!----main-js----->
-<script src="../assets/js/main.js"></script>
+<script src="../app/script/index.js"></script>
 
 <!----AOS-------->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

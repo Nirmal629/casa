@@ -1,0 +1,243 @@
+/**
+ * Registration Request Modal Stylesheet
+ * Location: /app/Views/css/auth/register.css
+ */
+
+/* Scoped styling to avoid affecting global site layout */
+.creative-modal-wrapper {
+    font-family: 'Inter', sans-serif;
+}
+
+.creative-modal-wrapper .modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.creative-modal-wrapper .modal-header {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem 2rem;
+}
+
+.creative-modal-wrapper .modal-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.creative-modal-wrapper .btn-close {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    opacity: 1;
+    transition: all 0.3s ease;
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.creative-modal-wrapper .btn-close:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: rotate(90deg);
+}
+
+.creative-modal-wrapper .modal-body {
+    padding: 2rem;
+    background-color: #f8fafc;
+}
+
+/* Premium Form Inputs */
+.creative-modal-wrapper .form-label-custom {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.creative-modal-wrapper .form-control-custom,
+.creative-modal-wrapper .form-select-custom {
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.creative-modal-wrapper .name-input-capitalized {
+    text-transform: capitalize;
+}
+
+.creative-modal-wrapper .form-control-custom:focus,
+.creative-modal-wrapper .form-select-custom:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    outline: none;
+}
+
+/* WhatsApp Input Group */
+.creative-modal-wrapper .whatsapp-input-wrapper {
+    position: relative;
+}
+
+.creative-modal-wrapper .whatsapp-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    z-index: 10;
+}
+
+.creative-modal-wrapper .whatsapp-input {
+    padding-left: 2.8rem;
+}
+
+.creative-modal-wrapper .input-group-text-wa {
+    background: #25D366;
+    color: white;
+    border: 2px solid #25D366;
+    border-right: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.creative-modal-wrapper .input-wa {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Custom Radio Buttons */
+.creative-modal-wrapper .custom-radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+.creative-modal-wrapper .custom-radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.creative-modal-wrapper .custom-radio input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 50%;
+    margin: 0;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.creative-modal-wrapper .custom-radio input:checked {
+    border-color: #6366f1;
+    border-width: 6px;
+}
+
+.creative-modal-wrapper .custom-radio label {
+    font-size: 0.95rem;
+    color: #334155;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Info Box */
+.creative-modal-wrapper .info-box-premium {
+    background: linear-gradient(to right, #eff6ff, #e0e7ff);
+    border-left: 5px solid #4f46e5;
+    border-radius: 12px;
+    padding: 1.25rem;
+    font-size: 0.85rem;
+    color: #1e3a8a;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.creative-modal-wrapper .info-box-divider {
+    border-color: #a5b4fc;
+    margin: 0.5rem 0 0.75rem 0;
+    opacity: 0.5;
+}
+
+.creative-modal-wrapper .info-contact-link {
+    color: #4f46e5;
+}
+
+.creative-modal-wrapper .info-box-premium h6 {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #3730a3;
+    margin-bottom: 0.75rem;
+}
+
+.creative-modal-wrapper .info-box-premium p {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Response Message States */
+.creative-modal-wrapper .response-msg {
+    display: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.creative-modal-wrapper .response-msg-success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.creative-modal-wrapper .response-msg-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* Submit Button & Success State Button */
+.creative-modal-wrapper .btn-submit-premium {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+.creative-modal-wrapper .btn-success-home {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.creative-modal-wrapper .btn-submit-premium:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 20px -3px rgba(99, 102, 241, 0.4);
+}
+
+.creative-modal-wrapper .btn-submit-premium:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Row Spacing */
+.creative-modal-wrapper .form-row {
+    margin-bottom: 1.2rem;
+}

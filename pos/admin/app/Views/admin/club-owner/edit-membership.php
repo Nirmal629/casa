@@ -32,6 +32,7 @@
               <?php endif;?>
               <!-- General Form Elements -->
               <form class="row g-3 needs-validation" action="<?=base_url()?>club-owner/editmembership" method="post" novalidate>
+                <?= csrf_field() ?>
                 <input type="hidden" name="membership_id" id="membership_id" value="<?=$membership_id?>">
                 <div class="row mb-3">
                   <label for="player_name" class="col-sm-2 col-form-label">Player Name<small class="text-danger">*</small></label>

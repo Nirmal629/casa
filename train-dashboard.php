@@ -1,5 +1,5 @@
 <!-----Header------>
-<?php include "includes/inner-header.php"; ?>
+<?php include __DIR__ . "/app/Views/layouts/header/inner-header.php"; ?>
 
 
 <!---Train-Dashboard------>
@@ -88,4 +88,4 @@
 
 
 <!------footer------>
-<?php include "includes/footer.php"; ?>
+<?php include __DIR__ . "/app/Views/layouts/footer/footer.php"; ?>

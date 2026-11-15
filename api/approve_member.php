@@ -1,8 +1,9 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 // api/approve_member.php
 // Approves a player join request and maps them to the host context.
 
-session_start();
 include('../dbConnection.php');
 
 header('Content-Type: application/json');

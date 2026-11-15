@@ -34,6 +34,7 @@
                 </div>
             <?php endif; ?>
             <form class="row g-3 needs-validation" action="<?=base_url()?>club-owner/updatebooking" method="post" novalidate>
+              <?= csrf_field() ?>
               <input type="hidden" name="booking_type" value="new_booking">
               <input type="hidden" name="booking_id" value="<?=$booking_id?>">
             <div class="card-body">

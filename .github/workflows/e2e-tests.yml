@@ -1,0 +1,62 @@
+name: E2E Automation Tests (Playwright PHP)
+
+on:
+  push:
+    branches: [ main, master, staging ]
+  pull_request:
+    branches: [ main, master, staging ]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, pdo_mysql, mysqli, json, curl
+          coverage: none
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install Playwright Browsers & CLI
+        run: vendor/bin/playwright-install --with-deps
+
+      - name: Start Built-in PHP Web Server
+        run: |
+          php -S localhost:8000 -t . > php_server.log 2>&1 &
+          sleep 2
+
+      - name: Run E2E Automation Tests
+        env:
+          APP_URL: http://localhost:8000
+          HEADLESS: "true"
+        run: vendor/bin/phpunit --colors=always
+
+      - name: Upload Test Artifacts / Failure Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: tests/Artifacts/screenshots/

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser([]);
 include('dbConnection.php');
 // print_r($_POST);
 

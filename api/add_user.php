@@ -1,6 +1,9 @@
 <?php
 
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiPost();
+if (!is_string($_POST['USERTYPE'] ?? null) || !in_array($_POST['USERTYPE'], ['Player', 'Host', 'Trainer'], true)) apiSecurityDeny(400, 'Invalid account type.');
+\App\Middleware\CsrfGuard::handle();
 
 header('Content-Type: application/json');
 
@@ -8,10 +11,11 @@ header('Content-Type: application/json');
 
 // --- DATABASE CONNECTION ---
 
-$db_host = "localhost";
-$db_name = "casa_test";
-$db_user = "casa_test";
-$db_pass = "casa_test123#";
+require_once __DIR__ . '/../app/Config/env.php';
+$db_host = env('DB_HOST', 'localhost');
+$db_name = env('DB_NAME', 'casa_test');
+$db_user = env('DB_USER', 'root');
+$db_pass = env('DB_PASS', '');
 
 try {
 
@@ -29,7 +33,7 @@ try {
 
 // --- SECURITY: CSRF CHECK ---
 
-if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+if (!\App\Helpers\Session::verifyCsrfToken($_POST['csrf_token'] ?? null)) {
 
     echo json_encode(['status' => 'error', 'message' => 'Security Error: Invalid session token.']);
 
@@ -101,7 +105,7 @@ try {
 
     // Default Password
 
-    $password = "abcde";
+    $password = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
 
 
 

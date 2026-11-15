@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiPost();
+\App\Middleware\CsrfGuard::handle();
 header('Content-Type: application/json');
 include('dbConnection.php');
 $data = json_decode(file_get_contents('php://input'), true);
@@ -17,9 +20,12 @@ $COUNTRY = trim($data['country']);
 $PROVINCE = trim($data['province']);
 $CURRENCY = trim($data['currency']);
 $TIMEZONE_OFFSET = trim($data['timezone_offset']);
-$USERTYPE = $data['usertype'];
+$USERTYPE = $data['usertype'] ?? 'Player';
+if (!is_string($USERTYPE) || !in_array($USERTYPE, ['Player', 'Host', 'Trainer'], true)) { http_response_code(400); exit(json_encode(['status' => 'error', 'message' => 'Invalid account type.'])); }
 $LEVEL = $data['level'];
-$PASSWORD = 'abcd';
+$plainPassword = $data['password'] ?? '';
+if (!is_string($plainPassword) || strlen($plainPassword) < 12 || strlen($plainPassword) > 72) { http_response_code(400); exit(json_encode(['status' => 'error', 'message' => 'Password must contain 12 to 72 bytes.'])); }
+$PASSWORD = password_hash($plainPassword, PASSWORD_DEFAULT);
 
 // Validation
 if (!$NAME || !$EMAIL || !$EMAIL_PERMISSION || !$WHATSAPP_NUMBER || !$CALL_PERMISSION  || !$GENDER || !$GAMES  || !$CITY || !$COUNTRY || !$PROVINCE || !$CURRENCY || !$TIMEZONE_OFFSET || !$USERTYPE) {

@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/_security.php';
+requireApiPost();
+\App\Middleware\CsrfGuard::handle();
 header('Content-Type: application/json');
 
 $connFile = __DIR__ . "/../dbConnection_PDO.php";
@@ -9,7 +11,7 @@ if (!file_exists($connFile)) {
 }
 include $connFile;
 
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+if (!\App\Helpers\Session::verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     echo json_encode(['success' => false, 'message' => 'Security token mismatch.']);
     exit;
 }
@@ -89,11 +91,11 @@ try {
             ':address'        => $_POST['ADDRESS'],
             ':currency'       => $_POST['CURRENCY'],
             ':timezone'       => $_POST['TIMEZONE_OFFSET'],
-            ':usertype'       => $_POST['USERTYPE'],
+            ':usertype'       => 'Player',
             ':team_id'        => $team_id,
             ':existing'       => $isExisting,
             ':ref'            => $_POST['REFFERAL_SOURCE'],
-            ':password'       => 'abcde', // Default Password Saved here
+            ':password'       => password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT), // Default Password Saved here
             ':level'          => $skill_level, // From dropdown
             ':verified_level' => $skill_level, // Same as LEVEL
             ':log_status'     => 'Y',          // Hardcoded to Y

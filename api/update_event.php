@@ -1,5 +1,9 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Host','Trainer']);
 include 'dbConnection.php';
+requireApiPost();
+requireOwnedEvent($conn, $_POST['id'] ?? null);
 
 // print_r($_POST);exit;
 
@@ -37,6 +41,23 @@ $snackscost = isset($_POST['snackscost']) ? validate_input($_POST['snackscost'])
 $eventtotalCostt = isset($_POST['eventtotalCostt']) ? validate_input($_POST['eventtotalCostt']) : null;
 $eventtotalplayerCostt = isset($_POST['eventtotalplayerCostt']) ? validate_input($_POST['eventtotalplayerCostt']) : null;
 $profitloss = isset($_POST['profitloss']) ? validate_input($_POST['profitloss']) : null;
+$courtconfirmed = isset($_POST['courtconfirmed']) ? (int)validate_input($_POST['courtconfirmed']) : null;
+$isCancelled = strcasecmp((string) $status, 'Cancelled') === 0;
+
+// A cancelled game must not retain operational or player financial values.
+// Keep the event row for history, but clear all amounts used by the completed
+// games table and any player-cost synchronization.
+if ($isCancelled) {
+    $event_cost = '0.00';
+    $event_discount = '0.00';
+    $facilitycost = '0.00';
+    $accessoriesCost = '0.00';
+    $snackscost = '0.00';
+    $eventtotalCostt = '0.00';
+    $eventtotalplayerCostt = '0.00';
+    $profitloss = '0.00';
+    $courtconfirmed = 0;
+}
 
 // Check required fields
 if (!$id || !$event_date || !$event_time || !$event_cost) {
@@ -53,6 +74,26 @@ if (!is_numeric($event_cost)) {
     echo json_encode($response);
     exit;
 }
+
+$eventModel = new \App\Models\EventModel();
+$freezeValidation = $eventModel->validateFreezeDateTime(
+    (string) $event_date,
+    (string) $event_time,
+    isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
+    isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
+    (string) ($_POST['freeze_type'] ?? '')
+);
+
+if (!$freezeValidation['valid']) {
+    http_response_code(400);
+    $response['success'] = false;
+    $response['error'] = $freezeValidation['error'];
+    echo json_encode($response);
+    exit;
+}
+
+$freeze_date = $conn->real_escape_string($freezeValidation['freeze_date']);
+$freeze_time = $conn->real_escape_string($freezeValidation['freeze_time']);
 
 // Update query
 $sql = "UPDATE ca_events 
@@ -79,14 +120,15 @@ $sql = "UPDATE ca_events
             TOTAL_EVENT_COST='$eventtotalCostt',
             TOTAL_PLAYER_COST='$eventtotalplayerCostt',
             PROFIT_LOSS='$profitloss',
-            BIRDIE_USED = '".$_POST['birdieUsed']."',
-            BIRDIE_COST = '$accessoriesCost',
-            CLUB_COST = '".$_POST['clubClost']."'
+            BIRDIE_USED = '".($isCancelled ? 0 : (int)($_POST['birdieUsed'] ?? 0))."',
+            BIRDIE_COST = '".($isCancelled ? '0.00' : $accessoriesCost)."',
+            CLUB_COST = '".($isCancelled ? '0.00' : (float)($_POST['clubClost'] ?? 0))."',
+            COURTS_CONFIRMED = '$courtconfirmed'
         WHERE ID = '$id'";
 
 if ($conn->query($sql) === TRUE) {
     $response['success'] = true;
-    if(isset($_POST['updatePlayerPrice']) && $_POST['updatePlayerPrice'] == 'Y')
+    if ($isCancelled || (isset($_POST['updatePlayerPrice']) && $_POST['updatePlayerPrice'] == 'Y'))
     {
         $updateJoin = "UPDATE ca_gamejoin 
                       SET PRICE = '$event_cost', CURRENCY = '$event_currency' 

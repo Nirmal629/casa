@@ -1,0 +1,63 @@
+/**
+ * Home Page Stylesheet
+ * Location: /app/Views/css/home.css
+ */
+
+/* Store Section Background */
+#homesotreid,
+.homeStore_sec {
+    background: #0f172a !important;
+}
+
+/* About Us Playground Section Background & Cards */
+#aboutusId,
+.playground_sec {
+    background: #000000 !important;
+}
+
+.playground_sec .feature-card {
+    flex: 1 1 200px;
+    max-width: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.133);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.playground_sec .feature-card .text-info {
+    font-size: 2rem;
+}
+
+/* Tournament Card Disabled Cursor */
+.tournament_card.closed,
+.tournament_card_closed {
+    cursor: default;
+}
+
+/* Popular Sports Section Clear Fix */
+.clear-both {
+    clear: both;
+}
+
+/* Testimonials / Community Voices Section */
+.testimonials_sec {
+    background: #0f172a !important;
+}
+
+.testimonials_sec .avatar-placeholder {
+    width: 45px;
+    height: 45px;
+    border: 1px solid rgba(34, 211, 238, 0.5);
+    flex-shrink: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.testimonials_sec .user-meta {
+    overflow: hidden;
+}
+
+.testimonials_sec .player-role {
+    font-size: 0.7rem;
+}

@@ -1,10 +1,11 @@
 <?php
+require_once __DIR__ . '/_security.php';
+requireApiUser(['Player']);
 /**
  * API: Join Club
  * Handles POST request from player-hub.php to join a club.
  */
 
-session_start();
 include('../dbConnection.php');
 
 header('Content-Type: application/json');

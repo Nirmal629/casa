@@ -587,39 +587,48 @@
 /* ===== GRID ===== */
 
 .playerhub_sec .main-grid {
-
-    /* display: grid;
-
-    grid-template-columns: 300px 1fr 300px; */
-
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr) 280px;
     gap: 20px;
-
     margin-top: 20px;
-
-    display: flex;
-    justify-content: space-between;
+    align-items: stretch;
 }
-
-
 
 /* ===== PANELS ===== */
 
 .playerhub_sec .panel {
-    width: 20%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     background: rgba(2, 6, 23, .75);
-
     border-radius: 14px;
-
     padding: 16px;
-
     border: 1px solid rgba(148, 163, 184, .2);
-
     box-shadow: inset 0 0 20px rgba(15, 23, 42, .8);
-
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .playerhub_sec .center-panel {
-    width: 60%;
+    width: 100%;
+    min-width: 0;
+}
+
+.playerhub_sec .left-panel .dossierCard {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.playerhub_sec .right-panel .scrollbox {
+    flex: 1 1 auto;
+    max-height: unset;
+    overflow-y: auto;
+}
+
+.playerhub_sec .right-panel .casastore_btn {
+    margin-top: auto;
 }
 
 
@@ -1795,43 +1804,43 @@
 
 
 /* ===== REVIEW ===== */
-
 .playerhub_sec .review {
-
     margin-top: 20px;
-
     padding: 25px;
-
     border-radius: 18px;
-
     background: linear-gradient(180deg, #fef3c7, #eab308);
-
     color: #1e293b;
-
     text-align: center;
-
     box-shadow: 0px 0px 5px 0px #ccc;
-
 }
 
+.playerhub_sec .review h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+    color: #1e293b;
+}
 
-
-.playerhub_sec .review button {
-
-    margin-top: 12px;
-
-    padding: 10px 26px;
-
+.playerhub_sec .review .writeReviewBtn {
+    margin-top: 18px;
+    padding: 10px 28px;
     border-radius: 30px;
-
     border: none;
-
     background: #fff;
-
-    font-weight: 600;
-
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 14px;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+    display: inline-block;
+}
 
+.playerhub_sec .review .writeReviewBtn:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* schedule modal */
@@ -1907,52 +1916,126 @@
 .reviewSlider {
     position: relative;
     width: 100%;
-    max-width: 550px;
+    max-width: 680px;
     height: auto;
     margin: 0px auto;
+}
 
-    .slick-slide {
-        width: 100%;
-        height: auto;
-    }
+/* Prevent FOUC / expansion jump on page reload before Slick initializes */
+.reviewSlider.reviewSlick:not(.slick-initialized) {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
 
-    .reviewSlide {
-        padding: 0px 8px;
+.reviewSlider.reviewSlick:not(.slick-initialized) .reviewSlide {
+    width: 100%;
+    max-width: 680px;
+    display: none;
+}
 
-        .reviewCard {
-            background-color: #fff;
-            padding: 15px 12px 25px;
-            border-radius: 12px;
+.reviewSlider.reviewSlick:not(.slick-initialized) .reviewSlide:first-child {
+    display: block;
+}
 
-            .reviewTextDiv {
-                width: 100%;
-                max-height: 100px;
-                overflow-y: auto;
-                padding-right: 8px;
+.reviewSlider .slick-slide {
+    width: 100%;
+    height: auto;
+}
 
-                p {
-                    font-size: 14px;
-                }
-            }
-        }
-    }
+.reviewSlider .reviewSlide {
+    padding: 0px 8px;
+}
 
-    .slick-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: -50px !important;
-        bottom: auto;
-        width: 42px;
-        height: 42px;
-        border-radius: 50% !important;
-        padding: 0 !important;
+.reviewSlider .reviewSlide .reviewCard {
+    background-color: #fff;
+    padding: 18px 20px 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
 
-        &.next-arrow {
-            left: auto !important;
-            right: -50px !important;
-        }
-    }
+.reviewSlider .reviewSlide .reviewCard .reviewTextDiv {
+    width: 100%;
+    min-height: 40px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 6px;
+    text-align: left;
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.reviewSlider .reviewSlide .reviewCard .reviewTextDiv p {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.reviewSlider .slide-arrow,
+.reviewSlider .slick-arrow {
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    left: -52px !important;
+    bottom: auto !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 5 !important;
+    transition: all 0.2s ease !important;
+}
+
+.reviewSlider .slide-arrow.next-arrow,
+.reviewSlider .slick-arrow.next-arrow {
+    left: auto !important;
+    right: -52px !important;
+}
+
+.reviewSlider .slide-arrow:hover,
+.reviewSlider .slick-arrow:hover {
+    background: #f8fafc !important;
+    transform: translateY(-50%) scale(1.05) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18) !important;
+}
+
+.reviewSlider .slide-arrow.slick-disabled,
+.reviewSlider .slick-arrow.slick-disabled {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.reviewSlider .btn-edit-review {
+    margin: 0 !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+    color: #0088b0 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.reviewSlider .btn-edit-review:hover {
+    background: #e0f2fe !important;
+    border-color: #bae6fd !important;
+    color: #006786 !important;
 }
 
 #reviewmodal .formatter {
@@ -2308,13 +2391,10 @@
     }
 }
 
-@media (max-width: 1480px) {
-    .playerhub_sec .panel {
-        width: 22.5%;
-    }
-
-    .playerhub_sec .center-panel {
-        width: 55%;
+@media (max-width: 1480px) and (min-width: 1200px) {
+    .playerhub_sec .main-grid {
+        grid-template-columns: 260px minmax(0, 1fr) 260px;
+        gap: 16px;
     }
 }
 
@@ -2347,7 +2427,7 @@
     }
 
     .playerhub_sec .main-grid {
-        flex-wrap: wrap;
+        grid-template-columns: 100%;
     }
 
     .playerhub_sec .panel {
@@ -2574,7 +2654,7 @@
     .tournament_Details .tournamentCardTxt p,
     .tournament_Details .tournamentCardTxt strong,
     .tournament_Details .tournamentCardTxt span {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .playerhub_sec .header_box span {
@@ -2590,3 +2670,275 @@
         font-size: 15px;
     }
 }
+
+/* Reference Screenshot Tournament Card Design */
+.tournamentcard_slider .slick-track {
+    display: flex !important;
+}
+.tournamentcard_slider .slick-slide {
+    height: auto !important;
+    display: flex !important;
+    padding: 0 10px;
+}
+.tournamentcard_slider .slick-slide > div {
+    display: flex;
+    width: 100%;
+}
+.tournament_card {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tournament_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+}
+.tournament_card .image {
+    width: 100%;
+    height: 200px;
+    background: #f1f5f9;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.tournament_card .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.tournament_card .content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+}
+.tournament_card .name {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+    margin-bottom: 2px !important;
+    line-height: 1.3;
+    min-height: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.tournament_card .tagline {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #2563eb !important;
+    text-align: center !important;
+    display: block;
+    margin-bottom: 8px !important;
+    min-height: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex: 1;
+}
+.card-info-list .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.card-info-list .info-icon {
+    color: #0284c7;
+    font-size: 16px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.card-info-list .info-text {
+    color: #334155;
+    font-weight: 500;
+}
+.card-info-list .info-text strong {
+    color: #0f172a;
+    font-weight: 700;
+}
+.tournament_card .openBtn {
+    margin-top: auto;
+    width: 100%;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease;
+}
+.tournament_card .open-btn-active {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+.tournament_card .open-btn-active:hover {
+    background: #0369a1 !important;
+}
+.tournament_card .open-btn-closed {
+    background: #8492a6 !important;
+    color: #ffffff !important;
+    cursor: default !important;
+}
+
+/* Prevent Hero Banner & Sliders FOUC / vertical layout jump on page refresh before Slick initializes */
+.herobanner_slider:not(.slick-initialized) {
+    display: block !important;
+    overflow: hidden !important;
+    position: relative !important;
+    max-height: 80vh !important;
+}
+
+.herobanner_slider:not(.slick-initialized) > .item:not(:first-child) {
+    display: none !important;
+}
+
+.herobanner_slider:not(.slick-initialized) > .item:first-child {
+    display: block !important;
+    width: 100% !important;
+}
+
+.tournamentcard_slider:not(.slick-initialized),
+.sttoreproduct_slider:not(.slick-initialized),
+.casaphotos_slider:not(.slick-initialized),
+.casavideo_slider:not(.slick-initialized),
+.advertisement_slider:not(.slick-initialized) {
+    display: flex !important;
+    overflow: hidden !important;
+    gap: 20px !important;
+}
+
+.tournamentcard_slider:not(.slick-initialized) > *:nth-child(n+5),
+.sttoreproduct_slider:not(.slick-initialized) > *:nth-child(n+5),
+.casaphotos_slider:not(.slick-initialized) > *:nth-child(n+5),
+.casavideo_slider:not(.slick-initialized) > *:nth-child(n+5),
+.advertisement_slider:not(.slick-initialized) > *:nth-child(n+5) {
+    display: none !important;
+}
+
+/* Gallery Images & Video Thumbnails Fixed Uniform Sizing */
+.casaphotos_slider .img-box,
+.casavideo_slider .casavideo-box {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    height: 240px !important;
+    margin: 0 8px !important;
+    background: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.casaphotos_slider .img-box:hover,
+.casavideo_slider .casavideo-box:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45) !important;
+}
+
+.casaphotos_slider .img-box a,
+.casavideo_slider .casavideo-box a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+}
+
+.casaphotos_slider .img-box img,
+.casavideo_slider .casavideo-box img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 12px !important;
+    transition: transform 0.4s ease !important;
+}
+
+.casaphotos_slider .img-box:hover img,
+.casavideo_slider .casavideo-box:hover img {
+    transform: scale(1.06) !important;
+}
+
+.casavideo-box .transparent-box {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.35) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.3s ease !important;
+}
+
+.casavideo-box:hover .transparent-box {
+    background: rgba(0, 0, 0, 0.55) !important;
+}
+
+.casavideo-box .caption {
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(2, 132, 199, 0.9) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    font-size: 18px !important;
+    padding-left: 3px !important;
+    box-shadow: 0 0 15px rgba(2, 132, 199, 0.8) !important;
+    transition: transform 0.3s ease, background 0.3s ease !important;
+}
+
+.casavideo-box:hover .caption {
+    transform: scale(1.15) !important;
+    background: #0284c7 !important;
+}
+
+@media (max-width: 576px) {
+    .casaphotos_slider .img-box,
+    .casavideo_slider .casavideo-box {
+        height: 200px !important;
+    }
+}
+
+/* Gallery Tab Content Stability & Smooth Transition */
+.gallerypage_sec .tab-content {
+    overflow: hidden !important;
+}
+
+.gallerypage_sec .tab-content:not(.active) {
+    display: none !important;
+}
+
+.gallerypage_sec .tab-content.active {
+    display: block !important;
+}
+
+.casaphotos_slider,
+.casavideo_slider {
+    overflow: hidden !important;
+}
+
+

@@ -1,0 +1,28 @@
+/* Main Header & Advertisement Marquee Styles - Location: assets/css/header.css */
+.marquee-container {
+    height: 70px;
+    overflow: hidden;
+    position: relative;
+    gap: 50px;
+}
+
+.ad-item {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    width: 100%;
+    pointer-events: none;
+}
+
+.ad-item.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}

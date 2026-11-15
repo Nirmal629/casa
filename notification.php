@@ -1,5 +1,5 @@
 <!-----Header------>
-<?php include "includes/inner-header.php"; ?>
+<?php include __DIR__ . "/app/Views/layouts/header/inner-header.php"; ?>
 
 <!-----notification-sec-------->
 <section class="notification_sec bothSide_gap">
@@ -81,7 +81,7 @@
 
 
 <!------footer------>
-<?php include "includes/footer.php"; ?>
+<?php include __DIR__ . "/app/Views/layouts/footer/footer.php"; ?>
 
 <script>
     const dismissAll = document.getElementById('dismiss-all');
