@@ -724,11 +724,11 @@ class HostController extends Controller
                     'hostId'        => $eventDetails['hostId'],
                     'eventCost'     => $eventDetails['cost'],
                     'eventCurrency' => $eventDetails['currency'],
-                    'event'         => [
+                    'event'         => array_merge($ev, [
                         'EVENT_COST'     => $eventDetails['cost'],
                         'EVENT_CURRENCY' => $eventDetails['currency'],
                         'HOST_ID'        => $eventDetails['hostId'],
-                    ],
+                    ]),
                 ]);
                 return;
             }
@@ -1671,7 +1671,7 @@ class HostController extends Controller
         $stmt = $this->db->prepare("
             SELECT cu.ID, cu.NAME,
                 COALESCE(NULLIF(cu.VERIFIED_LEVEL, ''), cu.LEVEL, 'N/A') AS LEVEL,
-                cu.GENDER, cg.CONFIRMED, cg.PRICE AS JOINED_PRICE,
+                cu.GENDER, cg.CONFIRMED, cg.PRICE AS JOINED_PRICE, cg.CREATED_AT AS JOINED_AT,
                 IF(cg.USER_ID IS NOT NULL, 1, 0) AS IS_JOINED,
                 e.EVENT_COST, e.EVENT_CURRENCY, e.HOST_ID,
                 COALESCE(NULLIF(cg.PRICE, ''), e.EVENT_COST, 0) AS EFFECTIVE_PRICE

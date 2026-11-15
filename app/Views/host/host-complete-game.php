@@ -2,6 +2,7 @@
 <div class="hostcomplete_game">
 <?php
 use App\Config\Database;
+require_once __DIR__ . '/../../Helpers/calendar_helper.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -39,26 +40,18 @@ if (!$checkCurrent || mysqli_num_rows($checkCurrent) == 0) {
                 <form>
                     <div class="row g-1 align-items-center">
                         <div class="col-auto">
-                            <select class="form-select py-0 px-2" id="com_year" aria-label="Default select example" style="width: 75px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
+                            <select class="form-select form-select-sm completed-period-select" id="com_year" aria-label="Completed games year" data-casa-dropdown data-size="sm" data-icon="fa-regular fa-calendar">
                                 <option value="">Year</option>
                                 <?php
-                                $startYear = 2024;
-                                $maxYear = max(intval(date('Y')) + 2, 2030);
-                                for ($year = $startYear; $year <= $maxYear; $year++) {
-                                    $selected = ($year == $defaultYear) ? 'selected' : '';
-                                    echo "<option value=\"$year\" $selected>$year</option>";
-                                }
+                                echo renderYearOptions($defaultYear, 2024, max(intval(date('Y')) + 2, 2030));
                                 ?>
                             </select>
                         </div>
                         <div class="col-auto">
-                            <select class="form-select py-0 px-2" id="com_month" aria-label="Default select example" style="width: 70px; height: 31px; font-size: 0.95rem; background-position: right 0.2rem center; padding-right: 1.5rem !important;">
+                            <select class="form-select form-select-sm completed-period-select" id="com_month" aria-label="Completed games month" data-casa-dropdown data-size="sm" data-icon="fa-regular fa-calendar-days">
                                 <option value="">Month</option>
                                 <?php
-                                foreach (getMonthOptions(true) as $num => $name) {
-                                    $selected = ($num == $defaultMonth) ? 'selected' : '';
-                                    echo "<option value=\"$num\" $selected>$name</option>";
-                                }
+                                echo renderMonthOptions($defaultMonth, true);
                                 ?>
                             </select>
                         </div>
@@ -147,6 +140,17 @@ if (!$checkCurrent || mysqli_num_rows($checkCurrent) == 0) {
                 $total_player_cost = (string)($event['TOTAL_PLAYER_COST'] ?? '0.00');
                 $profit_loss = (string)($event['PROFIT_LOSS'] ?? '0.00');
                 $event_status = (string)($event['STATUS'] ?? '');
+
+                // Cancelled games remain visible for history, but carry no
+                // operational or financial amounts.
+                if (strcasecmp($event_status, 'Cancelled') === 0) {
+                    $facility_cost = '0.00';
+                    $accessories_cost = '0.00';
+                    $snacks_cost = '0.00';
+                    $total_event_cost = '0.00';
+                    $total_player_cost = '0.00';
+                    $profit_loss = '0.00';
+                }
 
                 $status_class = ($event_status === 'Completed') ? 'green' : 'red';
                 $pnlClass = ((float)$profit_loss < 0) ? 'text-danger fw-bold' : (((float)$profit_loss > 0) ? 'text-success fw-bold' : '');

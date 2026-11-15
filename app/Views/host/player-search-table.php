@@ -17,6 +17,17 @@ if (!empty($playerList)):
     $eventCurrency = htmlspecialchars($normCurr);
     $escGameId = htmlspecialchars((string) ($gameId ?? ''));
     $escHostId = htmlspecialchars((string) ($hostId ?? ''));
+    $eventDate = !empty($event['EVENT_DATE']) ? date('l, M d Y', strtotime((string) $event['EVENT_DATE'])) : '';
+    $eventStart = !empty($event['EVENT_TIME']) ? date('g:i A', strtotime((string) $event['EVENT_TIME'])) : '';
+    $eventEnd = !empty($event['TO_TIME']) ? date('g:i A', strtotime((string) $event['TO_TIME'])) : '';
+    $eventTime = $eventStart . ($eventEnd !== '' ? " - {$eventEnd}" : '');
+    $courtStatus = trim((string) ($event['JOIN_MESSAGE'] ?? ''));
+    if ($courtStatus === '') {
+        $courtStatus = '0 court booked yet. 6 spots open for Court 1';
+    } else {
+        $courtStatus = preg_replace('/^0 court confirmed,?\s*/i', '0 court booked yet. ', $courtStatus);
+        $courtStatus = str_replace(['spots available for first court', 'spot available for first court'], ['spots open for Court 1', 'spot open for Court 1'], $courtStatus);
+    }
 
     if ($isJoinedOnly):
         ?>
@@ -29,6 +40,8 @@ if (!empty($playerList)):
                         <th style='width: 70px;'>Gender</th>
                         <th style='width: 80px;'>Amount</th>
                         <th style='width: 80px;'>Level</th>
+                        <th style='width: 150px;'>Joined At</th>
+                        <th style='width: 55px;'>Copy</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +53,18 @@ if (!empty($playerList)):
                         $curr = htmlspecialchars(($rawPlayerCurr === 'CAD' || empty($rawPlayerCurr)) ? '$' : $rawPlayerCurr);
                         $rawPrice = $player['JOINED_PRICE'] ?? $player['EFFECTIVE_PRICE'] ?? $eventCost;
                         $priceFormatted = is_numeric($rawPrice) ? number_format((float) $rawPrice, 2, '.', '') : (string) $rawPrice;
+                        $copyInviteText = "🏸 *Casa Badminton Club Game Invite*\n"
+                            . "👋 Hi {$displayName},\n\n"
+                            . "📅 *{$eventDate}*\n"
+                            . "⏰ *{$eventTime}*\n"
+                            . "📍 *" . (string) ($event['EVENT_VENUE'] ?? '') . "*\n\n"
+                            . "🎯 *Court Status*: {$courtStatus}\n"
+                            . "👤 Log in to portal & join. Skip if you're not available!\n\n"
+                            . "🌐 https://casa-games.com\n"
+                            . "📳 +1 437 981 0512\n"
+                            . "💪Stay fit & active!\n\n"
+                            . "**Reply DND to stop receiving personal invites!**";
+                        $copyInviteAttr = htmlspecialchars($copyInviteText, ENT_QUOTES, 'UTF-8');
                         ?>
                         <tr>
                             <td><?= $i++ ?></td>
@@ -47,6 +72,12 @@ if (!empty($playerList)):
                             <td><?= $displayGender ?></td>
                             <td class='fw-semibold text-success'><?= $curr . ' ' . $priceFormatted ?></td>
                             <td><span class='badge bg-info'><?= $displayLevel ?></span></td>
+                            <td><?= !empty($player['JOINED_AT']) ? htmlspecialchars(date('M d, Y h:i A', strtotime((string) $player['JOINED_AT'])), ENT_QUOTES, 'UTF-8') : '—' ?></td>
+                            <td>
+                                <button type='button' class='btn btn-sm btn-outline-secondary copy-player-invite' data-copy-message='<?= $copyInviteAttr ?>' title='Copy game invite' aria-label='Copy game invite'>
+                                    <i class='fa-regular fa-copy'></i>
+                                </button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

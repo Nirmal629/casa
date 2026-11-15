@@ -986,13 +986,126 @@ window.CasaHost = window.CasaHost || {};
 
         bindEvents: function () {
             // View Joined & Invited Players Modal
-            $(document).on('click', '.discoverGames_card .view_btn', this.onViewJoinedInvited);
+            $(document).on('click', '.discoverGames_card .view_btn, .session-action-dock .dock-btn-invite', this.onViewJoinedInvited);
 
             // View All Joined Players Modal (Scheduled)
             $(document).on('click', '.discoverGames_card .joined_btn', this.onViewJoinedAll);
 
             // View All Joined Players Modal (Subscription)
             $(document).on('click', '.discoverGames_card_sub .joined_btn', this.onViewJoinedAllSub);
+
+            // Copy the dynamic game invite for the selected player's row.
+            $(document).on('click', '.copy-player-invite', function () {
+                const button = this;
+                const message = button.dataset.copyMessage || '';
+                if (!message) return;
+
+                const copied = function () {
+                    const original = button.innerHTML;
+                    button.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    button.setAttribute('aria-label', 'Invite copied');
+                    setTimeout(() => {
+                        button.innerHTML = original;
+                        button.setAttribute('aria-label', 'Copy game invite');
+                    }, 1500);
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(message).then(copied).catch(() => {});
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = message;
+                    textarea.setAttribute('readonly', '');
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    textarea.remove();
+                    copied();
+                }
+            });
+
+            // Copy the dynamic invite from the game card's copy icon.
+            $(document).on('click', '.copy_event', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const button = this;
+                const $card = $(button).closest('.discoverGames_card, .session-card');
+                const id = $(button).attr('data-id') || $card.attr('data-event-id');
+                const raw = $card.find('#data_' + id).val() || $('#data_' + id).val();
+                const event = CasaHost.Utils.parseJson(raw) || {};
+                if (!event || !event.ID) return;
+
+                const date = event.EVENT_DATE ? new Date(`${event.EVENT_DATE}T00:00:00`) : null;
+                const dateText = date && !Number.isNaN(date.getTime())
+                    ? date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })
+                    : '';
+                const timeValue = (value) => {
+                    if (!value) return '';
+                    const parts = String(value).split(':');
+                    let hour = Number(parts[0]);
+                    const minute = parts[1] || '00';
+                    const suffix = hour >= 12 ? 'pm' : 'am';
+                    hour = hour % 12 || 12;
+                    return `${hour}:${minute} ${suffix}`;
+                };
+                const start = timeValue(event.EVENT_TIME);
+                const end = timeValue(event.TO_TIME);
+                const timeText = end ? `${start} - ${end}` : start;
+                let courtStatus = String(event.JOIN_MESSAGE || '').trim();
+                if (!courtStatus) courtStatus = '0 court booked yet. 6 spots open for Court 1';
+                courtStatus = courtStatus
+                    .replace(/^0 court confirmed,?\s*/i, '0 court booked yet. ')
+                    .replace('spots available for first court', 'spots open for Court 1')
+                    .replace('spot available for first court', 'spot open for Court 1');
+
+                const message = [
+                    '🏸 *Casa Badminton Club Game Invite*',
+                    '👋 Hey! Are you ready for game',
+                    '',
+                    `📅 *${dateText}*`,
+                    `⏰ *${timeText}*`,
+                    `📍 *${event.EVENT_VENUE || ''}*`,
+                    '',
+                    `🎯 *Court Status*: ${courtStatus}`,
+                    '',
+                    '🆕 *New here?* DM me to join + register on CASA',
+                    '👤 *Regulars*: Just log in to portal & join',
+                    '',
+                    '🌐 https://casa-games.com',
+                    '📳 +1 437 981 0512',
+                    '💪Stay fit & active!',
+                    '',
+                    "**Skip if you're not available!**"
+                ].join('\n');
+
+                const copied = function () {
+                    const original = button.innerHTML;
+                    button.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    button.setAttribute('title', 'Copied');
+                    setTimeout(() => {
+                        button.innerHTML = original;
+                        button.setAttribute('title', 'Copy Details');
+                    }, 1500);
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(message).then(copied).catch(() => {});
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = message;
+                    textarea.setAttribute('readonly', '');
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    textarea.remove();
+                    copied();
+                }
+            });
 
             // View upcoming player modal
             $(document).on('click', '.view_btnn', this.onViewUpcomingPlayer);
@@ -1044,10 +1157,16 @@ window.CasaHost = window.CasaHost || {};
             });
         },
 
-        onViewJoinedInvited: function () {
-            const id = $(this).attr('data-id');
-            const data = $('#data_' + id).val();
-            if (!data) return;
+        onViewJoinedInvited: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $card = $(this).closest('.discoverGames_card, .session-card');
+            const id = $(this).attr('data-id') || $card.attr('data-event-id');
+            const data = $card.find('#data_' + id).val() || $('#data_' + id).val();
+            if (!id || !data) {
+                console.error('[Invitations] Missing event payload for invite action', { id, card: $card[0] });
+                return;
+            }
 
             const parseData = CasaHost.Utils.parseJson(data) || {};
             $("#sgenderCategoryy").val(parseData?.GENDER_CATEGORY);
@@ -1067,6 +1186,12 @@ window.CasaHost = window.CasaHost || {};
                 success: function (response) {
                     $("#playerList").html(response);
                     $('.hostgameview_modal').addClass('open');
+                },
+                error: function (xhr, status, error) {
+                    console.error('[Invitations] Failed to load players:', status, error, xhr.responseText);
+                    if (typeof showToast === 'function') {
+                        showToast('error', 'Unable to load players. Please try again.');
+                    }
                 }
             });
         },

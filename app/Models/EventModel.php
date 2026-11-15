@@ -582,6 +582,41 @@ class EventModel extends Model
             . "💪Stay fit and active!";
     }
 
+    //Format the short invite used by the host card copy button.
+    private function formatInviteShareText(array $event): string
+    {
+        $dateTimestamp = !empty($event['EVENT_DATE']) ? strtotime($event['EVENT_DATE']) : false;
+        $dateFormatted = $dateTimestamp !== false ? date('l, M d Y', $dateTimestamp) : '';
+
+        $startTimeTs = !empty($event['EVENT_TIME']) ? strtotime($event['EVENT_TIME']) : false;
+        $startTime = $startTimeTs !== false ? date('g:i A', $startTimeTs) : '';
+        $endTimeTs = !empty($event['TO_TIME']) ? strtotime($event['TO_TIME']) : false;
+        $endTime = $endTimeTs !== false ? date('g:i A', $endTimeTs) : '';
+        $timeFormatted = $startTime . ($endTime !== '' ? " - {$endTime}" : '');
+
+        $courtStatus = trim((string) ($event['JOIN_MESSAGE'] ?? ''));
+        if ($courtStatus === '') {
+            $courtStatus = '0 court booked yet. 6 spots open for Court 1';
+        } else {
+            $courtStatus = preg_replace('/^0 court confirmed,?\\s*/i', '0 court booked yet. ', $courtStatus);
+            $courtStatus = str_replace('spots available for first court', 'spots open for Court 1', $courtStatus);
+            $courtStatus = str_replace('spot available for first court', 'spot open for Court 1', $courtStatus);
+        }
+
+        return "🏸 *Casa Badminton Club Game Invite*\n"
+            . "👋 Hey! Are you ready for game\n\n"
+            . "📅 *{$dateFormatted}*\n"
+            . "⏰ *{$timeFormatted}*\n"
+            . "📍 *" . ($event['EVENT_VENUE'] ?? '') . "*\n\n"
+            . "🎯 *Court Status*: {$courtStatus}\n\n"
+            . "🆕 *New here?* DM me to join + register on CASA\n"
+            . "👤 *Regulars*: Just log in to portal & join\n\n"
+            . "🌐 https://casa-games.com\n"
+            . "📳 +1 437 981 0512\n"
+            . "💪 Stay fit & active!\n\n"
+            . "**Skip if you're not available!**";
+    }
+
     //Enrich an event with join statistics, session user status, and formatted WhatsApp message.
     private function enrichEventWithJoins(array &$event, array $gameJoins, int $sessionUserId): void
     {
@@ -629,7 +664,7 @@ class EventModel extends Model
         $event['player_list'] = !empty($playerLines) ? implode("\n", $playerLines) : null;
 
         $playerListText = !empty($numberedPlayerLines) ? implode("\n", $numberedPlayerLines) . "\n" : "";
-        $event['formatted_event_data'] = $this->formatEventShareText($event, $playerListText);
+        $event['formatted_event_data'] = $this->formatInviteShareText($event);
     }
 
     //Get complete scheduled events data with aggregated player joins and formatted text.

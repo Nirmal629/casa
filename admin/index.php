@@ -21,14 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error = "Username and Password are required.";
     } else {
-        // Prepared SQL statement to prevent SQL injection
-        $stmt = mysqli_prepare($conn, "SELECT ID, TYPE, USER_NAME, PASSWORD, NAME FROM ca_admin WHERE USER_NAME = ?");
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "s", $username);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $user = $result ? mysqli_fetch_assoc($result) : null;
-            mysqli_stmt_close($stmt);
+        // Prepare the SQL statement
+        $stmt = mysqli_query($conn,"SELECT ID, TYPE, USER_NAME, PASSWORD, NAME FROM ca_admin WHERE USER_NAME = '".$username."'");
+        
+        if($stmt)
+        {
+            $user = mysqli_fetch_assoc($stmt);
 
             if ($user) {
                 $storedPassword = (string)($user['PASSWORD'] ?? '');

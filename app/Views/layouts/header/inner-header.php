@@ -195,6 +195,11 @@ if ($isClubGamesPage) {
                             <a href="<?= e($routes['hostDashboard']) ?>" role="menuitem">
                                 <i class="fa-solid fa-gauge" aria-hidden="true"></i> Host Dashboard
                             </a>
+                            <?php if ($isHost): ?>
+                            <a href="<?= e($routes['hostAuditLog']) ?>" role="menuitem">
+                                <i class="fa-solid fa-chart-line" aria-hidden="true"></i> Audit Dashboard
+                            </a>
+                            <?php endif; ?>
                             <?php endif; ?>
                             <div class="ncd-divider"></div>
                             <a href="<?= e($routes['logout']) ?>" class="ncd-logout" role="menuitem">

@@ -42,6 +42,22 @@ $eventtotalCostt = isset($_POST['eventtotalCostt']) ? validate_input($_POST['eve
 $eventtotalplayerCostt = isset($_POST['eventtotalplayerCostt']) ? validate_input($_POST['eventtotalplayerCostt']) : null;
 $profitloss = isset($_POST['profitloss']) ? validate_input($_POST['profitloss']) : null;
 $courtconfirmed = isset($_POST['courtconfirmed']) ? (int)validate_input($_POST['courtconfirmed']) : null;
+$isCancelled = strcasecmp((string) $status, 'Cancelled') === 0;
+
+// A cancelled game must not retain operational or player financial values.
+// Keep the event row for history, but clear all amounts used by the completed
+// games table and any player-cost synchronization.
+if ($isCancelled) {
+    $event_cost = '0.00';
+    $event_discount = '0.00';
+    $facilitycost = '0.00';
+    $accessoriesCost = '0.00';
+    $snackscost = '0.00';
+    $eventtotalCostt = '0.00';
+    $eventtotalplayerCostt = '0.00';
+    $profitloss = '0.00';
+    $courtconfirmed = 0;
+}
 
 // Check required fields
 if (!$id || !$event_date || !$event_time || !$event_cost) {
@@ -104,15 +120,15 @@ $sql = "UPDATE ca_events
             TOTAL_EVENT_COST='$eventtotalCostt',
             TOTAL_PLAYER_COST='$eventtotalplayerCostt',
             PROFIT_LOSS='$profitloss',
-            BIRDIE_USED = '".(int)($_POST['birdieUsed'] ?? 0)."',
-            BIRDIE_COST = '$accessoriesCost',
-            CLUB_COST = '".(float)($_POST['clubClost'] ?? 0)."',
+            BIRDIE_USED = '".($isCancelled ? 0 : (int)($_POST['birdieUsed'] ?? 0))."',
+            BIRDIE_COST = '".($isCancelled ? '0.00' : $accessoriesCost)."',
+            CLUB_COST = '".($isCancelled ? '0.00' : (float)($_POST['clubClost'] ?? 0))."',
             COURTS_CONFIRMED = '$courtconfirmed'
         WHERE ID = '$id'";
 
 if ($conn->query($sql) === TRUE) {
     $response['success'] = true;
-    if(isset($_POST['updatePlayerPrice']) && $_POST['updatePlayerPrice'] == 'Y')
+    if ($isCancelled || (isset($_POST['updatePlayerPrice']) && $_POST['updatePlayerPrice'] == 'Y'))
     {
         $updateJoin = "UPDATE ca_gamejoin 
                       SET PRICE = '$event_cost', CURRENCY = '$event_currency' 
