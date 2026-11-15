@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../app/Config/env.php';
-$appTimezone = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-if (!empty($appTimezone)) {
-    @date_default_timezone_set((string) $appTimezone);
-}
+require_once __DIR__ . '/../app/Config/Database.php';
+require_once __DIR__ . '/../app/Config/Timezone.php';
+$appTimezone = \App\Config\Timezone::name();
+date_default_timezone_set($appTimezone);
 require_once __DIR__ . '/../app/Helpers/Session.php';
 \App\Helpers\Session::start();
 

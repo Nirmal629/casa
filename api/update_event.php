@@ -76,12 +76,15 @@ if (!is_numeric($event_cost)) {
 }
 
 $eventModel = new \App\Models\EventModel();
+$timezoneResult = mysqli_query($conn, "SELECT EVENT_TIMEZONE FROM ca_events WHERE ID = '$id' LIMIT 1");
+$savedEventTimezone = $timezoneResult ? (string) (mysqli_fetch_assoc($timezoneResult)['EVENT_TIMEZONE'] ?? '') : '';
 $freezeValidation = $eventModel->validateFreezeDateTime(
     (string) $event_date,
     (string) $event_time,
     isset($_POST['freeze_date']) ? (string) $_POST['freeze_date'] : null,
     isset($_POST['freeze_time']) ? (string) $_POST['freeze_time'] : null,
-    (string) ($_POST['freeze_type'] ?? '')
+    (string) ($_POST['freeze_type'] ?? ''),
+    $savedEventTimezone !== '' ? $savedEventTimezone : null
 );
 
 if (!$freezeValidation['valid']) {

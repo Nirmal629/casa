@@ -513,11 +513,6 @@ class HostController extends Controller
             $this->redirect('/host/host-creat-game.php');
         }
 
-        $appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-        if (!empty($appTz)) {
-            @date_default_timezone_set($appTz);
-        }
-
         $input = !empty($_POST) ? $_POST : (json_decode((string) file_get_contents('php://input'), true) ?: []);
 
         $freezeValidation = $this->eventModel->validateFreezeDateTime(
@@ -1015,12 +1010,12 @@ class HostController extends Controller
             $sql = "INSERT INTO ca_events (
                 HOST_ID, HOST_NAME, EVENT_COUNTRY, EVENT_PROVINCE, EVENT_CITY, EVENT_CURRENCY,
                 EVENT_VENUE, EVENT_CATEGORY, GENDER_CATEGORY, GENDER_SKILL_LEVEL,
-                EVENT_TYPE, EVENT_DATE, EVENT_TIME, TO_TIME, CANCEL_DATE, CANCEL_TIME,
+                EVENT_TYPE, EVENT_DATE, EVENT_TIME, EVENT_TIMEZONE, TO_TIME, CANCEL_DATE, CANCEL_TIME,
                 EVENT_COST, EVENT_DISCOUNT, EVENT_DESCRIPTION, EVENT_MESSAGE, STATUS,
                 FACILITY_COST, ACCESSORIES_COST, SNACKS_COST, TOTAL_EVENT_COST,
                 TOTAL_PLAYER_COST, PROFIT_LOSS
             ) VALUES (
-                ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?,
                 ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?,
@@ -1632,6 +1627,7 @@ class HostController extends Controller
             'EVENT_TYPE'         => trim((string) ($input['event_type'] ?? '')),
             'EVENT_DATE'         => trim((string) ($input['event_date'] ?? '')),
             'EVENT_TIME'         => trim((string) ($input['event_time'] ?? '')),
+            'EVENT_TIMEZONE'     => \App\Config\Timezone::name(),
             'TO_TIME'            => trim((string) ($input['to_Time'] ?? $input['to_time'] ?? '')),
             'CANCEL_DATE'        => trim((string) ($input['freeze_date'] ?? '')),
             'CANCEL_TIME'        => trim((string) ($input['freeze_time'] ?? '')),
@@ -1745,6 +1741,7 @@ class HostController extends Controller
             $val('event_type'),
             $val('event_date'),
             $val('event_time'),
+            \App\Config\Timezone::name(),
             $val('to_time'),
             $val('freeze_date'),
             $val('freeze_time'),

@@ -29,6 +29,7 @@ class EventModel extends Model
         'EVENT_TYPE',
         'EVENT_DATE',
         'EVENT_TIME',
+        'EVENT_TIMEZONE',
         'TO_TIME',
         'CANCEL_DATE',
         'CANCEL_TIME',
@@ -91,15 +92,29 @@ class EventModel extends Model
 
     public function getAppTimezone(): DateTimeZone
     {
-        $timezoneName = function_exists('env')
-            ? (string) env('APP_TIMEZONE', env('TIMEZONE', date_default_timezone_get() ?: 'Asia/Kolkata'))
-            : (date_default_timezone_get() ?: 'Asia/Kolkata');
-
         try {
-            return new DateTimeZone($timezoneName);
+            return \App\Config\Timezone::zone();
         } catch (Throwable) {
-            return new DateTimeZone('Asia/Kolkata');
+            return new DateTimeZone('UTC');
         }
+    }
+
+    private function getEventTimezone(array $event): DateTimeZone
+    {
+        $timezoneName = trim((string) ($event['EVENT_TIMEZONE'] ?? ''));
+        if ($timezoneName !== '' && in_array($timezoneName, DateTimeZone::listIdentifiers(), true)) {
+            return new DateTimeZone($timezoneName);
+        }
+        return \App\Config\Timezone::configuredZone();
+    }
+
+    private function timezoneFromName(?string $timezoneName): DateTimeZone
+    {
+        $timezoneName = trim((string) $timezoneName);
+        if ($timezoneName !== '' && in_array($timezoneName, DateTimeZone::listIdentifiers(), true)) {
+            return new DateTimeZone($timezoneName);
+        }
+        return $this->getAppTimezone();
     }
 
     public function isEventExpired(int|array $event): bool
@@ -113,7 +128,7 @@ class EventModel extends Model
         $eventStartTimeStr = trim((string) ($eventData['EVENT_TIME'] ?? '00:00:00'));
         $eventEndTimeStr = trim((string) ($eventData['TO_TIME'] ?? ''));
 
-        $tz = $this->getAppTimezone();
+        $tz = $this->getEventTimezone($eventData);
 
         try {
             $startDt = new DateTimeImmutable("{$eventDateStr} {$eventStartTimeStr}", $tz);
@@ -171,7 +186,7 @@ class EventModel extends Model
             return false;
         }
 
-        $tz = $this->getAppTimezone();
+        $tz = $this->getEventTimezone($eventData);
 
         try {
             $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);
@@ -204,7 +219,7 @@ class EventModel extends Model
      *
      * @return array{valid: bool, error: ?string}
      */
-    public function validateEventDateTime(string $eventDate, string $eventTime): array
+    public function validateEventDateTime(string $eventDate, string $eventTime, ?string $timezoneName = null): array
     {
         $eventDate = trim($eventDate);
         $eventTime = trim($eventTime);
@@ -231,7 +246,7 @@ class EventModel extends Model
             ];
         }
 
-        $tz = $this->getAppTimezone();
+        $tz = $this->timezoneFromName($timezoneName);
 
         try {
             $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);
@@ -271,7 +286,8 @@ class EventModel extends Model
         string $eventTime,
         ?string $freezeDate,
         ?string $freezeTime,
-        string $freezeType = ''
+        string $freezeType = '',
+        ?string $timezoneName = null
     ): array {
         $eventDate = trim($eventDate);
         $eventTime = trim($eventTime);
@@ -315,7 +331,7 @@ class EventModel extends Model
             $freezeTime = $eventTime;
         }
 
-        $tz = $this->getAppTimezone();
+        $tz = $this->timezoneFromName($timezoneName);
 
         try {
             $eventStartDt = new DateTimeImmutable("{$eventDate} {$eventTime}", $tz);

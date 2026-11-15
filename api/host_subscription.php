@@ -21,10 +21,8 @@ requireApiUser(['Host','Trainer']);
  */
 
 require_once __DIR__ . '/../app/Config/env.php';
-$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-if (!empty($appTz)) {
-    @date_default_timezone_set($appTz);
-}
+require_once __DIR__ . '/../app/Config/Timezone.php';
+date_default_timezone_set(\App\Config\Timezone::configuredZone()->getName());
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');

@@ -19,10 +19,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../../app/Config/env.php';
-$appTz = env('APP_TIMEZONE', env('TIMEZONE', 'Asia/Kolkata'));
-if (!empty($appTz)) {
-    @date_default_timezone_set($appTz);
-}
+require_once __DIR__ . '/../../app/Config/Timezone.php';
+date_default_timezone_set(\App\Config\Timezone::configuredZone()->getName());
 
 // An API must return clean JSON — never let a stray notice/warning corrupt it.
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
