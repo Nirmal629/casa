@@ -8,7 +8,8 @@ require_once __DIR__ . '/../init.php';
 <?php include __DIR__ . "/../app/Views/layouts/header/header.php"; ?>
 
 <!-- Tournament Specific Styles -->
-<link rel="stylesheet" href="/tournament/assets/css/bracket.css" type="text/css">
+<?php $tournamentAssetPrefix = function_exists('appBasePath') ? appBasePath() : '/'; ?>
+<link rel="stylesheet" href="<?= htmlspecialchars($tournamentAssetPrefix, ENT_QUOTES, 'UTF-8') ?>tournament/assets/css/bracket.css" type="text/css">
 
 <section class="tournament_page bottomSide_gap">
     <div class="cust_container">
