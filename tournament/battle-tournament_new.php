@@ -1116,7 +1116,7 @@ if (is_array($tournamentSummary)) {
                 <div class="card">
                     <div class="d-flex align-items-center justify-content-between gap-1">
                         <h4 class="section-title">Teams Registered</h4>
-                        <a href="#" class="btn">View All Group</a>
+                        <a href="#all-groups" class="btn">View All Group</a>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -1170,7 +1170,7 @@ if (is_array($tournamentSummary)) {
             </div>
         </div>
 
-        <div class="grouptable">
+        <div class="grouptable" id="all-groups">
 
             <!-- All GROUP -->
             <div class="card">
