@@ -1,3 +1,9 @@
+<?php
+// This standalone entry point renders the shared header directly, so it must
+// initialize the application autoloader before the view references Session.
+require_once __DIR__ . '/../init.php';
+?>
+
 <!-----Header------>
 <?php include __DIR__ . "/../app/Views/layouts/header/header.php"; ?>
 
