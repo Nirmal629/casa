@@ -11,6 +11,40 @@ if (!function_exists('e')) {
     }
 }
 
+/**
+ * Return the application's public URL prefix, including deployments such as
+ * /staging/. This is derived from the server document root and app directory,
+ * so production at / continues to return '/'.
+ */
+if (!function_exists('appBasePath')) {
+    function appBasePath(): string
+    {
+        static $basePath;
+        if ($basePath !== null) {
+            return $basePath;
+        }
+
+        $documentRoot = realpath((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
+        $applicationRoot = realpath(__DIR__ . '/../..');
+
+        if ($documentRoot && $applicationRoot) {
+            $doc = strtolower(str_replace('\\', '/', rtrim($documentRoot, '/\\')));
+            $app = str_replace('\\', '/', $applicationRoot);
+            $appComparable = strtolower($app);
+
+            if (str_starts_with($appComparable, $doc . '/') || $appComparable === $doc) {
+                $relative = substr($app, strlen($documentRoot));
+                $relative = trim(str_replace('\\', '/', $relative), '/');
+                $basePath = $relative === '' ? '/' : '/' . $relative . '/';
+                return $basePath;
+            }
+        }
+
+        $basePath = '/';
+        return $basePath;
+    }
+}
+
 // Generate unique secure booking number
 function generateBookingNo(): string
 {

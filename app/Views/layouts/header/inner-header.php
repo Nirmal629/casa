@@ -22,7 +22,7 @@ $displayUserType = ucfirst($userProfile->role);
 
 // 4. Centralized Routes Mapping
 $currentInnerPage = getCurrentPage();
-$pathPrefix       = '/';
+$pathPrefix       = function_exists('appBasePath') ? appBasePath() : '/';
 
 $routes = [
     'home'           => "{$pathPrefix}index.php",
