@@ -14,9 +14,11 @@ if (!function_exists('get_club_logo_url')) {
     function get_club_logo_url($logo): string
     {
         $logo = trim((string) $logo);
-        $prefix = '../';
+        $assetUrl = static function (string $path): string {
+            return function_exists('appUrl') ? appUrl($path) : '/' . ltrim($path, '/');
+        };
         if ($logo === '') {
-            return "{$prefix}assets/images/logo/Final-Logo.png";
+            return $assetUrl('assets/images/logo/Final-Logo.png');
         }
 
         $cleanLogo = basename(ltrim($logo, '/\\'));
@@ -28,15 +30,13 @@ if (!function_exists('get_club_logo_url')) {
             ''                    => "{$baseDir}{$cleanLogo}",
         ];
 
-        $escapedLogo = htmlspecialchars($cleanLogo, ENT_QUOTES, 'UTF-8');
-
         foreach ($logoPathMap as $urlPath => $fullFileSystemPath) {
             if (file_exists($fullFileSystemPath)) {
-                return "{$prefix}{$urlPath}{$escapedLogo}";
+                return $assetUrl($urlPath . $cleanLogo);
             }
         }
 
-        return "{$prefix}uploads/clubs/{$escapedLogo}";
+        return $assetUrl('uploads/clubs/' . $cleanLogo);
     }
 }
 

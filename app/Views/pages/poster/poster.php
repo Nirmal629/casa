@@ -1,6 +1,5 @@
 <?php
 $posters ??= [];
-error_log('Poster View Received Data: ' . print_r($posters, true));
 
 if (!empty($posters)):
 ?>
