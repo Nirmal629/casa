@@ -7,6 +7,10 @@ $cardCssVer = file_exists($cardCssPath) ? filemtime($cardCssPath) : '1.0';
 <section class="">
     <?php
     [$hostId, $userType] = [(int) ($_SESSION['user_id'] ?? 0), $_SESSION['usertype'] ?? 'Host'];
+    // The edit modal is rendered before a specific event is selected.
+    // Keep the comparison values defined so an empty modal does not emit warnings.
+    $event_venue = (string) ($event_venue ?? '');
+    $event_category = (string) ($event_category ?? '');
     ?>
     <div class="custom_card">
         <div class="d-flex align-items-center flex-wrap gap-3 mb-4">
@@ -190,10 +194,13 @@ if (!in_array('Mix', $uniqueLevels, true)) {
 
                             if ($resVenue && mysqli_num_rows($resVenue) > 0) {
                                 while ($row = mysqli_fetch_assoc($resVenue)) {
-                                    $venueName = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-                                    $selected = ($venueName == $event_venue) ? "selected" : "";
+                                    $venueValue = (string) $row['NAME'];
+                                    $venueName = htmlspecialchars($venueValue, ENT_QUOTES, 'UTF-8');
+                                    $selected = ($venueValue === $event_venue) ? "selected" : "";
                                     echo "<option value=\"$venueName\" $selected>$venueName</option>";
                                 }
+                            } else {
+                                echo '<option value="" disabled selected>Venue not available</option>';
                             }
                             ?>
                         </select>
@@ -209,10 +216,13 @@ if (!in_array('Mix', $uniqueLevels, true)) {
 
                             if ($resVenue && mysqli_num_rows($resVenue) > 0) {
                                 while ($row = mysqli_fetch_assoc($resVenue)) {
-                                    $venueName = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-                                    $selected = ($venueName == $event_venue) ? "selected" : "";
-                                    echo "<option value=\"$venueName\" $selected>$venueName</option>";
+                                    $categoryValue = (string) $row['NAME'];
+                                    $categoryName = htmlspecialchars($categoryValue, ENT_QUOTES, 'UTF-8');
+                                    $selected = ($categoryValue === $event_category) ? "selected" : "";
+                                    echo "<option value=\"$categoryName\" $selected>$categoryName</option>";
                                 }
+                            } else {
+                                echo '<option value="" disabled selected>Category not available</option>';
                             }
                             ?>
                             <?php elseif ($_SESSION['usertype'] === 'Trainer'): ?>
