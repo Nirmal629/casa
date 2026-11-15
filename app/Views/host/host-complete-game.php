@@ -13,19 +13,10 @@ $host_id = intval($_SESSION['user_id'] ?? 0);
 $currentYear = date('Y');
 $currentMonth = date('n'); // 1-12 (no leading zero)
 
-// Check if current month has completed events for this host; if not, default to the latest month with completed events
+// Always open the completed-games filter on the current application month/year.
+// Users can still select an older month manually from the dropdowns.
 $defaultYear = $currentYear;
 $defaultMonth = $currentMonth;
-
-$checkCurrent = mysqli_query($conn, "SELECT ID FROM ca_events WHERE STATUS!='Active' AND HOST_ID='$host_id' AND YEAR(EVENT_DATE)='$currentYear' AND MONTH(EVENT_DATE)='$currentMonth' LIMIT 1");
-if (!$checkCurrent || mysqli_num_rows($checkCurrent) == 0) {
-    $latestEventCheck = mysqli_query($conn, "SELECT YEAR(EVENT_DATE) as yr, MONTH(EVENT_DATE) as mo FROM ca_events WHERE STATUS!='Active' AND HOST_ID='$host_id' ORDER BY EVENT_DATE DESC LIMIT 1");
-    if ($latestEventCheck && mysqli_num_rows($latestEventCheck) > 0) {
-        $latestRow = mysqli_fetch_assoc($latestEventCheck);
-        $defaultYear = intval($latestRow['yr']);
-        $defaultMonth = intval($latestRow['mo']);
-    }
-}
 ?>
     <div class="custom_card">
         <!--<h6 class="card_heading">The Completed Games</h6>-->

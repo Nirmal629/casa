@@ -107,6 +107,11 @@ if (empty($galleryImages) && empty($galleryVideos)) {
 $hasImages = !empty($galleryImages);
 $hasVideos = !empty($galleryVideos);
 $defaultTab = $hasImages ? 'images' : 'videos';
+$mediaUrl = static function (string $path): string {
+    if ($path === '' || preg_match('#^(?:https?:)?//#i', $path)) return $path;
+    if (str_starts_with($path, '/')) return $path;
+    return function_exists('appUrl') ? appUrl($path) : '/' . ltrim($path, '/');
+};
 ?>
 
 <!--home-gallery--->
@@ -133,8 +138,8 @@ $defaultTab = $hasImages ? 'images' : 'videos';
                     <div id="gallery" class="casaphotos_slider gallery">
                         <?php foreach ($galleryImages as $image) { ?>
                             <div class="img-box">
-                                <a href="<?php echo h($image['media_url']); ?>" class="glightbox-image" data-gallery="gallery-images" data-glightbox="type: image">
-                                    <img src="<?php echo h($image['media_url']); ?>" alt="<?php echo h($image['title'] ?: 'Gallery image'); ?>" onerror="this.onerror=null; this.src='assets/images/badminton-banner1.jpg';">
+                                <a href="<?php echo h($mediaUrl((string) $image['media_url'])); ?>" class="glightbox-image" data-gallery="gallery-images" data-glightbox="type: image">
+                                    <img src="<?php echo h($mediaUrl((string) $image['media_url'])); ?>" alt="<?php echo h($image['title'] ?: 'Gallery image'); ?>" onerror="this.onerror=null; this.src='<?php echo h($mediaUrl('assets/images/badminton-banner1.jpg')); ?>';">
                                 </a>
                             </div>
                         <?php } ?>
@@ -147,8 +152,8 @@ $defaultTab = $hasImages ? 'images' : 'videos';
                     <div class="casavideo_slider gallery">
                         <?php foreach ($galleryVideos as $video) { ?>
                             <div class="casavideo-box">
-                                <a href="<?php echo h($video['media_url']); ?>" class="glightbox-video" data-gallery="gallery-videos" data-glightbox="type: video">
-                                    <img src="<?php echo h($video['thumbnail_url']); ?>" alt="<?php echo h($video['title'] ?: 'Gallery video'); ?>" onerror="this.onerror=null; this.src='assets/images/badminton-banner1.jpg';">
+                                <a href="<?php echo h($mediaUrl((string) $video['media_url'])); ?>" class="glightbox-video" data-gallery="gallery-videos" data-glightbox="type: video">
+                                    <img src="<?php echo h($mediaUrl((string) $video['thumbnail_url'])); ?>" alt="<?php echo h($video['title'] ?: 'Gallery video'); ?>" onerror="this.onerror=null; this.src='<?php echo h($mediaUrl('assets/images/badminton-banner1.jpg')); ?>';">
                                     <div class="transparent-box">
                                         <div class="caption">▶</div>
                                     </div>

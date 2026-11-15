@@ -39,10 +39,26 @@ $products            ??= [];
 $orderMap            ??= [];
 $reviews             ??= [];
 $pathPrefix          ??= (function_exists('appBasePath') ? appBasePath() : '/');
+$playerDashboardUrl  = function_exists('appUrl') ? appUrl('player/player-dashboard.php') : ($pathPrefix . 'player/player-dashboard.php');
+$defaultClubLogoUrl  = function_exists('appUrl') ? appUrl('assets/images/logo/Final-Logo.png') : ($pathPrefix . 'assets/images/logo/Final-Logo.png');
+$assetUrl = static function ($value, string $fallback = ''): string {
+    $value = trim((string) $value);
+    if ($value === '') {
+        $value = $fallback;
+    }
+    if ($value === '' || preg_match('#^(?:https?:)?//#i', $value)) {
+        return $value;
+    }
+    $basePath = function_exists('appBasePath') ? appBasePath() : '/';
+    if ($basePath !== '/' && str_starts_with($value, $basePath)) {
+        return $value;
+    }
+    return function_exists('appUrl') ? appUrl(ltrim($value, '/')) : '/' . ltrim($value, '/');
+};
 
 // Pre-calculated view display parameters
 $prefix        = $pathPrefix ?? '../';
-$imagePath     = $user_profile_img ?? ($prefix . 'assets/images/profile.jpg');
+$imagePath     = $assetUrl($user_profile_img ?? '', 'assets/images/profile.jpg');
 $playerName    = $player_name ?? 'N/A';
 $playerGender  = $player_gender ?? 'N/A';
 $playerLevel   = $player_level ?? 'N/A';
@@ -53,7 +69,7 @@ include $views['header'];
 ?>
 
 <!-- Extracted Page Stylesheet -->
-<link rel="stylesheet" href="<?= $esc($pathPrefix) ?>app/Views/css/player/player-hub.css">
+<link rel="stylesheet" href="<?= $esc($assetUrl('app/Views/css/player/player-hub.css')) ?>">
 
 <section class="playerhub_sec bothSide_gap">
     <div class="cust_container">
@@ -103,7 +119,7 @@ include $views['header'];
                         <div class="profileDetails">
                             <div class="profile">
                                 <img src="<?= $imagePath ?>" alt="Profile Image" loading="eager" class="no-lazy"
-                                    onerror="this.onerror=null; this.src='<?= $prefix ?>assets/images/profile.jpg';">
+                                    onerror="this.onerror=null; this.src='<?= $esc($assetUrl('assets/images/profile.jpg')) ?>';">
                             </div>
                             <div class="info">
                                 <p><b>Name:</b> <?= $playerName ?></p>
@@ -118,18 +134,18 @@ include $views['header'];
                             <div class="statInnDiv"><span><?= $sessionsCount ?></span>Total Sessions</div>
                             <div class="statInnDiv"><span><?= $sessionsCount * 12 ?></span>Total Games</div>
                             <div class="statInnDiv">
-                                <div class="upcmngBtn"><img src="<?= $prefix ?>assets/images/upcoming.png" alt="upcoming icon"></div>
+                                <div class="upcmngBtn"><img src="<?= $esc($assetUrl('assets/images/upcoming.png')) ?>" alt="upcoming icon"></div>
                                 <span>5</span>No-Show
                             </div>
                             <div class="statInnDiv">
-                                <div class="upcmngBtn"><img src="<?= $prefix ?>assets/images/upcoming.png" alt="upcoming icon"></div>
+                                <div class="upcmngBtn"><img src="<?= $esc($assetUrl('assets/images/upcoming.png')) ?>" alt="upcoming icon"></div>
                                 <span>210</span>Recorded
                             </div>
                         </div>
 
                         <!-- Win Ratio -->
                         <div class="win">
-                            <div class="upcmngBtn"><img src="<?= $prefix ?>assets/images/upcoming.png" alt="upcoming icon"></div>
+                            <div class="upcmngBtn"><img src="<?= $esc($assetUrl('assets/images/upcoming.png')) ?>" alt="upcoming icon"></div>
                             <div class="winParaDiv">
                                 <p>
                                     <span>Win Ratio</span>
@@ -144,7 +160,7 @@ include $views['header'];
 
                         <!-- Tournaments Mini Slider -->
                         <div class="block">
-                            <h4>Tournaments <img src="<?= $prefix ?>assets/images/upcoming.png" alt="upcoming icon"></h4>
+                            <h4>Tournaments <img src="<?= $esc($assetUrl('assets/images/upcoming.png')) ?>" alt="upcoming icon"></h4>
                             <div class="tournamentBtm">
                                 <div class="tourSlider tourSlick">
                                     <div class="tourSlide">
@@ -162,7 +178,7 @@ include $views['header'];
 
                         <!-- Skill Badges -->
                         <div class="block">
-                            <h4>Skill Badges <img src="<?= $prefix ?>assets/images/upcoming.png" alt="upcoming icon"></h4>
+                            <h4>Skill Badges <img src="<?= $esc($assetUrl('assets/images/upcoming.png')) ?>" alt="upcoming icon"></h4>
                             <div class="badges">
                                 <div class="badgeSlider badgeSlick">
                                     <div class="badgeSlide">
@@ -214,7 +230,7 @@ include $views['header'];
                                     <div class="d-flex align-items-center gap-2 mb-0">
                                         <div class="club-logo-container">
                                             <img src="<?= $esc($clubLogoSrc) ?>" alt="<?= $clubName ?>" loading="eager" class="no-lazy"
-                                                onerror="this.onerror=null; this.src='assets/images/logo/Final-Logo.png';" />
+                                                onerror="this.onerror=null; this.src='<?= $esc($defaultClubLogoUrl) ?>';" />
                                         </div>
                                         <div>
                                             <h4 class="club-header-title"><?= $clubName ?></h4>
@@ -259,7 +275,7 @@ include $views['header'];
                                                     <i class="fa-solid fa-user-shield"></i>
                                                     <span>Member</span>
                                                 </div>
-                                                <a href="/player/player-dashboard.php?host_id=<?= $hostId ?>" class="btn-stacked-synced action-view">
+                                                <a href="<?= $esc($playerDashboardUrl) ?>?host_id=<?= $hostId ?>" class="btn-stacked-synced action-view">
                                                     <i class="fa-solid fa-gamepad"></i>
                                                     <span>Games</span>
                                                 </a>
@@ -298,8 +314,8 @@ include $views['header'];
                             <?php foreach ($upcomingTournaments as $t): ?>
                                 <div class="tournamentCard">
                                     <div class="banner">
-                                        <img src="<?= $t['imgPath'] ?>" alt="<?= $t['cupName'] ?>" loading="eager" class="no-lazy"
-                                            onerror="this.onerror=null; this.src='<?= $esc($pathPrefix) ?>assets/images/default.jpg';">
+                                        <img src="<?= $esc($assetUrl($t['imgPath'] ?? '', 'assets/images/default.jpg')) ?>" alt="<?= $esc($t['cupName'] ?? '') ?>" loading="eager" class="no-lazy"
+                                            onerror="this.onerror=null; this.src='<?= $esc($assetUrl('assets/images/default.jpg')) ?>';">
                                     </div>
                                     <div class="card-body">
                                         <div class="card-header">
@@ -356,7 +372,7 @@ include $views['header'];
                                                     <?php case 'not_joined':
                                                     default: ?>
                                                         <?php if ($t['isRegistrationOpen']): ?>
-                                                            <a href="tournament-details.php?id=<?= $t['id'] ?>" class="joinbtn">Join Now</a>
+                                                            <a href="<?= $esc($assetUrl('tournament-details.php')) ?>?id=<?= (int) $t['id'] ?>" class="joinbtn">Join Now</a>
                                                         <?php else: ?>
                                                             <button type="button" class="joinbtn status-disabled" disabled>
                                                                 Join Now
@@ -366,7 +382,7 @@ include $views['header'];
                                                 <?php endswitch; ?>
 
                                                 <?php if ($t['isDrawLive']): ?>
-                                                    <a href="tournament/?id=<?= $t['id'] ?>" class="joinbtn">View Live</a>
+                                                    <a href="<?= $esc($assetUrl('tournament/')) ?>?id=<?= (int) $t['id'] ?>" class="joinbtn">View Live</a>
                                                 <?php else: ?>
                                                     <button type="button" class="joinbtn"
                                                         onclick="alert('The Draw is almost here! Live match schedules and brackets will go live on <?= $t['drawDisplayDate'] ?> at 10:00 am EST. Stay tuned!');">
@@ -394,12 +410,12 @@ include $views['header'];
                                     $productID   = (int) $product['ID'];
                                     $productName = $product['display_name'] ?? 'N/A';
                                     $price       = $product['formatted_price'] ?? '0.00';
-                                    $imagePath   = $product['image_path'] ?? ($pathPrefix . 'assets/images/t-shirt.jpg');
+                                    $imagePath   = $assetUrl($product['image_path'] ?? '', 'assets/images/t-shirt.jpg');
                                     $orderData   = $orderMap[$productID] ?? null;
                                 ?>
                                     <div class="store-item">
                                         <img src="<?= $imagePath ?>" alt="<?= $productName ?>" loading="eager" class="no-lazy"
-                                            onerror="this.onerror=null; this.src='<?= $esc($pathPrefix) ?>assets/images/t-shirt.jpg';">
+                                            onerror="this.onerror=null; this.src='<?= $esc($assetUrl('assets/images/t-shirt.jpg')) ?>';">
                                         <div class="item-info">
                                             <div class="storeItemTop">
                                                 <h4><?= $productName ?></h4>
@@ -445,7 +461,7 @@ include $views['header'];
                         </div>
                     </div>
                     <?php if (function_exists('canViewProductListing') && canViewProductListing()): ?>
-                        <a href="product-listing.php" class="casastore_btn mt-4">The Casa Store</a>
+                        <a href="<?= $esc($assetUrl('product-listing.php')) ?>" class="casastore_btn mt-4">The Casa Store</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -572,7 +588,7 @@ include $views['footer_links'];
 ?>
 
 <!-- Extracted Interactivity JavaScript -->
-<script src="/app/script/player-hub.js"></script>
+<script src="<?= $esc($assetUrl('app/script/player-hub.js')) ?>"></script>
 
 <?php
 include $views['footer'];

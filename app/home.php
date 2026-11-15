@@ -41,6 +41,12 @@ $posters ??= [];
 
 <!-- Page Stylesheet -->
 <link rel="stylesheet" href="<?= $esc(function_exists('appUrl') ? appUrl('app/Views/css/home.css') : '/app/Views/css/home.css') ?>">
+<?php
+$tournamentCssPath = __DIR__ . '/../assets/css/tournament.css';
+$tournamentCssVersion = is_file($tournamentCssPath) ? (string) filemtime($tournamentCssPath) : '1.0';
+?>
+<!-- Explicit tournament stylesheet: keeps the home section styled in subfolder deployments such as /staging/. -->
+<link rel="stylesheet" href="<?= $esc(function_exists('appUrl') ? appUrl('assets/css/tournament.css') : '/assets/css/tournament.css') ?>?v=<?= $tournamentCssVersion ?>" type="text/css">
 
 <!-- Hero banner -->
 <?php if (!empty($banners)): ?>
@@ -322,7 +328,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="BadmintonTab" class="activelink">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/badminton_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/badminton_new.avif') : '/assets/images/game/badminton_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Badminton</span>
                     </div>
                 </a>
@@ -331,7 +337,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="FootballTab" class="">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/football_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/football_new.avif') : '/assets/images/game/football_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Football</span>
                         <span class="coming_soon">[ Coming Soon ]</span>
                     </div>
@@ -341,7 +347,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="CricketTab" class="">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/cricket_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/cricket_new.avif') : '/assets/images/game/cricket_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Cricket</span>
                         <span class="coming_soon">[ Coming Soon ]</span>
                     </div>
@@ -351,7 +357,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="SwimmingTab" class="">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/swimming_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/swimming_new.avif') : '/assets/images/game/swimming_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Swimming</span>
                         <span class="coming_soon">[ Coming Soon ]</span>
                     </div>
@@ -361,7 +367,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="TennisTab" class="">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/tennis_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/tennis_new.avif') : '/assets/images/game/tennis_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Tennis</span>
                         <span class="coming_soon">[ Coming Soon ]</span>
                     </div>
@@ -371,7 +377,7 @@ $posters ??= [];
             <li class="clickme">
                 <a href="javascript:void();" data-tag="TableTennisTab" class="">
                     <div class="popularSports_card">
-                        <img src="assets/images/game/table_tennis_new.avif" class="img-fluid" alt="game" />
+                         <img src="<?= $esc(function_exists('appUrl') ? appUrl('assets/images/game/table_tennis_new.avif') : '/assets/images/game/table_tennis_new.avif') ?>" class="img-fluid" alt="game" />
                         <span class="game_name">Table Tennis</span>
                         <span class="coming_soon">[ Coming Soon ]</span>
                     </div>

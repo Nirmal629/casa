@@ -23,9 +23,9 @@ if (!empty($events)):
 
         $eventTimezone = $event['EVENT_TIMEZONE'] ?? null;
         $eventDateTime = strtotime($eventDateStr . ' ' . $eventStartTimeStr);
-        $event_date_formatted = date('D, d M Y • h:i A', $eventDateTime);
         $event_toTime_formatted = !empty($eventEndTimeStr) ? date('h:i A', strtotime($eventEndTimeStr)) : '';
-        $event_date_formatted = \App\Config\Timezone::formatEvent((string) $eventDateStr, (string) $eventStartTimeStr, $eventTimezone, 'D, d M Y â€¢ h:i A');
+        $bullet = html_entity_decode('&#8226;', ENT_QUOTES, 'UTF-8');
+        $event_date_formatted = \App\Config\Timezone::formatEvent((string) $eventDateStr, (string) $eventStartTimeStr, $eventTimezone, 'D, d M Y') . ' ' . $bullet . ' ' . date('h:i A', strtotime($eventStartTimeStr));
         $event_toTime_formatted = !empty($eventEndTimeStr) ? \App\Config\Timezone::formatEventEnd((string) $eventDateStr, (string) $eventStartTimeStr, (string) $eventEndTimeStr, $eventTimezone) : '';
 
         // Expiration check via unified timezone-aware HostController/EventModel
@@ -62,7 +62,7 @@ if (!empty($events)):
 
         $event_canceldate = !empty($event['CANCEL_DATE']) ? date('D, d M Y', strtotime($event['CANCEL_DATE'])) : (!empty($event['EVENT_DATE']) ? date('D, d M Y', strtotime($event['EVENT_DATE'])) : '');
         $event_cancelTime = !empty($event['CANCEL_TIME']) ? date('h:i A', strtotime($event['CANCEL_TIME'])) : '';
-        $freezeDisplay = trim($event_canceldate . ($event_cancelTime !== '' ? ' • ' . $event_cancelTime : ''));
+        $freezeDisplay = trim($event_canceldate . ($event_cancelTime !== '' ? $bullet . $event_cancelTime : ''));
         if (empty($freezeDisplay)) {
             $freezeDisplay = 'At match start';
         }
@@ -333,7 +333,7 @@ if (!empty($events)):
                         <div class='session-court-status-left'>
                             <i class='fa-solid fa-flag-checkered' style='color: #64748b; font-size: 11px; margin-right: 4px;'></i>
                             <span class='session-court-status-text session-court-status-expired-text'>
-                                <?= $confirmedCourts > 0 ? "Session ended • {$confirmedCourts} court" . ($confirmedCourts > 1 ? 's' : '') . " completed" : "Session ended • Concluded" ?>
+                                <?= $confirmedCourts > 0 ? "Session ended {$bullet} {$confirmedCourts} court" . ($confirmedCourts > 1 ? 's' : '') . " completed" : "Session ended {$bullet} Concluded" ?>
                             </span>
                         </div>
                         <span class='session-court-badge session-court-badge-expired'>

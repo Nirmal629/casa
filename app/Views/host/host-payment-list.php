@@ -158,7 +158,8 @@ $currentMonth = (int) date('n');
             }
 
             // Retrieve CSRF token for secure mutation
-            const csrfToken = (typeof window.csrfToken === 'function' ? window.csrfToken() : null)
+            const csrfToken = (window.Casa && typeof window.Casa.csrfToken === 'function' ? window.Casa.csrfToken() : '')
+                || (typeof window.csrfToken === 'function' ? window.csrfToken() : null)
                 || (document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '')
                 || (document.querySelector('input[name="csrf_token"]') ? document.querySelector('input[name="csrf_token"]').value : '');
 
@@ -167,22 +168,33 @@ $currentMonth = (int) date('n');
             const apiUrl = baseUrl.replace(/\/$/, '') + '/api/update-player-premium';
             xhr.open('POST', apiUrl, true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             if (csrfToken) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             }
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    if (xhr.status === 200 && xhr.responseText.trim() === 'OK') {
+                    let response = null;
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (_) {
+                        response = null;
+                    }
+                    const updated = xhr.status === 200
+                        && ((response && response.success === true) || xhr.responseText.trim() === 'OK');
+                    if (updated) {
                         if (typeof showToast === 'function') {
                             showToast('success', 'Player premium status updated successfully');
                         }
                     } else {
+                        const errorMessage = response && (response.message || response.error)
+                            ? (response.message || response.error)
+                            : 'Failed to update premium status. Please try again.';
                         if (typeof showToast === 'function') {
-                            showToast('error', 'Failed to update premium status. Please try again.');
+                            showToast('error', errorMessage);
                         } else {
-                            alert('Failed to update premium status. Please try again.');
+                            alert(errorMessage);
                         }
 
                         // Revert checkbox & label

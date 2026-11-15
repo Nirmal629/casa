@@ -689,10 +689,15 @@ class LedgerPresenter
         if ($currency === '') {
             $currency = '$';
         }
+        $assetPrefix = function_exists('appBasePath') ? appBasePath() : '/';
         foreach ($pagePlayers as $idx => $p) {
             $data = $p['data'] ?? [];
             $userId = (int) ($data['ID'] ?? 0);
-            $profilePic = !empty($data['PROFILE_IMAGE']) ? '../profile_img/' . htmlspecialchars((string) $data['PROFILE_IMAGE'], ENT_QUOTES, 'UTF-8') : '../assets/images/profile.jpg';
+            $profilePic = !empty($data['PROFILE_IMAGE'])
+                ? $assetPrefix . 'profile_img/' . rawurlencode(basename((string) $data['PROFILE_IMAGE']))
+                : $assetPrefix . 'assets/images/profile.jpg';
+            $profilePic = htmlspecialchars($profilePic, ENT_QUOTES, 'UTF-8');
+            $fallbackPic = htmlspecialchars($assetPrefix . 'assets/images/profile.jpg', ENT_QUOTES, 'UTF-8');
             $isPremium = (isset($data['PREMIUM']) && strtoupper((string) $data['PREMIUM']) === 'Y');
             $premiumChecked = $isPremium ? 'checked' : '';
             $switchId = 'premium-switch-' . $userId;
@@ -711,7 +716,7 @@ class LedgerPresenter
 
             $html .= "<tr>
                 <th scope='row'>{$sl}</th>
-                <td><div class='profile_pic'><img src='{$profilePic}' class='img-fluid' alt='profile pic' /></div></td>
+                <td><div class='profile_pic'><img src='{$profilePic}' class='img-fluid' alt='profile pic' onerror=\"this.onerror=null;this.src=\\\"{$fallbackPic}\\\";\" /></div></td>
                 <td><strong>{$name}</strong></td>
                 <td>
                     <span style='color:#1a73e8;'>{$email}</span><br>
