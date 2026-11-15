@@ -572,7 +572,7 @@ class PlayerController extends Controller
             require_once __DIR__ . '/../Helpers/player_hub_helper.php';
             $tzEst = \App\Config\Timezone::zone();
             $nowEst = new \DateTimeImmutable('now', $tzEst);
-            $pathPrefix = '/';
+            $pathPrefix = function_exists('appBasePath') ? appBasePath() : '/';
 
             foreach ($rawTournaments as $row) {
                 $upcomingTournaments[] = prepareTournamentData($row, $pathPrefix, $baseDir, $tzEst, $nowEst);

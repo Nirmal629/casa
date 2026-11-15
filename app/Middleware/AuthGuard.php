@@ -196,12 +196,12 @@ class AuthGuard
 
         $type = strtolower(trim($userType));
         $routes = [
-            'host'    => '/host/host-dashboard.php',
-            'trainer' => '/host/host-dashboard.php',
-            'player'  => '/player/player-hub.php'
+            'host'    => appUrl('host/host-dashboard.php'),
+            'trainer' => appUrl('host/host-dashboard.php'),
+            'player'  => appUrl('player/player-hub.php')
         ];
 
-        $location = $routes[$type] ?? '/index.php';
+        $location = $routes[$type] ?? appUrl('index.php');
         header("Location: {$location}");
         exit;
     }
