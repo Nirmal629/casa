@@ -9,6 +9,19 @@ class Request
     public function getUri(): string
     {
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $scriptName = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+        $scriptDir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+
+        // The app can be deployed at /, /staging, or another subdirectory.
+        // Routes are registered without that deployment prefix.
+        if ($scriptDir !== '' && $scriptDir !== '/' && str_starts_with($uri, $scriptDir)) {
+            $uri = substr($uri, strlen($scriptDir)) ?: '/';
+        }
+
+        if ($uri === '/index.php' || str_ends_with($uri, '/index.php')) {
+            $uri = '/';
+        }
+
         return rtrim($uri, '/') ?: '/';
     }
 
