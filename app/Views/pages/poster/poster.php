@@ -26,8 +26,11 @@ if (!empty($posters)):
                 $src = is_array($item) ? ($item['media_url'] ?? $item['image'] ?? '') : (string)$item;
                 $src = trim((string)$src);
                 if (empty($src)) continue;
-                if (!preg_match('#^(?:https?:)?//#i', $src) && !str_starts_with($src, '/')) {
-                    $src = function_exists('appUrl') ? appUrl($src) : '/' . ltrim($src, '/');
+                if (!preg_match('#^(?:https?:)?//#i', $src)) {
+                    $basePath = function_exists('appBasePath') ? appBasePath() : '/';
+                    if ($basePath === '/' || !str_starts_with($src, $basePath)) {
+                        $src = function_exists('appUrl') ? appUrl(ltrim($src, '/')) : '/' . ltrim($src, '/');
+                    }
                 }
                 $encodedSrc = implode('/', array_map('rawurlencode', explode('/', $src)));
                 $url = htmlspecialchars($encodedSrc, ENT_QUOTES, 'UTF-8');

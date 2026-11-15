@@ -109,8 +109,9 @@ $hasVideos = !empty($galleryVideos);
 $defaultTab = $hasImages ? 'images' : 'videos';
 $mediaUrl = static function (string $path): string {
     if ($path === '' || preg_match('#^(?:https?:)?//#i', $path)) return $path;
-    if (str_starts_with($path, '/')) return $path;
-    return function_exists('appUrl') ? appUrl($path) : '/' . ltrim($path, '/');
+    $basePath = function_exists('appBasePath') ? appBasePath() : '/';
+    if ($basePath !== '/' && str_starts_with($path, $basePath)) return $path;
+    return function_exists('appUrl') ? appUrl(ltrim($path, '/')) : '/' . ltrim($path, '/');
 };
 ?>
 

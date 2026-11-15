@@ -17,7 +17,7 @@ $cardCssPath = __DIR__ . '/../css/sports-session-card.css';
 $cardCssVer = file_exists($cardCssPath) ? (string) filemtime($cardCssPath) : '1.0';
 $assetPrefix = function_exists('appBasePath') ? appBasePath() : '/';
 ?>
-<link rel="stylesheet" href="<?= htmlspecialchars($assetPrefix, ENT_QUOTES, 'UTF-8') ?>app/Views/css/sports-session-card.css?v=<?= $cardCssVer ?>">
+<link rel="stylesheet" href="<?= htmlspecialchars(function_exists('appUrl') ? appUrl('app/Views/css/sports-session-card.css') : '/app/Views/css/sports-session-card.css', ENT_QUOTES, 'UTF-8') ?>?v=<?= $cardCssVer ?>">
 
 <section class="weekly-schedule-section">
     <div class="custom_card">
