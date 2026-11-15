@@ -20,7 +20,7 @@ $banners ??= [];
 if (empty($banners)) {
     $banners = [
         [
-            'image' => '/assets/images/default-banner.jpg',
+            'image' => (function_exists('appUrl') ? appUrl('assets/images/default-banner.jpg') : '/assets/images/default-banner.jpg'),
             'sub_heading' => 'WELCOME TO CASA',
             'heading' => 'Play & Host',
             'highlight_text' => 'Games',
@@ -40,7 +40,7 @@ $posters ??= [];
 <?php include $views['header']; ?>
 
 <!-- Page Stylesheet -->
-<link rel="stylesheet" href="/app/Views/css/home.css">
+<link rel="stylesheet" href="<?= $esc(function_exists('appUrl') ? appUrl('app/Views/css/home.css') : '/app/Views/css/home.css') ?>">
 
 <!-- Hero banner -->
 <?php if (!empty($banners)): ?>

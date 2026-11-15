@@ -8,8 +8,14 @@ use App\Controllers\HomeController;
 /** @var App\Core\Router $router */
 
 // Auth routes
-$router->get('/login', [HomeController::class, 'index']);
-$router->get('/login.php', [HomeController::class, 'index']);
+$router->get('/login', static function (): void {
+    header('Location: ' . appUrl());
+    exit;
+});
+$router->get('/login.php', static function (): void {
+    header('Location: ' . appUrl());
+    exit;
+});
 $router->get('/logout.php', [AuthController::class, 'logout']);
 $router->get('/logout', [AuthController::class, 'logout']);
 

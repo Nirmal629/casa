@@ -29,7 +29,8 @@ $rememberUsername = $_COOKIE[$rememberCookieKey] ?? $_COOKIE['remember_username'
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="<?= e(appUrl('login')) ?>">
+    <!-- Submit to the existing front-controller POST route; works on / and /staging/. -->
+    <form method="POST" action="<?= e(appUrl('index.php')) ?>">
 
         <!-- CSRF Protection -->
         <input
