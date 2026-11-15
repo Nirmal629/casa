@@ -44,7 +44,7 @@ $user = \App\Helpers\Session::getCurrentUser($conn);
 
 <head>
     <?php include __DIR__ . "/header-links.php"; ?>
-    <link rel="stylesheet" href="/assets/css/header.css">
+    <link rel="stylesheet" href="<?= e($assetPrefix ?? '/') ?>assets/css/header.css">
 </head>
 
 <body>

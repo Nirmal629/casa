@@ -20,8 +20,8 @@
 <title>Casa | Play</title>
 
 <?php
-// Asset prefix for static files. Using an absolute root path `/` for the router.
-$assetPrefix = '/';
+// Asset prefix for static files; includes deployment subfolders such as /staging/.
+$assetPrefix = function_exists('appBasePath') ? appBasePath() : '/';
 
 // Smart Cache-Busting for Local CSS Files
 $tournCssFile = __DIR__ . '/../../../../assets/css/tournament.css';
@@ -45,6 +45,9 @@ $base_dir = rtrim($base_dir, '/') . '/';
 if ($base_dir !== '/') {
     $base_dir = '/' . ltrim($base_dir, '/');
 }
+
+// Keep the absolute URL aligned with the same resolved public prefix.
+$base_dir = $assetPrefix;
 
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
