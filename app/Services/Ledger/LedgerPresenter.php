@@ -626,11 +626,11 @@ class LedgerPresenter
     public static function sortIcon(string $col, string $currentSortBy, string $currentSortDir): string
     {
         if ($col !== $currentSortBy) {
-            return '<span class="text-muted ms-1" style="font-size:0.7rem;">⇅</span>';
+            return '<span class="text-muted ms-1" style="font-size:0.7rem;">&#8645;</span>';
         }
         return $currentSortDir === 'asc'
-            ? '<span class="text-warning ms-1" style="font-size:0.7rem;">▲</span>'
-            : '<span class="text-warning ms-1" style="font-size:0.7rem;">▼</span>';
+            ? '<span class="text-warning ms-1" style="font-size:0.7rem;">&#9650;</span>'
+            : '<span class="text-warning ms-1" style="font-size:0.7rem;">&#9660;</span>';
     }
 
     public static function renderPaymentListTableHtml(
@@ -716,7 +716,7 @@ class LedgerPresenter
 
             $html .= "<tr>
                 <th scope='row'>{$sl}</th>
-                <td><div class='profile_pic'><img src='{$profilePic}' class='img-fluid' alt='profile pic' onerror=\"this.onerror=null;this.src=\\\"{$fallbackPic}\\\";\" /></div></td>
+                <td><div class='profile_pic'><img src='{$profilePic}' class='img-fluid' alt='profile pic' data-fallback-src='{$fallbackPic}' onerror=\"this.onerror=null;this.src=this.dataset.fallbackSrc;\" /></div></td>
                 <td><strong>{$name}</strong></td>
                 <td>
                     <span style='color:#1a73e8;'>{$email}</span><br>
@@ -757,8 +757,8 @@ class LedgerPresenter
             'justify' => '',
             'show_first_last' => false,
             'show_prev_next' => true,
-            'prev_text' => '‹',
-            'next_text' => '›',
+            'prev_text' => '&lsaquo;',
+            'next_text' => '&rsaquo;',
             'on_each_side' => 2,
             'data_attributes' => [
                 'sort-by' => $sortBy,
