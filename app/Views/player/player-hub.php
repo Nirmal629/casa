@@ -38,7 +38,7 @@ $user_premium        ??= 'N';
 $products            ??= [];
 $orderMap            ??= [];
 $reviews             ??= [];
-$pathPrefix          ??= '/';
+$pathPrefix          ??= (function_exists('appBasePath') ? appBasePath() : '/');
 
 // Pre-calculated view display parameters
 $prefix        = $pathPrefix ?? '../';
@@ -53,7 +53,7 @@ include $views['header'];
 ?>
 
 <!-- Extracted Page Stylesheet -->
-<link rel="stylesheet" href="/app/Views/css/player/player-hub.css">
+<link rel="stylesheet" href="<?= $esc($pathPrefix) ?>app/Views/css/player/player-hub.css">
 
 <section class="playerhub_sec bothSide_gap">
     <div class="cust_container">

@@ -29,7 +29,7 @@ $rememberUsername = $_COOKIE[$rememberCookieKey] ?? $_COOKIE['remember_username'
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="/login">
+    <form method="POST" action="<?= e(appUrl('login')) ?>">
 
         <!-- CSRF Protection -->
         <input
@@ -134,10 +134,10 @@ $rememberUsername = $_COOKIE[$rememberCookieKey] ?? $_COOKIE['remember_username'
 <!-- Page Assets -->
 <link
     rel="stylesheet"
-    href="/app/Views/css/auth/login.css"
+    href="<?= e(appUrl('app/Views/css/auth/login.css')) ?>"
 >
 
 <script
-    src="/app/script/auth.js"
+    src="<?= e(appUrl('app/script/auth.js')) ?>"
     defer
 ></script>

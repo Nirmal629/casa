@@ -16,11 +16,11 @@ if ($host_id === 0 && !empty($_SESSION['user_id'])) {
 include __DIR__ . "/../layouts/header/inner-header.php";
 
 if (empty($_SESSION['usertype']) || strcasecmp(trim((string) $_SESSION['usertype']), 'Player') !== 0) {
-    echo "<script>window.location.href='/';</script>";
+    echo "<script>window.location.href=" . json_encode(function_exists('appUrl') ? appUrl() : '/') . ";</script>";
     exit();
 }
 ?>
-<link rel="stylesheet" href="/assets/css/player-dashboard.css?v=<?= @filemtime(__DIR__ . '/../../../assets/css/player-dashboard.css') ?: time() ?>">
+<link rel="stylesheet" href="<?= e(function_exists('appUrl') ? appUrl('assets/css/player-dashboard.css') : '/assets/css/player-dashboard.css') ?>?v=<?= @filemtime(__DIR__ . '/../../../assets/css/player-dashboard.css') ?: time() ?>">
 
 
 <!----User-game----->

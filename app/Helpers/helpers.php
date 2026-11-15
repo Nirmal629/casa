@@ -45,6 +45,15 @@ if (!function_exists('appBasePath')) {
     }
 }
 
+if (!function_exists('appUrl')) {
+    /** Build a public URL that also works when the app is deployed in /staging/. */
+    function appUrl(string $path = ''): string
+    {
+        $prefix = appBasePath();
+        return $prefix . ltrim($path, '/');
+    }
+}
+
 // Generate unique secure booking number
 function generateBookingNo(): string
 {

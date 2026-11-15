@@ -29,7 +29,7 @@ class AuthController extends Controller
         Session::start();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: /");
+            header('Location: ' . appUrl());
             exit;
         }
 
@@ -65,7 +65,7 @@ class AuthController extends Controller
         if (!Session::verifyCsrfToken($submittedCsrf)) {
             $this->logActivity(0, 'SECURITY_CSRF_FAIL', 'Login CSRF validation failed');
             $_SESSION['login_error'] = 'Security validation failed. Please try again.';
-            header("Location: /");
+            header('Location: ' . appUrl());
             exit;
         }
 
@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         if ($identity === '' || $password === '' || strlen($identity) > 255 || strlen($password) > 255) {
             $_SESSION['login_error'] = 'Please enter both username/email and password.';
-            header("Location: /");
+            header('Location: ' . appUrl());
             exit;
         }
 
@@ -102,7 +102,7 @@ class AuthController extends Controller
         if ($activeLock > 0) {
             $lockMinutes = (int) ceil($activeLock / 60);
             $_SESSION['login_error'] = "Too many failed login attempts. Account temporarily locked for {$lockMinutes} minute(s).";
-            header("Location: /");
+            header('Location: ' . appUrl());
             exit;
         }
 
@@ -164,7 +164,7 @@ class AuthController extends Controller
         // Redirect based on authorized USERTYPE
         $roleType = strtolower(trim((string) ($user['USERTYPE'] ?? '')));
         if ($roleType === 'host' || $roleType === 'trainer') {
-            header("Location: /host/host-dashboard.php");
+            header('Location: ' . appUrl('host/host-dashboard.php'));
         } elseif ($roleType === 'player') {
             $this->syncHomeClubs(
                 (int) $user['ID'],
@@ -173,12 +173,12 @@ class AuthController extends Controller
                 (string) ($user['CITY'] ?? ''),
                 (string) ($user['GAMES'] ?? '')
             );
-            header("Location: /player/player-hub.php");
+            header('Location: ' . appUrl('player/player-hub.php'));
         } else {
             // Unknown or unauthorized role: NEVER grant host permissions!
             Session::logout();
             $_SESSION['login_error'] = 'Account is not authorized for access.';
-            header("Location: /");
+            header('Location: ' . appUrl());
         }
         exit;
     }

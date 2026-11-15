@@ -60,11 +60,11 @@ class HomeController extends Controller
         switch ($userType) {
             case 'host':
             case 'trainer':
-                header('Location: /host/host-dashboard.php');
+                header('Location: ' . appUrl('host/host-dashboard.php'));
                 exit;
 
             case 'player':
-                header('Location: /player/player-hub.php');
+                header('Location: ' . appUrl('player/player-hub.php'));
                 exit;
 
             default:
