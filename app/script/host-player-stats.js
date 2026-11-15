@@ -246,9 +246,6 @@
         var status = (statusEl?.value || '').trim();
         var gender = (genderEl?.value || '').trim();
         var hostId = getCurrentHostId();
-        var csrfToken = (window.Casa && typeof window.Casa.csrfToken === 'function')
-            ? window.Casa.csrfToken()
-            : ((typeof window.csrfToken === 'function') ? window.csrfToken() : '');
 
         var params = {
             host_id: hostId,
@@ -256,13 +253,12 @@
             skill_level: level,
             status: status,
             gender: gender,
-            format: 'json',
-            csrf_token: csrfToken
+            format: 'json'
         };
 
         var $ = window.jQuery || window.$;
         if ($) {
-            currentStatsXhr = $.post(getApiUrl('get-player-stats'), params, function (res) {
+            currentStatsXhr = $.get(getApiUrl('get-player-stats'), params, function (res) {
                 hasInitialLoaded = true;
                 if (res && res.success && Array.isArray(res.data)) {
                     cachedPlayersList = res.data;
@@ -280,13 +276,13 @@
                 renderGenericPagination(0, 1, perPage);
             });
         } else {
-            fetch(getApiUrl('get-player-stats'), {
-                method: 'POST',
+            fetch(getApiUrl('get-player-stats') + '?' + new URLSearchParams(params).toString(), {
+                method: 'GET',
+                credentials: 'same-origin',
+                cache: 'no-store',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: new URLSearchParams(params).toString()
+                    'Accept': 'application/json'
+                }
             })
             .then(function (r) { return r.json(); })
             .then(function (res) {
